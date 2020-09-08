@@ -1,0 +1,14 @@
+targets:
+  swagger_generator:swagger_generator:
+    builders:
+      swagger_generator|swaggerCodeBuilder:
+        enabled: True
+builders:
+  swagger_generator:
+    import: 'package:swagger_generator/builder.dart'
+    builder_factories: ['swaggerCodeBuilder']
+    build_extensions:
+      '$lib$': ['.swagger.dart', '.models.dart', '.converter.dart']
+    build_to: source
+    auto_apply: dependents
+    runs_before: ['chopper_generator']

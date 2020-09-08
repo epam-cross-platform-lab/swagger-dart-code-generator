@@ -1,0 +1,22 @@
+name: swagger_generator
+
+version: 1.0.0
+
+description: A sample command-line application.
+environment:
+  sdk: '>=2.9.0 <3.0.0'
+
+dependencies:
+  build: ^1.1.6
+  path: ^1.6.0
+  markdown: ^2.0.3
+  recase: ^3.0.0
+  json_annotation: ^3.0.1
+  json_serializable: ^3.4.1
+  build_runner: ^1.10.2
+
+dev_dependencies:
+  build_config: ^0.4.1+1
+  pedantic: ^1.7.0
+  test: ^1.5.0
+
