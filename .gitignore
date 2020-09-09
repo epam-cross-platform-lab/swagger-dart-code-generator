@@ -36,6 +36,7 @@ build/
 *.lock
 *.models.dart
 *.swagger.dart
+!example_swagger.swagger.dart
 *.converter.dart
 *.pubspec.lock
 *.swagger
@@ -44,7 +45,7 @@ client_index.dart
 client_mapping.dart
 coverage_badge.svg
 lcov.info
-
+!example_swagger.swagger
 
 # Android related
 **/android/**/gradle-wrapper.jar

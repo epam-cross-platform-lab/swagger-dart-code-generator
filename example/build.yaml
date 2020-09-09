@@ -2,8 +2,6 @@ targets:
   $default:
     sources:
     - lib/**
-    - swagger_examples/**
-    - unstable_examples/**
     - $package$
     builders:
       swagger_generator:
@@ -13,15 +11,12 @@ targets:
           ignore_headers: true
           use_default_null_for_lists: false
           build_only_models: false
-          input_folder: 'swagger_examples/'
+          input_folder: 'lib/'
           output_folder: 'lib/generated_code/'
           default_values_map:
             - type_name: int
               default_value: '36'
           response_override_value_map:
-            - url: '/bonuspage/v0/pbo'
+            - url: '/store/inventory'
               method: get
-              overriden_value: 'List<Object>'
-            - url: '/bonuspage/v0/personal'
-              method: get
-              overriden_value: 'List<List<List<List>>>'
+              overriden_value: 'List<dynamic>'

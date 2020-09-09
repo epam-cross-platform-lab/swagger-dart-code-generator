@@ -8,7 +8,8 @@ class SwaggerConverterGeneratorV2 implements SwaggerConverterGenerator {
   String generate(String dartCode, String fileName) {
     return """
 final ${fileName.pascalCase}$converterClassEnding = 
-{${_generateModelsMapping(dartCode)}};""";
+{
+${_generateModelsMapping(dartCode)}};""";
   }
 
   String _generateModelsMapping(String dartCode) {
@@ -26,7 +27,7 @@ final ${fileName.pascalCase}$converterClassEnding =
       final String key = definitions.keys.elementAt(i).toString();
 
       result.writeln(
-          "  ${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,");
+          "\t${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,");
     }
 
     return result.toString();
