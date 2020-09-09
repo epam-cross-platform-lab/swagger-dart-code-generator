@@ -41,8 +41,6 @@ build/
 *.pubspec.lock
 *.swagger
 !example_swagger.swagger
-client_index.dart
-client_mapping.dart
 
 # Android related
 **/android/**/gradle-wrapper.jar
