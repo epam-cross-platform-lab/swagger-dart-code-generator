@@ -16,6 +16,14 @@ class SwaggerResponse {
             ? ResponseSchema.fromJson(json['schema'] as Map<String, dynamic>)
             : null;
 
+  SwaggerResponse(
+      {this.code,
+      this.description,
+      this.type,
+      this.schema,
+      this.enumValue,
+      this.content});
+
   String code;
   String description;
   String type;
