@@ -61,7 +61,6 @@ const String _baseUrl='$_baseUrl';
 
       expect(result, contains("static OrderService create"));
       expect(result, contains("services: [_\$OrderService()],"));
-      expect(result, contains("/*converter: JsonSerializableConverter(),*/"));
     });
   });
 
