@@ -69,6 +69,7 @@ $enums
     return generatedClass;
   }
 
+  @visibleForTesting
   String generateConstructorPropertiesContent(Map<String, dynamic> entityMap) {
     if (entityMap == null) {
       return '';
@@ -82,6 +83,7 @@ $enums
     return '{\n${generatedConstructorParameters.toString()}\n\t}';
   }
 
+  @visibleForTesting
   String generateEnumsContent(Map<String, dynamic> map, String className) {
     if (map == null) {
       return '';
@@ -166,14 +168,14 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
             defaultValues,
             useDefaultNullForLists));
       } else if (propertyEntryMap['\$ref'] != null) {
-        results.add(_generatePropertyContentByRef(
+        results.add(generatePropertyContentByRef(
             propertyEntryMap, propertyName, propertyKey, className));
       } else if (propertyEntryMap['schema'] != null) {
         results.add(_generatePropertyContentBySchema(
             propertyEntryMap, propertyName, propertyKey, className));
       } else {
         results.add(
-            _generatePropertyContentByDefault(propertyEntryMap, propertyName));
+            generatePropertyContentByDefault(propertyEntryMap, propertyName));
       }
     }
 
@@ -252,7 +254,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     }
   }
 
-  String _generatePropertyContentByRef(Map<String, dynamic> propertyEntryMap,
+  @visibleForTesting
+  String generatePropertyContentByRef(Map<String, dynamic> propertyEntryMap,
       String propertyName, String propertyKey, String className) {
     String jsonKeyContent = "@JsonKey(name: '$propertyKey'";
 
@@ -279,7 +282,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     return "\t$jsonKeyContent)\n\tfinal $_typeName ${generateFieldName(propertyName)};";
   }
 
-  String _generatePropertyContentByDefault(
+  @visibleForTesting
+  String generatePropertyContentByDefault(
       Map<String, dynamic> propertyEntryMap, String propertyName) {
     String jsonKeyContent = "@JsonKey(name: '$propertyName'";
     return "\t$jsonKeyContent)\n  final ${propertyEntryMap['originalRef']} ${generateFieldName(propertyName)};";
@@ -317,9 +321,9 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String getParameterTypeName(
       String className, String parameterName, Map<String, dynamic> parameter,
-      [String nameParameter]) {
-    if (nameParameter != null) {
-      return nameParameter.pascalCase;
+      [String refNameParameter]) {
+    if (refNameParameter != null) {
+      return refNameParameter.pascalCase;
     }
 
     if (parameter == null) {
