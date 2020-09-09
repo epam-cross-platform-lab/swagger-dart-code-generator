@@ -254,7 +254,7 @@ const String _baseUrl='$baseUrl';
       services: [_\$$fileName()],
       /*baseUrl: YOUR_BASE_URL,*/
       /*client: YOUR_CLIENT,*/
-      /*${withConverter ? """converter: JsonSerializableConverter(),""" : """/*converter: JsonSerializableConverter(),*/"""}*/
+      /*converter: YOUR_CONVERTER*/
       /*errorConverter: YOUR_ERROR_CONVERTER*/);
     return _\$$fileName(newClient);
   }
@@ -348,8 +348,7 @@ const String _baseUrl='$baseUrl';
     }
 
     final String generatedMethod = """
-\t//$summary
-$parametersComments
+\t///$summary  ${parametersComments.isNotEmpty ? """\n$parametersComments""" : ''}
 \t@$typeReq
 \tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($parametersPart);
 """;
