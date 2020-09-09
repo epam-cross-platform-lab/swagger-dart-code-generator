@@ -225,4 +225,31 @@ void main() {
       expect(result, contains(_expectedResult));
     });
   });
+
+  group('generateEnumValuesContent', () {
+    final _generator = SwaggerModelsGeneratorV2();
+    test('Should return enum values', () {
+      final List<String> list = ["Cats", "dogs", "Forgs"];
+      final String _expectedResult = "\t@JsonValue('Cats')\n  cats";
+      final String result = _generator.generateEnumValuesContent(list);
+
+      expect(result, contains(_expectedResult));
+    });
+  });
+
+  group('generateEnumPropertyContent', () {
+    final _generator = SwaggerModelsGeneratorV2();
+    test('Should return enum property with JsonKey', () {
+      final String key = "dog";
+      final String className = "animals";
+      final String _jsonKeyExpectedResult =
+          "@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)";
+      final String _expectedResult = 'final AnimalsDog dog;';
+      final String result =
+          _generator.generateEnumPropertyContent(key, className);
+
+      expect(result, contains(_jsonKeyExpectedResult));
+      expect(result, contains(_expectedResult));
+    });
+  });
 }

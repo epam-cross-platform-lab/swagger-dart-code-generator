@@ -36,6 +36,7 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
     return "$generatedClasses\n$generatedEnums";
   }
 
+  @visibleForTesting
   String generateModelClassContent(
     String className,
     Map<String, dynamic> map,
@@ -129,6 +130,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     }
   }
 
+  @visibleForTesting
   String generateEnumValuesContent(List<dynamic> values) {
     return values
         .map((dynamic e) => "\t@JsonValue('$e')\n  ${getEnumFieldName(e)}")
@@ -160,7 +162,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       });
 
       if (propertyEntryMap.containsKey('type')) {
-        results.add(_generatePropertyContentByType(
+        results.add(generatePropertyContentByType(
             propertyEntryMap,
             propertyName,
             propertyKey,
@@ -206,13 +208,15 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     return """  $jsonKeyContent  final List<$typeName> ${generateFieldName(propertyName)};""";
   }
 
-  String _generateEnumPropertyContent(String key, String className) {
+  @visibleForTesting
+  String generateEnumPropertyContent(String key, String className) {
     return """
   @JsonKey(unknownEnumValue: ${className.capitalize + key.capitalize}.swaggerGeneratedUnknown)
   final ${className.capitalize + key.capitalize} ${generateFieldName(key)};""";
   }
 
-  String _generateGeneralPropertyContent(
+  @visibleForTesting
+  String generateGeneralPropertyContent(
       String propertyName,
       String propertyKey,
       String className,
@@ -233,7 +237,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     return """  $jsonKeyContent  final $typeName ${generateFieldName(propertyName)};""";
   }
 
-  String _generatePropertyContentByType(
+  @visibleForTesting
+  String generatePropertyContentByType(
       Map<String, dynamic> propertyEntryMap,
       String propertyName,
       String propertyKey,
@@ -246,10 +251,10 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
             className, propertyEntryMap, useDefaultNullForLists);
         break;
       case 'enum':
-        return _generateEnumPropertyContent(propertyName, className);
+        return generateEnumPropertyContent(propertyName, className);
         break;
       default:
-        return _generateGeneralPropertyContent(propertyName, propertyKey,
+        return generateGeneralPropertyContent(propertyName, propertyKey,
             className, defaultValues, propertyEntryMap);
     }
   }
