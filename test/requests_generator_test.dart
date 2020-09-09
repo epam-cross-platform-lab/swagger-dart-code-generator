@@ -1,71 +1,14 @@
 import 'package:swagger_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
 import 'package:swagger_generator/src/models/generator_options.dart';
+import 'requests_generator_definitions.dart';
 import 'package:test/test.dart';
 
-import 'code_examples.dart';
-
 void main() {
-  group('Models generator testing group', () {
-    final _generator = SwaggerRequestsGeneratorV2();
-    final _fileName = 'order_service';
-    final _className = 'OrderSerice';
+  final _generator = SwaggerRequestsGeneratorV2();
+  final _fileName = 'order_service';
+  final _className = 'OrderSerice';
 
-    test('Should ignore headers if option is true', () {
-      final result = _generator.generate(
-          request_with_header,
-          _className,
-          _fileName,
-          GeneratorOptions(
-            ignoreHeaders: true,
-          ));
-
-      var isContainHeader = result.contains("@Header");
-
-      expect(isContainHeader, equals(false));
-    });
-
-    test('Should NOT ignore headers if option is true', () {
-      final result = _generator.generate(
-          request_with_header,
-          _className,
-          _fileName,
-          GeneratorOptions(
-            ignoreHeaders: false,
-          ));
-
-      var isContainHeader = result.contains("@Header");
-
-      expect(isContainHeader, equals(true));
-    });
-
-    test(
-        'Should generate List<String> for query parameters type array and items.type string',
-        () {
-      final result = _generator.generate(
-          request_with_array_string,
-          _className,
-          _fileName,
-          GeneratorOptions(
-            ignoreHeaders: false,
-          ));
-
-      expect(result, contains("List<String> applications"));
-    });
-
-    test(
-        'Should generate List<String> for query parameters type array and items.type string',
-        () {
-      final result = _generator.generate(
-          request_with_array_order_summary,
-          _className,
-          _fileName,
-          GeneratorOptions(
-            ignoreHeaders: false,
-          ));
-
-      expect(result, contains("Future<Response<List<OrderSummary>>>"));
-    });
-
+  group('Tests for additional methids', () {
     test('Should transform "parametersGET1" to "parametersGet1"', () {
       String str = "parametersGET1";
       final generator = SwaggerRequestsGeneratorV2();
@@ -118,11 +61,70 @@ const String _baseUrl='$_baseUrl';
 
       expect(result, contains("static OrderService create"));
       expect(result, contains("services: [_\$OrderService()],"));
-      expect(result, contains("/*converter: JsonSerializableConverter(),*/"));
+    });
+  });
+
+  group('Tests for parameters', () {
+    test('Should ignore headers if option is true', () {
+      final result = _generator.generate(
+          request_with_header,
+          _className,
+          _fileName,
+          GeneratorOptions(
+            ignoreHeaders: true,
+          ));
+
+      var isContainHeader = result.contains("@Header");
+
+      expect(isContainHeader, equals(false));
+    });
+
+    test('Should NOT ignore headers if option is true', () {
+      final result = _generator.generate(
+          request_with_header,
+          _className,
+          _fileName,
+          GeneratorOptions(
+            ignoreHeaders: false,
+          ));
+
+      var isContainHeader = result.contains("@Header");
+
+      expect(isContainHeader, equals(true));
     });
 
     test(
         'Should generate List<String> for query parameters type array and items.type string',
+        () {
+      final result = _generator.generate(
+          request_with_array_string,
+          _className,
+          _fileName,
+          GeneratorOptions(
+            ignoreHeaders: false,
+          ));
+
+      expect(result, contains("List<String> testName"));
+    });
+
+    test(
+        'Should generate List<String> for query parameters type array and items.type string',
+        () {
+      final result = _generator.generate(
+          request_with_array_item_summary,
+          _className,
+          _fileName,
+          GeneratorOptions(
+            ignoreHeaders: false,
+          ));
+
+      expect(result, contains("Future<Response<List<ItemSummary>>>"));
+    });
+  });
+
+  group('Tests for return type', () {
+    test(
+        'Should generate List<String> for return type parameters type array and items.type string',
         () {
       final result = _generator.generate(
           request_with_list_string_return_type,
@@ -133,6 +135,20 @@ const String _baseUrl='$_baseUrl';
           ));
 
       expect(result, contains("Future<Response<List<String>>>"));
+    });
+
+    test(
+        'Should generate List<TestItem> for return type parameters type array and items.type string',
+        () {
+      final result = _generator.generate(
+          request_with_list_test_item_return_type,
+          _className,
+          _fileName,
+          GeneratorOptions(
+            ignoreHeaders: false,
+          ));
+
+      expect(result, contains("Future<Response<List<TestItem>>>"));
     });
   });
 }
