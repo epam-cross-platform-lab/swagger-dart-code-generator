@@ -227,3 +227,27 @@ const String request_with_content_first_response_type = """
   }
 }
 """;
+
+const String request_with_content_first_response_ref = """
+{
+  "paths": {
+    "/model/items": {
+      "get": {
+        "summary": "Some test request",
+        "operationId": "getModelItems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type" : "testType",
+              "items" : {
+                "\$ref" : "#definitions/TestItem"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+""";

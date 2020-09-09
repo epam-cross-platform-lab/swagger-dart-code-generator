@@ -297,7 +297,7 @@ const String _baseUrl='$baseUrl';
     if (parameter.schema?.enumValues != null) {
       parameterType = parameter.name.capitalize;
     } else if (parameter.schema?.originalRef != null) {
-      parameterType = parameter.schema?.originalRef;
+      parameterType = parameter.schema.originalRef;
     } else {
       parameterType = defaultBodyParameter;
     }
