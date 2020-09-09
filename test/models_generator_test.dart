@@ -55,6 +55,16 @@ void main() {
 
       expect(result, contains(_expectedResult));
     });
+
+    test('Should return default from switch', () {
+      String _defaultValue = "Animal";
+      String _typeName = "Object";
+      String _expectedResult = "Animal";
+      final String result = _generator.generateDefaultValueFromMap(
+          DefaultValueMap(defaultValue: _defaultValue, typeName: _typeName));
+
+      expect(result, contains(_expectedResult));
+    });
   });
 
   group('getParameterTypeName', () {
@@ -62,8 +72,8 @@ void main() {
     test('Should return validate parameter type name', () {
       String _className = "Animal";
       String _parameterName = "orderId";
-      Map<String, dynamic> _parameter = {"type": "string"};
-      String _expectedResult = "String";
+      Map<String, dynamic> _parameter = {"type": "object"};
+      String _expectedResult = "Object";
       final result = _generator.getParameterTypeName(
           _className, _parameterName, _parameter);
 
@@ -140,6 +150,14 @@ void main() {
     test('Should return \$validateEnumFieldName', () {
       String _name = "55element";
       String _expectedResult = "\$55element";
+      final result = _generator.getEnumFieldName(_name);
+
+      expect(result, contains(_expectedResult));
+    });
+
+    test('Should return \$with', () {
+      String _name = "with";
+      String _expectedResult = "\$with";
       final result = _generator.getEnumFieldName(_name);
 
       expect(result, contains(_expectedResult));
@@ -250,6 +268,112 @@ void main() {
 
       expect(result, contains(_jsonKeyExpectedResult));
       expect(result, contains(_expectedResult));
+    });
+  });
+
+  group('generateModelClassContent', () {
+    final _generator = SwaggerModelsGeneratorV2();
+    test('Should return model class content', () {
+      Map<String, dynamic> map = {};
+      final String fileName = "order_service.dart";
+      final String className = "Animals";
+      final bool useDefaultNullForLists = false;
+      final String _classExpectedResult = 'class Animals{';
+      final String _factoryConstructorExpectedResult =
+          '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
+      final String result = _generator.generateModelClassContent(
+          className, map, fileName, [], useDefaultNullForLists);
+
+      expect(result, contains(_classExpectedResult));
+      expect(result, contains(_factoryConstructorExpectedResult));
+    });
+  });
+
+  group('generateConstructorPropertiesContent', () {
+    final _generator = SwaggerModelsGeneratorV2();
+    test('Should return empty', () {
+      final String expectedResult = '';
+      final String result =
+          _generator.generateConstructorPropertiesContent(null);
+
+      expect(result, contains(expectedResult));
+    });
+
+    test('Should return validate constructor property', () {
+      final Map<String, dynamic> map = {"Animal": "dog"};
+      final String expectedResult = 'this.animal';
+      final String result =
+          _generator.generateConstructorPropertiesContent(map);
+
+      expect(result, contains(expectedResult));
+    });
+  });
+
+  group('generatePropertyContentBySchema', () {
+    final _generator = SwaggerModelsGeneratorV2();
+    test('Should return property content by schema', () {
+      Map<String, dynamic> map = {
+        "schema": {"\$ref": "#/definitions/Pet"}
+      };
+      final String propertyName = "dog";
+      final String className = "Animals";
+      final String propertyKey = "Dog";
+      final String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Dog')\n";
+      final String _fieldExpectedResult = "\tfinal Pet dog";
+      final String result = _generator.generatePropertyContentBySchema(
+          map, propertyName, propertyKey, className);
+
+      expect(result, contains(_jsonKeyExpectedResult));
+      expect(result, contains(_fieldExpectedResult));
+    });
+  });
+
+  group('generatePropertiesContent', () {
+    final _generator = SwaggerModelsGeneratorV2();
+    test('Should return properties from ref', () {
+      Map<String, dynamic> map = {
+        "Animals": {"\$ref": "#/definitions/Pet"}
+      };
+      final String className = "Animals";
+      final String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      final String _fieldExpectedResult = "final Pet animals";
+      final String result =
+          _generator.generatePropertiesContent(map, className, [], false);
+
+      expect(result, contains(_jsonKeyExpectedResult));
+      expect(result, contains(_fieldExpectedResult));
+    });
+
+    test('Should return properties from schema', () {
+      final Map<String, dynamic> map = {
+        "Animals": {
+          "schema": {"\$ref": "#/definitions/Pet"}
+        }
+      };
+
+      final String className = "Animals";
+      final String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      final String _fieldExpectedResult = "final Pet animals";
+      final String result =
+          _generator.generatePropertiesContent(map, className, [], false);
+
+      expect(result, contains(_jsonKeyExpectedResult));
+      expect(result, contains(_fieldExpectedResult));
+    });
+
+    test('Should return properties from default originalRef', () {
+      Map<String, dynamic> map = {
+        "Animals": {"originalRef": "Pet"}
+      };
+
+      final String className = "Animals";
+      final String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      final String _fieldExpectedResult = "final Pet animals";
+      final String result =
+          _generator.generatePropertiesContent(map, className, [], false);
+
+      expect(result, contains(_jsonKeyExpectedResult));
+      expect(result, contains(_fieldExpectedResult));
     });
   });
 }

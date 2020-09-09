@@ -48,7 +48,7 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
     final String generatedConstructorProperties =
         generateConstructorPropertiesContent(properties);
 
-    final generatedProperties = _generatePropertiesContent(
+    final generatedProperties = generatePropertiesContent(
         properties, className, defaultValues, useDefaultNullForLists);
 
     final String enums = generateEnumsContent(properties, className);
@@ -96,7 +96,7 @@ $enums
               map[key] as Map<String, dynamic>;
 
           if (enumValuesMap.containsKey('type')) {
-            return _generateEnumContentIfPossible(
+            return generateEnumContentIfPossible(
                 enumValuesMap, generateEnumName(className, key));
           }
 
@@ -113,7 +113,8 @@ $enums
     return "${className.capitalize}${enumName.capitalize}";
   }
 
-  String _generateEnumContentIfPossible(
+  @visibleForTesting
+  String generateEnumContentIfPossible(
       Map<String, dynamic> map, String enumName) {
     if (map['enum'] != null) {
       return """
@@ -123,7 +124,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
 }
 """;
     } else if (map['items'] != null) {
-      return _generateEnumContentIfPossible(
+      return generateEnumContentIfPossible(
           map['items'] as Map<String, dynamic>, enumName);
     } else {
       return '';
@@ -137,7 +138,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         .join(',\n');
   }
 
-  String _generatePropertiesContent(
+  @visibleForTesting
+  String generatePropertiesContent(
     Map<String, dynamic> propertiesMap,
     String className,
     List<DefaultValueMap> defaultValues,
@@ -173,7 +175,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         results.add(generatePropertyContentByRef(
             propertyEntryMap, propertyName, propertyKey, className));
       } else if (propertyEntryMap['schema'] != null) {
-        results.add(_generatePropertyContentBySchema(
+        results.add(generatePropertyContentBySchema(
             propertyEntryMap, propertyName, propertyKey, className));
       } else {
         results.add(
@@ -184,7 +186,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     return results.join("\n");
   }
 
-  String _generateListPropertyContent(
+  @visibleForTesting
+  String generateListPropertyContent(
       String propertyName,
       String propertyKey,
       String className,
@@ -247,8 +250,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       bool useDefaultNullForLists) {
     switch (propertyEntryMap['type']) {
       case 'array':
-        return _generateListPropertyContent(propertyName, propertyKey,
-            className, propertyEntryMap, useDefaultNullForLists);
+        return generateListPropertyContent(propertyName, propertyKey, className,
+            propertyEntryMap, useDefaultNullForLists);
         break;
       case 'enum':
         return generateEnumPropertyContent(propertyName, className);
@@ -273,7 +276,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     return "\t$jsonKeyContent)\n  final $_typeName ${generateFieldName(propertyName)};";
   }
 
-  String _generatePropertyContentBySchema(Map<String, dynamic> propertyEntryMap,
+  @visibleForTesting
+  String generatePropertyContentBySchema(Map<String, dynamic> propertyEntryMap,
       String propertyName, String propertyKey, String className) {
     String jsonKeyContent = "@JsonKey(name: '$propertyKey'";
 
