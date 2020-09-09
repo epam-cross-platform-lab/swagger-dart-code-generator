@@ -36,9 +36,11 @@ build/
 *.lock
 *.models.dart
 *.swagger.dart
+!example_swagger.swagger.dart
 *.converter.dart
 *.pubspec.lock
 *.swagger
+!example_swagger.swagger
 client_index.dart
 client_mapping.dart
 

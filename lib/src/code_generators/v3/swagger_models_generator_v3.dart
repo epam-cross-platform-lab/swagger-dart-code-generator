@@ -75,7 +75,7 @@ $enums
       return "\t\tthis.$fieldName,";
     }).join("\n");
 
-    return '{\n\t${generatedConstructorParameters.toString()}\t}';
+    return '{\n${generatedConstructorParameters.toString()}\n\t}';
   }
 
   String generateEnumsContent(Map<String, dynamic> map, String className) {
