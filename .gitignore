@@ -39,8 +39,12 @@ build/
 *.converter.dart
 *.pubspec.lock
 *.swagger
+*.test_coverage.dart
 client_index.dart
 client_mapping.dart
+coverage_badge.svg
+lcov.info
+
 
 # Android related
 **/android/**/gradle-wrapper.jar
