@@ -45,4 +45,6 @@ class Content {
   final String type;
   final ItemSchema items;
   final String ref;
+
+  Content({this.items, this.ref, this.responseType, this.type});
 }

@@ -204,6 +204,20 @@ const String _baseUrl='$_baseUrl';
 
       expect(result, contains("Future<Response<TestType>> getModelItems();"));
     });
+
+    test('Should generate return type by content -> first -> ref', () {
+      final result = _generator.getReturnTypeName(
+          [
+            SwaggerResponse(
+                code: '200',
+                content: [Content(ref: "#components/schemas/TestItem")])
+          ],
+          "/test/items",
+          "get",
+          []);
+
+      expect(result, equals("TestItem"));
+    });
   });
 
   group('Tests for getSuccessedResponse', () {
@@ -307,7 +321,40 @@ const String _baseUrl='$_baseUrl';
       final result = _generator.getParameterContent(
           parameter: parameter, ignoreHeaders: true);
 
-      expect(result, contains(''));
+      expect(result, equals(''));
+    });
+
+    test('Should generate custom parameter types by schema', () {
+      SwaggerRequestParameter parameter = SwaggerRequestParameter(
+          inParameter: 'CustomType',
+          name: "testParameter",
+          isRequired: true,
+          schema: SwaggerParameterSchema(type: "CustomType"));
+
+      final result = _generator.getParameterContent(
+          parameter: parameter, ignoreHeaders: true);
+
+      expect(
+          result,
+          equals(
+              "@CustomType('testParameter') @required CustomType testParameter"));
+    });
+
+    test('Should generate custom parameter types by schema', () {
+      SwaggerRequestParameter parameter = SwaggerRequestParameter(
+          inParameter: 'CustomType',
+          name: "testParameter",
+          isRequired: true,
+          schema:
+              SwaggerParameterSchema(ref: "#components/schemas/CustomType"));
+
+      final result = _generator.getParameterContent(
+          parameter: parameter, ignoreHeaders: true);
+
+      expect(
+          result,
+          equals(
+              "@CustomType('testParameter') @required CustomType testParameter"));
     });
 
     test('Should ignore cookie parameters', () {

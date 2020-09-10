@@ -298,7 +298,7 @@ const String _baseUrl='$baseUrl';
         if (parameter.type != null) {
           parameterType = parameter.type;
         } else if (parameter.schema?.type != null) {
-          parameterType = parameter.schema?.type;
+          parameterType = parameter.schema.type;
         } else if (parameter.schema?.ref != null) {
           parameterType = parameter.schema?.ref?.split('/')?.last;
         }
