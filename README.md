@@ -48,7 +48,7 @@ targets:
 
 ### **Default Value Map**
 
-If you want to add defaultValue: attribute to fields with concrete type you can use default value map.
+If you want to add defaultValue: attribute to fields with concrete type you can use default value map. Please see next example:
 
 ```yaml
 targets:
@@ -65,4 +65,25 @@ targets:
               default_value: 'defaut'
             - type_name: 'List<String>'
               default_value: '[]'
+```
+
+### **Response Override Value Map**
+
+If you want to override response for concrete request, you can use response_override_value_map. For example:
+
+```yaml
+targets:
+  $default:
+    builders:
+      swagger_generator:
+        options:
+          input_folder: 'lib/swaggers'
+          output_folder: 'lib/generated_code/'
+          response_override_value_map:
+            - url: '/store/inventory'
+              method: get
+              overriden_value: 'List<dynamic>'
+              - url: '/news/latest'
+              method: put
+              overriden_value: 'MyPerfectType'
 ```
