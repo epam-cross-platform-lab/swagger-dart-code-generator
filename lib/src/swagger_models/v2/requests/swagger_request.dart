@@ -19,6 +19,15 @@ class SwaggerRequest {
         parameters = mapParameters(json['parameters'] as List<dynamic>) ??
             <SwaggerRequestParameter>[];
 
+  SwaggerRequest(
+      {this.type,
+      this.summary,
+      this.description,
+      this.operationId,
+      this.consumes,
+      this.responses,
+      this.parameters});
+
   String type;
   String summary;
   String description;

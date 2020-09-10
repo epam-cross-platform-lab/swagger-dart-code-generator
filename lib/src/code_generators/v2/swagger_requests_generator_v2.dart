@@ -34,16 +34,17 @@ class SwaggerRequestsGeneratorV2 implements SwaggerRequestsGenerator {
       swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                _getNeededRequestParameter(parameter, swaggerRoot.parameters))
+                getNeededRequestParameter(parameter, swaggerRoot.parameters))
             .toList();
       });
     });
 
-    return _getFileContent(swaggerRoot, className, fileName, options);
+    return getFileContent(swaggerRoot, className, fileName, options);
   }
 
   ///Get parameter from root parameters if needed
-  SwaggerRequestParameter _getNeededRequestParameter(
+  @visibleForTesting
+  SwaggerRequestParameter getNeededRequestParameter(
       SwaggerRequestParameter swaggerRequestParameter,
       List<SwaggerRequestParameter> definedParameters) {
     if (swaggerRequestParameter.ref == null) {
@@ -60,21 +61,22 @@ class SwaggerRequestsGeneratorV2 implements SwaggerRequestsGenerator {
     return neededParameter;
   }
 
-  String _getFileContent(SwaggerRoot swaggerRoot, String className,
+  @visibleForTesting
+  String getFileContent(SwaggerRoot swaggerRoot, String className,
       String fileName, GeneratorOptions options) {
     final String classContent =
-        _getRequestClassContent(swaggerRoot.host, className, fileName, options);
+        getRequestClassContent(swaggerRoot.host, className, fileName, options);
     final String chopperClientContent =
         getChopperClientContent(className, options.withConverter);
-    final String allMethodsContent =
-        _getAllMethodsContent(swaggerRoot, options);
-    final String result = _generateFileContent(
+    final String allMethodsContent = getAllMethodsContent(swaggerRoot, options);
+    final String result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
 
     return result;
   }
 
-  String _generateFileContent(String classContent, String chopperClientContent,
+  @visibleForTesting
+  String generateFileContent(String classContent, String chopperClientContent,
       String allMethodsContent) {
     String result = """
 $classContent
@@ -86,7 +88,8 @@ $allMethodsContent
     return result;
   }
 
-  String _getAllMethodsContent(
+  @visibleForTesting
+  String getAllMethodsContent(
       SwaggerRoot swaggerRoot, GeneratorOptions options) {
     final StringBuffer methods = StringBuffer();
 
@@ -108,15 +111,15 @@ $allMethodsContent
           _unnamedMethodsCounter++;
         }
 
-        final String requiredParameters = _getRequiredParametersContent(
+        final String requiredParameters = getRequiredParametersContent(
           listParameters: swaggerRequest.parameters,
           ignoreHeaders: options.ignoreHeaders,
         );
 
         final String parameterCommentsForMethod =
-            _getParameterCommentsForMethod(swaggerRequest.parameters);
+            getParameterCommentsForMethod(swaggerRequest.parameters);
 
-        final String returnTypeName = _getReturnTypeName(
+        final String returnTypeName = getReturnTypeName(
             swaggerRequest.responses,
             swaggerPath.path,
             swaggerRequest.type,
@@ -139,7 +142,8 @@ $allMethodsContent
     return methods.toString();
   }
 
-  String _getReturnTypeName(List<SwaggerResponse> responses, String url,
+  @visibleForTesting
+  String getReturnTypeName(List<SwaggerResponse> responses, String url,
       String methodName, List<ResponseOverrideValueMap> overridenRequests) {
     if (overridenRequests
             ?.any((ResponseOverrideValueMap element) => element.url == url) ==
@@ -152,7 +156,7 @@ $allMethodsContent
       }
     }
 
-    final SwaggerResponse neededResponse = _getSuccessedResponse(responses);
+    final SwaggerResponse neededResponse = getSuccessedResponse(responses);
 
     if (neededResponse == null) {
       return null;
@@ -181,7 +185,8 @@ $allMethodsContent
     return null;
   }
 
-  SwaggerResponse _getSuccessedResponse(List<SwaggerResponse> responses) {
+  @visibleForTesting
+  SwaggerResponse getSuccessedResponse(List<SwaggerResponse> responses) {
     return responses.firstWhere(
         (SwaggerResponse response) =>
             successDescriptions.contains(response.description) ||
@@ -189,10 +194,11 @@ $allMethodsContent
         orElse: () => null);
   }
 
-  String _getRequiredParametersContent(
+  @visibleForTesting
+  String getRequiredParametersContent(
       {List<SwaggerRequestParameter> listParameters, bool ignoreHeaders}) {
     return listParameters
-        .map((SwaggerRequestParameter parameter) => _getParameterContent(
+        .map((SwaggerRequestParameter parameter) => getParameterContent(
             parameter: parameter, ignoreHeaders: ignoreHeaders))
         .where((String element) => element.isNotEmpty)
         .join(', ');
@@ -217,7 +223,8 @@ $allMethodsContent
     return name.join();
   }
 
-  String _getRequestClassContent(String host, String className, String fileName,
+  @visibleForTesting
+  String getRequestClassContent(String host, String className, String fileName,
       GeneratorOptions options) {
     final String classWithoutChopper = """
 ${getBaseUrlContent(host, options.withBaseUrl)}
@@ -263,11 +270,12 @@ const String _baseUrl='$baseUrl';
     return generatedChopperClient;
   }
 
-  String _getParameterContent(
+  @visibleForTesting
+  String getParameterContent(
       {SwaggerRequestParameter parameter, bool ignoreHeaders}) {
     switch (parameter.inParameter) {
       case 'body':
-        return _getBodyParameter(parameter);
+        return getBodyParameter(parameter);
       case 'formData':
         final bool isEnum = parameter.schema?.enumValues != null;
 
@@ -283,11 +291,12 @@ const String _baseUrl='$baseUrl';
     }
   }
 
-  String _getBodyParameter(SwaggerRequestParameter parameter) {
+  @visibleForTesting
+  String getBodyParameter(SwaggerRequestParameter parameter) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
       parameterType = parameter.name.capitalize;
-    } else if (parameter.schema.originalRef != null) {
+    } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
     } else {
       parameterType = defaultBodyParameter;
@@ -356,7 +365,8 @@ const String _baseUrl='$baseUrl';
     return generatedMethod;
   }
 
-  String _getParameterCommentsForMethod(
+  @visibleForTesting
+  String getParameterCommentsForMethod(
           List<SwaggerRequestParameter> listParameters) =>
       listParameters
           .map((parameter) =>

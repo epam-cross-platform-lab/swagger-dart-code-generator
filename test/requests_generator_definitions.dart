@@ -4,7 +4,7 @@ const request_with_header = """
     "/model/items": {
       "get": {
         "summary": "Some test request",
-        "operationId": "retrieveOrderSummariesUsingGET",
+        "operationId": "someOperationId",
         "parameters": [
           {
             "name": "headerParameter",
@@ -172,6 +172,76 @@ const String request_with_list_test_item_return_type = """
               "items": {
                 "originalRef": "TestItem",
                 "\$ref": "#/definitions/TestItem"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+""";
+
+const String request_with_original_ref_return_type = """
+{
+  "paths": {
+    "/model/items": {
+      "get": {
+        "summary": "Some test request",
+        "operationId": "getModelItems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "originalRef": "TestItem"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+""";
+
+const String request_with_content_first_response_type = """
+{
+  "paths": {
+    "/model/items": {
+      "get": {
+        "summary": "Some test request",
+        "operationId": "getModelItems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "applicacion/json": {
+                "schema" : {
+                  "type" : "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+""";
+
+const String request_with_content_first_response_ref = """
+{
+  "paths": {
+    "/model/items": {
+      "get": {
+        "summary": "Some test request",
+        "operationId": "getModelItems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type" : "testType",
+              "items" : {
+                "\$ref" : "#definitions/TestItem"
               }
             }
           }
