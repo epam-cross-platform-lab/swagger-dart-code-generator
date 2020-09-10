@@ -118,7 +118,7 @@ $allMethodsContent
         );
 
         final String parameterCommentsForMethod =
-            getParameterCommentsForMethod(swaggerRequest.parameters);
+            getParameterCommentsForMethod(swaggerRequest.parameters, options);
 
         final String returnTypeName = getReturnTypeName(
             swaggerRequest.responses,
@@ -382,18 +382,28 @@ const String _baseUrl='$baseUrl';
 
   @visibleForTesting
   String getParameterCommentsForMethod(
-          List<SwaggerRequestParameter> listParameters) =>
+          List<SwaggerRequestParameter> listParameters,
+          GeneratorOptions options) =>
       listParameters
-          .map((parameter) =>
-              createSummaryParameters(parameter.name, parameter.description))
+          .map((parameter) => createSummaryParameters(parameter.name,
+              parameter.description, parameter.inParameter, options))
+          .where((element) => element.isNotEmpty)
           .join('\n');
 
   @visibleForTesting
   String createSummaryParameters(
-      String parameterName, String parameterDescription) {
+      String parameterName,
+      String parameterDescription,
+      String inParameter,
+      GeneratorOptions options) {
+    if (inParameter == 'header' && options.ignoreHeaders) {
+      return '';
+    }
     if (parameterDescription != null) {
       parameterDescription =
           parameterDescription.replaceAll(RegExp(r'\n|\r|\t'), ' ');
+    } else {
+      parameterDescription = '';
     }
 
     final String comments =

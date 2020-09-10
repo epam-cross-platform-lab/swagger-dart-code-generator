@@ -25,7 +25,8 @@ void main() {
     test('Should get parameter summary', () {
       String name = "orderId";
       String description = "Id of the order";
-      final result = _generator.createSummaryParameters(name, description);
+      final result = _generator.createSummaryParameters(
+          name, description, 'query', GeneratorOptions());
 
       expect(result, contains("///@param orderId Id of the order"));
     });
@@ -408,15 +409,18 @@ const String _baseUrl='$_baseUrl';
 
   group('Tests for createSummaryParameters', () {
     test('Should generate description for parameter', () {
-      final result = _generator.createSummaryParameters(
-          "testParameterName", "testParameterDescription");
+      final result = _generator.createSummaryParameters("testParameterName",
+          "testParameterDescription", 'query', GeneratorOptions());
       expect(result,
           equals("	///@param testParameterName testParameterDescription"));
     });
 
     test('Should replace special characters in description', () {
       final result = _generator.createSummaryParameters(
-          "testParameterName", "test\tParameter\nDescription\rSplitted");
+          "testParameterName",
+          "test\tParameter\nDescription\rSplitted",
+          'query',
+          GeneratorOptions());
       expect(
           result,
           equals(
