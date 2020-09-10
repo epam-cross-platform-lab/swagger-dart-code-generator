@@ -18,27 +18,32 @@ import 'package:swagger_generator/src/code_generators/v3/swagger_requests_genera
 import 'package:swagger_generator/src/models/generator_options.dart';
 
 class SwaggerCodeGenerator {
-  Map<int, SwaggerAdditionsGenerator> _additionsMap = {
+  final Map<int, SwaggerAdditionsGenerator> _additionsMap =
+      <int, SwaggerAdditionsGenerator>{
     2: SwaggerAdditionsGeneratorV2(),
     3: SwaggerAdditionsGeneratorV3()
   };
 
-  Map<int, SwaggerConverterGenerator> _converterMap = {
+  final Map<int, SwaggerConverterGenerator> _converterMap =
+      <int, SwaggerConverterGenerator>{
     2: SwaggerConverterGeneratorV2(),
     3: SwaggerConverterGeneratorV3()
   };
 
-  Map<int, SwaggerEnumsGenerator> _enumsMap = {
+  final Map<int, SwaggerEnumsGenerator> _enumsMap =
+      <int, SwaggerEnumsGenerator>{
     2: SwaggerEnumsGeneratorV2(),
     3: SwaggerEnumsGeneratorV3()
   };
 
-  Map<int, SwaggerModelsGenerator> _modelsMap = {
+  final Map<int, SwaggerModelsGenerator> _modelsMap =
+      <int, SwaggerModelsGenerator>{
     2: SwaggerModelsGeneratorV2(),
     3: SwaggerModelsGeneratorV3()
   };
 
-  Map<int, SwaggerRequestsGenerator> _requestsMap = {
+  final Map<int, SwaggerRequestsGenerator> _requestsMap =
+      <int, SwaggerRequestsGenerator>{
     2: SwaggerRequestsGeneratorV2(),
     3: SwaggerRequestsGeneratorV3()
   };
@@ -46,7 +51,7 @@ class SwaggerCodeGenerator {
   int _getApiVersion(String dartCode) {
     final dynamic map = jsonDecode(dartCode);
 
-    final String openApi = map["openapi"];
+    final String openApi = map['openapi'] as String;
     return openApi != null ? 3 : 2;
   }
 

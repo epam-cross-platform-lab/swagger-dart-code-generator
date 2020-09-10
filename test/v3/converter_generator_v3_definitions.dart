@@ -1,4 +1,4 @@
-const model_with_parameters = """
+const String model_with_parameters = """
 {
     "components": {
         "schemas": {

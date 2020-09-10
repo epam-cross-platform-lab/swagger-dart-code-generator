@@ -1,4 +1,124 @@
-const model_with_parameters = """
+const ref = "\$";
+const model_with_parameters_v3 = """
+{
+ "components": {
+    "schemas": {
+      "AuthorizationDetails": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Opaque value generated. The state will be echoed back in the token response, therefore state needs to be maintained between the request and the response.",
+            "example": "00001-00002-00003-00004"
+          },
+          "authorizationUri": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI to follow for authorization",
+            "example": "https://sso.service.some.country/oidc/authorize?response_type=code&state=00001-00002-00003-00004&nonce=54345345-345345345-345345345-435345&client_id=some-client-id&redirect_uri=https%3A%2F%2Fsome-success-uri.com%2Fen_gb%2Flogin_success"
+          },
+          "redirectUri": {
+            "type": "string",
+            "format": "uri",
+            "description": "Redirect URI used after successful authentication",
+            "example": "https%3A%2F%2Fsome-success-uri.com%2Fen_gb%2Flogin_success"
+          },
+          "logoutUri": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI to follow to logout"
+          },
+          "validityToken": {
+            "type": "string",
+            "description": "The validity token will contain the payload of the generated nonce and state value.",
+            "example": ""
+          }
+        }
+      },
+      "CompleteAuthorizationRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Code value obtained for SSO authorization service"
+          },
+          "state": {
+            "type": "string",
+            "format": "uuid",
+            "description": "State value obtained previously",
+            "example": "00001-00002-00003-00004"
+          },
+          "validityToken": {
+            "type": "string",
+            "description": "The validity token obtained previously",
+            "example": ""
+          }
+        }
+      },
+      "TokensResponse": {
+        "type": "object",
+        "properties": {
+          "token_type": {
+            "type": "string",
+            "enum": [
+              "bearer"
+            ]
+          },
+          "access_token": {
+            "$ref": "#/components/schemas/SvcAccessToken"
+          },
+          "refresh_token": {
+            "$ref": "#/components/schemas/SvcRefreshToken"
+          },
+          "expires_in": {
+            "type": "integer",
+            "description": "access token expiration in seconds"
+          },
+          "username": {
+            "type": "string",
+            "description": "username of authenticated client"
+          },
+          "givenName": {
+            "type": "string",
+            "description": "first name"
+          },
+          "familyName": {
+            "type": "string",
+            "description": "family name"
+          }
+        }
+      },
+      "RefreshAuthorizationRequest": {
+        "type": "object",
+        "properties": {
+          "svcRefreshToken": {
+            "$ref": "#/components/schemas/SvcRefreshToken"
+          }
+        }
+      },
+      "DeleteAuthorizationRequest": {
+        "type": "object",
+        "properties": {
+          "svcRefreshToken": {
+            "$ref": "#/components/schemas/SvcRefreshToken"
+          }
+        }
+      },
+      "SvcRefreshToken": {
+        "type": "string",
+        "description": "Valid service refresh token"
+      },
+      "SvcAccessToken": {
+        "type": "string",
+        "description": "jwt service access token used as ACCESS_TOKEN with calls to services"
+      }
+    }
+  }
+}
+""";
+
+const model_with_parameters_v2 = """
 {
   "definitions": {
     "ActiveOrderAndListSummary": {
