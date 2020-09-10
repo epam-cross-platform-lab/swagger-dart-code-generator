@@ -6,15 +6,14 @@ import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
 import 'package:swagger_generator/src/swagger_models/v3/swagger_tag.dart';
 
 class SwaggerRoot {
-  SwaggerRoot({
-    SwaggerInfo info,
-    String host,
-    String basePath,
-    List<SwaggerPath> paths,
-    List<SwaggerTag> tags,
-    List<String> schemes,
-    SwaggerComponents components,
-  });
+  SwaggerRoot(
+      {this.basePath,
+      this.components,
+      this.host,
+      this.info,
+      this.paths,
+      this.schemes,
+      this.tags});
 
   SwaggerRoot.fromJson(Map<String, dynamic> json)
       : info = json.containsKey('info')

@@ -17,8 +17,7 @@ void main() {
   group('Tests for additional methids', () {
     test('Should transform "parametersGET1" to "parametersGet1"', () {
       String str = "parametersGET1";
-      final generator = SwaggerRequestsGeneratorV2();
-      final result = generator.abbreviationToCamelCase(str);
+      final result = _generator.abbreviationToCamelCase(str);
 
       expect(result, equals("parametersGet1"));
     });
@@ -26,17 +25,15 @@ void main() {
     test('Should get parameter summary', () {
       String name = "orderId";
       String description = "Id of the order";
-      final generator = SwaggerRequestsGeneratorV2();
-      final result = generator.createSummaryParameters(name, description);
+      final result = _generator.createSummaryParameters(name, description);
 
       expect(result, contains("///@param orderId Id of the order"));
     });
 
     test('Should get code with base url', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _baseUrl = "http://google.com/";
       bool _isBaseUrl = true;
-      final result = generator.getBaseUrlContent(_baseUrl, _isBaseUrl);
+      final result = _generator.getBaseUrlContent(_baseUrl, _isBaseUrl);
 
       expect(result, equals("""
 const String _baseUrl='$_baseUrl';
@@ -45,33 +42,29 @@ const String _baseUrl='$_baseUrl';
     });
 
     test('Should get parameter type name', () {
-      final generator = SwaggerRequestsGeneratorV2();
-      final result = generator.getParameterTypeName("array", "integer");
+      final result = _generator.getParameterTypeName("array", "integer");
 
       expect(result, contains("List<int>"));
     });
 
     test('Should get validate name', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _name = "x-application";
-      final result = generator.validateParameterName(_name);
+      final result = _generator.validateParameterName(_name);
 
       expect(result, contains("xApplication"));
     });
 
     test('Should add \$ if name is key word', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _name = "null";
-      final result = generator.validateParameterName(_name);
+      final result = _generator.validateParameterName(_name);
 
       expect(result, contains("\$null"));
     });
 
     test('Should create chopper client', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _name = "OrderService";
       bool _isConverter = false;
-      final result = generator.getChopperClientContent(_name, _isConverter);
+      final result = _generator.getChopperClientContent(_name, _isConverter);
 
       expect(result, contains("static OrderService create"));
       expect(result, contains("services: [_\$OrderService()],"));

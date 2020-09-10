@@ -28,6 +28,16 @@ class SwaggerRequest {
   List<SwaggerResponse> responses;
   List<SwaggerRequestParameter> parameters;
 
+  SwaggerRequest(
+      {this.type,
+      this.summary,
+      this.description,
+      this.operationId,
+      this.consumes,
+      this.produces,
+      this.responses,
+      this.parameters});
+
   static List<SwaggerRequestParameter> mapParameters(List<dynamic> map) {
     if (map == null) {
       return null;

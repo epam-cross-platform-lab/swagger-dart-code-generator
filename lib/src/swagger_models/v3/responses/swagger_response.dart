@@ -23,6 +23,14 @@ class SwaggerResponse {
   ResponseSchema schema;
   List<String> enumValue;
   List<Content> content;
+
+  SwaggerResponse(
+      {this.code,
+      this.description,
+      this.type,
+      this.schema,
+      this.enumValue,
+      this.content});
 }
 
 class Content {
@@ -37,4 +45,6 @@ class Content {
   final String type;
   final ItemSchema items;
   final String ref;
+
+  Content({this.items, this.ref, this.responseType, this.type});
 }
