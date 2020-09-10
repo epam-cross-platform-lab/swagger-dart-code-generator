@@ -21,5 +21,6 @@ jobs:
         channel: 'beta' # or: 'dev' or 'beta'
     - name: Install dependencies
       run: flutter pub get
+      working-directory: example
     - name: Run tests
       run: flutter pub run test
