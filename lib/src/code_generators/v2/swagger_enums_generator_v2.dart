@@ -77,12 +77,6 @@ $enumValuesContent
 
   @visibleForTesting
   String getValidatedEnumFieldName(String name) {
-    exceptionWords.forEach((String exceptionWord) {
-      if (name == exceptionWord) {
-        name = '\$' + name;
-      }
-    });
-
     if (name.startsWith(RegExp('[0-9]+'))) {
       name = defaultEnumFieldName + name;
     }

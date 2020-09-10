@@ -23,6 +23,14 @@ class SwaggerResponse {
   ResponseSchema schema;
   List<String> enumValue;
   List<Content> content;
+
+  SwaggerResponse(
+      {this.code,
+      this.description,
+      this.type,
+      this.schema,
+      this.enumValue,
+      this.content});
 }
 
 class Content {

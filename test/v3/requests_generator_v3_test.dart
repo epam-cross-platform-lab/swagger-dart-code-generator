@@ -1,24 +1,23 @@
-import 'package:swagger_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
+import 'package:swagger_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
 import 'package:swagger_generator/src/models/generator_options.dart';
-import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_parameter_schema.dart';
-import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_request.dart';
-import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
-import 'package:swagger_generator/src/swagger_models/v2/responses/swagger_response.dart';
-import 'package:swagger_generator/src/swagger_models/v2/swagger_path.dart';
-import 'package:swagger_generator/src/swagger_models/v2/swagger_root.dart';
+import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_parameter_schema.dart';
+import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request.dart';
+import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
+import 'package:swagger_generator/src/swagger_models/v3/responses/swagger_response.dart';
+import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
+import 'package:swagger_generator/src/swagger_models/v3/swagger_root.dart';
 import 'requests_generator_definitions.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final _generator = SwaggerRequestsGeneratorV2();
+  final _generator = SwaggerRequestsGeneratorV3();
   final _fileName = 'order_service';
   final _className = 'OrderSerice';
 
   group('Tests for additional methids', () {
     test('Should transform "parametersGET1" to "parametersGet1"', () {
       String str = "parametersGET1";
-      final generator = SwaggerRequestsGeneratorV2();
-      final result = generator.abbreviationToCamelCase(str);
+      final result = _generator.abbreviationToCamelCase(str);
 
       expect(result, equals("parametersGet1"));
     });
@@ -26,17 +25,15 @@ void main() {
     test('Should get parameter summary', () {
       String name = "orderId";
       String description = "Id of the order";
-      final generator = SwaggerRequestsGeneratorV2();
-      final result = generator.createSummaryParameters(name, description);
+      final result = _generator.createSummaryParameters(name, description);
 
       expect(result, contains("///@param orderId Id of the order"));
     });
 
     test('Should get code with base url', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _baseUrl = "http://google.com/";
       bool _isBaseUrl = true;
-      final result = generator.getBaseUrlContent(_baseUrl, _isBaseUrl);
+      final result = _generator.getBaseUrlContent(_baseUrl, _isBaseUrl);
 
       expect(result, equals("""
 const String _baseUrl='$_baseUrl';
@@ -45,33 +42,29 @@ const String _baseUrl='$_baseUrl';
     });
 
     test('Should get parameter type name', () {
-      final generator = SwaggerRequestsGeneratorV2();
-      final result = generator.getParameterTypeName("array", "integer");
+      final result = _generator.getParameterTypeName("array", "integer");
 
       expect(result, contains("List<int>"));
     });
 
     test('Should get validate name', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _name = "x-application";
-      final result = generator.validateParameterName(_name);
+      final result = _generator.validateParameterName(_name);
 
       expect(result, contains("xApplication"));
     });
 
     test('Should add \$ if name is key word', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _name = "null";
-      final result = generator.validateParameterName(_name);
+      final result = _generator.validateParameterName(_name);
 
       expect(result, contains("\$null"));
     });
 
     test('Should create chopper client', () {
-      final generator = SwaggerRequestsGeneratorV2();
       String _name = "OrderService";
       bool _isConverter = false;
-      final result = generator.getChopperClientContent(_name, _isConverter);
+      final result = _generator.getChopperClientContent(_name, _isConverter);
 
       expect(result, contains("static OrderService create"));
       expect(result, contains("services: [_\$OrderService()],"));
@@ -246,7 +239,7 @@ const String _baseUrl='$_baseUrl';
   });
 
   group('Tests for getParameterContent', () {
-    test('Shouod generate body parameter by schema -> ref', () {
+    test('Should generate body parameter by schema -> ref', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'body',
           name: "testParameter",
@@ -259,7 +252,7 @@ const String _baseUrl='$_baseUrl';
       expect(result, contains("@Body() @required TestItem testParameter"));
     });
 
-    test('Shouod generate formData parameter by schema -> ref', () {
+    test('Should generate formData parameter by schema -> ref', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'formData',
           name: "testParameter",
@@ -273,7 +266,7 @@ const String _baseUrl='$_baseUrl';
           contains("@Field('testParameter') @required dynamic testParameter"));
     });
 
-    test('Shouod generate body parameter by schema -> enum values', () {
+    test('Should generate body parameter by schema -> enum values', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'body',
           name: "testParameter",
@@ -286,7 +279,7 @@ const String _baseUrl='$_baseUrl';
       expect(result, contains("@Body() @required TestParameter testParameter"));
     });
 
-    test('Shouod generate body parameter if no ref and no schema', () {
+    test('Should generate body parameter if no ref and no schema', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'body', name: "testParameter", isRequired: true);
 
@@ -296,7 +289,7 @@ const String _baseUrl='$_baseUrl';
       expect(result, contains("@Body() @required String testParameter"));
     });
 
-    test('Shouod generate header parameter if not ignore', () {
+    test('Should generate header parameter if not ignore', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'header', name: "testParameter", isRequired: true);
 
@@ -307,7 +300,7 @@ const String _baseUrl='$_baseUrl';
           contains("@Header('testParameter') @required String testParameter"));
     });
 
-    test('Shouod generate header parameter if ignore headers == true', () {
+    test('Should generate header parameter if ignore headers == true', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'header', name: "testParameter", isRequired: true);
 
@@ -317,7 +310,7 @@ const String _baseUrl='$_baseUrl';
       expect(result, contains(''));
     });
 
-    test('Shouod ignore cookie parameters', () {
+    test('Should ignore cookie parameters', () {
       SwaggerRequestParameter parameter = SwaggerRequestParameter(
           inParameter: 'cookie', name: "testParameter", isRequired: true);
 
