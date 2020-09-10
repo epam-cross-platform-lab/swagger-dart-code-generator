@@ -13,10 +13,10 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     ignoreHeaders: json['ignore_headers'] as bool ?? false,
     useDefaultNullForLists: json['use_default_null_for_lists'] as bool ?? false,
     buildOnlyModels: json['build_only_models'] as bool ?? false,
-    defaultValuesMap: (json['default_values_map'] as List<DefaultValueMap>)
+    defaultValuesMap: (json['default_values_map'] as List)
             ?.map((e) => e == null
                 ? null
-                : DefaultValueMap.fromJson((e as Map<String, dynamic>)?.map(
+                : DefaultValueMap.fromJson((e as Map)?.map(
                     (k, e) => MapEntry(k as String, e),
                   )))
             ?.toList() ??
