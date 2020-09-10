@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2.1.0
     - uses: subosito/flutter-action@v1
       name: Checkout to beta
       with:
@@ -18,5 +17,5 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
       # working-directory: example
-    # - name: Run tests
-    #   run: flutter pub run test
+    - name: Run tests
+      run: flutter pub run test
