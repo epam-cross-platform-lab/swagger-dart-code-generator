@@ -32,7 +32,7 @@ targets:
 | `useDefaultNullForLists` | `false` | If option is true, default value for lists will be null, otherwice - [] |
 | `buildOnlyModels` | `false` | If option is true, chopper classes will not be generated. |
 | `defaultValuesMap` | `[]` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map). |
-| `responseOverrideValueMap` | `[]` | Contains map of responses and theirs overriden values. See [ResponseOverrideValueMap](#response-override-map). |
+| `responseOverrideValueMap` | `[]` | Contains map of responses and theirs overriden values. See [ResponseOverrideValueMap](#response-override-value-map). |
 | `inputFolder` | `null` | Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers). |
 | `outputFolder` | `null` | Path to output folder (for ex. lib/generated). |
 
