@@ -3,7 +3,7 @@ import 'package:swagger_generator/src/definitions.dart';
 import 'package:swagger_generator/src/extensions/file_name_extensions.dart';
 
 class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
-  static const String mappingVariableName = "generatedMapping";
+  static const String mappingVariableName = 'generatedMapping';
 
   String generateIndexes(Map<String, List<String>> buildExtensions) {
     final imports = StringBuffer();

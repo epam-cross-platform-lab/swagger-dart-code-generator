@@ -3,12 +3,14 @@ import 'package:test/test.dart';
 
 void main() {
   group('Additions generator tests', () {
-    final _generator = SwaggerAdditionsGeneratorV2();
+    final SwaggerAdditionsGeneratorV2 _generator =
+        SwaggerAdditionsGeneratorV2();
 
     test('Should generate mapping for files', () {
-      final result = _generator.generateConverterMappings({
-        "someFile.dart": ["someFile.swagger.dart"],
-        "secondFile.dart": ["secondFile.swagger.dart"]
+      final String result =
+          _generator.generateConverterMappings(<String, List<String>>{
+        'someFile.dart': <String>['someFile.swagger.dart'],
+        'secondFile.dart': <String>['secondFile.swagger.dart']
       });
 
       expect(result, contains('...SomeFileJsonDecoderMappings'));
@@ -16,17 +18,17 @@ void main() {
     });
 
     test('Should generate correct imports', () {
-      final result =
-          _generator.generateImportsContent("swagger.fileName", true);
+      final String result =
+          _generator.generateImportsContent('swagger.fileName', true);
 
       expect(result, contains("part 'swagger.fileName.swagger.chopper.dart';"));
       expect(result, contains("part 'swagger.fileName.swagger.g.dart';"));
     });
 
     test('Should generate indexes file', () {
-      final result = _generator.generateIndexes({
-        "someFile.dart": ["someFile.swagger.dart"],
-        "secondFile.dart": ["secondFile.swagger.dart"]
+      final String result = _generator.generateIndexes(<String, List<String>>{
+        'someFile.dart': <String>['someFile.swagger.dart'],
+        'secondFile.dart': <String>['secondFile.swagger.dart']
       });
 
       expect(result, contains("import 'someFile.dart.dart' show SomeFile;"));

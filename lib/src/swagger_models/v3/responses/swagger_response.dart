@@ -2,6 +2,14 @@ import 'package:swagger_generator/src/swagger_models/v3/responses/item_schema.da
 import 'package:swagger_generator/src/swagger_models/v3/responses/response_schema.dart';
 
 class SwaggerResponse {
+  SwaggerResponse(
+      {this.code,
+      this.description,
+      this.type,
+      this.schema,
+      this.enumValue,
+      this.content});
+
   SwaggerResponse.fromJson(Map<String, dynamic> json)
       : code = json['code'] as String,
         description = json['description'] as String,
@@ -23,28 +31,25 @@ class SwaggerResponse {
   ResponseSchema schema;
   List<String> enumValue;
   List<Content> content;
-
-  SwaggerResponse(
-      {this.code,
-      this.description,
-      this.type,
-      this.schema,
-      this.enumValue,
-      this.content});
 }
 
 class Content {
+  Content({this.items, this.ref, this.responseType, this.type});
+
   Content.fromJson(this.type, Map<dynamic, dynamic> json)
-      : responseType = json['schema'] != null ? json['schema']['type'] : '',
+      : responseType = json['schema'] as String != null
+            ? json['schema']['type'] as String
+            : '',
         items = json['schema'] != null && json['schema']['items'] != null
-            ? ItemSchema.fromJson(json['schema']['items'])
+            ? ItemSchema.fromJson(
+                json['schema']['items'] as Map<String, dynamic>)
             : null,
-        ref = json['schema'] != null ? json['schema']['\$ref'] : null;
+        ref = json['schema'] as String != null
+            ? json['schema']['\$ref'] as String
+            : null;
 
   final String responseType;
   final String type;
   final ItemSchema items;
   final String ref;
-
-  Content({this.items, this.ref, this.responseType, this.type});
 }
