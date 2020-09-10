@@ -20,3 +20,9 @@ jobs:
       # working-directory: example
     - name: Run tests
       run: flutter pub run test
+    - name: Test coverage
+      run: flutter pub run test_coverage
+    - name: test123
+      run: echo Linux Open Source Software Technologies
+      
+      
