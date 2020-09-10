@@ -6,7 +6,7 @@ import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request
 import 'package:swagger_generator/src/swagger_models/v3/responses/swagger_response.dart';
 import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
 import 'package:swagger_generator/src/swagger_models/v3/swagger_root.dart';
-import 'requests_generator_definitions.dart';
+import 'requests_generator_v3_definitions.dart';
 import 'package:test/test.dart';
 
 void main() {
