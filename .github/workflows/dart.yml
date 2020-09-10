@@ -15,6 +15,8 @@ jobs:
       name: Checkout to beta
       with:
         channel: 'beta' # or: 'dev' or 'beta'
+    - name: test123
+      run: echo Linux Open Source Software Technologies
     - name: Install dependencies
       run: flutter pub get
       # working-directory: example
@@ -22,7 +24,6 @@ jobs:
       run: flutter pub run test
     - name: Test coverage
       run: flutter pub run test_coverage
-    - name: test123
-      run: echo Linux Open Source Software Technologies
+   
       
       
