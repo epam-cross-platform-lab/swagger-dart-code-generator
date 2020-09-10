@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:build/build.dart';
 import 'package:swagger_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_generator/src/extensions/string_extension.dart';
 import 'package:swagger_generator/src/models/generator_options.dart';
