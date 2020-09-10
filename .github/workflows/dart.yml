@@ -10,9 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2.1.0
+    - name: Cache Flutter Dependencies
+      uses: actions/cache@v1
+      with:
+        path: /opt/hostedtoolcache/flutter
+        key: ${{ runner.os }}-flutter
     - uses: subosito/flutter-action@v1
       with:
-        channel: 'beta' 
+        channel: 'beta' # or: 'dev' or 'beta'
     - name: Install dependencies
       run: flutter pub get
     - name: Run tests
