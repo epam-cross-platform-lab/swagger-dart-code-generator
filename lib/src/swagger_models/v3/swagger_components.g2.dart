@@ -8,8 +8,8 @@ part of 'swagger_components.dart';
 
 SwaggerComponents _$SwaggerComponentsFromJson(Map<String, dynamic> json) {
   return SwaggerComponents(
-    parameters: (json['parameters'] as List)
-        ?.map((e) => e == null
+    parameters: (json['parameters'] as List<SwaggerRequestParameter>)
+        ?.map((SwaggerRequestParameter e) => e == null
             ? null
             : SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
         ?.toList(),

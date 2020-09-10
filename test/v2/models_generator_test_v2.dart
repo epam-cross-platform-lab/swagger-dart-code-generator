@@ -1,7 +1,7 @@
 import 'package:swagger_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
-import 'code_examples.dart';
+import '../code_examples.dart';
 
 void main() {
   group('generate', () {
@@ -10,7 +10,7 @@ void main() {
 
     test('Should parse object name as a field Type', () {
       final String result = _generator.generate(
-          model_with_parameters, _fileName, GeneratorOptions());
+          model_with_parameters_v2, _fileName, GeneratorOptions());
 
       expect(result, contains('final DeliveryDto deliveryDate'));
     });
@@ -25,7 +25,7 @@ void main() {
         )
       ]);
       final String result = _generator.generate(
-          model_with_parameters, _fileName, generatorOptions);
+          model_with_parameters_v2, _fileName, generatorOptions);
 
       expect(result, contains(expectedResult));
     });

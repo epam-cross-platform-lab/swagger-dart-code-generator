@@ -4,16 +4,18 @@ import '../code_examples.dart';
 
 void main() {
   group('Converter generator tests', () {
-    final _generator = SwaggerConverterGeneratorV2();
-    final _fileName = 'file_name';
+    final SwaggerConverterGeneratorV2 _generator =
+        SwaggerConverterGeneratorV2();
+    const String _fileName = 'file_name';
 
     test('Should create fromJsonFactory for model', () {
-      final result = _generator.generate(model_with_parameters, _fileName);
+      final String result =
+          _generator.generate(model_with_parameters_v2, _fileName);
 
       expect(
           result,
           contains(
-              "ActiveOrderAndListSummary: ActiveOrderAndListSummary.fromJsonFactory"));
+              'ActiveOrderAndListSummary: ActiveOrderAndListSummary.fromJsonFactory'));
     });
   });
 }

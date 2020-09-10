@@ -1,4 +1,4 @@
-const request_with_header = """
+const String request_with_header = """
 {
   "paths": {
     "/model/items": {
