@@ -37,16 +37,13 @@ class Content {
   Content({this.items, this.ref, this.responseType, this.type});
 
   Content.fromJson(this.type, Map<dynamic, dynamic> json)
-      : responseType = json['schema'] as String != null
-            ? json['schema']['type'] as String
-            : '',
+      : responseType =
+            json['schema'] != null ? json['schema']['type'] as String : '',
         items = json['schema'] != null && json['schema']['items'] != null
             ? ItemSchema.fromJson(
                 json['schema']['items'] as Map<String, dynamic>)
             : null,
-        ref = json['schema'] as String != null
-            ? json['schema']['\$ref'] as String
-            : null;
+        ref = json['schema'] != null ? json['schema']['\$ref'] as String : null;
 
   final String responseType;
   final String type;

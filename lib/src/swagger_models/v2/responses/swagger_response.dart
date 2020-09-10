@@ -34,9 +34,8 @@ class SwaggerResponse {
 
 class Content {
   Content.fromJson(this.type, Map<dynamic, dynamic> json)
-      : responseType = json['schema'] as String != null
-            ? json['schema']['type'] as String
-            : '';
+      : responseType =
+            json['schema'] != null ? json['schema']['type'] as String : '';
 
   final String responseType;
   final String type;
