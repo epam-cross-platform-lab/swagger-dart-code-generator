@@ -6,11 +6,11 @@ import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request
 import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
 import 'package:swagger_generator/src/swagger_models/v3/swagger_root.dart';
 import 'package:meta/meta.dart';
-import 'package:swagger_generator/src/exception_words.dart';
 
 class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'VALUE_';
 
+  @override
   String generate(String swagger, String fileName) {
     final List<String> enumNames = <String>[];
     final StringBuffer result = StringBuffer();
@@ -54,7 +54,7 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
   String generateEnumContent(String enumName, List<String> enumValues) {
     final String enumValuesContent = getEnumValuesContent(enumValues);
 
-    String result = """
+    final String result = """
 enum $enumName{
 \t@JsonValue('swaggerGeneratedUnknown')
 \tswaggerGeneratedUnknown,

@@ -6,8 +6,8 @@ import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_request
 import 'package:swagger_generator/src/swagger_models/v2/responses/swagger_response.dart';
 import 'package:swagger_generator/src/swagger_models/v2/swagger_path.dart';
 import 'package:swagger_generator/src/swagger_models/v2/swagger_root.dart';
-import 'requests_generator_definitions.dart';
 import 'package:test/test.dart';
+import 'requests_generator_definitions.dart';
 
 void main() {
   final SwaggerRequestsGeneratorV2 _generator = SwaggerRequestsGeneratorV2();
@@ -23,9 +23,9 @@ void main() {
     });
 
     test('Should get parameter summary', () {
-      String name = "orderId";
-      String description = "Id of the order";
-      final result = _generator.createSummaryParameters(
+      const String name = 'orderId';
+      const String description = 'Id of the order';
+      final String result = _generator.createSummaryParameters(
           name, description, 'body', GeneratorOptions());
 
       expect(result, contains('///@param orderId Id of the order'));
@@ -369,16 +369,19 @@ const String _baseUrl='$_baseUrl';
 
   group('Tests for createSummaryParameters', () {
     test('Should generate description for parameter', () {
-      final result = _generator.createSummaryParameters("testParameterName",
-          "testParameterDescription", 'query', GeneratorOptions());
+      final String result = _generator.createSummaryParameters(
+          'testParameterName',
+          'testParameterDescription',
+          'query',
+          GeneratorOptions());
       expect(result,
           equals('	///@param testParameterName testParameterDescription'));
     });
 
     test('Should replace special characters in description', () {
-      final result = _generator.createSummaryParameters(
-          "testParameterName",
-          "test\tParameter\nDescription\rSplitted",
+      final String result = _generator.createSummaryParameters(
+          'testParameterName',
+          'test\tParameter\nDescription\rSplitted',
           'query',
           GeneratorOptions());
       expect(

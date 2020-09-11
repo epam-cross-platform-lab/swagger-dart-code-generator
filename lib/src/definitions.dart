@@ -1,1 +1,1 @@
-const String converterClassEnding = "JsonDecoderMappings";
+const String converterClassEnding = 'JsonDecoderMappings';

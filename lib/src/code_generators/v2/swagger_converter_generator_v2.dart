@@ -5,6 +5,7 @@ import 'package:swagger_generator/src/extensions/string_extension.dart';
 import 'package:recase/recase.dart';
 
 class SwaggerConverterGeneratorV2 implements SwaggerConverterGenerator {
+  @override
   String generate(String dartCode, String fileName) {
     return """
 final ${fileName.pascalCase}$converterClassEnding = 
