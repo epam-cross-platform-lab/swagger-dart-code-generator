@@ -4,7 +4,7 @@ targets:
     - lib/**
     - $package$
     builders:
-      swagger_generator:
+      swagger_dart_code_generator:
         options:
           with_base_url: true
           with_converter: true

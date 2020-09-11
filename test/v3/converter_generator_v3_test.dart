@@ -1,4 +1,4 @@
-import 'package:swagger_generator/src/code_generators/v3/swagger_converter_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_converter_generator_v3.dart';
 import 'package:test/test.dart';
 import 'converter_generator_v3_definitions.dart';
 

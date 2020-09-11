@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:build/build.dart';
-import 'package:swagger_generator/src/extensions/file_name_extensions.dart';
-import 'package:swagger_generator/src/models/generator_options.dart';
-import 'package:swagger_generator/src/swagger_code_generator.dart';
+import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 
-SwaggerCodeBuilder swaggerCodeBuilder(BuilderOptions options) =>
-    SwaggerCodeBuilder(options);
+SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
+    SwaggerDartCodeGenerator(options);
 
 const String inputFileExtension = '.swagger';
 const String outputFileExtension = '.swagger.dart';
@@ -33,8 +33,8 @@ Map<String, List<String>> generateExtensions(GeneratorOptions options) {
   return result;
 }
 
-class SwaggerCodeBuilder implements Builder {
-  SwaggerCodeBuilder(BuilderOptions builderOptions) {
+class SwaggerDartCodeGenerator implements Builder {
+  SwaggerDartCodeGenerator(BuilderOptions builderOptions) {
     options = GeneratorOptions.fromJson(builderOptions.config);
   }
 

@@ -1,5 +1,5 @@
-import 'package:swagger_generator/src/swagger_models/v3/responses/item_schema.dart';
-import 'package:swagger_generator/src/swagger_models/v3/responses/response_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/responses/item_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/responses/response_schema.dart';
 
 class SwaggerResponse {
   SwaggerResponse(

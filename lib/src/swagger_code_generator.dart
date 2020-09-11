@@ -1,21 +1,21 @@
 import 'dart:convert';
 
-import 'package:swagger_generator/src/code_generators/swagger_additions_generator.dart';
-import 'package:swagger_generator/src/code_generators/swagger_converter_generator.dart';
-import 'package:swagger_generator/src/code_generators/swagger_enums_generator.dart';
-import 'package:swagger_generator/src/code_generators/swagger_models_generator.dart';
-import 'package:swagger_generator/src/code_generators/swagger_requests_generator.dart';
-import 'package:swagger_generator/src/code_generators/v2/swagger_additions_generator_v2.dart';
-import 'package:swagger_generator/src/code_generators/v2/swagger_converter_generator_v2.dart';
-import 'package:swagger_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
-import 'package:swagger_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
-import 'package:swagger_generator/src/code_generators/v3/swagger_additions_generator_v3.dart';
-import 'package:swagger_generator/src/code_generators/v3/swagger_converter_generator_v3.dart';
-import 'package:swagger_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
-import 'package:swagger_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
-import 'package:swagger_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
-import 'package:swagger_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_additions_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_converter_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_additions_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_converter_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class SwaggerCodeGenerator {
   final Map<int, SwaggerAdditionsGenerator> _additionsMap =
