@@ -71,14 +71,10 @@ class SwaggerCodeBuilder implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-<<<<<<< HEAD
     final customDecoder = codeGenerator.generateCustomJsonConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final copyAssetId = AssetId(buildStep.inputId.package,
-=======
-    final AssetId copyAssetId = AssetId(buildStep.inputId.package,
->>>>>>> master
         "${options.outputFolder}$fileNameWithoutExtension$outputFileExtension");
 
     await buildStep.writeAsString(
