@@ -21,7 +21,7 @@ jobs:
     - name: Run tests
       run: flutter pub run test
     - name: Test coverage
-      run: flutter pub run test_coverage --min-coverage 70
+      run: flutter pub run test_coverage --port 1234 --min-coverage 70
    
       
       
