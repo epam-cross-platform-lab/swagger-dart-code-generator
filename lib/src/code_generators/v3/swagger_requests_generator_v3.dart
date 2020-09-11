@@ -68,8 +68,8 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
       String fileName, GeneratorOptions options) {
     final String classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
-    final String chopperClientContent =
-        getChopperClientContent(className, options.withConverter);
+    final String chopperClientContent = getChopperClientContent(
+        className, swaggerRoot.host, swaggerRoot.basePath, options);
     final String allMethodsContent = getAllMethodsContent(swaggerRoot, options);
     final String result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
@@ -245,8 +245,7 @@ abstract class $className extends ChopperService""";
     if (withBaseUrl) {
       if (baseUrl != null) {
         return """
-const String _baseUrl='$baseUrl';
-@ChopperApi(baseUrl: _baseUrl)
+@ChopperApi()
 """;
       } else {
         return """@ChopperApi()""";
@@ -257,7 +256,16 @@ const String _baseUrl='$baseUrl';
   }
 
   @visibleForTesting
-  String getChopperClientContent(String fileName, bool withConverter) {
+  String getChopperClientContent(
+      String fileName, String host, String basePath, GeneratorOptions options) {
+    final String baseUrlString = options.withBaseUrl
+        ? "baseUrl:  'https://$host${basePath ?? ''}'"
+        : '/*baseUrl: YOUR_BASE_URL*/';
+
+    final String converterString = options.withBaseUrl && options.withConverter
+        ? 'converter: CustomJsonDecoder(),'
+        : 'converter: chopper.JsonSerializableConverter(),';
+
     final String generatedChopperClient = """
   static $fileName create([ChopperClient client]) {
     if(client!=null){
@@ -266,10 +274,8 @@ const String _baseUrl='$baseUrl';
 
     final newClient = ChopperClient(
       services: [_\$$fileName()],
-      /*baseUrl: YOUR_BASE_URL,*/
-      /*client: YOUR_CLIENT,*/
-      /*converter: YOUR_CONVERTER*/
-      /*errorConverter: YOUR_ERROR_CONVERTER*/);
+      $converterString
+      $baseUrlString);
     return _\$$fileName(newClient);
   }
   

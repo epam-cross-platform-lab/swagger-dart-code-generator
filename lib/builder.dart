@@ -71,11 +71,16 @@ class SwaggerCodeBuilder implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
+    final String customDecoder = codeGenerator.generateCustomJsonConverter(
+        contents, getFileNameWithoutExtension(fileNameWithExtension));
+
     final AssetId copyAssetId = AssetId(buildStep.inputId.package,
         "${options.outputFolder}$fileNameWithoutExtension$outputFileExtension");
 
-    await buildStep.writeAsString(copyAssetId,
-        _generateFileContent(imports, requests, converter, models));
+    await buildStep.writeAsString(
+        copyAssetId,
+        _generateFileContent(
+            imports, requests, converter, models, customDecoder));
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
@@ -83,8 +88,8 @@ class SwaggerCodeBuilder implements Builder {
     }
   }
 
-  String _generateFileContent(
-      String imports, String requests, String converter, String models) {
+  String _generateFileContent(String imports, String requests, String converter,
+      String models, String customDecoder) {
     return """
 $imports
 
@@ -97,6 +102,8 @@ ${options.buildOnlyModels ? '' : requests}
 ${options.withConverter ? converter : ''}
 
 ${options.buildOnlyModels ? '' : models}
+
+${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
   }
 
@@ -112,12 +119,14 @@ ${options.buildOnlyModels ? '' : models}
 
     await buildStep.writeAsString(indexAssetId, imports);
 
-    final AssetId mappingAssetId =
-        AssetId(inputId.package, "${options.outputFolder}$mappingFileName");
+    if (options.withConverter) {
+      final AssetId mappingAssetId =
+          AssetId(inputId.package, "${options.outputFolder}$mappingFileName");
 
-    final String mapping =
-        codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
+      final String mapping =
+          codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
 
-    await buildStep.writeAsString(mappingAssetId, mapping);
+      await buildStep.writeAsString(mappingAssetId, mapping);
+    }
   }
 }
