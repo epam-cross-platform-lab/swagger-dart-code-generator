@@ -1,5 +1,5 @@
 const String ref = '\$';
-const String model_with_parameters_v3 = """
+const String model_with_parameters_v3 = '''
 {
  "components": {
     "schemas": {
@@ -116,9 +116,9 @@ const String model_with_parameters_v3 = """
     }
   }
 }
-""";
+''';
 
-const String model_with_parameters_v2 = """
+const String model_with_parameters_v2 = '''
 {
   "definitions": {
     "ActiveOrderAndListSummary": {
@@ -205,9 +205,9 @@ const String model_with_parameters_v2 = """
     }
   }
 }
-""";
+''';
 
-const String request_with_header = """
+const String request_with_header = '''
 {
   "paths": {
     "/v2/order/summaries": {
@@ -260,9 +260,9 @@ const String request_with_header = """
     }
   }
 }
-""";
+''';
 
-const String request_with_enum_in_parameter = """
+const String request_with_enum_in_parameter = '''
 {
   "paths": {
     "/v3/order/{orderId}/state": {
@@ -333,9 +333,9 @@ const String request_with_enum_in_parameter = """
     }
   }
 }
-""";
+''';
 
-const String request_with_array_string = """
+const String request_with_array_string = '''
 {
   "paths": {
     "/v1/{pboSortType}": {
@@ -381,9 +381,9 @@ const String request_with_array_string = """
     }
   }
 }
-""";
+''';
 
-const String request_with_array_order_summary = """
+const String request_with_array_order_summary = '''
 {
   "paths": {
     "/v2/order/summaries": {
@@ -436,9 +436,9 @@ const String request_with_array_order_summary = """
     }
   }
 }
-""";
+''';
 
-const String request_with_list_string_return_type = """
+const String request_with_list_string_return_type = '''
 {
   "paths": {
     "/v1/suggestions": {
@@ -509,4 +509,4 @@ const String request_with_list_string_return_type = """
     }
   }
 }
-""";
+''';
