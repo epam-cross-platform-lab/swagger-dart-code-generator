@@ -34,7 +34,7 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
       );
     }).join('\n');
 
-    return "$generatedClasses\n$generatedEnums";
+    return '''$generatedClasses\n$generatedEnums''';
   }
 
   @visibleForTesting
@@ -55,7 +55,7 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
 
     final String enums = generateEnumsContent(properties, className);
 
-    final String generatedClass = """
+    final String generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $className{
 \t$className($generatedConstructorProperties);\n
@@ -67,7 +67,7 @@ $generatedProperties
 }
 
 $enums
-""";
+''';
 
     return generatedClass;
   }
@@ -81,7 +81,7 @@ $enums
     final String generatedConstructorParameters =
         entityMap.keys.map((String key) {
       final String fieldName = generateFieldName(key);
-      return "\t\tthis.$fieldName,";
+      return '\t\tthis.$fieldName,';
     }).join('\n');
 
     return '{\n${generatedConstructorParameters.toString()}\n\t}';
@@ -113,7 +113,7 @@ $enums
 
   @visibleForTesting
   String generateEnumName(String className, String enumName) {
-    return "${className.capitalize}${enumName.capitalize}";
+    return '${className.capitalize}${enumName.capitalize}';
   }
 
   @visibleForTesting
@@ -209,14 +209,14 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     final String jsonKeyContent =
         "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? ')\n' : ', defaultValue: <$typeName>[])\n'}";
 
-    return """  $jsonKeyContent  final List<$typeName> ${generateFieldName(propertyName)};""";
+    return '''  $jsonKeyContent  final List<$typeName> ${generateFieldName(propertyName)};''';
   }
 
   @visibleForTesting
   String generateEnumPropertyContent(String key, String className) {
-    return """
+    return '''
   @JsonKey(unknownEnumValue: ${className.capitalize + key.capitalize}.swaggerGeneratedUnknown)
-  final ${className.capitalize + key.capitalize} ${generateFieldName(key)};""";
+  final ${className.capitalize + key.capitalize} ${generateFieldName(key)};''';
   }
 
   @visibleForTesting
@@ -234,11 +234,11 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       final DefaultValueMap defaultValue = defaultValues.firstWhere(
           (DefaultValueMap element) => element.typeName == typeName);
       jsonKeyContent +=
-          ", defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n";
+          ', defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n';
     } else {
       jsonKeyContent += ')\n';
     }
-    return """  $jsonKeyContent  final $typeName ${generateFieldName(propertyName)};""";
+    return '''  $jsonKeyContent  final $typeName ${generateFieldName(propertyName)};''';
   }
 
   @visibleForTesting
@@ -274,7 +274,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     final String _typeName = getParameterTypeName(
         className, propertyName, propertyEntryMap, parameterName);
 
-    return "\t$jsonKeyContent)\n  final $_typeName ${generateFieldName(propertyName)};";
+    return '\t$jsonKeyContent)\n  final $_typeName ${generateFieldName(propertyName)};';
   }
 
   @visibleForTesting
@@ -290,7 +290,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
 
     final String _typeName = getParameterTypeName(
         className, propertyName, propertyEntryMap, parameterName);
-    return "\t$jsonKeyContent)\n\tfinal $_typeName ${generateFieldName(propertyName)};";
+    return '\t$jsonKeyContent)\n\tfinal $_typeName ${generateFieldName(propertyName)};';
   }
 
   @visibleForTesting

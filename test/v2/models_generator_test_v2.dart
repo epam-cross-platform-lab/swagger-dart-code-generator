@@ -262,7 +262,7 @@ void main() {
       const String _className = 'Animals';
       const String _jsonKeyExpendedResult = "@JsonKey(name: '$_propertyKey'";
       const String _expectedResult =
-          "\t$_jsonKeyExpendedResult)\n  final Pet $_propertyName;";
+          '\t$_jsonKeyExpendedResult)\n  final Pet $_propertyName;';
 
       final String result = _generator.generatePropertyContentByRef(
         _propertyEntryMap,

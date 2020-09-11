@@ -75,7 +75,7 @@ class SwaggerDartCodeGenerator implements Builder {
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final AssetId copyAssetId = AssetId(buildStep.inputId.package,
-        "${options.outputFolder}$fileNameWithoutExtension$outputFileExtension");
+        '${options.outputFolder}$fileNameWithoutExtension$outputFileExtension');
 
     await buildStep.writeAsString(
         copyAssetId,
@@ -112,7 +112,7 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
     final SwaggerCodeGenerator codeGenerator = SwaggerCodeGenerator();
 
     final AssetId indexAssetId =
-        AssetId(inputId.package, "${options.outputFolder}$indexFileName");
+        AssetId(inputId.package, '${options.outputFolder}$indexFileName');
 
     final String imports =
         codeGenerator.generateIndexes(swaggerCode, buildExtensions);
@@ -121,7 +121,7 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 
     if (options.withConverter) {
       final AssetId mappingAssetId =
-          AssetId(inputId.package, "${options.outputFolder}$mappingFileName");
+          AssetId(inputId.package, '${options.outputFolder}$mappingFileName');
 
       final String mapping =
           codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);

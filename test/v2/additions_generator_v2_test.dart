@@ -36,4 +36,17 @@ void main() {
           result, contains("import 'secondFile.dart.dart' show SecondFile;"));
     });
   });
+
+  group('Test for generateCustomJsonConverter', () {
+    final SwaggerAdditionsGeneratorV2 _generator =
+        SwaggerAdditionsGeneratorV2();
+    test('Should generate custom json converter', () {
+      const String fileName = 'example_swagger';
+      const String expectedResult =
+          'CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings)';
+      final String result = _generator.generateCustomJsonConverter(fileName);
+
+      expect(result, contains(expectedResult));
+    });
+  });
 }

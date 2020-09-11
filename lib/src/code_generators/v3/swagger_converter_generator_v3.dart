@@ -7,10 +7,10 @@ import 'package:recase/recase.dart';
 class SwaggerConverterGeneratorV3 implements SwaggerConverterGenerator {
   @override
   String generate(String dartCode, String fileName) {
-    return """
+    return '''
 final ${fileName.pascalCase}$converterClassEnding = 
 {
-${_generateModelsMapping(dartCode)}};""";
+${_generateModelsMapping(dartCode)}};''';
   }
 
   String _generateModelsMapping(String dartCode) {
@@ -32,7 +32,7 @@ ${_generateModelsMapping(dartCode)}};""";
       }
 
       result.writeln(
-          "\t${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,");
+          '\t${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,');
     }
 
     return result.toString();

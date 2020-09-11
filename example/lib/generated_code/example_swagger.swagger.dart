@@ -12,7 +12,6 @@ part 'example_swagger.swagger.g.dart';
 // **************************************************************************
 
 @ChopperApi()
-
 abstract class ExampleSwagger extends ChopperService
 {
   static ExampleSwagger create([ChopperClient client]) {

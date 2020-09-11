@@ -29,16 +29,16 @@ class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
       final String fileName = key.split('/').last;
-      maps.writeln("  ...$className,");
+      maps.writeln('  ...$className,');
       imports.writeln("import '$fileName.dart';");
     });
 
-    final String mapping = """
+    final String mapping = '''
 $imports
 
 final $mappingVariableName = {
 $maps};
-      """;
+      ''';
 
     return mapping;
   }

@@ -1,4 +1,4 @@
-const String request_with_header = """
+const String request_with_header = '''
 {
   "paths": {
     "/model/items": {
@@ -29,9 +29,9 @@ const String request_with_header = """
     }
   }
 }
-""";
+''';
 
-const String request_with_array_string = """
+const String request_with_array_string = '''
 {
   "paths": {
     "/model/items": {
@@ -67,9 +67,9 @@ const String request_with_array_string = """
     }
   }
 }
-""";
+''';
 
-const String request_with_array_item_summary = """
+const String request_with_array_item_summary = '''
 {
   "paths": {
     "/model/items": {
@@ -105,9 +105,9 @@ const String request_with_array_item_summary = """
     }
   }
 }
-""";
+''';
 
-const String request_with_list_string_return_type = """
+const String request_with_list_string_return_type = '''
 {
   "paths": {
     "/model/items": {
@@ -142,9 +142,9 @@ const String request_with_list_string_return_type = """
     }
   }
 }
-""";
+''';
 
-const String request_with_list_test_item_return_type = """
+const String request_with_list_test_item_return_type = '''
 {
   "paths": {
     "/model/items": {
@@ -180,9 +180,9 @@ const String request_with_list_test_item_return_type = """
     }
   }
 }
-""";
+''';
 
-const String request_with_original_ref_return_type = """
+const String request_with_original_ref_return_type = '''
 {
   "paths": {
     "/model/items": {
@@ -201,9 +201,9 @@ const String request_with_original_ref_return_type = """
     }
   }
 }
-""";
+''';
 
-const String request_with_content_first_response_type = """
+const String request_with_content_first_response_type = '''
 {
   "paths": {
     "/model/items": {
@@ -226,9 +226,9 @@ const String request_with_content_first_response_type = """
     }
   }
 }
-""";
+''';
 
-const String request_with_content_first_response_ref = """
+const String request_with_content_first_response_ref = '''
 {
   "paths": {
     "/model/items": {
@@ -250,4 +250,4 @@ const String request_with_content_first_response_ref = """
     }
   }
 }
-""";
+''';
