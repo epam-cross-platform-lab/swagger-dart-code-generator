@@ -23,6 +23,7 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'String';
   int _unnamedMethodsCounter = 0;
 
+  @override
   String generate(String code, String className, String fileName,
       GeneratorOptions options) {
     _unnamedMethodsCounter = 0;
@@ -79,7 +80,7 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
   @visibleForTesting
   String generateFileContent(String classContent, String chopperClientContent,
       String allMethodsContent) {
-    String result = """
+    final String result = """
 $classContent
 {
 $chopperClientContent
@@ -178,13 +179,13 @@ $allMethodsContent
     if (neededResponse.content?.isNotEmpty == true &&
         neededResponse.content != null) {
       if (neededResponse.content.first.ref != null) {
-        return neededResponse.content.first.ref.split("/").last;
+        return neededResponse.content.first.ref.split('/').last;
       }
       if (neededResponse.content.first.responseType?.isNotEmpty == true) {
         return getParameterTypeName(
             neededResponse.content.first.responseType,
             neededResponse.schema?.items?.originalRef ??
-                neededResponse.content?.first?.items?.ref?.split("/")?.last);
+                neededResponse.content?.first?.items?.ref?.split('/')?.last);
       }
     }
 
@@ -215,7 +216,7 @@ $allMethodsContent
     List<String> name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
-        String result = '\$' + parameterName;
+        final String result = '\$' + parameterName;
         name.add(result);
       }
     });
@@ -385,9 +386,12 @@ const String _baseUrl='$baseUrl';
           List<SwaggerRequestParameter> listParameters,
           GeneratorOptions options) =>
       listParameters
-          .map((parameter) => createSummaryParameters(parameter.name,
-              parameter.description, parameter.inParameter, options))
-          .where((element) => element.isNotEmpty)
+          .map((SwaggerRequestParameter parameter) => createSummaryParameters(
+              parameter.name,
+              parameter.description,
+              parameter.inParameter,
+              options))
+          .where((String element) => element.isNotEmpty)
           .join('\n');
 
   @visibleForTesting
