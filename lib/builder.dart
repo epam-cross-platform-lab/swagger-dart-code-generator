@@ -79,7 +79,7 @@ class SwaggerCodeBuilder implements Builder {
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
-      await _generate_additional_files(contents, buildStep.inputId, buildStep);
+      await _generateAdditionalFiles(contents, buildStep.inputId, buildStep);
     }
   }
 
@@ -100,7 +100,7 @@ ${options.buildOnlyModels ? '' : models}
 """;
   }
 
-  Future _generate_additional_files(
+  Future<void> _generateAdditionalFiles(
       String swaggerCode, AssetId inputId, BuildStep buildStep) async {
     final SwaggerCodeGenerator codeGenerator = SwaggerCodeGenerator();
 
