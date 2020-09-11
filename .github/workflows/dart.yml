@@ -23,8 +23,10 @@ jobs:
       # working-directory: example
     - name: Run tests
       run: flutter pub run test
-    - name: Test coverage
-      run: flutter pub run test_coverage --min-coverage 70
+    - name: Flutter analyze
+      run: flutter analyze
+    # - name: Test coverage
+    #   run: flutter pub run test_coverage --min-coverage 70
    
       
       
