@@ -97,7 +97,7 @@ class CustomJsonDecoder {
       values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();
 }
 
-class JsonSerializableConverter extends JsonConverter {
+class JsonSerializableConverter extends chopper.JsonConverter {
   @override
   Response<ResultType> convertResponse<ResultType, Item>(Response response) {
     if (response.bodyString.isEmpty) {

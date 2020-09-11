@@ -257,7 +257,7 @@ const String _baseUrl='$baseUrl';
         : '\*baseUrl: YOUR_BASE_URL*/';
 
     var converterString = options.withBaseUrl && options.withConverter
-        ? 'converter: CustomJsonDecoder(),'
+        ? 'converter: JsonSerializableConverter(),'
         : 'converter: chopper.JsonConverter(),';
 
     final String generatedChopperClient = """

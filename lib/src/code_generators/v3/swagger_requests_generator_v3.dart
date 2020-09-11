@@ -264,7 +264,7 @@ const String _baseUrl='$baseUrl';
 
     var converterString = options.withBaseUrl && options.withConverter
         ? 'converter: CustomJsonDecoder(),'
-        : 'converter: chopper.JsonConverter(),';
+        : 'converter: chopper.JsonSerializableConverter(),';
 
     final String generatedChopperClient = """
   static $fileName create([ChopperClient client]) {

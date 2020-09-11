@@ -117,12 +117,14 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 
     await buildStep.writeAsString(indexAssetId, imports);
 
-    final mappingAssetId =
-        AssetId(inputId.package, "${options.outputFolder}$mappingFileName");
+    if (options.withConverter) {
+      final mappingAssetId =
+          AssetId(inputId.package, "${options.outputFolder}$mappingFileName");
 
-    final mapping =
-        codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
+      final mapping =
+          codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
 
-    await buildStep.writeAsString(mappingAssetId, mapping);
+      await buildStep.writeAsString(mappingAssetId, mapping);
+    }
   }
 }
