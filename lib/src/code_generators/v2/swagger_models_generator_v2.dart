@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:recase/recase.dart';
-import 'package:swagger_generator/src/code_generators/swagger_models_generator.dart';
-import 'package:swagger_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
-import 'package:swagger_generator/src/extensions/string_extension.dart';
-import 'package:swagger_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:meta/meta.dart';
-import 'package:swagger_generator/src/exception_words.dart';
+import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';

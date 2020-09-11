@@ -1,9 +1,9 @@
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
-import 'package:swagger_generator/src/swagger_models/v3/swagger_components.dart';
-import 'package:swagger_generator/src/swagger_models/v3/swagger_info.dart';
-import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
-import 'package:swagger_generator/src/swagger_models/v3/swagger_tag.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_components.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_info.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_path.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_tag.dart';
 
 class SwaggerRoot {
   SwaggerRoot(

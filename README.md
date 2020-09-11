@@ -1,25 +1,55 @@
-# hello
+<p align="center">
+  <h1><b>Swagger code generator</b></h1>
+</p>
 
-A new Flutter package project.
+# :mega: **Build dart types from Swagger/OpenAPI schemas**
 
-## Getting Started
+[![pub package](https://img.shields.io/pub/v/swagger_dart_code_generator.svg)](https://pub.dartlang.org/packages/swagger_dart_code_generator)
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+SwaggerDartCodeGenerator is a code generator that looks for `*.swagger` files and builds `.swagger.dart` files, based on the schema. Codegenration based on Chopper and JsonAnnotation models and can be configured for your needs.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+---
+## **Installation**
+Add the following to your `pubspec.yaml` file to be able to do code generation:
+```yaml
+dev_dependencies:
+  chopper_generator: ^3.0.5
+  json_annotation: ^3.0.1
+  json_serializable: ^3.4.1
+  swagger_dart_code_generator: any
+```
+The generated code uses the following packages in run-time:
+```yaml
+dependencies:
+  chopper: ^3.0.3
+```
+
+Then run:
+```shell
+pub packages get
+```
+or
+```shell
+flutter packages get
+```
+
+Now SwaggerGenerator will generate the API files for you by running:
+```shell
+pub run build_runner build
+```
+or
+```shell
+flutter pub run build_runner build
+```
 
 ## **Configuration**
 Swagger generator offers some configuration options to generate code. All options should be included on `build.yaml` file on the root of the project:
+
 ```yaml
 targets:
   $default:
     builders:
-      swagger_generator:
+      swagger_dart_code_generator:
         options:
           # custom configuration options!
 ```
@@ -37,6 +67,7 @@ targets:
 | `output_folder` | `null` | Path to output folder (for ex. lib/generated). |
 
 It's important to remember that, by default, [build](https://github.com/dart-lang/build) will follow [Dart's package layout conventions](https://dart.dev/tools/pub/package-layout), meaning that only some folders will be considered to parse the input files. So, if you want to reference files from a folder other than `lib/`, make sure you've included it on `sources`:
+
 ```yaml
 targets:
   $default:
@@ -46,7 +77,7 @@ targets:
       - swaggers/**
 ```
 
-### **Default Value Map**
+### **Default Value Map for model generation**
 
 If you want to add defaultValue: attribute to fields with concrete type you can use default value map. Please see next example:
 
@@ -54,7 +85,7 @@ If you want to add defaultValue: attribute to fields with concrete type you can 
 targets:
   $default:
     builders:
-      swagger_generator:
+      swagger_dart_code_generator:
         options:
           input_folder: 'lib/swaggers'
           output_folder: 'lib/generated_code/'
@@ -67,7 +98,7 @@ targets:
               default_value: '[]'
 ```
 
-### **Response Override Value Map**
+### **Response Override Value Map for request generation**
 
 If you want to override response for concrete request, you can use response_override_value_map. For example:
 
@@ -75,7 +106,7 @@ If you want to override response for concrete request, you can use response_over
 targets:
   $default:
     builders:
-      swagger_generator:
+      swagger_dart_code_generator:
         options:
           input_folder: 'lib/swaggers'
           output_folder: 'lib/generated_code/'
@@ -87,3 +118,5 @@ targets:
               method: put
               overriden_value: 'MyPerfectType'
 ```
+
+Check the [examples](./example) to see how to use it in details.

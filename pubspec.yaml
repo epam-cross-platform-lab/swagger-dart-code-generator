@@ -1,6 +1,9 @@
-name: swagger_generator
+name: swagger_dart_code_generator
 
 version: 1.0.0
+homepage: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
+repository: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
+issue_tracker: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues
 
 description: A sample command-line application.
 environment:
@@ -14,6 +17,7 @@ dependencies:
   json_annotation: ^3.0.1
   json_serializable: ^3.4.1
   build_runner: ^1.10.2
+  meta: ^1.2.3
 
 dev_dependencies:
   test_coverage: ^0.4.2

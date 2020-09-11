@@ -1,4 +1,4 @@
-import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
 
 import 'requests/swagger_request.dart';
 

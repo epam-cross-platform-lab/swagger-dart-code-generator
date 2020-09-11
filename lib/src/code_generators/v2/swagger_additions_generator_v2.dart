@@ -1,7 +1,7 @@
-import 'package:swagger_generator/src/code_generators/swagger_additions_generator.dart';
-import 'package:swagger_generator/src/definitions.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
+import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:recase/recase.dart';
-import 'package:swagger_generator/src/extensions/file_name_extensions.dart';
+import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
 
 class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
   static const String mappingVariableName = 'generatedMapping';

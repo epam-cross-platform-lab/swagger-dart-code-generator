@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:swagger_generator/src/code_generators/swagger_enums_generator.dart';
-import 'package:swagger_generator/src/extensions/string_extension.dart';
-import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_request.dart';
-import 'package:swagger_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
-import 'package:swagger_generator/src/swagger_models/v2/swagger_path.dart';
-import 'package:swagger_generator/src/swagger_models/v2/swagger_root.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
+import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_path.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_root.dart';
 import 'package:meta/meta.dart';
 
 class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {

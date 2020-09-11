@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/parameter_item.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_parameter_schema.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request_items.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/parameter_item.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_parameter_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request_items.dart';
 
 part 'swagger_request_parameter.g2.dart';
 

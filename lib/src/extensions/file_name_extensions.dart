@@ -1,4 +1,4 @@
-import 'package:swagger_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 
 String getClassNameFromFileName(String file) {
   final String name = file.split('.').first;

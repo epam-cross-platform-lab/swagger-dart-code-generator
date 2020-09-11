@@ -1,11 +1,11 @@
-import 'package:swagger_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
-import 'package:swagger_generator/src/models/generator_options.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_parameter_schema.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request.dart';
-import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
-import 'package:swagger_generator/src/swagger_models/v3/responses/swagger_response.dart';
-import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
-import 'package:swagger_generator/src/swagger_models/v3/swagger_root.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_parameter_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/responses/swagger_response.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_path.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.dart';
 import 'package:test/test.dart';
 import 'requests_generator_v3_definitions.dart';
 
