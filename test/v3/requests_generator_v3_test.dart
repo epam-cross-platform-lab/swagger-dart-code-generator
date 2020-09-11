@@ -31,17 +31,6 @@ void main() {
       expect(result, contains('///@param orderId Id of the order'));
     });
 
-    test('Should get code with base url', () {
-      const String _baseUrl = 'http://google.com/';
-      const bool _isBaseUrl = true;
-      final String result = _generator.getBaseUrlContent(_baseUrl, _isBaseUrl);
-
-      expect(result, equals("""
-const String _baseUrl='$_baseUrl';
-@ChopperApi(baseUrl: _baseUrl)
-"""));
-    });
-
     test('Should get parameter type name', () {
       final String result = _generator.getParameterTypeName('array', 'integer');
 
