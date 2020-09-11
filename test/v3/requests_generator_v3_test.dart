@@ -6,8 +6,8 @@ import 'package:swagger_generator/src/swagger_models/v3/requests/swagger_request
 import 'package:swagger_generator/src/swagger_models/v3/responses/swagger_response.dart';
 import 'package:swagger_generator/src/swagger_models/v3/swagger_path.dart';
 import 'package:swagger_generator/src/swagger_models/v3/swagger_root.dart';
-import 'requests_generator_v3_definitions.dart';
 import 'package:test/test.dart';
+import 'requests_generator_v3_definitions.dart';
 
 void main() {
   final SwaggerRequestsGeneratorV3 _generator = SwaggerRequestsGeneratorV3();
@@ -23,9 +23,9 @@ void main() {
     });
 
     test('Should get parameter summary', () {
-      String name = "orderId";
-      String description = "Id of the order";
-      final result = _generator.createSummaryParameters(
+      const String name = 'orderId';
+      const String description = 'Id of the order';
+      final String result = _generator.createSummaryParameters(
           name, description, 'query', GeneratorOptions());
 
       expect(result, contains('///@param orderId Id of the order'));
@@ -416,16 +416,19 @@ const String _baseUrl='$_baseUrl';
 
   group('Tests for createSummaryParameters', () {
     test('Should generate description for parameter', () {
-      final result = _generator.createSummaryParameters("testParameterName",
-          "testParameterDescription", 'query', GeneratorOptions());
+      final String result = _generator.createSummaryParameters(
+          'testParameterName',
+          'testParameterDescription',
+          'query',
+          GeneratorOptions());
       expect(result,
           equals('	///@param testParameterName testParameterDescription'));
     });
 
     test('Should replace special characters in description', () {
-      final result = _generator.createSummaryParameters(
-          "testParameterName",
-          "test\tParameter\nDescription\rSplitted",
+      final String result = _generator.createSummaryParameters(
+          'testParameterName',
+          'test\tParameter\nDescription\rSplitted',
           'query',
           GeneratorOptions());
       expect(

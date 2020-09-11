@@ -1,5 +1,5 @@
-const ref = "\$";
-const model_with_parameters_v3 = """
+const String ref = '\$';
+const String model_with_parameters_v3 = """
 {
  "components": {
     "schemas": {
@@ -118,7 +118,7 @@ const model_with_parameters_v3 = """
 }
 """;
 
-const model_with_parameters_v2 = """
+const String model_with_parameters_v2 = """
 {
   "definitions": {
     "ActiveOrderAndListSummary": {
@@ -207,7 +207,7 @@ const model_with_parameters_v2 = """
 }
 """;
 
-const request_with_header = """
+const String request_with_header = """
 {
   "paths": {
     "/v2/order/summaries": {
@@ -262,7 +262,7 @@ const request_with_header = """
 }
 """;
 
-const request_with_enum_in_parameter = """
+const String request_with_enum_in_parameter = """
 {
   "paths": {
     "/v3/order/{orderId}/state": {

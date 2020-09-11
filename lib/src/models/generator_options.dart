@@ -10,8 +10,8 @@ class GeneratorOptions {
       this.ignoreHeaders = false,
       this.useDefaultNullForLists = false,
       this.buildOnlyModels = false,
-      this.defaultValuesMap = const [],
-      this.responseOverrideValueMap = const [],
+      this.defaultValuesMap = const <DefaultValueMap>[],
+      this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
       this.inputFolder,
       this.outputFolder});
 
@@ -28,10 +28,10 @@ class GeneratorOptions {
   @JsonKey(defaultValue: false)
   final bool ignoreHeaders;
 
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   final String inputFolder;
 
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   final String outputFolder;
 
   @JsonKey(defaultValue: false)
