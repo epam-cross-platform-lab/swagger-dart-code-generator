@@ -18,7 +18,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> addPet({String body}) {
-    final $url = 'petstore.swagger.io/pet';
+    final $url = '/pet';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -26,7 +26,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> updatePet({String body}) {
-    final $url = 'petstore.swagger.io/pet';
+    final $url = '/pet';
     final $body = body;
     final $request = Request('PUT', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -34,7 +34,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<List<Pet>>> findPetsByStatus({List<String> status}) {
-    final $url = 'petstore.swagger.io/pet/findByStatus';
+    final $url = '/pet/findByStatus';
     final $params = <String, dynamic>{'status': status};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<List<Pet>, Pet>($request);
@@ -42,7 +42,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<List<Pet>>> findPetsByTags({List<String> tags}) {
-    final $url = 'petstore.swagger.io/pet/findByTags';
+    final $url = '/pet/findByTags';
     final $params = <String, dynamic>{'tags': tags};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<List<Pet>, Pet>($request);
@@ -50,7 +50,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> getPetById({int petId}) {
-    final $url = 'petstore.swagger.io/pet/$petId';
+    final $url = '/pet/$petId';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -58,7 +58,7 @@ class _$ExampleSwagger extends ExampleSwagger {
   @override
   Future<Response<dynamic>> updatePetWithForm(
       {int petId, String name, String status}) {
-    final $url = 'petstore.swagger.io/pet/$petId';
+    final $url = '/pet/$petId';
     final $body = <String, dynamic>{'name': name, 'status': status};
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request,
@@ -67,7 +67,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> deletePet({int petId}) {
-    final $url = 'petstore.swagger.io/pet/$petId';
+    final $url = '/pet/$petId';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -75,7 +75,7 @@ class _$ExampleSwagger extends ExampleSwagger {
   @override
   Future<Response<dynamic>> uploadFile(
       {int petId, String additionalMetadata, List<int> file}) {
-    final $url = 'petstore.swagger.io/pet/$petId/uploadImage';
+    final $url = '/pet/$petId/uploadImage';
     final $body = <String, dynamic>{
       'additionalMetadata': additionalMetadata,
       'file': file
@@ -87,14 +87,14 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<List<dynamic>>> getInventory() {
-    final $url = 'petstore.swagger.io/store/inventory';
+    final $url = '/store/inventory';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<List<dynamic>, List<dynamic>>($request);
   }
 
   @override
   Future<Response<dynamic>> placeOrder({String body}) {
-    final $url = 'petstore.swagger.io/store/order';
+    final $url = '/store/order';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -102,21 +102,21 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> getOrderById({int orderId}) {
-    final $url = 'petstore.swagger.io/store/order/$orderId';
+    final $url = '/store/order/$orderId';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> deleteOrder({int orderId}) {
-    final $url = 'petstore.swagger.io/store/order/$orderId';
+    final $url = '/store/order/$orderId';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> createUser({String body}) {
-    final $url = 'petstore.swagger.io/user';
+    final $url = '/user';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -124,7 +124,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> createUsersWithArrayInput({String body}) {
-    final $url = 'petstore.swagger.io/user/createWithArray';
+    final $url = '/user/createWithArray';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -132,7 +132,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> createUsersWithListInput({String body}) {
-    final $url = 'petstore.swagger.io/user/createWithList';
+    final $url = '/user/createWithList';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -140,7 +140,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<String>> loginUser({String username, String password}) {
-    final $url = 'petstore.swagger.io/user/login';
+    final $url = '/user/login';
     final $params = <String, dynamic>{
       'username': username,
       'password': password
@@ -151,21 +151,21 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> logoutUser() {
-    final $url = 'petstore.swagger.io/user/logout';
+    final $url = '/user/logout';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getUserByName({String username}) {
-    final $url = 'petstore.swagger.io/user/$username';
+    final $url = '/user/$username';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> updateUser({String username, String body}) {
-    final $url = 'petstore.swagger.io/user/$username';
+    final $url = '/user/$username';
     final $body = body;
     final $request = Request('PUT', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -173,7 +173,7 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> deleteUser({String username}) {
-    final $url = 'petstore.swagger.io/user/$username';
+    final $url = '/user/$username';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }

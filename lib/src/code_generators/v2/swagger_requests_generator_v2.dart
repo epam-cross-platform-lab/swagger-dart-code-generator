@@ -79,12 +79,12 @@ class SwaggerRequestsGeneratorV2 implements SwaggerRequestsGenerator {
   @visibleForTesting
   String generateFileContent(String classContent, String chopperClientContent,
       String allMethodsContent) {
-    final String result = """
+    final String result = '''
 $classContent
 {
 $chopperClientContent
 $allMethodsContent
-}""";
+}''';
 
     return result;
   }
@@ -227,26 +227,11 @@ $allMethodsContent
   @visibleForTesting
   String getRequestClassContent(String host, String className, String fileName,
       GeneratorOptions options) {
-    final String classWithoutChopper = """
-${getBaseUrlContent(host, options.withBaseUrl)}
-abstract class $className extends ChopperService""";
+    final String classWithoutChopper = '''
+@ChopperApi()
+abstract class $className extends ChopperService''';
 
     return classWithoutChopper;
-  }
-
-  @visibleForTesting
-  String getBaseUrlContent(String baseUrl, bool withBaseUrl) {
-    if (withBaseUrl) {
-      if (baseUrl != null) {
-        return """
-@ChopperApi()
-""";
-      } else {
-        return """@ChopperApi()""";
-      }
-    } else {
-      return """@ChopperApi()""";
-    }
   }
 
   @visibleForTesting
@@ -260,7 +245,7 @@ abstract class $className extends ChopperService""";
         ? 'converter: JsonSerializableConverter(),'
         : 'converter: chopper.JsonConverter(),';
 
-    final String generatedChopperClient = """
+    final String generatedChopperClient = '''
   static $fileName create([ChopperClient client]) {
     if(client!=null){
       return _\$$fileName(client);
@@ -273,7 +258,7 @@ abstract class $className extends ChopperService""";
     return _\$$fileName(newClient);
   }
   
-""";
+''';
     return generatedChopperClient;
   }
 
@@ -347,14 +332,14 @@ abstract class $className extends ChopperService""";
     String typeReq = typeRequest.capitalize + "(path: '$requestPath')";
     if (hasFormData) {
       typeReq +=
-          "\n  @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)";
+          '\n  @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)';
     }
 
     if (returnType != null && returnType != 'num') {
       returnType = returnType.pascalCase;
     }
 
-    final String returnTypeString = returnType != null ? "<$returnType>" : '';
+    final String returnTypeString = returnType != null ? '<$returnType>' : '';
 
     final String parametersPart =
         requiredParameters.isEmpty ? '' : '{$requiredParameters}';
@@ -403,7 +388,7 @@ abstract class $className extends ChopperService""";
     }
 
     final String comments =
-        """\t///@param $parameterName $parameterDescription""";
+        '''\t///@param $parameterName $parameterDescription''';
     return comments;
   }
 
