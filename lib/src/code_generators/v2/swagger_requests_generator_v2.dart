@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:build/build.dart';
 import 'package:swagger_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_generator/src/extensions/string_extension.dart';
 import 'package:swagger_generator/src/models/generator_options.dart';
@@ -253,9 +252,13 @@ const String _baseUrl='$baseUrl';
   @visibleForTesting
   String getChopperClientContent(
       String fileName, String host, String basePath, GeneratorOptions options) {
-    var baseUrlString = options.withBaseUrl && host.isNotEmpty
+    var baseUrlString = options.withBaseUrl
         ? "baseUrl:  'https://$host${basePath ?? ''}'"
         : '\*baseUrl: YOUR_BASE_URL*/';
+
+    var converterString = options.withBaseUrl && options.withConverter
+        ? 'converter: CustomJsonDecoder(),'
+        : 'converter: chopper.JsonConverter(),';
 
     final String generatedChopperClient = """
   static $fileName create([ChopperClient client]) {
@@ -265,10 +268,8 @@ const String _baseUrl='$baseUrl';
 
     final newClient = ChopperClient(
       services: [_\$$fileName()],
-      converter: chopper.JsonConverter(),
-      $baseUrlString,
-      /*client: YOUR_CLIENT,*/
-      /*errorConverter: YOUR_ERROR_CONVERTER*/);
+      $converterString
+      $baseUrlString);
     return _\$$fileName(newClient);
   }
   

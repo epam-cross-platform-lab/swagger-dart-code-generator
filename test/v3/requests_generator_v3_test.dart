@@ -64,9 +64,10 @@ const String _baseUrl='$_baseUrl';
 
     test('Should create chopper client', () {
       const String _name = 'OrderService';
-      const bool _isConverter = false;
-      final String result =
-          _generator.getChopperClientContent(_name, _isConverter);
+      const String _host = 'some.host';
+      const String _path = '/path';
+      final String result = _generator.getChopperClientContent(
+          _name, _host, _path, GeneratorOptions());
 
       expect(result, contains('static OrderService create'));
       expect(result, contains('services: [_\$OrderService()],'));

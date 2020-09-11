@@ -258,9 +258,13 @@ const String _baseUrl='$baseUrl';
   @visibleForTesting
   String getChopperClientContent(
       String fileName, String host, String basePath, GeneratorOptions options) {
-    var baseUrlString = options.withBaseUrl && host.isNotEmpty
+    var baseUrlString = options.withBaseUrl
         ? "baseUrl:  'https://$host${basePath ?? ''}'"
         : '\*baseUrl: YOUR_BASE_URL*/';
+
+    var converterString = options.withBaseUrl && options.withConverter
+        ? 'converter: CustomJsonDecoder(),'
+        : 'converter: chopper.JsonConverter(),';
 
     final String generatedChopperClient = """
   static $fileName create([ChopperClient client]) {
@@ -270,9 +274,8 @@ const String _baseUrl='$baseUrl';
 
     final newClient = ChopperClient(
       services: [_\$$fileName()],
-      $baseUrlString,
-      /*baseUrl: YOUR_BASE_URL,*/
-      /*client: YOUR_CLIENT);
+      $converterString
+      $baseUrlString);
     return _\$$fileName(newClient);
   }
   

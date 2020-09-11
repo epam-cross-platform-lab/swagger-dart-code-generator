@@ -70,11 +70,16 @@ class SwaggerCodeBuilder implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
+    final customDecoder = codeGenerator.generateCustomJsonConverter(
+        contents, getFileNameWithoutExtension(fileNameWithExtension));
+
     final copyAssetId = AssetId(buildStep.inputId.package,
         "${options.outputFolder}$fileNameWithoutExtension$outputFileExtension");
 
-    await buildStep.writeAsString(copyAssetId,
-        _generateFileContent(imports, requests, converter, models));
+    await buildStep.writeAsString(
+        copyAssetId,
+        _generateFileContent(
+            imports, requests, converter, models, customDecoder));
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
@@ -82,8 +87,8 @@ class SwaggerCodeBuilder implements Builder {
     }
   }
 
-  String _generateFileContent(
-      String imports, String requests, String converter, String models) {
+  String _generateFileContent(String imports, String requests, String converter,
+      String models, String customDecoder) {
     return """
 $imports
 
@@ -96,6 +101,8 @@ ${options.buildOnlyModels ? '' : requests}
 ${options.withConverter ? converter : ''}
 
 ${options.buildOnlyModels ? '' : models}
+
+${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
   }
 
