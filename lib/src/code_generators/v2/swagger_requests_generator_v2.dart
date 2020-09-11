@@ -254,7 +254,7 @@ const String _baseUrl='$baseUrl';
       String fileName, String host, String basePath, GeneratorOptions options) {
     var baseUrlString = options.withBaseUrl
         ? "baseUrl:  'https://$host${basePath ?? ''}'"
-        : '\*baseUrl: YOUR_BASE_URL*/';
+        : '/*baseUrl: YOUR_BASE_URL*/';
 
     var converterString = options.withBaseUrl && options.withConverter
         ? 'converter: JsonSerializableConverter(),'
