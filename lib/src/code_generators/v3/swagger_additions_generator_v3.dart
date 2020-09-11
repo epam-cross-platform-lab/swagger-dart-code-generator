@@ -62,6 +62,7 @@ part '$swaggerFileName.swagger.g.dart';""");
     return result.toString();
   }
 
+  @override
   String generateCustomJsonConverter(String fileName) {
     return '''
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);

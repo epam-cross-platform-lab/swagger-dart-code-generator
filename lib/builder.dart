@@ -71,10 +71,10 @@ class SwaggerCodeBuilder implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final customDecoder = codeGenerator.generateCustomJsonConverter(
+    final String customDecoder = codeGenerator.generateCustomJsonConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
-    final copyAssetId = AssetId(buildStep.inputId.package,
+    final AssetId copyAssetId = AssetId(buildStep.inputId.package,
         "${options.outputFolder}$fileNameWithoutExtension$outputFileExtension");
 
     await buildStep.writeAsString(
@@ -120,10 +120,10 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
     await buildStep.writeAsString(indexAssetId, imports);
 
     if (options.withConverter) {
-      final mappingAssetId =
+      final AssetId mappingAssetId =
           AssetId(inputId.package, "${options.outputFolder}$mappingFileName");
 
-      final mapping =
+      final String mapping =
           codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
 
       await buildStep.writeAsString(mappingAssetId, mapping);

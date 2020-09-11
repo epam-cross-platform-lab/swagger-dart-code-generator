@@ -252,11 +252,11 @@ abstract class $className extends ChopperService""";
   @visibleForTesting
   String getChopperClientContent(
       String fileName, String host, String basePath, GeneratorOptions options) {
-    var baseUrlString = options.withBaseUrl
+    final String baseUrlString = options.withBaseUrl
         ? "baseUrl:  'https://$host${basePath ?? ''}'"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
-    var converterString = options.withBaseUrl && options.withConverter
+    final String converterString = options.withBaseUrl && options.withConverter
         ? 'converter: JsonSerializableConverter(),'
         : 'converter: chopper.JsonConverter(),';
 
