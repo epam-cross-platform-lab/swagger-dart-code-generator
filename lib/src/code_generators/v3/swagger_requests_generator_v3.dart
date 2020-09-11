@@ -244,8 +244,7 @@ abstract class $className extends ChopperService""";
     if (withBaseUrl) {
       if (baseUrl != null) {
         return """
-const String _baseUrl='$baseUrl';
-@ChopperApi(baseUrl: _baseUrl)
+@ChopperApi()
 """;
       } else {
         return """@ChopperApi()""";
