@@ -1,6 +1,6 @@
+import 'package:swagger_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
-import '../../lib/src/code_generators/v3/swagger_models_generator_v3.dart';
 import '../code_examples.dart';
 
 void main() {

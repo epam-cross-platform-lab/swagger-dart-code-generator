@@ -2,6 +2,15 @@ import '../responses/swagger_response.dart';
 import 'swagger_request_parameter.dart';
 
 class SwaggerRequest {
+  SwaggerRequest(
+      {this.type,
+      this.summary,
+      this.description,
+      this.operationId,
+      this.consumes,
+      this.responses,
+      this.parameters});
+
   SwaggerRequest.fromJson(Map<String, dynamic> json)
       : summary = json['summary'] as String,
         description = json['description'] as String,
@@ -18,15 +27,6 @@ class SwaggerRequest {
             <SwaggerResponse>[],
         parameters = mapParameters(json['parameters'] as List<dynamic>) ??
             <SwaggerRequestParameter>[];
-
-  SwaggerRequest(
-      {this.type,
-      this.summary,
-      this.description,
-      this.operationId,
-      this.consumes,
-      this.responses,
-      this.parameters});
 
   String type;
   String summary;

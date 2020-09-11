@@ -23,6 +23,7 @@ class SwaggerRequestsGeneratorV2 implements SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'String';
   int _unnamedMethodsCounter = 0;
 
+  @override
   String generate(String code, String className, String fileName,
       GeneratorOptions options) {
     _unnamedMethodsCounter = 0;
@@ -78,7 +79,7 @@ class SwaggerRequestsGeneratorV2 implements SwaggerRequestsGenerator {
   @visibleForTesting
   String generateFileContent(String classContent, String chopperClientContent,
       String allMethodsContent) {
-    String result = """
+    final String result = """
 $classContent
 {
 $chopperClientContent
@@ -209,7 +210,7 @@ $allMethodsContent
     List<String> name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
-        String result = '\$' + parameterName;
+        final String result = '\$' + parameterName;
         name.add(result);
       }
     });
@@ -376,9 +377,12 @@ abstract class $className extends ChopperService""";
           List<SwaggerRequestParameter> listParameters,
           GeneratorOptions options) =>
       listParameters
-          .map((parameter) => createSummaryParameters(parameter.name,
-              parameter.description, parameter.inParameter, options))
-          .where((element) => element.isNotEmpty)
+          .map((SwaggerRequestParameter parameter) => createSummaryParameters(
+              parameter.name,
+              parameter.description,
+              parameter.inParameter,
+              options))
+          .where((String element) => element.isNotEmpty)
           .join('\n');
 
   @visibleForTesting

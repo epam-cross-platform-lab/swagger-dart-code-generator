@@ -9,6 +9,7 @@ import 'package:swagger_generator/src/exception_words.dart';
 class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
+  @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 

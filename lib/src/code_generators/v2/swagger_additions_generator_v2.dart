@@ -6,12 +6,13 @@ import 'package:swagger_generator/src/extensions/file_name_extensions.dart';
 class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
   static const String mappingVariableName = 'generatedMapping';
 
+  @override
   String generateIndexes(Map<String, List<String>> buildExtensions) {
-    final imports = StringBuffer();
+    final StringBuffer imports = StringBuffer();
 
-    buildExtensions.keys.forEach((key) {
-      final fileName = key.split('/').last;
-      final className = getClassNameFromFileName(key.split('/').last);
+    buildExtensions.keys.forEach((String key) {
+      final String fileName = key.split('/').last;
+      final String className = getClassNameFromFileName(key.split('/').last);
 
       imports.writeln("import '$fileName.dart' show $className;");
     });
@@ -19,11 +20,12 @@ class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
     return imports.toString();
   }
 
+  @override
   String generateConverterMappings(Map<String, List<String>> buildExtensions) {
     final StringBuffer maps = StringBuffer();
     final StringBuffer imports = StringBuffer();
-    buildExtensions.keys.forEach((key) {
-      final className =
+    buildExtensions.keys.forEach((String key) {
+      final String className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
       final String fileName = key.split('/').last;
@@ -31,7 +33,7 @@ class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
       imports.writeln("import '$fileName.dart';");
     });
 
-    final mapping = """
+    final String mapping = """
 $imports
 
 final $mappingVariableName = {
@@ -41,8 +43,9 @@ $maps};
     return mapping;
   }
 
+  @override
   String generateImportsContent(String swaggerFileName, bool hasModels) {
-    final result = StringBuffer();
+    final StringBuffer result = StringBuffer();
 
     result.writeln("""import 'package:json_annotation/json_annotation.dart';
 import 'package:chopper/chopper.dart';
