@@ -45,6 +45,7 @@ $maps};
 
     result.writeln("""import 'package:json_annotation/json_annotation.dart';
 import 'package:chopper/chopper.dart';
+import 'package:chopper/chopper.dart' as chopper;
 import 'package:flutter/widgets.dart';
 
 part '$swaggerFileName.swagger.chopper.dart';""");

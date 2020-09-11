@@ -67,8 +67,8 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
       String fileName, GeneratorOptions options) {
     final String classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
-    final String chopperClientContent =
-        getChopperClientContent(className, options.withConverter);
+    final String chopperClientContent = getChopperClientContent(
+        className, swaggerRoot.host, swaggerRoot.basePath, options);
     final String allMethodsContent = getAllMethodsContent(swaggerRoot, options);
     final String result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
@@ -256,7 +256,12 @@ const String _baseUrl='$baseUrl';
   }
 
   @visibleForTesting
-  String getChopperClientContent(String fileName, bool withConverter) {
+  String getChopperClientContent(
+      String fileName, String host, String basePath, GeneratorOptions options) {
+    var baseUrlString = options.withBaseUrl && host.isNotEmpty
+        ? "baseUrl:  'https://$host${basePath ?? ''}'"
+        : '\*baseUrl: YOUR_BASE_URL*/';
+
     final String generatedChopperClient = """
   static $fileName create([ChopperClient client]) {
     if(client!=null){
@@ -265,10 +270,9 @@ const String _baseUrl='$baseUrl';
 
     final newClient = ChopperClient(
       services: [_\$$fileName()],
+      $baseUrlString,
       /*baseUrl: YOUR_BASE_URL,*/
-      /*client: YOUR_CLIENT,*/
-      /*converter: YOUR_CONVERTER*/
-      /*errorConverter: YOUR_ERROR_CONVERTER*/);
+      /*client: YOUR_CLIENT);
     return _\$$fileName(newClient);
   }
   
