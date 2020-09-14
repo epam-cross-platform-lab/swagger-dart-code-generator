@@ -5,7 +5,7 @@ on:
     - cron: "*/15 * * * *"
 
 jobs:
-  Has Changes: 
+  has_changes: 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
