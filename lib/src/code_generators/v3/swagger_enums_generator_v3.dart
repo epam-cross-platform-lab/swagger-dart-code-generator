@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.dart';
 import 'package:meta/meta.dart';
 
@@ -12,32 +9,30 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
 
   @override
   String generate(String swagger, String fileName) {
-    final List<String> enumNames = <String>[];
-    final StringBuffer result = StringBuffer();
-    final Map<String, dynamic> map =
-        jsonDecode(swagger) as Map<String, dynamic>;
-    final SwaggerRoot swaggerRoot = SwaggerRoot.fromJson(map);
+    final enumNames = <String>[];
+    final result = StringBuffer();
+    final map = jsonDecode(swagger) as Map<String, dynamic>;
+    final swaggerRoot = SwaggerRoot.fromJson(map);
 
-    for (int i = 0; i < swaggerRoot.paths.length; i++) {
-      final SwaggerPath swaggerPath = swaggerRoot.paths[i];
+    for (var i = 0; i < swaggerRoot.paths.length; i++) {
+      final swaggerPath = swaggerRoot.paths[i];
 
-      for (int j = 0; j < swaggerPath.requests.length; j++) {
-        final SwaggerRequest swaggerRequest = swaggerPath.requests[j];
+      for (var j = 0; j < swaggerPath.requests.length; j++) {
+        final swaggerRequest = swaggerPath.requests[j];
 
         if (swaggerRequest.parameters == null) {
           continue;
         }
 
-        for (int p = 0; p < swaggerRequest.parameters.length; p++) {
-          final SwaggerRequestParameter swaggerRequestParameter =
-              swaggerRequest.parameters[p];
+        for (var p = 0; p < swaggerRequest.parameters.length; p++) {
+          final swaggerRequestParameter = swaggerRequest.parameters[p];
 
           if (enumNames.contains(swaggerRequestParameter.name)) {
             continue;
           }
 
           if (swaggerRequestParameter.schema?.enumValues != null) {
-            final String enumContent = generateEnumContent(
+            final enumContent = generateEnumContent(
                 swaggerRequestParameter.name.capitalize,
                 swaggerRequestParameter.schema?.enumValues);
 
@@ -52,9 +47,9 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
   }
 
   String generateEnumContent(String enumName, List<String> enumValues) {
-    final String enumValuesContent = getEnumValuesContent(enumValues);
+    final enumValuesContent = getEnumValuesContent(enumValues);
 
-    final String result = """
+    final result = """
 enum $enumName{
 \t@JsonValue('swaggerGeneratedUnknown')
 \tswaggerGeneratedUnknown,
@@ -67,7 +62,7 @@ $enumValuesContent
 
   @visibleForTesting
   String getEnumValuesContent(List<String> enumValues) {
-    final String result = enumValues
+    final result = enumValues
         .map((String enumFieldName) =>
             "\t@JsonValue('$enumFieldName')\n\t${getValidatedEnumFieldName(enumFieldName)}")
         .join(',\n');
@@ -81,7 +76,7 @@ $enumValuesContent
       name = defaultEnumFieldName + name;
     }
 
-    final String result = name
+    final result = name
         .replaceAll(RegExp('[ -.,]'), '_')
         .split('_')
         .map((String word) => word.toLowerCase().capitalize)

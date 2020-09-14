@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'example_swagger.swagger2.dart';
+part of 'example_swagger.swagger.dart';
 
 // **************************************************************************
 // ChopperGenerator
@@ -12,7 +12,7 @@ class _$ExampleSwagger extends ExampleSwagger {
     if (client == null) return;
     this.client = client;
   }
- 
+
   @override
   final definitionType = ExampleSwagger;
 

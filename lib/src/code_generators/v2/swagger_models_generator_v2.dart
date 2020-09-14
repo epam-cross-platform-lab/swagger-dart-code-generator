@@ -12,19 +12,18 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
 
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
-    final String generatedEnums =
+    final generatedEnums =
         SwaggerEnumsGeneratorV2().generate(dartCode, fileName);
 
     final dynamic map = jsonDecode(dartCode);
 
-    final Map<String, dynamic> definitions =
-        map['definitions'] as Map<String, dynamic>;
+    final definitions = map['definitions'] as Map<String, dynamic>;
 
     if (definitions == null) {
       return '';
     }
 
-    final String generatedClasses = definitions.keys.map((String className) {
+    final generatedClasses = definitions.keys.map((String className) {
       return generateModelClassContent(
         className.pascalCase,
         definitions[className] as Map<String, dynamic>,
@@ -45,17 +44,16 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
     List<DefaultValueMap> defaultValues,
     bool useDefaultNullForLists,
   ) {
-    final Map<String, dynamic> properties =
-        map['properties'] as Map<String, dynamic>;
-    final String generatedConstructorProperties =
+    final properties = map['properties'] as Map<String, dynamic>;
+    final generatedConstructorProperties =
         generateConstructorPropertiesContent(properties);
 
-    final String generatedProperties = generatePropertiesContent(
+    final generatedProperties = generatePropertiesContent(
         properties, className, defaultValues, useDefaultNullForLists);
 
-    final String enums = generateEnumsContent(properties, className);
+    final enums = generateEnumsContent(properties, className);
 
-    final String generatedClass = '''
+    final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $className{
 \t$className($generatedConstructorProperties);\n
@@ -78,9 +76,8 @@ $enums
       return '';
     }
 
-    final String generatedConstructorParameters =
-        entityMap.keys.map((String key) {
-      final String fieldName = generateFieldName(key);
+    final generatedConstructorParameters = entityMap.keys.map((String key) {
+      final fieldName = generateFieldName(key);
       return '\t\tthis.$fieldName,';
     }).join('\n');
 
@@ -93,10 +90,9 @@ $enums
       return '';
     }
 
-    final String gemeratedEnumsContent = map.keys
+    final gemeratedEnumsContent = map.keys
         .map((String key) {
-          final Map<String, dynamic> enumValuesMap =
-              map[key] as Map<String, dynamic>;
+          final enumValuesMap = map[key] as Map<String, dynamic>;
 
           if (enumValuesMap.containsKey('type')) {
             return generateEnumContentIfPossible(
@@ -152,13 +148,13 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       return '';
     }
 
-    final List<String> results = <String>[];
+    final results = <String>[];
 
-    for (int i = 0; i < propertiesMap.keys.length; i++) {
-      String propertyName = propertiesMap.keys.elementAt(i);
-      final Map<String, dynamic> propertyEntryMap =
+    for (var i = 0; i < propertiesMap.keys.length; i++) {
+      var propertyName = propertiesMap.keys.elementAt(i);
+      final propertyEntryMap =
           propertiesMap[propertyName] as Map<String, dynamic>;
-      final String propertyKey = propertyName;
+      final propertyKey = propertyName;
 
       exceptionWords.forEach((String exceptionWord) {
         if (propertyName == exceptionWord) {
@@ -206,7 +202,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     typeName ??= getParameterTypeName(
         className, propertyName, items as Map<String, dynamic>);
 
-    final String jsonKeyContent =
+    final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? ')\n' : ', defaultValue: <$typeName>[])\n'}";
 
     return '''  $jsonKeyContent  final List<$typeName> ${generateFieldName(propertyName)};''';
@@ -226,12 +222,12 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       String className,
       List<DefaultValueMap> defaultValues,
       Map<String, dynamic> val) {
-    String jsonKeyContent = "@JsonKey(name: '$propertyKey'";
-    final String typeName = getParameterTypeName(className, propertyName, val);
+    var jsonKeyContent = "@JsonKey(name: '$propertyKey'";
+    final typeName = getParameterTypeName(className, propertyName, val);
 
     if (defaultValues
         .any((DefaultValueMap element) => element.typeName == typeName)) {
-      final DefaultValueMap defaultValue = defaultValues.firstWhere(
+      final defaultValue = defaultValues.firstWhere(
           (DefaultValueMap element) => element.typeName == typeName);
       jsonKeyContent +=
           ', defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n';
@@ -266,12 +262,11 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String generatePropertyContentByRef(Map<String, dynamic> propertyEntryMap,
       String propertyName, String propertyKey, String className) {
-    final String jsonKeyContent = "@JsonKey(name: '$propertyKey'";
+    final jsonKeyContent = "@JsonKey(name: '$propertyKey'";
 
-    final String parameterName =
-        propertyEntryMap['\$ref'].toString().split('/').last;
+    final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
 
-    final String _typeName = getParameterTypeName(
+    final _typeName = getParameterTypeName(
         className, propertyName, propertyEntryMap, parameterName);
 
     return '\t$jsonKeyContent)\n  final $_typeName ${generateFieldName(propertyName)};';
@@ -280,15 +275,13 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String generatePropertyContentBySchema(Map<String, dynamic> propertyEntryMap,
       String propertyName, String propertyKey, String className) {
-    final String jsonKeyContent = "@JsonKey(name: '$propertyKey'";
+    final jsonKeyContent = "@JsonKey(name: '$propertyKey'";
 
-    final Map<String, dynamic> propertySchema =
-        propertyEntryMap['schema'] as Map<String, dynamic>;
+    final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
 
-    final String parameterName =
-        propertySchema['\$ref'].toString().split('/').last;
+    final parameterName = propertySchema['\$ref'].toString().split('/').last;
 
-    final String _typeName = getParameterTypeName(
+    final _typeName = getParameterTypeName(
         className, propertyName, propertyEntryMap, parameterName);
     return '\t$jsonKeyContent)\n\tfinal $_typeName ${generateFieldName(propertyName)};';
   }
@@ -296,7 +289,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String generatePropertyContentByDefault(
       Map<String, dynamic> propertyEntryMap, String propertyName) {
-    final String jsonKeyContent = "@JsonKey(name: '$propertyName'";
+    final jsonKeyContent = "@JsonKey(name: '$propertyName'";
     return "\t$jsonKeyContent)\n  final ${propertyEntryMap['originalRef']} ${generateFieldName(propertyName)};";
   }
 
@@ -314,7 +307,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
 
   @visibleForTesting
   String generateFieldName(String jsonKey) {
-    final List<String> forbiddenCharacters = <String>['#'];
+    final forbiddenCharacters = <String>['#'];
     jsonKey = jsonKey.camelCase;
 
     forbiddenCharacters.forEach((String element) {
@@ -363,8 +356,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       case 'object':
         return 'Object';
       case 'array':
-        final Map<String, dynamic> items =
-            parameter['items'] as Map<String, dynamic>;
+        final items = parameter['items'] as Map<String, dynamic>;
         return getParameterTypeName(className, parameterName, items);
       default:
         if (parameter['oneOf'] != null) {
@@ -376,7 +368,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
 
   @visibleForTesting
   String getEnumFieldName(dynamic dynamicName) {
-    String name = dynamicName.toString();
+    var name = dynamicName.toString();
 
     exceptionWords.forEach((String forbiddenWord) {
       if (name == forbiddenWord) {
@@ -384,7 +376,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       }
     });
 
-    String result = name
+    var result = name
         .replaceAll(' ', '_')
         .replaceAll('-', '_')
         .replaceAll('.', '_')

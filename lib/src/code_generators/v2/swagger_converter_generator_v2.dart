@@ -14,18 +14,17 @@ ${_generateModelsMapping(dartCode)}};''';
   }
 
   String _generateModelsMapping(String dartCode) {
-    final StringBuffer result = StringBuffer();
+    final result = StringBuffer();
     final dynamic map = jsonDecode(dartCode);
 
-    final Map<String, dynamic> definitions =
-        map['definitions'] as Map<String, dynamic>;
+    final definitions = map['definitions'] as Map<String, dynamic>;
 
     if (definitions == null) {
       return '';
     }
 
-    for (int i = 0; i < definitions.keys.length; i++) {
-      final String key = definitions.keys.elementAt(i).toString();
+    for (var i = 0; i < definitions.keys.length; i++) {
+      final key = definitions.keys.elementAt(i).toString();
 
       result.writeln(
           '''\t${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,''');
