@@ -1,10 +1,12 @@
 <p align="center">
-  <h1><b>Swagger code generator</b></h1>
+<img src="https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/assets/lib_full_logo.png" height="100" alt="Bloc" />
 </p>
 
 # :mega: **Build dart types from Swagger/OpenAPI schemas**
 
 [![pub package](https://img.shields.io/pub/v/swagger_dart_code_generator.svg)](https://pub.dartlang.org/packages/swagger_dart_code_generator)
+![Coverage](https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/coverage_badge.svg?sanitize=true)
+<a href="https://discord.gg/fmkN37"><img src="https://img.shields.io/discord/755005482405462017.svg?logo=discord&color=blue" alt="Discord"></a>
 [![codecov](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator)
 
 SwaggerDartCodeGenerator is a code generator that looks for `*.swagger` files and builds `.swagger.dart` files, based on the schema. Codegenration based on Chopper and JsonAnnotation models and can be configured for your needs.
