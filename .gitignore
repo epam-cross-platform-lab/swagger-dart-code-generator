@@ -43,6 +43,7 @@ build/
 coverage_badge.svg
 lcov.info
 !example_swagger.swagger
+example/lib/generated_code/
 
 # Android related
 **/android/**/gradle-wrapper.jar
