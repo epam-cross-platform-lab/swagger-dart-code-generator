@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 0.32.1">
+  <meta name="description" content="swagger_dart_code_generator API docs, for the Dart programming language.">
+  <title>swagger_dart_code_generator - Dart API docs</title>
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+</head>
+
+<body data-base-href=""
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator">swagger_dart_code_generator package</a></li>
+  </ol>
+  <div class="self-name">swagger_dart_code_generator</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator">swagger_dart_code_generator package</a></li>
+    </ol>
+    
+    <h5 class="hidden-xs"><span class="package-name">swagger_dart_code_generator</span> <span class="package-kind">package</span></h5>
+    <ol>
+          <li class="section-title">Libraries</li>
+          <li><a href="swagger_dart_code_generator/swagger_dart_code_generator-library.html">swagger_dart_code_generator</a></li>
+    </ol>
+  </div>
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <section class="desc markdown">
+        <p align="center">
+  </p><h1><b>Swagger code generator</b></h1>
+<p></p>
+<h1 id="mega-build-dart-types-from-swaggeropenapi-schemas">:mega: <strong>Build dart types from Swagger/OpenAPI schemas</strong></h1>
+<p><a href="https://pub.dartlang.org/packages/swagger_dart_code_generator"><img src="https://img.shields.io/pub/v/swagger_dart_code_generator.svg" alt="pub package"></a></p>
+<p>SwaggerDartCodeGenerator is a code generator that looks for <code>*.swagger</code> files and builds <code>.swagger.dart</code> files, based on the schema. Codegenration based on Chopper and JsonAnnotation models and can be configured for your needs.</p>
+<hr>
+<h2 id="installation"><strong>Installation</strong></h2>
+<p>Add the following to your <code>pubspec.yaml</code> file to be able to do code generation:</p>
+<pre class="language-yaml"><code class="language-yaml">dev_dependencies:
+  chopper_generator: ^3.0.5
+  json_annotation: ^3.0.1
+  json_serializable: ^3.4.1
+  swagger_dart_code_generator: any
+</code></pre>
+<p>The generated code uses the following packages in run-time:</p>
+<pre class="language-yaml"><code class="language-yaml">dependencies:
+  chopper: ^3.0.3
+</code></pre>
+<p>Then run:</p>
+<pre class="language-shell"><code class="language-shell">pub packages get
+</code></pre>
+<p>or</p>
+<pre class="language-shell"><code class="language-shell">flutter packages get
+</code></pre>
+<p>Now SwaggerGenerator will generate the API files for you by running:</p>
+<pre class="language-shell"><code class="language-shell">pub run build_runner build
+</code></pre>
+<p>or</p>
+<pre class="language-shell"><code class="language-shell">flutter pub run build_runner build
+</code></pre>
+<h2 id="configuration"><strong>Configuration</strong></h2>
+<p>Swagger generator offers some configuration options to generate code. All options should be included on <code>build.yaml</code> file on the root of the project:</p>
+<pre class="language-yaml"><code class="language-yaml">targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        options:
+          # custom configuration options!
+</code></pre><table><thead><tr><th>Option</th><th>Default value</th><th>Description</th></tr></thead><tbody><tr><td><code>with_base_url</code></td><td><code>true</code></td><td>If this option is false, generator will ignore base url in swagger file.</td></tr><tr><td><code>with_converter</code></td><td><code>true</code></td><td>If option is true, combination of all mappings will be generated.</td></tr><tr><td><code>ignore_headers</code></td><td><code>false</code></td><td>If option is true, headers will not be generated.</td></tr><tr><td><code>use_default_null_for_lists</code></td><td><code>false</code></td><td>If option is true, default value for lists will be null, otherwice - []</td></tr><tr><td><code>build_only_models</code></td><td><code>false</code></td><td>If option is true, chopper classes will not be generated.</td></tr><tr><td><code>default_values_map</code></td><td><code>[]</code></td><td>Contains map of types and theirs default values. See <a href="#default-value-map">DefaultValueMap</a>.</td></tr><tr><td><code>response_override_value_map</code></td><td><code>[]</code></td><td>Contains map of responses and theirs overriden values. See <a href="#response-override-value-map">ResponseOverrideValueMap</a>.</td></tr><tr><td><code>input_folder</code></td><td><code>null</code></td><td>Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers).</td></tr><tr><td><code>output_folder</code></td><td><code>null</code></td><td>Path to output folder (for ex. lib/generated).</td></tr></tbody></table>
+<p>It's important to remember that, by default, <a href="https://github.com/dart-lang/build">build</a> will follow <a href="https://dart.dev/tools/pub/package-layout">Dart's package layout conventions</a>, meaning that only some folders will be considered to parse the input files. So, if you want to reference files from a folder other than <code>lib/</code>, make sure you've included it on <code>sources</code>:</p>
+<pre class="language-yaml"><code class="language-yaml">targets:
+  $default:
+    sources:
+      - lib/**
+      - swagger_examples/**
+      - swaggers/**
+</code></pre>
+<h3 id="default-value-map-for-model-generation"><strong>Default Value Map for model generation</strong></h3>
+<p>If you want to add defaultValue: attribute to fields with concrete type you can use default value map. Please see next example:</p>
+<pre class="language-yaml"><code class="language-yaml">targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: 'lib/swaggers'
+          output_folder: 'lib/generated_code/'
+          default_values_map:
+            - type_name: int
+              default_value: '36'
+            - type_name: String
+              default_value: 'defaut'
+            - type_name: 'List&lt;String&gt;'
+              default_value: '[]'
+</code></pre>
+<h3 id="response-override-value-map-for-request-generation"><strong>Response Override Value Map for request generation</strong></h3>
+<p>If you want to override response for concrete request, you can use response_override_value_map. For example:</p>
+<pre class="language-yaml"><code class="language-yaml">targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: 'lib/swaggers'
+          output_folder: 'lib/generated_code/'
+          response_override_value_map:
+            - url: '/store/inventory'
+              method: get
+              overriden_value: 'List&lt;dynamic&gt;'
+              - url: '/news/latest'
+              method: put
+              overriden_value: 'MyPerfectType'
+</code></pre>
+<p>Check the <a href="./example">examples</a> to see how to use it in details.</p>
+      </section>
+      
+        <section class="summary">
+            <h2>Libraries</h2>
+          <dl>
+            <dt id="swagger_dart_code_generator">
+              <span class="name"><a href="swagger_dart_code_generator/swagger_dart_code_generator-library.html">swagger_dart_code_generator</a></span>             
+            </dt>
+            <dd>
+               
+            </dd>
+          </dl>
+        </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    swagger_dart_code_generator
+      1.0.0
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+</body>
+
+</html>
