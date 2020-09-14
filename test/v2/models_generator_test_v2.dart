@@ -5,26 +5,26 @@ import '../code_examples.dart';
 
 void main() {
   group('generate', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
-    const String _fileName = 'order_service.dart';
+    final _generator = SwaggerModelsGeneratorV2();
+    const _fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
-      final String result = _generator.generate(
+      final result = _generator.generate(
           model_with_parameters_v2, _fileName, GeneratorOptions());
 
       expect(result, contains('final DeliveryDto deliveryDate'));
     });
 
     test('Should parse object name as a field Type', () {
-      const String expectedResult = "@JsonKey(name: 'id', defaultValue: 19)";
-      final GeneratorOptions generatorOptions =
+      const expectedResult = "@JsonKey(name: 'id', defaultValue: 19)";
+      final generatorOptions =
           GeneratorOptions(defaultValuesMap: <DefaultValueMap>[
         DefaultValueMap(
           typeName: 'int',
           defaultValue: '19',
         )
       ]);
-      final String result = _generator.generate(
+      final result = _generator.generate(
           model_with_parameters_v2, _fileName, generatorOptions);
 
       expect(result, contains(expectedResult));
@@ -32,35 +32,35 @@ void main() {
   });
 
   group('generateEnumName', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
 
     test('Should generate enum name', () {
-      const String _className = 'animal';
-      const String _enumName = 'cat';
-      const String _expectedResult = 'AnimalCat';
-      final String result = _generator.generateEnumName(_className, _enumName);
+      const _className = 'animal';
+      const _enumName = 'cat';
+      const _expectedResult = 'AnimalCat';
+      final result = _generator.generateEnumName(_className, _enumName);
 
       expect(result, contains(_expectedResult));
     });
   });
 
   group('generateDefaultValueFromMap', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return default value', () {
-      const String _defaultValue = 'true';
-      const String _typeName = 'bool';
-      const String _expectedResult = 'true';
-      final String result = _generator.generateDefaultValueFromMap(
+      const _defaultValue = 'true';
+      const _typeName = 'bool';
+      const _expectedResult = 'true';
+      final result = _generator.generateDefaultValueFromMap(
           DefaultValueMap(defaultValue: _defaultValue, typeName: _typeName));
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return default from switch', () {
-      const String _defaultValue = 'Animal';
-      const String _typeName = 'Object';
-      const String _expectedResult = 'Animal';
-      final String result = _generator.generateDefaultValueFromMap(
+      const _defaultValue = 'Animal';
+      const _typeName = 'Object';
+      const _expectedResult = 'Animal';
+      final result = _generator.generateDefaultValueFromMap(
           DefaultValueMap(defaultValue: _defaultValue, typeName: _typeName));
 
       expect(result, contains(_expectedResult));
@@ -68,89 +68,81 @@ void main() {
   });
 
   group('getParameterTypeName', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return validate parameter type name', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const Map<String, dynamic> _parameter = <String, dynamic>{
-        'type': 'object'
-      };
-      const String _expectedResult = 'Object';
-      final String result = _generator.getParameterTypeName(
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _parameter = <String, dynamic>{'type': 'object'};
+      const _expectedResult = 'Object';
+      final result = _generator.getParameterTypeName(
           _className, _parameterName, _parameter);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return Object, because we dont jave map[items]', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const Map<String, dynamic> _parameter = <String, dynamic>{
-        'type': 'array'
-      };
-      const String _expectedResult = 'Object';
-      final String result = _generator.getParameterTypeName(
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _parameter = <String, dynamic>{'type': 'array'};
+      const _expectedResult = 'Object';
+      final result = _generator.getParameterTypeName(
           _className, _parameterName, _parameter);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return Object, because we have map[oneOf]', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const Map<String, dynamic> _parameter = <String, dynamic>{
-        'oneOf': 'animals'
-      };
-      const String _expectedResult = 'Object';
-      final String result = _generator.getParameterTypeName(
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _parameter = <String, dynamic>{'oneOf': 'animals'};
+      const _expectedResult = 'Object';
+      final result = _generator.getParameterTypeName(
           _className, _parameterName, _parameter);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return Object', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const String _expectedResult = 'Object';
-      final String result =
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _expectedResult = 'Object';
+      final result =
           _generator.getParameterTypeName(_className, _parameterName, null);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return validate parameter type name', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const Map<String, dynamic> _parameter = <String, dynamic>{
-        '\$ref': '#/definitions/Pet'
-      };
-      const String _expectedResult = 'Pet';
-      final String result = _generator.getParameterTypeName(
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _parameter = <String, dynamic>{'\$ref': '#/definitions/Pet'};
+      const _expectedResult = 'Pet';
+      final result = _generator.getParameterTypeName(
           _className, _parameterName, _parameter);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return optional name parameter', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const String _refNameParameter = 'animals_Object';
-      const String _expectedResult = 'AnimalsObject';
-      final String result = _generator.getParameterTypeName(
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _refNameParameter = 'animals_Object';
+      const _expectedResult = 'AnimalsObject';
+      final result = _generator.getParameterTypeName(
           _className, _parameterName, null, _refNameParameter);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return DateTime', () {
-      const String _className = 'Animal';
-      const String _parameterName = 'orderId';
-      const Map<String, dynamic> _parameter = <String, dynamic>{
+      const _className = 'Animal';
+      const _parameterName = 'orderId';
+      const _parameter = <String, dynamic>{
         'type': 'string',
         'format': 'date-time'
       };
-      const String _expectedResult = 'DateTime';
-      final String result = _generator.getParameterTypeName(
+      const _expectedResult = 'DateTime';
+      final result = _generator.getParameterTypeName(
           _className, _parameterName, _parameter);
 
       expect(result, contains(_expectedResult));
@@ -158,90 +150,88 @@ void main() {
   });
 
   group('getEnumFieldName', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
 
     test('Should return validate enum field name', () {
-      const String _name = 'cat-dog_ Cars';
-      const String _expectedResult = 'catDogCars';
-      final String result = _generator.getEnumFieldName(_name);
+      const _name = 'cat-dog_ Cars';
+      const _expectedResult = 'catDogCars';
+      final result = _generator.getEnumFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return validate enum field name without forbidden symbols',
         () {
-      const String _name = 'cat,dog..Cars';
-      const String _expectedResult = 'catDogCars';
-      final String result = _generator.getEnumFieldName(_name);
+      const _name = 'cat,dog..Cars';
+      const _expectedResult = 'catDogCars';
+      final result = _generator.getEnumFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return \$validateEnumFieldName', () {
-      const String _name = '55element';
-      const String _expectedResult = '\$55element';
-      final String result = _generator.getEnumFieldName(_name);
+      const _name = '55element';
+      const _expectedResult = '\$55element';
+      final result = _generator.getEnumFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return \$with', () {
-      const String _name = 'with';
-      const String _expectedResult = '\$with';
-      final String result = _generator.getEnumFieldName(_name);
+      const _name = 'with';
+      const _expectedResult = '\$with';
+      final result = _generator.getEnumFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
   });
 
   group('generateFieldName', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
 
     test('Should return validate field name', () {
-      const String _name = 'Cat_Dog-Animals';
-      const String _expectedResult = 'catDogAnimals';
-      final String result = _generator.generateFieldName(_name);
+      const _name = 'Cat_Dog-Animals';
+      const _expectedResult = 'catDogAnimals';
+      final result = _generator.generateFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return \$forbiddenFieldName', () {
-      const String _name = '#';
-      const String _expectedResult = '\$forbiddenFieldName';
-      final String result = _generator.generateFieldName(_name);
+      const _name = '#';
+      const _expectedResult = '\$forbiddenFieldName';
+      final result = _generator.generateFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return \$null', () {
-      const String _name = 'null';
-      const String _expectedResult = '\$null';
-      final String result = _generator.generateFieldName(_name);
+      const _name = 'null';
+      const _expectedResult = '\$null';
+      final result = _generator.generateFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
 
     test('Should return \$number', () {
-      const String _name = '5element';
-      const String _expectedResult = '\$5element';
-      final String result = _generator.generateFieldName(_name);
+      const _name = '5element';
+      const _expectedResult = '\$5element';
+      final result = _generator.generateFieldName(_name);
 
       expect(result, contains(_expectedResult));
     });
   });
 
   group('generatePropertyContentByDefault', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return property with JsonKey', () {
-      final Map<String, dynamic> _propertyEntryMap = <String, dynamic>{
-        'originalRef': 'Pet'
-      };
-      const String _propertyName = 'shipDate';
-      const String _jsonKeyExpendedResult = "@JsonKey(name: '$_propertyName'";
-      final String _expectedResult =
+      final _propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
+      const _propertyName = 'shipDate';
+      const _jsonKeyExpendedResult = "@JsonKey(name: '$_propertyName'";
+      final _expectedResult =
           "\t$_jsonKeyExpendedResult)\n  final ${_propertyEntryMap['originalRef']} $_propertyName;";
 
-      final String result = _generator.generatePropertyContentByDefault(
+      final result = _generator.generatePropertyContentByDefault(
         _propertyEntryMap,
         _propertyName,
       );
@@ -252,19 +242,17 @@ void main() {
   });
 
   group('generatePropertyContentByRef', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return property with JsonKey', () {
-      final Map<String, dynamic> _propertyEntryMap = <String, dynamic>{
-        '\$ref': '#/definitions/Pet'
-      };
-      const String _propertyName = 'shipDate';
-      const String _propertyKey = 'shipDateGet';
-      const String _className = 'Animals';
-      const String _jsonKeyExpendedResult = "@JsonKey(name: '$_propertyKey'";
-      const String _expectedResult =
+      final _propertyEntryMap = <String, dynamic>{'\$ref': '#/definitions/Pet'};
+      const _propertyName = 'shipDate';
+      const _propertyKey = 'shipDateGet';
+      const _className = 'Animals';
+      const _jsonKeyExpendedResult = "@JsonKey(name: '$_propertyKey'";
+      const _expectedResult =
           '\t$_jsonKeyExpendedResult)\n  final Pet $_propertyName;';
 
-      final String result = _generator.generatePropertyContentByRef(
+      final result = _generator.generatePropertyContentByRef(
         _propertyEntryMap,
         _propertyName,
         _propertyKey,
@@ -277,27 +265,26 @@ void main() {
   });
 
   group('generateEnumValuesContent', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return enum values', () {
-      final List<String> list = <String>['Cats', 'dogs', 'Forgs'];
-      const String _expectedResult = "\t@JsonValue('Cats')\n  cats";
-      final String result = _generator.generateEnumValuesContent(list);
+      final list = <String>['Cats', 'dogs', 'Forgs'];
+      const _expectedResult = "\t@JsonValue('Cats')\n  cats";
+      final result = _generator.generateEnumValuesContent(list);
 
       expect(result, contains(_expectedResult));
     });
   });
 
   group('generateEnumPropertyContent', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return enum property with JsonKey', () {
       // ignore: prefer_const_declarations
-      final String key = 'dog';
-      const String className = 'animals';
-      const String _jsonKeyExpectedResult =
+      final key = 'dog';
+      const className = 'animals';
+      const _jsonKeyExpectedResult =
           '@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)';
-      const String _expectedResult = 'final AnimalsDog dog;';
-      final String result =
-          _generator.generateEnumPropertyContent(key, className);
+      const _expectedResult = 'final AnimalsDog dog;';
+      final result = _generator.generateEnumPropertyContent(key, className);
 
       expect(result, contains(_jsonKeyExpectedResult));
       expect(result, contains(_expectedResult));
@@ -305,16 +292,16 @@ void main() {
   });
 
   group('generateModelClassContent', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return model class content', () {
-      const Map<String, dynamic> map = <String, dynamic>{};
-      const String fileName = 'order_service.dart';
-      const String className = 'Animals';
-      const bool useDefaultNullForLists = false;
-      const String _classExpectedResult = 'class Animals{';
-      const String _factoryConstructorExpectedResult =
+      const map = <String, dynamic>{};
+      const fileName = 'order_service.dart';
+      const className = 'Animals';
+      const useDefaultNullForLists = false;
+      const _classExpectedResult = 'class Animals{';
+      const _factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
-      final String result = _generator.generateModelClassContent(className, map,
+      final result = _generator.generateModelClassContent(className, map,
           fileName, <DefaultValueMap>[], useDefaultNullForLists);
 
       expect(result, contains(_classExpectedResult));
@@ -323,37 +310,35 @@ void main() {
   });
 
   group('generateConstructorPropertiesContent', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return empty', () {
-      const String expectedResult = '';
-      final String result =
-          _generator.generateConstructorPropertiesContent(null);
+      const expectedResult = '';
+      final result = _generator.generateConstructorPropertiesContent(null);
 
       expect(result, contains(expectedResult));
     });
 
     test('Should return validate constructor property', () {
-      final Map<String, dynamic> map = <String, dynamic>{'Animal': 'dog'};
-      const String expectedResult = 'this.animal';
-      final String result =
-          _generator.generateConstructorPropertiesContent(map);
+      final map = <String, dynamic>{'Animal': 'dog'};
+      const expectedResult = 'this.animal';
+      final result = _generator.generateConstructorPropertiesContent(map);
 
       expect(result, contains(expectedResult));
     });
   });
 
   group('generatePropertyContentBySchema', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return property content by schema', () {
-      final Map<String, dynamic> map = <String, dynamic>{
+      final map = <String, dynamic>{
         'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
       };
-      const String propertyName = 'dog';
-      const String className = 'Animals';
-      const String propertyKey = 'Dog';
-      const String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Dog')\n";
-      const String _fieldExpectedResult = '\tfinal Pet dog';
-      final String result = _generator.generatePropertyContentBySchema(
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+      const _jsonKeyExpectedResult = "\t@JsonKey(name: 'Dog')\n";
+      const _fieldExpectedResult = '\tfinal Pet dog';
+      final result = _generator.generatePropertyContentBySchema(
           map, propertyName, propertyKey, className);
 
       expect(result, contains(_jsonKeyExpectedResult));
@@ -362,15 +347,15 @@ void main() {
   });
 
   group('generatePropertiesContent', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return properties from ref', () {
-      final Map<String, dynamic> map = <String, dynamic>{
+      final map = <String, dynamic>{
         'Animals': <String, dynamic>{'\$ref': '#/definitions/Pet'}
       };
-      const String className = 'Animals';
-      const String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const String _fieldExpectedResult = 'final Pet animals';
-      final String result = _generator.generatePropertiesContent(
+      const className = 'Animals';
+      const _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      const _fieldExpectedResult = 'final Pet animals';
+      final result = _generator.generatePropertiesContent(
           map, className, <DefaultValueMap>[], false);
 
       expect(result, contains(_jsonKeyExpectedResult));
@@ -378,16 +363,16 @@ void main() {
     });
 
     test('Should return properties from schema', () {
-      final Map<String, dynamic> map = <String, dynamic>{
+      final map = <String, dynamic>{
         'Animals': <String, dynamic>{
           'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
         }
       };
 
-      const String className = 'Animals';
-      const String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const String _fieldExpectedResult = 'final Pet animals';
-      final String result = _generator.generatePropertiesContent(
+      const className = 'Animals';
+      const _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      const _fieldExpectedResult = 'final Pet animals';
+      final result = _generator.generatePropertiesContent(
           map, className, <DefaultValueMap>[], false);
 
       expect(result, contains(_jsonKeyExpectedResult));
@@ -395,14 +380,14 @@ void main() {
     });
 
     test('Should return properties from default originalRef', () {
-      final Map<String, dynamic> map = <String, dynamic>{
+      final map = <String, dynamic>{
         'Animals': <String, dynamic>{'originalRef': 'Pet'}
       };
 
-      const String className = 'Animals';
-      const String _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const String _fieldExpectedResult = 'final Pet animals';
-      final String result = _generator.generatePropertiesContent(
+      const className = 'Animals';
+      const _jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      const _fieldExpectedResult = 'final Pet animals';
+      final result = _generator.generatePropertiesContent(
           map, className, <DefaultValueMap>[], false);
 
       expect(result, contains(_jsonKeyExpectedResult));
@@ -410,14 +395,14 @@ void main() {
     });
 
     test('Should return property \$with', () {
-      final Map<String, dynamic> map = <String, dynamic>{
+      final map = <String, dynamic>{
         'with': <String, dynamic>{'originalRef': 'Pet'}
       };
 
-      const String className = 'Animals';
-      const String _jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
-      const String _fieldExpectedResult = 'final Pet \$with';
-      final String result = _generator.generatePropertiesContent(
+      const className = 'Animals';
+      const _jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
+      const _fieldExpectedResult = 'final Pet \$with';
+      final result = _generator.generatePropertiesContent(
           map, className, <DefaultValueMap>[], false);
 
       expect(result, contains(_jsonKeyExpectedResult));
@@ -426,17 +411,17 @@ void main() {
   });
 
   group('generateListPropertyContent', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return List<Object>', () {
-      final Map<String, dynamic> map = <String, dynamic>{'items': null};
-      const String propertyName = 'dog';
-      const String className = 'Animals';
-      const String propertyKey = 'Dog';
-      const String _jsonKeyExpectedResult =
+      final map = <String, dynamic>{'items': null};
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+      const _jsonKeyExpectedResult =
           "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
-      const String _propertyExpectedResult = 'final List<Object> dog';
-      final String result = _generator.generateListPropertyContent(
+      const _propertyExpectedResult = 'final List<Object> dog';
+      final result = _generator.generateListPropertyContent(
           propertyName, propertyKey, className, map, false);
 
       expect(result, contains(_jsonKeyExpectedResult));
@@ -445,18 +430,18 @@ void main() {
   });
 
   group('generatePropertyContentByType', () {
-    final SwaggerModelsGeneratorV2 _generator = SwaggerModelsGeneratorV2();
+    final _generator = SwaggerModelsGeneratorV2();
     test('Should return property content by schema', () {
-      final Map<String, String> map = <String, String>{'type': 'enum'};
-      const String propertyName = 'dog';
-      const String className = 'Animals';
-      const String propertyKey = 'Dog';
-      const String _jsonKeyExpectedResult =
+      final map = <String, String>{'type': 'enum'};
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+      const _jsonKeyExpectedResult =
           '@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)';
 
-      const String _propertyExpectedResult = 'final AnimalsDog dog';
-      final String result = _generator.generatePropertyContentByType(map,
-          propertyName, propertyKey, className, <DefaultValueMap>[], false);
+      const _propertyExpectedResult = 'final AnimalsDog dog';
+      final result = _generator.generatePropertyContentByType(map, propertyName,
+          propertyKey, className, <DefaultValueMap>[], false);
 
       expect(result, contains(_jsonKeyExpectedResult));
       expect(result, contains(_propertyExpectedResult));

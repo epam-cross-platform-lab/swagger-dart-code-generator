@@ -4,13 +4,11 @@ import '../code_examples.dart';
 
 void main() {
   group('Converter generator tests', () {
-    final SwaggerConverterGeneratorV2 _generator =
-        SwaggerConverterGeneratorV2();
-    const String _fileName = 'file_name';
+    final _generator = SwaggerConverterGeneratorV2();
+    const _fileName = 'file_name';
 
     test('Should create fromJsonFactory for model', () {
-      final String result =
-          _generator.generate(model_with_parameters_v2, _fileName);
+      final result = _generator.generate(model_with_parameters_v2, _fileName);
 
       expect(
           result,
