@@ -132,4 +132,4 @@ targets:
               overriden_value: 'MyPerfectType'
 ```
 
-Check the [examples](./example) to see how to use it in details.
+Check the [examples](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/tree/master/example) to see how to use it in details.
