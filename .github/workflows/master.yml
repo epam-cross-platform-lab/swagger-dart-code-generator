@@ -2,7 +2,7 @@ name: CI for master branch
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "0 */8 * * *"
 
 jobs:
   has_changes: 
