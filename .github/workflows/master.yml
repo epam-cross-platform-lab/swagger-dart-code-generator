@@ -1,8 +1,8 @@
-name: CI for pull request
+name: CI for master branch
 
 on:
-  pull_request:
-    branches: [ master ]
+  schedule:
+    - cron: "0-59/30 * * * *"
 
 jobs:
   build:
@@ -28,8 +28,3 @@ jobs:
       with:
         token: ${{secrets.CODECOV_TOKEN}}
         file: ./coverage/lcov.info
-    # - name: Test coverage
-    #   run: flutter pub run test_coverage --min-coverage 70
-   
-      
-      
