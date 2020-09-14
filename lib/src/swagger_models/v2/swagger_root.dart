@@ -45,11 +45,11 @@ class SwaggerRoot {
   }
 
   static List<SwaggerRequestParameter> mapParameters(Map<String, dynamic> map) {
-    final List<SwaggerRequestParameter> results = <SwaggerRequestParameter>[];
-    for (int i = 0; i < map.keys.length; i++) {
-      final String key = map.keys.elementAt(i);
+    final results = <SwaggerRequestParameter>[];
+    for (var i = 0; i < map.keys.length; i++) {
+      final key = map.keys.elementAt(i);
 
-      final SwaggerRequestParameter result =
+      final result =
           SwaggerRequestParameter.fromJson(map[key] as Map<String, dynamic>);
       result.name = key;
 
@@ -59,29 +59,29 @@ class SwaggerRoot {
   }
 
   static List<SwaggerPath> mapPaths(Map<String, dynamic> map) {
-    final List<SwaggerPath> results = <SwaggerPath>[];
+    final results = <SwaggerPath>[];
 
-    for (int i = 0; i < map.keys.length; i++) {
-      final String key = map.keys.elementAt(i);
-      final Map<String, dynamic> value = map[key] as Map<String, dynamic>;
+    for (var i = 0; i < map.keys.length; i++) {
+      final key = map.keys.elementAt(i);
+      final value = map[key] as Map<String, dynamic>;
 
-      final SwaggerPath path = SwaggerPath(path: key);
+      final path = SwaggerPath(path: key);
       path.requests = <SwaggerRequest>[];
       path.parameters = <SwaggerRequestParameter>[];
       if (value.containsKey('parameters')) {
-        final List<dynamic> list = value['parameters'] as List<dynamic>;
-        for (int k = 0; k < list.length; k++) {
-          final SwaggerRequestParameter parameter =
+        final list = value['parameters'] as List<dynamic>;
+        for (var k = 0; k < list.length; k++) {
+          final parameter =
               SwaggerRequestParameter.fromJson(list[k] as Map<String, dynamic>);
           path.parameters.add(parameter);
         }
       }
-      for (int j = 0; j < value.keys.length; j++) {
-        final String requestKey = value.keys.elementAt(j);
+      for (var j = 0; j < value.keys.length; j++) {
+        final requestKey = value.keys.elementAt(j);
         if (requestKey.contains('parameters')) {
           continue;
         }
-        final SwaggerRequest request =
+        final request =
             SwaggerRequest.fromJson(value[requestKey] as Map<String, dynamic>);
         request.parameters.addAll(path.parameters);
         request.type = requestKey;

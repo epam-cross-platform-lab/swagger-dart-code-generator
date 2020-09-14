@@ -27,8 +27,8 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
   String generate(String code, String className, String fileName,
       GeneratorOptions options) {
     _unnamedMethodsCounter = 0;
-    final Map<String, dynamic> map = jsonDecode(code) as Map<String, dynamic>;
-    final SwaggerRoot swaggerRoot = SwaggerRoot.fromJson(map);
+    final map = jsonDecode(code) as Map<String, dynamic>;
+    final swaggerRoot = SwaggerRoot.fromJson(map);
 
     //Link defined parameters with requests
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
@@ -53,11 +53,10 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
       return swaggerRequestParameter;
     }
 
-    final String parameterClassName =
-        swaggerRequestParameter.ref.split('/').last;
+    final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
-    final SwaggerRequestParameter neededParameter =
-        definedParameters.firstWhere((SwaggerRequestParameter element) =>
+    final neededParameter = definedParameters.firstWhere(
+        (SwaggerRequestParameter element) =>
             element.name == parameterClassName);
 
     return neededParameter;
@@ -66,12 +65,12 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
   @visibleForTesting
   String getFileContent(SwaggerRoot swaggerRoot, String className,
       String fileName, GeneratorOptions options) {
-    final String classContent =
+    final classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
-    final String chopperClientContent = getChopperClientContent(
+    final chopperClientContent = getChopperClientContent(
         className, swaggerRoot.host, swaggerRoot.basePath, options);
-    final String allMethodsContent = getAllMethodsContent(swaggerRoot, options);
-    final String result = generateFileContent(
+    final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
+    final result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
 
     return result;
@@ -80,7 +79,7 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
   @visibleForTesting
   String generateFileContent(String classContent, String chopperClientContent,
       String allMethodsContent) {
-    final String result = '''
+    final result = '''
 $classContent
 {
 $chopperClientContent
@@ -93,18 +92,18 @@ $allMethodsContent
   @visibleForTesting
   String getAllMethodsContent(
       SwaggerRoot swaggerRoot, GeneratorOptions options) {
-    final StringBuffer methods = StringBuffer();
+    final methods = StringBuffer();
 
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
       swaggerPath.requests
           .where((SwaggerRequest swaggerRequest) =>
               swaggerRequest.type.toLowerCase() != requestTypeOptions)
           .forEach((SwaggerRequest swaggerRequest) {
-        final bool hasFormData = swaggerRequest.parameters.any(
+        final hasFormData = swaggerRequest.parameters.any(
             (SwaggerRequestParameter swaggerRequestParameter) =>
                 swaggerRequestParameter.inParameter == 'formData');
 
-        String methodName = swaggerRequest.operationId;
+        var methodName = swaggerRequest.operationId;
 
         if (methodName == null) {
           methodName = defaultMethodName + _unnamedMethodsCounter.toString();
@@ -113,21 +112,21 @@ $allMethodsContent
           _unnamedMethodsCounter++;
         }
 
-        final String requiredParameters = getRequiredParametersContent(
+        final requiredParameters = getRequiredParametersContent(
           listParameters: swaggerRequest.parameters,
           ignoreHeaders: options.ignoreHeaders,
         );
 
-        final String parameterCommentsForMethod =
+        final parameterCommentsForMethod =
             getParameterCommentsForMethod(swaggerRequest.parameters, options);
 
-        final String returnTypeName = getReturnTypeName(
+        final returnTypeName = getReturnTypeName(
             swaggerRequest.responses,
             swaggerPath.path,
             swaggerRequest.type,
             options.responseOverrideValueMap);
 
-        final String generatedMethod = getMethodContent(
+        final generatedMethod = getMethodContent(
             summary: swaggerRequest.summary,
             typeRequest: swaggerRequest.type,
             methodName: methodName,
@@ -150,7 +149,7 @@ $allMethodsContent
     if (overridenRequests
             ?.any((ResponseOverrideValueMap element) => element.url == url) ==
         true) {
-      final ResponseOverrideValueMap overridenResponse = overridenRequests
+      final overridenResponse = overridenRequests
           .firstWhere((ResponseOverrideValueMap element) => element.url == url);
 
       if (overridenResponse.method == methodName) {
@@ -158,7 +157,7 @@ $allMethodsContent
       }
     }
 
-    final SwaggerResponse neededResponse = getSuccessedResponse(responses);
+    final neededResponse = getSuccessedResponse(responses);
 
     if (neededResponse == null) {
       return null;
@@ -213,10 +212,10 @@ $allMethodsContent
 
   @visibleForTesting
   String validateParameterName(String parameterName) {
-    List<String> name = <String>[];
+    var name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
-        final String result = '\$' + parameterName;
+        final result = '\$' + parameterName;
         name.add(result);
       }
     });
@@ -233,7 +232,7 @@ $allMethodsContent
   @visibleForTesting
   String getRequestClassContent(String host, String className, String fileName,
       GeneratorOptions options) {
-    final String classWithoutChopper = '''
+    final classWithoutChopper = '''
 ${getBaseUrlContent(host, options.withBaseUrl)}
 abstract class $className extends ChopperService''';
 
@@ -258,15 +257,15 @@ abstract class $className extends ChopperService''';
   @visibleForTesting
   String getChopperClientContent(
       String fileName, String host, String basePath, GeneratorOptions options) {
-    final String baseUrlString = options.withBaseUrl
+    final baseUrlString = options.withBaseUrl
         ? "baseUrl:  'https://$host${basePath ?? ''}'"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
-    final String converterString = options.withBaseUrl && options.withConverter
+    final converterString = options.withBaseUrl && options.withConverter
         ? 'converter: CustomJsonDecoder(),'
         : 'converter: chopper.JsonSerializableConverter(),';
 
-    final String generatedChopperClient = '''
+    final generatedChopperClient = '''
   static $fileName create([ChopperClient client]) {
     if(client!=null){
       return _\$$fileName(client);
@@ -290,7 +289,7 @@ abstract class $className extends ChopperService''';
       case 'body':
         return getBodyParameter(parameter);
       case 'formData':
-        final bool isEnum = parameter.schema?.enumValues != null;
+        final isEnum = parameter.schema?.enumValues != null;
 
         return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? parameter.name.capitalize : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
       case 'header':
@@ -300,7 +299,7 @@ abstract class $className extends ChopperService''';
       case 'cookie':
         return '';
       default:
-        String parameterType = '';
+        var parameterType = '';
 
         if (parameter.type != null) {
           parameterType = parameter.type;
@@ -360,7 +359,7 @@ abstract class $className extends ChopperService''';
       String requestPath,
       bool hasFormData,
       String returnType}) {
-    String typeReq = typeRequest.capitalize + "(path: '$requestPath')";
+    var typeReq = typeRequest.capitalize + "(path: '$requestPath')";
     if (hasFormData) {
       typeReq +=
           '\n  @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)';
@@ -370,15 +369,15 @@ abstract class $className extends ChopperService''';
       returnType = returnType.pascalCase;
     }
 
-    final String returnTypeString = returnType != null ? '<$returnType>' : '';
-    final String parametersPart =
+    final returnTypeString = returnType != null ? '<$returnType>' : '';
+    final parametersPart =
         requiredParameters.isEmpty ? '' : '{$requiredParameters}';
 
     if (summary != null) {
       summary = summary.replaceAll(RegExp(r'\n|\r|\t'), ' ');
     }
 
-    final String generatedMethod = """
+    final generatedMethod = """
 \t///$summary  ${parametersComments.isNotEmpty ? """\n$parametersComments""" : ''}
 \t@$typeReq
 \tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($parametersPart);
@@ -416,15 +415,14 @@ abstract class $className extends ChopperService''';
       parameterDescription = '';
     }
 
-    final String comments =
-        '''\t///@param $parameterName $parameterDescription''';
+    final comments = '''\t///@param $parameterName $parameterDescription''';
     return comments;
   }
 
   @visibleForTesting
   String abbreviationToCamelCase(String word) {
-    bool isLastLetterUpper = false;
-    final String result = word.split('').map((String e) {
+    var isLastLetterUpper = false;
+    final result = word.split('').map((String e) {
       if (e.isUpper && !isLastLetterUpper) {
         isLastLetterUpper = true;
         return e;

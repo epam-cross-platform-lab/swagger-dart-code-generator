@@ -8,11 +8,11 @@ class SwaggerAdditionsGeneratorV3 implements SwaggerAdditionsGenerator {
 
   @override
   String generateIndexes(Map<String, List<String>> buildExtensions) {
-    final StringBuffer imports = StringBuffer();
+    final imports = StringBuffer();
 
     buildExtensions.keys.forEach((String key) {
-      final String fileName = key.split('/').last;
-      final String className = getClassNameFromFileName(key.split('/').last);
+      final fileName = key.split('/').last;
+      final className = getClassNameFromFileName(key.split('/').last);
 
       imports.writeln("import '$fileName.dart' show $className;");
     });
@@ -22,18 +22,18 @@ class SwaggerAdditionsGeneratorV3 implements SwaggerAdditionsGenerator {
 
   @override
   String generateConverterMappings(Map<String, List<String>> buildExtensions) {
-    final StringBuffer maps = StringBuffer();
-    final StringBuffer imports = StringBuffer();
+    final maps = StringBuffer();
+    final imports = StringBuffer();
     buildExtensions.keys.forEach((String key) {
-      final String className =
+      final className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
-      final String fileName = key.split('/').last;
+      final fileName = key.split('/').last;
       maps.writeln('  ...$className,');
       imports.writeln("import '$fileName.dart';");
     });
 
-    final String mapping = '''
+    final mapping = '''
 $imports
 
 final $mappingVariableName = {
@@ -45,7 +45,7 @@ $maps};
 
   @override
   String generateImportsContent(String swaggerFileName, bool hasModels) {
-    final StringBuffer result = StringBuffer();
+    final result = StringBuffer();
 
     result.writeln("""import 'package:json_annotation/json_annotation.dart';
 import 'package:chopper/chopper.dart';

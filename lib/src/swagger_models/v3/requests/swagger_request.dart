@@ -42,7 +42,7 @@ class SwaggerRequest {
     if (map == null) {
       return null;
     }
-    final List<SwaggerRequestParameter> result = map
+    final result = map
         .map((dynamic e) =>
             SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
         .toList();
@@ -51,13 +51,13 @@ class SwaggerRequest {
   }
 
   static List<SwaggerResponse> mapResponses(Map<String, dynamic> map) {
-    final List<SwaggerResponse> results = <SwaggerResponse>[];
+    final results = <SwaggerResponse>[];
     if (map == null) {
       return null;
     }
-    for (int i = 0; i < map.keys.length; i++) {
-      final String key = map.keys.elementAt(i);
-      final SwaggerResponse response =
+    for (var i = 0; i < map.keys.length; i++) {
+      final key = map.keys.elementAt(i);
+      final response =
           SwaggerResponse.fromJson(map[key] as Map<String, dynamic>);
       response.code = key;
 

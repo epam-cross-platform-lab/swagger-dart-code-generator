@@ -13,14 +13,14 @@ const String indexFileName = 'client_index.dart';
 const String mappingFileName = 'client_mapping.dart';
 
 Map<String, List<String>> generateExtensions(GeneratorOptions options) {
-  final Iterable<FileSystemEntity> filesList = Directory(options.inputFolder)
+  final filesList = Directory(options.inputFolder)
       .listSync()
       .where((FileSystemEntity file) => file.path.endsWith(inputFileExtension));
 
-  final Map<String, List<String>> result = <String, List<String>>{};
+  final result = <String, List<String>>{};
 
   filesList.forEach((FileSystemEntity element) {
-    final String name = element.path.split('/').last.split('.').first;
+    final name = element.path.split('/').last.split('.').first;
     result[element.path] = <String>[
       '${options.outputFolder}$name$outputFileExtension'
     ];
@@ -48,33 +48,32 @@ class SwaggerDartCodeGenerator implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    final String fileNameWithExtension = buildStep.inputId.pathSegments.last;
-    final String fileNameWithoutExtension =
-        fileNameWithExtension.split('.').first;
+    final fileNameWithExtension = buildStep.inputId.pathSegments.last;
+    final fileNameWithoutExtension = fileNameWithExtension.split('.').first;
 
-    final String contents = await buildStep.readAsString(buildStep.inputId);
+    final contents = await buildStep.readAsString(buildStep.inputId);
 
-    final SwaggerCodeGenerator codeGenerator = SwaggerCodeGenerator();
+    final codeGenerator = SwaggerCodeGenerator();
 
-    final String models = codeGenerator.generateModels(
+    final models = codeGenerator.generateModels(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
-    final String imports = codeGenerator.generateImportsContent(
+    final imports = codeGenerator.generateImportsContent(
         contents, fileNameWithoutExtension, models.isNotEmpty);
 
-    final String converter = codeGenerator.generateConverter(
+    final converter = codeGenerator.generateConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
-    final String requests = codeGenerator.generateRequests(
+    final requests = codeGenerator.generateRequests(
         contents,
         getClassNameFromFileName(fileNameWithExtension),
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final String customDecoder = codeGenerator.generateCustomJsonConverter(
+    final customDecoder = codeGenerator.generateCustomJsonConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
-    final AssetId copyAssetId = AssetId(buildStep.inputId.package,
+    final copyAssetId = AssetId(buildStep.inputId.package,
         '${options.outputFolder}$fileNameWithoutExtension$outputFileExtension');
 
     await buildStep.writeAsString(
@@ -109,21 +108,20 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 
   Future<void> _generateAdditionalFiles(
       String swaggerCode, AssetId inputId, BuildStep buildStep) async {
-    final SwaggerCodeGenerator codeGenerator = SwaggerCodeGenerator();
+    final codeGenerator = SwaggerCodeGenerator();
 
-    final AssetId indexAssetId =
+    final indexAssetId =
         AssetId(inputId.package, '${options.outputFolder}$indexFileName');
 
-    final String imports =
-        codeGenerator.generateIndexes(swaggerCode, buildExtensions);
+    final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
 
     await buildStep.writeAsString(indexAssetId, imports);
 
     if (options.withConverter) {
-      final AssetId mappingAssetId =
+      final mappingAssetId =
           AssetId(inputId.package, '${options.outputFolder}$mappingFileName');
 
-      final String mapping =
+      final mapping =
           codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
 
       await buildStep.writeAsString(mappingAssetId, mapping);
