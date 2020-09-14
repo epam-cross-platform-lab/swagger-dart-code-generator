@@ -5,7 +5,6 @@
 # :mega: **Build dart types from Swagger/OpenAPI schemas**
 
 [![pub package](https://img.shields.io/pub/v/swagger_dart_code_generator.svg)](https://pub.dartlang.org/packages/swagger_dart_code_generator)
-![Coverage](https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/coverage_badge.svg?sanitize=true)
 <a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/actions"><img src="https://img.shields.io/github/workflow/status/epam-cross-platform-lab/swagger-dart-code-generator/CI%20for%20master%20branch/master" alt="build"></a>
 <a href="https://discord.gg/fmkN37"><img src="https://img.shields.io/discord/755005482405462017.svg?logo=discord&color=blue" alt="Discord"></a>
 [![codecov](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator)
