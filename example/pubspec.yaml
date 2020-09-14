@@ -23,7 +23,7 @@ dev_dependencies:
   json_serializable: ^3.4.1
   swagger_dart_code_generator:
     path: ../
-  build_runner: ^1.10.2
+  build_runner: ^1.10.1
   
 
 flutter:
