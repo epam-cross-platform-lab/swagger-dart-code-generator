@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/assets/lib_full_logo.png" height="100" alt="Bloc" />
+<img src="https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/assets/lib_full_logo.png" height="100" alt="Swagger dart code generator" />
 </p>
 
 # :mega: **Build dart types from Swagger/OpenAPI schemas**
