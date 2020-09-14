@@ -1,0 +1,47 @@
+name: CI for master branch
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  Has Changes: 
+    has-changes:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Make changes
+      run: touch change.temp
+    # This step will evaluate the repo status and report the change
+    - name: Check if there are changes
+      id: changes
+      uses: UnicornGlobal/has-changes-action@v1.0.11
+    # You can now access a variable indicating if there have been changes
+    - name: Process changes
+      if: steps.changes.outputs.changed == 1
+      run: echo "Changes exist"
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.1.0
+    - uses: subosito/flutter-action@v1
+      name: Checkout to beta
+      with:
+        channel: 'beta' # or: 'dev' or 'beta'
+    - name: Install dependencies
+      run: flutter pub get
+      # working-directory: example
+    - name: Run tests
+      run: flutter pub run test
+    - name: Flutter analyze
+      run: flutter analyze
+    - name: Flutter test coverage
+      run: flutter test --coverage
+    - uses: codecov/codecov-action@v1.0.2
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./coverage/lcov.info

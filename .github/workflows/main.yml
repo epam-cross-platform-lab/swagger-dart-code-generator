@@ -1,4 +1,4 @@
-name: SwaggerDartCodeGenerator CI
+name: CI for pull request
 
 on:
   pull_request:
