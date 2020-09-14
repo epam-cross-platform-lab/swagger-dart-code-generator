@@ -43,6 +43,7 @@ build/
 lcov.info
 !example_swagger.swagger
 example/lib/generated_code/
+doc/
 
 # Android related
 **/android/**/gradle-wrapper.jar
