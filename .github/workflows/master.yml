@@ -1,8 +1,8 @@
 name: CI for master branch
 
-# on:
-#   schedule:
-#     - cron: "0-59/30 * * * *"
+on:
+  schedule:
+    - cron: "0-59/30 * * * *"
 
 jobs:
   Has Changes: 
