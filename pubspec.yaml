@@ -5,7 +5,8 @@ homepage: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 repository: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 issue_tracker: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues
 
-description: A sample command-line application.
+description: Have you been turned into a problem with writing and duplicating code for http requests? This package can help. It has all of the http and model codegeneration functionality you have been looking for.
+
 environment:
   sdk: '>=2.9.0 <3.0.0'
 
