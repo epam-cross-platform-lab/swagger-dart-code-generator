@@ -21,6 +21,8 @@ dependencies:
   meta: ^1.2.3
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   test_coverage: ^0.4.2
   build_config: ^0.4.1+1
   pedantic: ^1.7.0
