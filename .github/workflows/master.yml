@@ -2,11 +2,10 @@ name: CI for master branch
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/15 * * * *"
 
 jobs:
   Has Changes: 
-    has-changes:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -25,7 +24,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2.1.0
     - uses: subosito/flutter-action@v1
