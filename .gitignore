@@ -40,7 +40,6 @@ build/
 *.pubspec.lock
 *.swagger
 *.test_coverage.dart
-coverage_badge.svg
 lcov.info
 !example_swagger.swagger
 example/lib/generated_code/
