@@ -22,6 +22,12 @@ jobs:
       run: flutter pub run test
     - name: Flutter analyze
       run: flutter analyze
+    - name: Flutter test coverage
+      run: flutter test --coverage
+    - uses: codecov/codecov-action@v1.0.2
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./coverage/lcov.info
     # - name: Test coverage
     #   run: flutter pub run test_coverage --min-coverage 70
    
