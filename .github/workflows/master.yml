@@ -17,7 +17,7 @@ jobs:
       run: flutter pub get
     - name: Flutter test coverage
       run: flutter test --coverage
-    - name: Remove some unnecessart files from coverage
+    - name: Remove some unnecessary files from coverage
       run: flutter pub run remove_from_coverage -f coverage/lcov.info -r 'swagger_models' -r 'models'
     - uses: codecov/codecov-action@v1.0.2
       with:
