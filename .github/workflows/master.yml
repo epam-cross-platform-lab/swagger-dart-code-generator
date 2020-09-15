@@ -17,6 +17,7 @@ jobs:
       run: flutter pub get
     - name: Flutter test coverage
       run: flutter test --coverage
+      run: flutter pub run remove_from_coverage -f coverage/lcov.info -r 'swagger_models' -r 'models'
     - uses: codecov/codecov-action@v1.0.2
       with:
         token: ${{secrets.CODECOV_TOKEN}}
