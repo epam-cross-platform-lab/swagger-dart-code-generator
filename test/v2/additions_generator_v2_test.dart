@@ -1,4 +1,4 @@
-import 'package:swagger_dart_codegenerator/src/codegenerators/v2/swagger_additionsgenerator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_additions_generator_v2.dart';
 import 'package:test/test.dart';
 
 void main() {
