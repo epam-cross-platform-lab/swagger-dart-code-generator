@@ -27,12 +27,12 @@ abstract class ExampleSwagger extends ChopperService {
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
   @Post(path: '/pet')
-  Future<Response> addPet({@Body() @required String body});
+  Future<Response> addPet({@Body() @required Pet body});
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
   @Put(path: '/pet')
-  Future<Response> updatePet({@Body() @required String body});
+  Future<Response> updatePet({@Body() @required Pet body});
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
@@ -49,7 +49,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///Find pet by ID
   ///@param petId ID of pet to return
   @Get(path: '/pet/{petId}')
-  Future<Response> getPetById({@Path('petId') @required int petId});
+  Future<Response<Pet>> getPetById({@Path('petId') @required int petId});
 
   ///Updates a pet in the store with form data
   ///@param petId ID of pet that needs to be updated
@@ -73,7 +73,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param file file to upload
   @Post(path: '/pet/{petId}/uploadImage')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
-  Future<Response> uploadFile(
+  Future<Response<ApiResponse>> uploadFile(
       {@Path('petId') @required int petId,
       @Field('additionalMetadata') String additionalMetadata,
       @Field('file') List<int> file});
@@ -85,12 +85,13 @@ abstract class ExampleSwagger extends ChopperService {
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
   @Post(path: '/store/order')
-  Future<Response> placeOrder({@Body() @required String body});
+  Future<Response<Order>> placeOrder({@Body() @required Order body});
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
   @Get(path: '/store/order/{orderId}')
-  Future<Response> getOrderById({@Path('orderId') @required int orderId});
+  Future<Response<Order>> getOrderById(
+      {@Path('orderId') @required int orderId});
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
@@ -100,7 +101,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///Create user
   ///@param body Created user object
   @Post(path: '/user')
-  Future<Response> createUser({@Body() @required String body});
+  Future<Response> createUser({@Body() @required User body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
@@ -127,7 +128,8 @@ abstract class ExampleSwagger extends ChopperService {
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
   @Get(path: '/user/{username}')
-  Future<Response> getUserByName({@Path('username') @required String username});
+  Future<Response<User>> getUserByName(
+      {@Path('username') @required String username});
 
   ///Updated user
   ///@param username name that need to be updated
@@ -135,7 +137,7 @@ abstract class ExampleSwagger extends ChopperService {
   @Put(path: '/user/{username}')
   Future<Response> updateUser(
       {@Path('username') @required String username,
-      @Body() @required String body});
+      @Body() @required User body});
 
   ///Delete user
   ///@param username The name that needs to be deleted
