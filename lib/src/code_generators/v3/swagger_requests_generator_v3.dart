@@ -41,7 +41,13 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
       });
     });
 
-    return getFileContent(swaggerRoot, className, fileName, options);
+    final components = map['components'] as Map<String, dynamic>;
+    final schemes = components != null
+        ? components['schemes'] as Map<String, dynamic>
+        : null;
+
+    return getFileContent(swaggerRoot, className, fileName, options,
+        schemes != null && schemes.keys.isNotEmpty);
   }
 
   ///Get parameter from root parameters if needed
@@ -64,11 +70,11 @@ class SwaggerRequestsGeneratorV3 implements SwaggerRequestsGenerator {
 
   @visibleForTesting
   String getFileContent(SwaggerRoot swaggerRoot, String className,
-      String fileName, GeneratorOptions options) {
+      String fileName, GeneratorOptions options, bool hasModels) {
     final classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
     final chopperClientContent = getChopperClientContent(
-        className, swaggerRoot.host, swaggerRoot.basePath, options);
+        className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
     final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
     final result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
@@ -259,15 +265,16 @@ abstract class $className extends ChopperService''';
   }
 
   @visibleForTesting
-  String getChopperClientContent(
-      String fileName, String host, String basePath, GeneratorOptions options) {
+  String getChopperClientContent(String fileName, String host, String basePath,
+      GeneratorOptions options, bool hasModels) {
     final baseUrlString = options.withBaseUrl
         ? "baseUrl:  'https://$host${basePath ?? ''}'"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
-    final converterString = options.withBaseUrl && options.withConverter
-        ? 'converter: CustomJsonDecoder(),'
-        : 'converter: chopper.JsonSerializableConverter(),';
+    final converterString =
+        options.withBaseUrl && options.withConverter && hasModels
+            ? 'converter: JsonSerializableConverter(),'
+            : 'converter: chopper.JsonConverter(),';
 
     final generatedChopperClient = '''
   static $fileName create([ChopperClient client]) {
