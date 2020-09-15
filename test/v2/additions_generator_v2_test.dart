@@ -1,13 +1,12 @@
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_additions_generator_v2.dart';
+import 'package:swagger_dart_codegenerator/src/codegenerators/v2/swagger_additionsgenerator_v2.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Additions generator tests', () {
-    final _generator = SwaggerAdditionsGeneratorV2();
+    final generator = SwaggerAdditionsGeneratorV2();
 
     test('Should generate mapping for files', () {
-      final result =
-          _generator.generateConverterMappings(<String, List<String>>{
+      final result = generator.generateConverterMappings(<String, List<String>>{
         'someFile.dart': <String>['someFile.swagger.dart'],
         'secondFile.dart': <String>['secondFile.swagger.dart']
       });
@@ -17,15 +16,14 @@ void main() {
     });
 
     test('Should generate correct imports', () {
-      final result =
-          _generator.generateImportsContent('swagger.fileName', true);
+      final result = generator.generateImportsContent('swagger.fileName', true);
 
       expect(result, contains("part 'swagger.fileName.swagger.chopper.dart';"));
       expect(result, contains("part 'swagger.fileName.swagger.g.dart';"));
     });
 
     test('Should generate indexes file', () {
-      final result = _generator.generateIndexes(<String, List<String>>{
+      final result = generator.generateIndexes(<String, List<String>>{
         'someFile.dart': <String>['someFile.swagger.dart'],
         'secondFile.dart': <String>['secondFile.swagger.dart']
       });
@@ -37,12 +35,12 @@ void main() {
   });
 
   group('Test for generateCustomJsonConverter', () {
-    final _generator = SwaggerAdditionsGeneratorV2();
+    final generator = SwaggerAdditionsGeneratorV2();
     test('Should generate custom json converter', () {
       const fileName = 'example_swagger';
       const expectedResult =
           'CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings)';
-      final result = _generator.generateCustomJsonConverter(fileName);
+      final result = generator.generateCustomJsonConverter(fileName);
 
       expect(result, contains(expectedResult));
     });
