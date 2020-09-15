@@ -56,7 +56,7 @@ void main() {
       const _host = 'some.host';
       const _path = '/path';
       final result = _generator.getChopperClientContent(
-          _name, _host, _path, GeneratorOptions());
+          _name, _host, _path, GeneratorOptions(), true);
 
       expect(result, contains('static OrderService create'));
       expect(result, contains('services: [_\$OrderService()],'));
