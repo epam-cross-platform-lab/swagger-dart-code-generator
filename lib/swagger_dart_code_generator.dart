@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:build/build.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
+import 'package:universal_io/io.dart';
 
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
     SwaggerDartCodeGenerator(options);
@@ -70,8 +70,8 @@ class SwaggerDartCodeGenerator implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final customDecoder = codeGenerator.generateCustomJsonConverter(
-        contents, getFileNameWithoutExtension(fileNameWithExtension));
+    final customDecoder = codeGenerator.generateCustomJsonConverter(contents,
+        getFileNameWithoutExtension(fileNameWithExtension), models.isNotEmpty);
 
     final copyAssetId = AssetId(buildStep.inputId.package,
         '${options.outputFolder}$fileNameWithoutExtension$outputFileExtension');
@@ -83,7 +83,8 @@ class SwaggerDartCodeGenerator implements Builder {
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
-      await _generateAdditionalFiles(contents, buildStep.inputId, buildStep);
+      await _generateAdditionalFiles(
+          contents, buildStep.inputId, buildStep, models.isNotEmpty);
     }
   }
 
@@ -106,8 +107,8 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
   }
 
-  Future<void> _generateAdditionalFiles(
-      String swaggerCode, AssetId inputId, BuildStep buildStep) async {
+  Future<void> _generateAdditionalFiles(String swaggerCode, AssetId inputId,
+      BuildStep buildStep, bool hasModels) async {
     final codeGenerator = SwaggerCodeGenerator();
 
     final indexAssetId =
@@ -121,8 +122,8 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
       final mappingAssetId =
           AssetId(inputId.package, '${options.outputFolder}$mappingFileName');
 
-      final mapping =
-          codeGenerator.generateConverterMappings(swaggerCode, buildExtensions);
+      final mapping = codeGenerator.generateConverterMappings(
+          swaggerCode, buildExtensions, hasModels);
 
       await buildStep.writeAsString(mappingAssetId, mapping);
     }
