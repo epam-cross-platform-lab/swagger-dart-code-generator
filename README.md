@@ -74,8 +74,8 @@ targets:
 | `ignore_headers` | `false` | `false` | If option is true, headers will not be generated. |
 | `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwice - [] |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
-| `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map). |
-| `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overriden values. See [ResponseOverrideValueMap](#response-override-value-map). |
+| `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
+| `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overriden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |
 | `input_folder` | `-` | `true` | Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers). |
 | `output_folder` | `-` | `true` | Path to output folder (for ex. lib/generated). |
 
@@ -111,7 +111,7 @@ targets:
               default_value: '[]'
 ```
 
-### **Response Override Value Map for request generation**
+### **Response Override Value Map for requests generation**
 
 If you want to override response for concrete request, you can use response_override_value_map. For example:
 
