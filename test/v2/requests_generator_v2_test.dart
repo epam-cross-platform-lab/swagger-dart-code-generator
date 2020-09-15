@@ -137,10 +137,10 @@ void main() {
     });
 
     test('Should generate MyObject if ref is #definitions/MyObject', () {
-      final result = _generator.generate(
+      final result = generator.generate(
           request_with_object_ref_response,
-          _className,
-          _fileName,
+          className,
+          fileName,
           GeneratorOptions(
             ignoreHeaders: false,
           ));
@@ -444,7 +444,7 @@ void main() {
           name: 'myName',
           isRequired: true,
           schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
-      final result = _generator.getBodyParameter(parameter);
+      final result = generator.getBodyParameter(parameter);
 
       expect(result, equals('@Body() @required MyObject myName'));
     });
