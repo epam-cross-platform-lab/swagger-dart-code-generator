@@ -56,7 +56,7 @@ void main() {
       const _host = 'some.host';
       const _path = '/path';
       final result = _generator.getChopperClientContent(
-          _name, _host, _path, GeneratorOptions());
+          _name, _host, _path, GeneratorOptions(), true);
 
       expect(result, contains('static OrderService create'));
       expect(result, contains('services: [_\$OrderService()],'));
@@ -134,6 +134,18 @@ void main() {
           ));
 
       expect(result, contains('Future<Response<List<String>>>'));
+    });
+
+    test('Should generate MyObject if ref is #definitions/MyObject', () {
+      final result = _generator.generate(
+          request_with_object_ref_response,
+          _className,
+          _fileName,
+          GeneratorOptions(
+            ignoreHeaders: false,
+          ));
+
+      expect(result, contains('Future<Response<MyObject>>'));
     });
 
     test(
@@ -472,6 +484,19 @@ void main() {
           typeRequest: 'typeRequests');
 
       expect(result, contains('@FactoryConverter'));
+    });
+  });
+
+  group('Tests for getBodyParameter', () {
+    test('Should return MyObject from schema->ref', () {
+      final parameter = SwaggerRequestParameter(
+          inParameter: 'body',
+          name: 'myName',
+          isRequired: true,
+          schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
+      final result = _generator.getBodyParameter(parameter);
+
+      expect(result, equals('@Body() @required MyObject myName'));
     });
   });
 }

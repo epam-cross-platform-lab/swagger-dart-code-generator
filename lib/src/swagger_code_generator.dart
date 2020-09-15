@@ -59,10 +59,10 @@ class SwaggerCodeGenerator {
           String dartCode, Map<String, List<String>> buildExtensions) =>
       _getSwaggerAdditionsGenerator(dartCode).generateIndexes(buildExtensions);
 
-  String generateConverterMappings(
-          String dartCode, Map<String, List<String>> buildExtensions) =>
+  String generateConverterMappings(String dartCode,
+          Map<String, List<String>> buildExtensions, bool hasModels) =>
       _getSwaggerAdditionsGenerator(dartCode)
-          .generateConverterMappings(buildExtensions);
+          .generateConverterMappings(buildExtensions, hasModels);
 
   String generateImportsContent(
           String dartCode, String swaggerFileName, bool hasModels) =>
@@ -85,9 +85,10 @@ class SwaggerCodeGenerator {
       _getSwaggerRequestsGenerator(dartCode)
           .generate(dartCode, className, fileName, options);
 
-  String generateCustomJsonConverter(String dartCode, String fileName) =>
+  String generateCustomJsonConverter(
+          String dartCode, String fileName, bool hasModels) =>
       _getSwaggerAdditionsGenerator(dartCode)
-          .generateCustomJsonConverter(fileName);
+          .generateCustomJsonConverter(fileName, hasModels);
 
   SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator(String dartCode) =>
       _additionsMap[_getApiVersion(dartCode)];

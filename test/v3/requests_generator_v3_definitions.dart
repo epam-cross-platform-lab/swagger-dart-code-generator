@@ -1,5 +1,24 @@
 const String request_with_header = '''
 {
+  "definitions":{
+      "MyCoolDefinition":{
+         "type":"object",
+         "properties":{
+            "startTime":{
+               "type":"string",
+               "format":"date"
+            },
+            "endTime":{
+               "type":"string",
+               "format":"date"
+            },
+            "imageUrl":{
+               "type":"string"
+            }
+         },
+         "title":"MyCoolDefinition"
+      }
+   },
   "paths": {
     "/model/items": {
       "get": {
@@ -173,6 +192,40 @@ const String request_with_list_test_item_return_type = '''
                 "originalRef": "TestItem",
                 "\$ref": "#/definitions/TestItem"
               }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+''';
+
+const String request_with_object_ref_response = '''
+{
+  "paths": {
+    "/model/items": {
+      "get": {
+        "summary": "Some test request",
+        "operationId": "getModelItems",
+        "parameters": [
+          {
+            "name": "testName",
+            "in": "query",
+            "description": "test name",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "\$ref" : "MyObject"
             }
           }
         }

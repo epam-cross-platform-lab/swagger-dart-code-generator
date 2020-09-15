@@ -1,33 +1,52 @@
 const String request_with_header = '''
 {
-  "paths": {
-    "/model/items": {
-      "get": {
-        "summary": "Some test request",
-        "operationId": "someOperationId",
-        "parameters": [
-          {
-            "name": "headerParameter",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "originalRef": "TestItem",
-                "\$ref": "#/definitions/TestItem"
-              }
+   "definitions":{
+      "MyCoolDefinition":{
+         "type":"object",
+         "properties":{
+            "startTime":{
+               "type":"string",
+               "format":"date"
+            },
+            "endTime":{
+               "type":"string",
+               "format":"date"
+            },
+            "imageUrl":{
+               "type":"string"
             }
-          }
-        }
+         },
+         "title":"MyCoolDefinition"
       }
-    }
-  }
+   },
+   "paths":{
+      "/model/items":{
+         "get":{
+            "summary":"Some test request",
+            "operationId":"someOperationId",
+            "parameters":[
+               {
+                  "name":"headerParameter",
+                  "in":"header",
+                  "required":true,
+                  "type":"string"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"OK",
+                  "schema":{
+                     "type":"array",
+                     "items":{
+                        "originalRef":"TestItem",
+                        "\$ref":"#/definitions/TestItem"
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
 }
 ''';
 

@@ -21,7 +21,12 @@ class SwaggerAdditionsGeneratorV3 implements SwaggerAdditionsGenerator {
   }
 
   @override
-  String generateConverterMappings(Map<String, List<String>> buildExtensions) {
+  String generateConverterMappings(
+      Map<String, List<String>> buildExtensions, bool hasModels) {
+    if (!hasModels) {
+      return '';
+    }
+
     final maps = StringBuffer();
     final imports = StringBuffer();
     buildExtensions.keys.forEach((String key) {
@@ -63,7 +68,11 @@ part '$swaggerFileName.swagger.g.dart';""");
   }
 
   @override
-  String generateCustomJsonConverter(String fileName) {
+  String generateCustomJsonConverter(String fileName, bool hasModels) {
+    if (!hasModels) {
+      return '';
+    }
+
     return '''
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 

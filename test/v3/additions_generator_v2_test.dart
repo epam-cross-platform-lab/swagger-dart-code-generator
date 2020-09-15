@@ -10,7 +10,7 @@ void main() {
           _generator.generateConverterMappings(<String, List<String>>{
         'someFile.dart': <String>['someFile.swagger.dart'],
         'secondFile.dart': <String>['secondFile.swagger.dart']
-      });
+      }, true);
 
       expect(result, contains('...SomeFileJsonDecoderMappings'));
       expect(result, contains('...SecondFileJsonDecoderMappings'));
@@ -42,7 +42,7 @@ void main() {
       const fileName = 'example_swagger';
       const expectedResult =
           'CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings)';
-      final result = _generator.generateCustomJsonConverter(fileName);
+      final result = _generator.generateCustomJsonConverter(fileName, true);
 
       expect(result, contains(expectedResult));
     });
