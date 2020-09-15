@@ -3,35 +3,35 @@ import 'package:test/test.dart';
 import '../code_examples.dart';
 
 void main() {
-  final _generator = SwaggerEnumsGeneratorV3();
-  const _fileName = 'orders_service';
+  final generator = SwaggerEnumsGeneratorV3();
+  const fileName = 'orders_service';
   group('Converter generator tests', () {
     test('Should do something', () {
       final result =
-          _generator.generate(request_with_enum_in_parameter, _fileName);
+          generator.generate(request_with_enum_in_parameter, fileName);
 
       expect(result, contains('enum OrderStateRequest'));
     });
 
     test('Should generate enum values', () {
-      final _values = <String>['file_sup'];
-      const _output = "\t@JsonValue('file_sup')\n\tfileSup";
-      final result = _generator.getEnumValuesContent(_values);
+      final values = <String>['file_sup'];
+      const output = "\t@JsonValue('file_sup')\n\tfileSup";
+      final result = generator.getEnumValuesContent(values);
 
-      expect(result, contains(_output));
+      expect(result, contains(output));
     });
 
     test('Should return enum field name', () {
-      const _name = 'cat-dog_ Cars';
-      const _output = 'catDogCars';
-      final result = _generator.getValidatedEnumFieldName(_name);
+      const name = 'cat-dog_ Cars';
+      const output = 'catDogCars';
+      final result = generator.getValidatedEnumFieldName(name);
 
-      expect(result, contains(_output));
+      expect(result, contains(output));
     });
   });
   group('Tests for getValidatedEnumFieldName', () {
     test('Should remove numbers at beginning if it is key word', () {
-      final result = _generator.getValidatedEnumFieldName('007');
+      final result = generator.getValidatedEnumFieldName('007');
       expect(result, equals('value007'));
     });
   });

@@ -9,6 +9,7 @@ part of 'response_schema.dart';
 ResponseSchema _$ResponseSchemaFromJson(Map<String, dynamic> json) {
   return ResponseSchema(
     type: json['type'] as String,
+    ref: json['\$ref'] as String,
     originalRef: json['originalRef'] as String,
     enumValue: (json['enum'] as List<dynamic>)
         ?.map((dynamic e) => e as String)
@@ -24,5 +25,6 @@ Map<String, dynamic> _$ResponseSchemaToJson(ResponseSchema instance) =>
       'type': instance.type,
       'originalRef': instance.originalRef,
       'enum': instance.enumValue,
+      '\$ref': instance.ref,
       'items': instance.items,
     };
