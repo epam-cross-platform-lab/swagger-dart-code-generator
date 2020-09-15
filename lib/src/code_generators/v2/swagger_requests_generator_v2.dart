@@ -170,6 +170,10 @@ $allMethodsContent
               neededResponse.schema.items?.ref?.split('/')?.last);
     }
 
+    if (neededResponse.schema?.ref != null) {
+      return neededResponse.schema?.ref?.split('/')?.last;
+    }
+
     if (neededResponse.schema?.originalRef != null) {
       return neededResponse.schema.originalRef;
     }
@@ -289,6 +293,8 @@ abstract class $className extends ChopperService''';
       parameterType = parameter.name.capitalize;
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
+    } else if (parameter.schema?.ref != null) {
+      parameterType = parameter.schema.ref.split('/').last;
     } else {
       parameterType = defaultBodyParameter;
     }
