@@ -1,6 +1,7 @@
 const String request_with_header = '''
 {
-  "definitions":{
+  "components":{
+    "schemes" : {
       "MyCoolDefinition":{
          "type":"object",
          "properties":{
@@ -18,7 +19,8 @@ const String request_with_header = '''
          },
          "title":"MyCoolDefinition"
       }
-   },
+   }
+  },
   "paths": {
     "/model/items": {
       "get": {
