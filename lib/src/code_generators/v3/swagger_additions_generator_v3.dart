@@ -49,15 +49,19 @@ $maps};
   }
 
   @override
-  String generateImportsContent(String swaggerFileName, bool hasModels) {
+  String generateImportsContent(
+      String swaggerFileName, bool hasModels, bool buildOnlyModels) {
     final result = StringBuffer();
+
+    final chopperImport =
+        buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
     result.writeln("""import 'package:json_annotation/json_annotation.dart';
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:flutter/widgets.dart';
 
-part '$swaggerFileName.swagger.chopper.dart';""");
+$chopperImport""");
 
     if (hasModels) {
       result.writeln("""
