@@ -2,6 +2,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
+import 'requests_generator_v3_definitions.dart';
 
 void main() {
   group('generate', () {
@@ -295,13 +296,14 @@ void main() {
     final generator = SwaggerModelsGeneratorV3();
     test('Should return model class content', () {
       const map = <String, dynamic>{};
+      const schemes = <String, dynamic>{};
       const className = 'Animals';
       const useDefaultNullForLists = false;
       const classExpectedResult = 'class Animals{';
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
-          className, map, <DefaultValueMap>[], useDefaultNullForLists);
+          className, map, schemes, <DefaultValueMap>[], useDefaultNullForLists);
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -444,6 +446,28 @@ void main() {
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));
+    });
+  });
+
+  group('getModelInheritedProperties', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should generate 2 levels of inheritance', () {
+      final result = generator.generate(
+          model_with_inheritance, 'MyClass', GeneratorOptions());
+
+      expect(result, contains('final String rootCause;'));
+      expect(result, contains('final String message;'));
+      expect(result, contains('final int code;'));
+    });
+
+    test('Should generate 3 levels of inheritance', () {
+      final result = generator.generate(
+          model_with_inheritance_3_levels, 'MyClass', GeneratorOptions());
+
+      expect(result, contains('final String phone;'));
+      expect(result, contains('final String rootCause;'));
+      expect(result, contains('final String message;'));
+      expect(result, contains('final int code;'));
     });
   });
 }
