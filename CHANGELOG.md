@@ -1,3 +1,9 @@
+## 1.0.2
+
+* Implemented inheritance support. Models can extend others.
+* Fixed bug with build_only_models flag
+* Added missing tests for models_generator
+
 ## 1.0.1
 
 * Fixed bug with request parameter and result type, when schema.ref used

@@ -2,6 +2,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
+import 'requests_generator_v3_definitions.dart';
 
 void main() {
   group('generate', () {
@@ -28,6 +29,21 @@ void main() {
           model_with_parameters_v3, fileName, generatorOptions);
 
       expect(result, contains(expectedResult));
+    });
+  });
+
+  group('generateEnumContentIfPossible', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should generate enum', () {
+      final map = <String, dynamic>{
+        'items': {
+          'enum': ['Item1', 'Item2']
+        }
+      };
+      const enumName = 'TestName';
+      final result = generator.generateEnumContentIfPossible(map, enumName);
+
+      expect(result, contains('enum TestName'));
     });
   });
 
@@ -295,16 +311,31 @@ void main() {
     final generator = SwaggerModelsGeneratorV3();
     test('Should return model class content', () {
       const map = <String, dynamic>{};
+      const schemes = <String, dynamic>{};
       const className = 'Animals';
       const useDefaultNullForLists = false;
-      const classExpectedResult = 'class Animals{';
+      const classExpectedResult = 'class Animals {';
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
-          className, map, <DefaultValueMap>[], useDefaultNullForLists);
+          className, map, schemes, <DefaultValueMap>[], useDefaultNullForLists);
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
+    });
+
+    test('Should return enum if model is enum', () {
+      final map = <String, dynamic>{
+        'enum': ['Item1', 'Item2']
+      };
+      const schemes = <String, dynamic>{};
+      const className = 'Animals';
+      const useDefaultNullForLists = false;
+
+      final result = generator.generateModelClassContent(
+          className, map, schemes, <DefaultValueMap>[], useDefaultNullForLists);
+
+      expect(result, contains('enum Animals {'));
     });
   });
 
@@ -426,6 +457,20 @@ void main() {
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));
     });
+
+    test('Should return List<Object>', () {
+      final map = <String, dynamic>{
+        'items': {'originalRef': 'TestOriginalRef'}
+      };
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generateListPropertyContent(
+          propertyName, propertyKey, className, map, false);
+
+      expect(result, contains('final List<TestOriginalRef> dog;'));
+    });
   });
 
   group('generatePropertyContentByType', () {
@@ -444,6 +489,40 @@ void main() {
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));
+    });
+
+    test('Should return property content by schema', () {
+      final map = <String, String>{'type': 'array'};
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generatePropertyContentByType(map, propertyName,
+          propertyKey, className, <DefaultValueMap>[], false);
+
+      expect(result, contains('final List<Object> dog;'));
+    });
+  });
+
+  group('getModelInheritedProperties', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should generate 2 levels of inheritance', () {
+      final result = generator.generate(
+          model_with_inheritance, 'MyClass', GeneratorOptions());
+
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
+    });
+
+    test('Should generate 3 levels of inheritance', () {
+      final result = generator.generate(
+          model_with_inheritance_3_levels, 'MyClass', GeneratorOptions());
+
+      expect(result,
+          contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
+
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
     });
   });
 }
