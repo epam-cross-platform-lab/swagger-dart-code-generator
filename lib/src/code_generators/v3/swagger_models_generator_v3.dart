@@ -13,16 +13,17 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 
-    final definitions = map['components']['schemas'] as Map<String, dynamic>;
+    final schemas = map['components']['schemas'] as Map<String, dynamic>;
 
-    if (definitions == null) {
+    if (schemas == null) {
       return '';
     }
 
-    return definitions.keys.map((String className) {
+    return schemas.keys.map((String className) {
       return generateModelClassContent(
         className.pascalCase,
-        definitions[className] as Map<String, dynamic>,
+        schemas[className] as Map<String, dynamic>,
+        schemas,
         options.defaultValuesMap,
         options.useDefaultNullForLists,
       );
@@ -30,9 +31,25 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
   }
 
   @visibleForTesting
+  Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
+    if (!modelMap.containsKey('allOf')) {
+      return modelMap['properties'] as Map<String, dynamic>;
+    }
+
+    final allOf = modelMap['allOf'] as List<dynamic>;
+    final newModelMap = allOf.firstWhere(
+        (m) => (m as Map<String, dynamic>).containsKey('properties'));
+
+    final currentProperties = newModelMap['properties'] as Map<String, dynamic>;
+
+    return currentProperties;
+  }
+
+  @visibleForTesting
   String generateModelClassContent(
     String className,
     Map<String, dynamic> map,
+    Map<String, dynamic> schemes,
     List<DefaultValueMap> defaultValues,
     bool useDefaultNullForLists,
   ) {
@@ -40,7 +57,20 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
       return generateEnumContentIfPossible(map, className);
     }
 
-    final properties = map['properties'] as Map<String, dynamic>;
+    final properties = getModelProperties(map);
+
+    var extendsString = '';
+
+    if (map.containsKey('allOf')) {
+      final allOf = map['allOf'] as List<dynamic>;
+      final refItem = allOf
+          .firstWhere((m) => (m as Map<String, dynamic>).containsKey('\$ref'));
+
+      final ref = refItem['\$ref'].toString().split('/').last;
+
+      extendsString = 'extends $ref';
+    }
+
     final generatedConstructorProperties =
         generateConstructorPropertiesContent(properties);
 
@@ -51,7 +81,7 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
 
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
-class $className{
+class $className $extendsString{
 \t$className($generatedConstructorProperties);\n
 \tfactory $className.fromJson(Map<String, dynamic> json) => _\$${className}FromJson(json);\n
 $generatedProperties

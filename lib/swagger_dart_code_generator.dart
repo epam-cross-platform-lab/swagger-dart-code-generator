@@ -58,8 +58,8 @@ class SwaggerDartCodeGenerator implements Builder {
     final models = codeGenerator.generateModels(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
-    final imports = codeGenerator.generateImportsContent(
-        contents, fileNameWithoutExtension, models.isNotEmpty);
+    final imports = codeGenerator.generateImportsContent(contents,
+        fileNameWithoutExtension, models.isNotEmpty, options.buildOnlyModels);
 
     final converter = codeGenerator.generateConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
@@ -101,7 +101,7 @@ ${options.buildOnlyModels ? '' : requests}
 
 ${options.withConverter ? converter : ''}
 
-${options.buildOnlyModels ? '' : models}
+${models}
 
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;

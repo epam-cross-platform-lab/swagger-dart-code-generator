@@ -306,3 +306,111 @@ const String request_with_content_first_response_ref = '''
   }
 }
 ''';
+
+const String model_with_inheritance = '''
+{
+  "openapi": "3.0.0",
+  "components": {
+    "schemas": {
+      "BasicErrorModel": {
+        "type": "object",
+        "required": [
+          "message",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 600
+          }
+        }
+      },
+      "ExtendedErrorModel": {
+        "allOf": [
+          {
+            "\$ref": "#/components/schemas/BasicErrorModel"
+          },
+          {
+            "type": "object",
+            "required": [
+              "rootCause"
+            ],
+            "properties": {
+              "rootCause": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+''';
+
+const String model_with_inheritance_3_levels = '''
+{
+  "openapi": "3.0.0",
+  "components": {
+    "schemas": {
+      "BasicErrorModel": {
+        "type": "object",
+        "required": [
+          "message",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 600
+          }
+        }
+      },
+      "ExtendedErrorModel": {
+        "allOf": [
+          {
+            "\$ref": "#/components/schemas/BasicErrorModel"
+          },
+          {
+            "type": "object",
+            "required": [
+              "rootCause"
+            ],
+            "properties": {
+              "rootCause": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "MostExtendedErrorModel": {
+        "allOf": [
+          {
+            "\$ref": "#/components/schemas/ExtendedErrorModel"
+          },
+          {
+            "type": "object",
+            "required": [
+              "rootCause"
+            ],
+            "properties": {
+              "phone": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+''';
