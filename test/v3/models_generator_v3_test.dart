@@ -299,7 +299,7 @@ void main() {
       const schemes = <String, dynamic>{};
       const className = 'Animals';
       const useDefaultNullForLists = false;
-      const classExpectedResult = 'class Animals{';
+      const classExpectedResult = 'class Animals {';
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
