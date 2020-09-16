@@ -32,6 +32,21 @@ void main() {
     });
   });
 
+  group('generateEnumContentIfPossible', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should generate enum', () {
+      final map = <String, dynamic>{
+        'items': {
+          'enum': ['Item1', 'Item2']
+        }
+      };
+      const enumName = 'TestName';
+      final result = generator.generateEnumContentIfPossible(map, enumName);
+
+      expect(result, contains('enum TestName'));
+    });
+  });
+
   group('generateEnumName', () {
     final generator = SwaggerModelsGeneratorV3();
 
@@ -308,6 +323,20 @@ void main() {
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
     });
+
+    test('Should return enum if model is enum', () {
+      final map = <String, dynamic>{
+        'enum': ['Item1', 'Item2']
+      };
+      const schemes = <String, dynamic>{};
+      const className = 'Animals';
+      const useDefaultNullForLists = false;
+
+      final result = generator.generateModelClassContent(
+          className, map, schemes, <DefaultValueMap>[], useDefaultNullForLists);
+
+      expect(result, contains('enum Animals {'));
+    });
   });
 
   group('generateConstructorPropertiesContent', () {
@@ -428,6 +457,20 @@ void main() {
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));
     });
+
+    test('Should return List<Object>', () {
+      final map = <String, dynamic>{
+        'items': {'originalRef': 'TestOriginalRef'}
+      };
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generateListPropertyContent(
+          propertyName, propertyKey, className, map, false);
+
+      expect(result, contains('final List<TestOriginalRef> dog;'));
+    });
   });
 
   group('generatePropertyContentByType', () {
@@ -446,6 +489,18 @@ void main() {
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));
+    });
+
+    test('Should return property content by schema', () {
+      final map = <String, String>{'type': 'array'};
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generatePropertyContentByType(map, propertyName,
+          propertyKey, className, <DefaultValueMap>[], false);
+
+      expect(result, contains('final List<Object> dog;'));
     });
   });
 
