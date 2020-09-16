@@ -31,8 +31,7 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
   }
 
   @visibleForTesting
-  Map<String, dynamic> getModelInheritedProperties(
-      Map<String, dynamic> modelMap, Map<String, dynamic> schemes) {
+  Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
     if (!modelMap.containsKey('allOf')) {
       return modelMap['properties'] as Map<String, dynamic>;
     }
@@ -41,19 +40,7 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
     final newModelMap = allOf.firstWhere(
         (m) => (m as Map<String, dynamic>).containsKey('properties'));
 
-    final refItem = allOf
-        .firstWhere((m) => (m as Map<String, dynamic>).containsKey('\$ref'));
-
     final currentProperties = newModelMap['properties'] as Map<String, dynamic>;
-
-    final ref = refItem['\$ref'].toString().split('/').last;
-
-    final parentModel = schemes[ref] as Map<String, dynamic>;
-
-    final parentModelProperties =
-        getModelInheritedProperties(parentModel, schemes);
-
-    currentProperties.addAll(parentModelProperties);
 
     return currentProperties;
   }
@@ -70,7 +57,19 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
       return generateEnumContentIfPossible(map, className);
     }
 
-    final properties = getModelInheritedProperties(map, schemes);
+    final properties = getModelProperties(map);
+
+    var extendsString = '';
+
+    if (map.containsKey('allOf')) {
+      final allOf = map['allOf'] as List<dynamic>;
+      final refItem = allOf
+          .firstWhere((m) => (m as Map<String, dynamic>).containsKey('\$ref'));
+
+      final ref = refItem['\$ref'].toString().split('/').last;
+
+      extendsString = 'extends $ref';
+    }
 
     final generatedConstructorProperties =
         generateConstructorPropertiesContent(properties);
@@ -82,7 +81,7 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
 
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
-class $className{
+class $className $extendsString{
 \t$className($generatedConstructorProperties);\n
 \tfactory $className.fromJson(Map<String, dynamic> json) => _\$${className}FromJson(json);\n
 $generatedProperties

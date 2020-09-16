@@ -455,19 +455,19 @@ void main() {
       final result = generator.generate(
           model_with_inheritance, 'MyClass', GeneratorOptions());
 
-      expect(result, contains('final String rootCause;'));
-      expect(result, contains('final String message;'));
-      expect(result, contains('final int code;'));
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
     });
 
     test('Should generate 3 levels of inheritance', () {
       final result = generator.generate(
           model_with_inheritance_3_levels, 'MyClass', GeneratorOptions());
 
-      expect(result, contains('final String phone;'));
-      expect(result, contains('final String rootCause;'));
-      expect(result, contains('final String message;'));
-      expect(result, contains('final int code;'));
+      expect(result,
+          contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
+
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
     });
   });
 }
