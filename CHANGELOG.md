@@ -1,3 +1,7 @@
+## 1.0.2+1
+
+* Remove unnecessary braces
+
 ## 1.0.2
 
 * Implemented inheritance support. Models can extend others.

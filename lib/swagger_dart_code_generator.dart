@@ -101,7 +101,7 @@ ${options.buildOnlyModels ? '' : requests}
 
 ${options.withConverter ? converter : ''}
 
-${models}
+$models
 
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
