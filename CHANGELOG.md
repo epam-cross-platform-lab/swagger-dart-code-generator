@@ -1,6 +1,7 @@
-## 1.0.2+1
+## 1.0.3
 
 * Remove unnecessary braces
+* Fixed client_index.dart file
 
 ## 1.0.2
 
