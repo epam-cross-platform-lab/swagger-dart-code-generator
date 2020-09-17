@@ -29,9 +29,9 @@ void main() {
         'secondFile.dart': <String>['secondFile.swagger.dart']
       });
 
-      expect(result, contains("import 'someFile.dart.dart' show SomeFile;"));
+      expect(result, contains("export 'someFile.dart.dart' show SomeFile;"));
       expect(
-          result, contains("import 'secondFile.dart.dart' show SecondFile;"));
+          result, contains("export 'secondFile.dart.dart' show SecondFile;"));
     });
   });
 

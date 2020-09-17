@@ -1,1 +1,1 @@
-import 'example_swagger.swagger.dart' show ExampleSwagger;
+export 'example_swagger.swagger.dart' show ExampleSwagger;
