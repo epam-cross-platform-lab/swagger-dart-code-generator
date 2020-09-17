@@ -14,7 +14,7 @@ class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
       final fileName = key.split('/').last;
       final className = getClassNameFromFileName(key.split('/').last);
 
-      imports.writeln("import '$fileName.dart' show $className;");
+      imports.writeln("export '$fileName.dart' show $className;");
     });
 
     return imports.toString();
