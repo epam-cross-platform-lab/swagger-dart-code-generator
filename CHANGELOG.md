@@ -2,6 +2,7 @@
 
 * Fixed build error on Example
 * Removed empty lines in pubspec.yaml
+* Added defined type to generated converters
 
 ## 1.0.3
 
