@@ -1,7 +1,5 @@
 import 'example_swagger.swagger.dart';
 
-
-final generatedMapping = {
+final Map<Type, Object Function(Map<String, dynamic>)> generatedMapping = {
   ...ExampleSwaggerJsonDecoderMappings,
 };
-      

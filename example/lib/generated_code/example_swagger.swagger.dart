@@ -145,7 +145,8 @@ abstract class ExampleSwagger extends ChopperService {
   Future<Response> deleteUser({@Path('username') @required String username});
 }
 
-final ExampleSwaggerJsonDecoderMappings = {
+final Map<Type, Object Function(Map<String, dynamic>)>
+    ExampleSwaggerJsonDecoderMappings = {
   Order: Order.fromJsonFactory,
   Category: Category.fromJsonFactory,
   User: User.fromJsonFactory,
