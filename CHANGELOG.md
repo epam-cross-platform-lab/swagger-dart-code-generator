@@ -1,5 +1,10 @@
 ## 1.0.3
 
+* Fixed build error on Example
+* Removed empty lines in pubspec.yaml
+
+## 1.0.3
+
 * Remove unnecessary braces
 * Fixed client_index.dart file
 
