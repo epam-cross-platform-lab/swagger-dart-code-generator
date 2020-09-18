@@ -8,7 +8,7 @@ class SwaggerConverterGeneratorV3 implements SwaggerConverterGenerator {
   @override
   String generate(String dartCode, String fileName) {
     return '''
-final ${fileName.pascalCase}$converterClassEnding = 
+final Map<Type, Object Function(Map<String, dynamic>)> ${fileName.pascalCase}$converterClassEnding = 
 {
 ${_generateModelsMapping(dartCode)}};''';
   }
