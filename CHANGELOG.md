@@ -1,4 +1,4 @@
-## 1.0.3
+## 1.0.4
 
 * Fixed build error on Example
 * Removed empty lines in pubspec.yaml
