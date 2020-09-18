@@ -3,6 +3,7 @@ import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 import 'package:universal_io/io.dart';
+import 'package:dart_style/dart_style.dart';
 
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
     SwaggerDartCodeGenerator(options);
@@ -45,6 +46,8 @@ class SwaggerDartCodeGenerator implements Builder {
   Map<String, List<String>> _buildExtensionsCopy;
 
   GeneratorOptions options;
+
+  DartFormatter _formatter = DartFormatter();
 
   @override
   Future<void> build(BuildStep buildStep) async {
@@ -90,7 +93,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
   String _generateFileContent(String imports, String requests, String converter,
       String models, String customDecoder) {
-    return """
+    final result = """
 $imports
 
 // **************************************************************************
@@ -105,6 +108,8 @@ $models
 
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
+
+    return _formatter.format(result);
   }
 
   Future<void> _generateAdditionalFiles(String swaggerCode, AssetId inputId,
@@ -116,7 +121,7 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 
     final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
 
-    await buildStep.writeAsString(indexAssetId, imports);
+    await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
 
     if (options.withConverter) {
       final mappingAssetId =
@@ -125,7 +130,7 @@ ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
       final mapping = codeGenerator.generateConverterMappings(
           swaggerCode, buildExtensions, hasModels);
 
-      await buildStep.writeAsString(mappingAssetId, mapping);
+      await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
     }
   }
 }
