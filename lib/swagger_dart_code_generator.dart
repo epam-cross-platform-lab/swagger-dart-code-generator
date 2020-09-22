@@ -47,7 +47,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
   GeneratorOptions options;
 
-  DartFormatter _formatter = DartFormatter();
+  final DartFormatter _formatter = DartFormatter();
 
   @override
   Future<void> build(BuildStep buildStep) async {
