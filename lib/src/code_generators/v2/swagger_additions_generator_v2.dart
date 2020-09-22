@@ -41,7 +41,7 @@ class SwaggerAdditionsGeneratorV2 implements SwaggerAdditionsGenerator {
     final mapping = '''
 $imports
 
-final $mappingVariableName = {
+final Map<Type, Object Function(Map<String, dynamic>)> $mappingVariableName = {
 $maps};
       ''';
 

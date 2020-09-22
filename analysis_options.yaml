@@ -6,7 +6,7 @@ analyzer:
   strong-mode:
     implicit-casts: false
   exclude:
-    - example
+    - example/**/*.dart
     - test/**/*.dart
 linter:
   rules:
