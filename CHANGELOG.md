@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Added usage of autoformatting code
+
 ## 1.0.3
 
 * Remove unnecessary braces
