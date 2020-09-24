@@ -1,6 +1,7 @@
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
+import 'requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV2();
@@ -33,6 +34,11 @@ void main() {
     test('Should remove numbers at beginning if it is key word', () {
       final result = generator.getValidatedEnumFieldName('007');
       expect(result, equals('value007'));
+    });
+
+    test('Should remove numbers at beginning if it is key word', () {
+      final result = generator.getEnumNames(request_with_enum);
+      expect(result[0], equals('contentType'));
     });
   });
 }
