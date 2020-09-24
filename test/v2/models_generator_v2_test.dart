@@ -229,7 +229,7 @@ void main() {
       const propertyName = 'shipDate';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyName'";
       final expectedResult =
-          "\t$jsonKeyExpendedResult)\n  final ${propertyEntryMap['originalRef']} $propertyName;";
+          "\t$jsonKeyExpendedResult)\n\tfinal ${propertyEntryMap['originalRef']} $propertyName;";
 
       final result = generator
           .generatePropertyContentByDefault(propertyEntryMap, propertyName, []);
@@ -248,7 +248,7 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyKey'";
       const expectedResult =
-          '\t$jsonKeyExpendedResult)\n  final Pet $propertyName;';
+          '\t$jsonKeyExpendedResult)\n\tfinal Pet $propertyName;';
 
       final result = generator.generatePropertyContentByRef(
           propertyEntryMap, propertyName, propertyKey, className, []);

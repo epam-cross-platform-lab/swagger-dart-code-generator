@@ -239,7 +239,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         : '';
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'} $unknownEnumValue)\n";
+        "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'}$unknownEnumValue)\n";
 
     if (allEnumNames.contains(typeName)) {}
 
@@ -249,7 +249,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String generateEnumPropertyContent(String key, String className) {
     return '''
-  @JsonKey(unknownEnumValue: ${generateEnumName(key, className)}.swaggerGeneratedUnknown)
+  @JsonKey(unknownEnumValue: ${generateEnumName(className, key)}.swaggerGeneratedUnknown)
   final ${className.capitalize + key.capitalize} ${generateFieldName(key)};''';
   }
 
@@ -317,7 +317,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         ? ', unknownEnumValue: $className.swaggerGeneratedUnknown'
         : '';
 
-    final jsonKeyContent = "@JsonKey(name: '$propertyKey' $unknownEnumValue)\n";
+    final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
 
     final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
 
@@ -338,7 +338,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         ? ', unknownEnumValue: $className.swaggerGeneratedUnknown'
         : '';
 
-    final jsonKeyContent = "@JsonKey(name: '$propertyKey' $unknownEnumValue)\n";
+    final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
 
     final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
 
@@ -357,8 +357,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
         : '';
 
-    final jsonKeyContent =
-        "@JsonKey(name: '$propertyName' $unknownEnumValue)\n";
+    final jsonKeyContent = "@JsonKey(name: '$propertyName'$unknownEnumValue)\n";
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
   }
 
