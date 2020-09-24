@@ -253,6 +253,15 @@ void main() {
       expect(result, contains(jsonKeyExpendedResult));
       expect(result, contains(expectedResult));
     });
+
+    test('Should add unknownEnumValue', () {
+      final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
+      const propertyName = 'shipDate';
+      final result = generator.generatePropertyContentByDefault(
+          propertyEntryMap, propertyName, ['Pet']);
+
+      expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
+    });
   });
 
   group('generatePropertyContentByRef', () {
@@ -271,6 +280,18 @@ void main() {
 
       expect(result, contains(jsonKeyExpendedResult));
       expect(result, contains(expectedResult));
+    });
+
+    test('Should add unknownEnumValue', () {
+      final propertyEntryMap = <String, dynamic>{'\$ref': '#/definitions/Pet'};
+      const propertyName = 'shipDate';
+      const propertyKey = 'shipDateGet';
+      const className = 'Animals';
+
+      final result = generator.generatePropertyContentByRef(
+          propertyEntryMap, propertyName, propertyKey, className, ['Pet']);
+
+      expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
     });
   });
 
@@ -368,6 +389,20 @@ void main() {
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
     });
+
+    test('Should add unknownEnumValue', () {
+      final map = <String, dynamic>{
+        'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
+      };
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generatePropertyContentBySchema(
+          map, propertyName, propertyKey, className, ['Pet']);
+
+      expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
+    });
   });
 
   group('generatePropertiesContent', () {
@@ -452,6 +487,19 @@ void main() {
       expect(result, contains(propertyExpectedResult));
     });
 
+    test('Should add unknownEnumValue', () {
+      final map = <String, dynamic>{
+        'items': {'originalRef': 'Dog'}
+      };
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+      final result = generator.generateListPropertyContent(
+          propertyName, propertyKey, className, map, false, ['Dog']);
+
+      expect(result, contains('unknownEnumValue: Dog.swaggerGeneratedUnknown'));
+    });
+
     test('Should return List<Object>', () {
       final map = <String, dynamic>{
         'items': {'originalRef': 'TestOriginalRef'}
@@ -506,6 +554,13 @@ void main() {
 
       expect(
           result, contains('class ExtendedErrorModel extends BasicErrorModel'));
+    });
+
+    test('Should generate enum', () {
+      final result =
+          generator.generate(model_with_enum, 'MyClass', GeneratorOptions());
+
+      expect(result, contains('enum BasicErrorModel'));
     });
 
     test('Should generate 3 levels of inheritance', () {

@@ -352,6 +352,22 @@ const String model_with_inheritance = '''
 }
 ''';
 
+const String model_with_enum = '''
+{
+   "openapi":"3.0.0",
+   "components":{
+      "schemas":{
+         "BasicErrorModel":{
+            "enum":[
+               "message",
+               "code"
+            ]
+         }
+      }
+   }
+}
+''';
+
 const String model_with_inheritance_3_levels = '''
 {
   "openapi": "3.0.0",
@@ -409,6 +425,45 @@ const String model_with_inheritance_3_levels = '''
             }
           }
         ]
+      }
+    }
+  }
+}
+''';
+
+const request_with_enum = '''
+{
+  "paths": {
+    "/pets/{petId}/items": {
+      "get": {
+        "summary": "Some summary",
+        "tags": [
+          "Bookmarks"
+        ],
+        "parameters": [
+          {
+            "name": "contentType",
+            "in": "query",
+            "description": "content source type",
+            "type": "string",
+            "schema": {
+              "enum": [
+              "vod",
+              "replay",
+              "network-recording",
+              "local-recording"
+            ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookmarks for given profile and content is returned.",
+            "schema": {
+              "\$ref": "#/definitions/Pet"
+            }
+          }
+        }
       }
     }
   }

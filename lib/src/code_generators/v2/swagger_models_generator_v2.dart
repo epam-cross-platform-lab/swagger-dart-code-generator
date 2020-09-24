@@ -313,18 +313,17 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       String propertyKey,
       String className,
       List<String> allEnumNames) {
-    final unknownEnumValue = allEnumNames.contains(className)
-        ? ', unknownEnumValue: $className.swaggerGeneratedUnknown'
+    final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
+    final typeName = getParameterTypeName(
+        className, propertyName, propertyEntryMap, parameterName);
+
+    final unknownEnumValue = allEnumNames.contains(typeName)
+        ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
         : '';
 
     final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
 
-    final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
-
-    final _typeName = getParameterTypeName(
-        className, propertyName, propertyEntryMap, parameterName);
-
-    return '\t$jsonKeyContent\tfinal $_typeName ${generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
   }
 
   @visibleForTesting
@@ -334,19 +333,19 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       String propertyKey,
       String className,
       List<String> allEnumNames) {
-    final unknownEnumValue = allEnumNames.contains(className)
-        ? ', unknownEnumValue: $className.swaggerGeneratedUnknown'
+    final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
+    final parameterName = propertySchema['\$ref'].toString().split('/').last;
+
+    final typeName = getParameterTypeName(
+        className, propertyName, propertyEntryMap, parameterName);
+
+    final unknownEnumValue = allEnumNames.contains(typeName)
+        ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
         : '';
 
     final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
 
-    final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
-
-    final parameterName = propertySchema['\$ref'].toString().split('/').last;
-
-    final _typeName = getParameterTypeName(
-        className, propertyName, propertyEntryMap, parameterName);
-    return '\t$jsonKeyContent\tfinal $_typeName ${generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
   }
 
   @visibleForTesting

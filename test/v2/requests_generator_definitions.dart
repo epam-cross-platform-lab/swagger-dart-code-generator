@@ -304,3 +304,42 @@ const String request_with_content_first_response_ref = '''
   }
 }
 ''';
+
+const request_with_enum = '''
+{
+  "paths": {
+    "/pets/{petId}/items": {
+      "get": {
+        "summary": "Some summary",
+        "tags": [
+          "Bookmarks"
+        ],
+        "parameters": [
+          {
+            "name": "contentType",
+            "in": "query",
+            "description": "content source type",
+            "type": "string",
+            "schema": {
+              "enum": [
+              "vod",
+              "replay",
+              "network-recording",
+              "local-recording"
+            ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookmarks for given profile and content is returned.",
+            "schema": {
+              "\$ref": "#/definitions/Pet"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+''';
