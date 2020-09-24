@@ -1,4 +1,7 @@
-<<<<<<< HEAD
+## 1.0.6
+
+* Added support of unknownEnumValue: MyClass.swaggerGeneratedUnknown
+
 ## 1.0.5
 
 * Added usage of autoformatting code
