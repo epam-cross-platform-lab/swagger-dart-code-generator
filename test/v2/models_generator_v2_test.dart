@@ -231,10 +231,8 @@ void main() {
       final expectedResult =
           "\t$jsonKeyExpendedResult)\n  final ${propertyEntryMap['originalRef']} $propertyName;";
 
-      final result = generator.generatePropertyContentByDefault(
-        propertyEntryMap,
-        propertyName,
-      );
+      final result = generator
+          .generatePropertyContentByDefault(propertyEntryMap, propertyName, []);
 
       expect(result, contains(jsonKeyExpendedResult));
       expect(result, contains(expectedResult));
@@ -253,11 +251,7 @@ void main() {
           '\t$jsonKeyExpendedResult)\n  final Pet $propertyName;';
 
       final result = generator.generatePropertyContentByRef(
-        propertyEntryMap,
-        propertyName,
-        propertyKey,
-        className,
-      );
+          propertyEntryMap, propertyName, propertyKey, className, []);
 
       expect(result, contains(jsonKeyExpendedResult));
       expect(result, contains(expectedResult));
@@ -302,7 +296,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(className, map,
-          fileName, <DefaultValueMap>[], useDefaultNullForLists);
+          fileName, <DefaultValueMap>[], useDefaultNullForLists, []);
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -339,7 +333,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Dog')\n";
       const fieldExpectedResult = '\tfinal Pet dog';
       final result = generator.generatePropertyContentBySchema(
-          map, propertyName, propertyKey, className);
+          map, propertyName, propertyKey, className, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -356,7 +350,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet animals';
       final result = generator.generatePropertiesContent(
-          map, className, <DefaultValueMap>[], false);
+          map, className, <DefaultValueMap>[], false, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -373,7 +367,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet animals';
       final result = generator.generatePropertiesContent(
-          map, className, <DefaultValueMap>[], false);
+          map, className, <DefaultValueMap>[], false, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -388,7 +382,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet animals';
       final result = generator.generatePropertiesContent(
-          map, className, <DefaultValueMap>[], false);
+          map, className, <DefaultValueMap>[], false, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -403,7 +397,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
       const fieldExpectedResult = 'final Pet \$with';
       final result = generator.generatePropertiesContent(
-          map, className, <DefaultValueMap>[], false);
+          map, className, <DefaultValueMap>[], false, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -422,7 +416,7 @@ void main() {
 
       const propertyExpectedResult = 'final List<Object> dog';
       final result = generator.generateListPropertyContent(
-          propertyName, propertyKey, className, map, false);
+          propertyName, propertyKey, className, map, false, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));
@@ -441,7 +435,7 @@ void main() {
 
       const propertyExpectedResult = 'final AnimalsDog dog';
       final result = generator.generatePropertyContentByType(map, propertyName,
-          propertyKey, className, <DefaultValueMap>[], false);
+          propertyKey, className, <DefaultValueMap>[], false, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(propertyExpectedResult));

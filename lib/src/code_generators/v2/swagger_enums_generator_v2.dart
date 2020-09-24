@@ -46,13 +46,44 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
     return result.toString();
   }
 
+  List<String> getEnumNames(String swagger) {
+    final enumNames = <String>[];
+    final map = jsonDecode(swagger) as Map<String, dynamic>;
+    final swaggerRoot = SwaggerRoot.fromJson(map);
+
+    for (var i = 0; i < swaggerRoot.paths.length; i++) {
+      final swaggerPath = swaggerRoot.paths[i];
+
+      for (var j = 0; j < swaggerPath.requests.length; j++) {
+        final swaggerRequest = swaggerPath.requests[j];
+
+        if (swaggerRequest.parameters == null) {
+          continue;
+        }
+
+        for (var p = 0; p < swaggerRequest.parameters.length; p++) {
+          final swaggerRequestParameter = swaggerRequest.parameters[p];
+
+          if (enumNames.contains(swaggerRequestParameter.name)) {
+            continue;
+          }
+
+          if (swaggerRequestParameter.schema?.enumValues != null) {
+            enumNames.add(swaggerRequestParameter.name);
+          }
+        }
+      }
+    }
+
+    return enumNames;
+  }
+
   String generateEnumContent(String enumName, List<String> enumValues) {
     final enumValuesContent = getEnumValuesContent(enumValues);
 
     final result = """
 enum $enumName{
 \t@JsonValue('swaggerGeneratedUnknown')
-\tswaggerGeneratedUnknown,
 $enumValuesContent
 }
  """;
