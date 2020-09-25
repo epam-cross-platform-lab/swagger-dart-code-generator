@@ -383,7 +383,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       }
     });
 
-    if (jsonKey.startsWith(RegExp('[0-9]')) || jsonKey == 'null') {
+    if (jsonKey.startsWith(RegExp('[0-9]')) ||
+        exceptionWords.contains(jsonKey)) {
       jsonKey = '\$' + jsonKey;
     }
     return jsonKey;
