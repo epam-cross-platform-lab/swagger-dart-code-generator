@@ -2,6 +2,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_reque
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_parameter_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request_items.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/responses/swagger_response.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_path.dart';
@@ -13,6 +14,34 @@ void main() {
   final generator = SwaggerRequestsGeneratorV3();
   const fileName = 'order_service';
   const className = 'OrderSerice';
+
+  group('Tests for getDefaultParameter', () {
+    test('Should use parameter -> schema -> enumValues', () {
+      final parameter = SwaggerRequestParameter(
+          isRequired: true,
+          inParameter: 'query',
+          name: 'number',
+          schema: SwaggerParameterSchema(enumValues: ['one', 'two']));
+
+      final result = generator.getDefaultParameter(parameter, '/path', 'get');
+
+      expect(
+          result, equals('@Query(\'number\') @required PathGetNumber number'));
+    });
+
+    test('Should use parameter -> items -> enumValues', () {
+      final parameter = SwaggerRequestParameter(
+          isRequired: true,
+          inParameter: 'query',
+          name: 'number',
+          items: SwaggerRequestItems(enumValues: ['one', 'two']));
+
+      final result = generator.getDefaultParameter(parameter, '/path', 'get');
+
+      expect(result,
+          equals('@Query(\'number\') @required List<PathGetNumber> number'));
+    });
+  });
 
   group('Tests for additional methids', () {
     test('Should transform "parametersGET1" to "parametersGet1"', () {
@@ -264,7 +293,10 @@ void main() {
           schema: SwaggerParameterSchema(originalRef: 'TestItem'));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result, contains('@Body() @required TestItem testParameter'));
     });
@@ -277,7 +309,10 @@ void main() {
           schema: SwaggerParameterSchema(originalRef: 'TestItem'));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result,
           contains("@Field('testParameter') @required dynamic testParameter"));
@@ -291,9 +326,13 @@ void main() {
           schema: SwaggerParameterSchema(enumValues: <String>['one', 'two']));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
-      expect(result, contains('@Body() @required TestParameter testParameter'));
+      expect(result,
+          contains('@Body() @required PathGetTestParameter testParameter'));
     });
 
     test('Should generate body parameter if no ref and no schema', () {
@@ -327,12 +366,12 @@ void main() {
       expect(result, equals(''));
     });
 
-    test('Should generate custom parameter types by schema', () {
+    test('Should generate custom parameter types -> schema', () {
       final parameter = SwaggerRequestParameter(
-          inParameter: 'CustomType',
+          inParameter: 'MyCustomType',
           name: 'testParameter',
           isRequired: true,
-          schema: SwaggerParameterSchema(type: 'CustomType'));
+          schema: SwaggerParameterSchema(type: 'MyCustomType'));
 
       final result = generator.getParameterContent(
           parameter: parameter, ignoreHeaders: true);
@@ -340,24 +379,7 @@ void main() {
       expect(
           result,
           equals(
-              "@CustomType('testParameter') @required CustomType testParameter"));
-    });
-
-    test('Should generate custom parameter types by schema', () {
-      final parameter = SwaggerRequestParameter(
-          inParameter: 'CustomType',
-          name: 'testParameter',
-          isRequired: true,
-          schema:
-              SwaggerParameterSchema(ref: '#components/schemas/CustomType'));
-
-      final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: true);
-
-      expect(
-          result,
-          equals(
-              "@CustomType('testParameter') @required CustomType testParameter"));
+              "@MyCustomType('testParameter') @required MyCustomType testParameter"));
     });
 
     test('Should ignore cookie parameters', () {
@@ -491,7 +513,7 @@ void main() {
           name: 'myName',
           isRequired: true,
           schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
-      final result = generator.getBodyParameter(parameter);
+      final result = generator.getBodyParameter(parameter, 'path', 'type');
 
       expect(result, equals('@Body() @required MyObject myName'));
     });

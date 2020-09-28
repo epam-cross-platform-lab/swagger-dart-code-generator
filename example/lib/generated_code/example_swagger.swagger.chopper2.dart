@@ -33,7 +33,8 @@ class _$ExampleSwagger extends ExampleSwagger {
   }
 
   @override
-  Future<Response<List<Pet>>> findPetsByStatus({List<String> status}) {
+  Future<Response<List<Pet>>> findPetsByStatus(
+      {List<PetFindByStatusGetStatus> status}) {
     final $url = '/pet/findByStatus';
     final $params = <String, dynamic>{'status': status};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);

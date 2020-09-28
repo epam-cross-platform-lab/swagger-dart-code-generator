@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
@@ -115,9 +116,10 @@ $allMethodsContent
         }
 
         final requiredParameters = getRequiredParametersContent(
-          listParameters: swaggerRequest.parameters,
-          ignoreHeaders: options.ignoreHeaders,
-        );
+            listParameters: swaggerRequest.parameters,
+            ignoreHeaders: options.ignoreHeaders,
+            path: swaggerPath.path,
+            requestType: swaggerRequest.type);
 
         final parameterCommentsForMethod =
             getParameterCommentsForMethod(swaggerRequest.parameters, options);
@@ -203,10 +205,16 @@ $allMethodsContent
 
   @visibleForTesting
   String getRequiredParametersContent(
-      {List<SwaggerRequestParameter> listParameters, bool ignoreHeaders}) {
+      {List<SwaggerRequestParameter> listParameters,
+      bool ignoreHeaders,
+      String path,
+      String requestType}) {
     return listParameters
         .map((SwaggerRequestParameter parameter) => getParameterContent(
-            parameter: parameter, ignoreHeaders: ignoreHeaders))
+            parameter: parameter,
+            ignoreHeaders: ignoreHeaders,
+            path: path,
+            requestType: requestType))
         .where((String element) => element.isNotEmpty)
         .join(', ');
   }
@@ -271,10 +279,13 @@ abstract class $className extends ChopperService''';
 
   @visibleForTesting
   String getParameterContent(
-      {SwaggerRequestParameter parameter, bool ignoreHeaders}) {
+      {SwaggerRequestParameter parameter,
+      bool ignoreHeaders,
+      String requestType,
+      String path}) {
     switch (parameter.inParameter) {
       case 'body':
-        return getBodyParameter(parameter);
+        return getBodyParameter(parameter, path, requestType);
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
@@ -286,15 +297,39 @@ abstract class $className extends ChopperService''';
       case 'cookie':
         return '';
       default:
-        return "@${parameter.inParameter.capitalize}('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${getParameterTypeName(parameter.type ?? parameter.schema?.type, parameter.items?.type)} ${validateParameterName(parameter.name)}";
+        return getDefaultParameter(parameter, path, requestType);
     }
   }
 
   @visibleForTesting
-  String getBodyParameter(SwaggerRequestParameter parameter) {
+  String getDefaultParameter(
+      SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
-      parameterType = parameter.name.capitalize;
+      parameterType = SwaggerModelsGeneratorV2.generateRequestEnumName(
+          path, requestType, parameter.name);
+    } else if (parameter.items?.enumValues != null) {
+      final typeName = SwaggerModelsGeneratorV2.generateRequestEnumName(
+          path, requestType, parameter.name);
+      parameterType = 'List<$typeName>';
+    } else {
+      parameterType = getParameterTypeName(
+          parameter.type ?? parameter.schema?.type, parameter.items?.type);
+    }
+
+    return "@${parameter.inParameter.capitalize}('${parameter.name}') ${parameter.isRequired ? "@required" : ""} $parameterType ${validateParameterName(parameter.name)}";
+  }
+
+  @visibleForTesting
+  String getBodyParameter(
+    SwaggerRequestParameter parameter,
+    String path,
+    String requestType,
+  ) {
+    String parameterType;
+    if (parameter.schema?.enumValues != null) {
+      parameterType = SwaggerModelsGeneratorV2.generateRequestEnumName(
+          path, requestType, parameter.name);
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
     } else if (parameter.schema?.ref != null) {

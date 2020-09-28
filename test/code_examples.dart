@@ -335,6 +335,79 @@ const String request_with_enum_in_parameter = '''
 }
 ''';
 
+const String request_with_list_of_enum_in_parameter = '''
+{
+  "paths": {
+    "/v3/order/{orderId}/state": {
+      "put": {
+        "tags": [
+          "appie-order-controller-v-3"
+        ],
+        "summary": "Update state of an order.",
+        "operationId": "changeOrderStateUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "Id of the order",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "orderStateRequest",
+            "description": "Order state",
+            "required": false,
+            "items": {
+              "type": "string",
+              "enum": [
+                "SUBMITTED",
+                "CANCELLED",
+                "REOPENED",
+                "RESET"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "deprecated": false
+      }
+    }
+  }
+}
+''';
+
 const String request_with_array_string = '''
 {
   "paths": {

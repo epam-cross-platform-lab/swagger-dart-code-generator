@@ -14,14 +14,21 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 
-    final schemas = map['components']['schemas'] as Map<String, dynamic>;
+    final generatedEnums =
+        SwaggerEnumsGeneratorV3().generate(dartCode, fileName);
+
+    final components = map['components'] as Map<String, dynamic>;
+    final schemas = components == null
+        ? null
+        : components['schemas'] as Map<String, dynamic>;
+
     final allEnumsNames = getAllEnumNames(schemas, dartCode);
 
     if (schemas == null) {
       return '';
     }
 
-    return schemas.keys.map((String className) {
+    final generatedClasses = schemas.keys.map((String className) {
       return generateModelClassContent(
           className.pascalCase,
           schemas[className] as Map<String, dynamic>,
@@ -30,6 +37,8 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
           options.useDefaultNullForLists,
           allEnumsNames);
     }).join('\n');
+
+    return '$generatedClasses$generatedEnums';
   }
 
   List<String> getAllEnumNames(
@@ -402,8 +411,22 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     }
   }
 
+  static String generateRequestEnumName(
+      String path, String requestType, String parameterName) {
+    if (path == '/') {
+      path = '\$';
+    }
+
+    path = path.split('{').map((e) => e.capitalize).join();
+    path = path.split('}').map((e) => e.capitalize).join();
+
+    final correctedPath = SwaggerModelsGeneratorV3.generateFieldName(path);
+
+    return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
+  }
+
   @visibleForTesting
-  String generateFieldName(String jsonKey) {
+  static String generateFieldName(String jsonKey) {
     final forbiddenCharacters = <String>['#'];
     jsonKey = jsonKey.camelCase;
 
@@ -413,7 +436,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
       }
     });
 
-    if (jsonKey.startsWith(RegExp('[0-9]')) || jsonKey == 'null') {
+    if (jsonKey.startsWith(RegExp('[0-9]')) ||
+        exceptionWords.contains(jsonKey)) {
       jsonKey = '\$' + jsonKey;
     }
     return jsonKey;
@@ -468,7 +492,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     var name = dynamicName.toString();
 
     exceptionWords.forEach((String forbiddenWord) {
-      if (name == forbiddenWord) {
+      if (name.toLowerCase() == forbiddenWord) {
         name = '\$' + name;
       }
     });

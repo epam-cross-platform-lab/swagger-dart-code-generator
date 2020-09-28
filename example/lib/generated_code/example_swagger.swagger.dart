@@ -38,7 +38,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param status Status values that need to be considered for filter
   @Get(path: '/pet/findByStatus')
   Future<Response<List<Pet>>> findPetsByStatus(
-      {@Query('status') @required List<String> status});
+      {@Query('status') @required List<PetFindByStatusGetStatus> status});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
@@ -176,7 +176,8 @@ class Order {
   final int quantity;
   @JsonKey(name: 'shipDate')
   final DateTime shipDate;
-  @JsonKey(name: 'status')
+  @JsonKey(
+      name: 'status', unknownEnumValue: OrderStatus.swaggerGeneratedUnknown)
   final OrderStatus status;
   @JsonKey(name: 'complete')
   final bool complete;
@@ -292,7 +293,7 @@ class Pet {
   final List<String> photoUrls;
   @JsonKey(name: 'tags', defaultValue: <Tag>[])
   final List<Tag> tags;
-  @JsonKey(name: 'status')
+  @JsonKey(name: 'status', unknownEnumValue: PetStatus.swaggerGeneratedUnknown)
   final PetStatus status;
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
@@ -330,6 +331,17 @@ class ApiResponse {
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
   Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
+}
+
+enum PetFindByStatusGetStatus {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('available')
+  available,
+  @JsonValue('pending')
+  pending,
+  @JsonValue('sold')
+  sold
 }
 
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);

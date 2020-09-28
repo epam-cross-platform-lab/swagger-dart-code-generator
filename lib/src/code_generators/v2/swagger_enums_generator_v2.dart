@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_root.dart';
 import 'package:meta/meta.dart';
@@ -27,17 +29,23 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          if (enumNames.contains(swaggerRequestParameter.name)) {
+          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+              swaggerPath.path,
+              swaggerRequest.type,
+              swaggerRequestParameter.name);
+
+          if (enumNames.contains(name)) {
             continue;
           }
 
-          if (swaggerRequestParameter.schema?.enumValues != null) {
-            final enumContent = generateEnumContent(
-                swaggerRequestParameter.name.capitalize,
-                swaggerRequestParameter.schema?.enumValues);
+          final enumValues = swaggerRequestParameter.schema?.enumValues ??
+              swaggerRequestParameter.items?.enumValues;
+
+          if (enumValues != null) {
+            final enumContent = generateEnumContent(name, enumValues);
 
             result.writeln(enumContent);
-            enumNames.add(swaggerRequestParameter.name);
+            enumNames.add(name);
           }
         }
       }
@@ -64,12 +72,20 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          if (enumNames.contains(swaggerRequestParameter.name)) {
+          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+              swaggerPath.path,
+              swaggerRequest.type,
+              swaggerRequestParameter.name);
+
+          if (enumNames.contains(name)) {
             continue;
           }
 
-          if (swaggerRequestParameter.schema?.enumValues != null) {
-            enumNames.add(swaggerRequestParameter.name);
+          final enumValues = swaggerRequestParameter.schema?.enumValues ??
+              swaggerRequestParameter.items?.enumValues;
+
+          if (enumValues != null) {
+            enumNames.add(name);
           }
         }
       }
@@ -84,6 +100,7 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
     final result = """
 enum $enumName{
 \t@JsonValue('swaggerGeneratedUnknown')
+\tswaggerGeneratedUnknown,
 $enumValuesContent
 }
  """;
@@ -107,11 +124,15 @@ $enumValuesContent
       name = defaultEnumFieldName + name;
     }
 
-    final result = name
+    var result = name
         .replaceAll(RegExp('[ -.,]'), '_')
         .split('_')
         .map((String word) => word.toLowerCase().capitalize)
         .join();
+
+    if (exceptionWords.contains(result.toLowerCase())) {
+      return '\$' + result.lower;
+    }
 
     return result.lower;
   }

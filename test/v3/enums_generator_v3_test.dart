@@ -11,7 +11,14 @@ void main() {
       final result =
           generator.generate(request_with_enum_in_parameter, fileName);
 
-      expect(result, contains('enum OrderStateRequest'));
+      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+
+    test('Should generate list<enum>', () {
+      final result =
+          generator.generate(request_with_list_of_enum_in_parameter, fileName);
+
+      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
     });
 
     test('Should generate enum values', () {
@@ -29,6 +36,14 @@ void main() {
 
       expect(result, contains(output));
     });
+
+    test('Should return \$null if name is null', () {
+      const name = 'null';
+      const output = '\$null';
+      final result = generator.getValidatedEnumFieldName(name);
+
+      expect(result, contains(output));
+    });
   });
   group('Tests for getValidatedEnumFieldName', () {
     test('Should remove numbers at beginning if it is key word', () {
@@ -39,6 +54,12 @@ void main() {
     test('Should remove numbers at beginning if it is key word', () {
       final result = generator.getEnumNames(request_with_enum);
       expect(result[0], equals('contentType'));
+    });
+
+    test('Should remove numbers at beginning if it is key word', () {
+      final result =
+          generator.getEnumNames(request_with_list_of_enum_in_parameter);
+      expect(result[0], equals('orderStateRequest'));
     });
   });
 }
