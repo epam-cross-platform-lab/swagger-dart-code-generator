@@ -203,12 +203,10 @@ void main() {
   });
 
   group('generateFieldName', () {
-    final generator = SwaggerModelsGeneratorV3();
-
     test('Should return validate field name', () {
       const name = 'Cat_Dog-Animals';
       const expectedResult = 'catDogAnimals';
-      final result = generator.generateFieldName(name);
+      final result = SwaggerModelsGeneratorV3.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -216,7 +214,7 @@ void main() {
     test('Should return \$forbiddenFieldName', () {
       const name = '#';
       const expectedResult = '\$forbiddenFieldName';
-      final result = generator.generateFieldName(name);
+      final result = SwaggerModelsGeneratorV3.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -224,7 +222,7 @@ void main() {
     test('Should return \$null', () {
       const name = 'null';
       const expectedResult = '\$null';
-      final result = generator.generateFieldName(name);
+      final result = SwaggerModelsGeneratorV3.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -232,7 +230,7 @@ void main() {
     test('Should return \$number', () {
       const name = '5element';
       const expectedResult = '\$5element';
-      final result = generator.generateFieldName(name);
+      final result = SwaggerModelsGeneratorV3.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
