@@ -130,8 +130,8 @@ $enumValuesContent
         .map((String word) => word.toLowerCase().capitalize)
         .join();
 
-    if (exceptionWords.contains(result)) {
-      result = '\$' + result;
+    if (exceptionWords.contains(result.toLowerCase())) {
+      return '\$' + result.lower;
     }
 
     return result.lower;

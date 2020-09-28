@@ -321,20 +321,11 @@ abstract class $className extends ChopperService''';
       case 'cookie':
         return '';
       default:
-        var parameterType = '';
-
-        if (parameter.type != null) {
-          parameterType = parameter.type;
-        } else if (parameter.schema?.type != null) {
-          parameterType = parameter.schema.type;
-        } else if (parameter.schema?.ref != null) {
-          parameterType = parameter.schema?.ref?.split('/')?.last;
-        }
-
         return getDefaultParameter(parameter, path, requestType);
     }
   }
 
+  @visibleForTesting
   String getDefaultParameter(
       SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;

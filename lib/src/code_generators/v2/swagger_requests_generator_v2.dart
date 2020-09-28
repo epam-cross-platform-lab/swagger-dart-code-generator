@@ -301,6 +301,7 @@ abstract class $className extends ChopperService''';
     }
   }
 
+  @visibleForTesting
   String getDefaultParameter(
       SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;

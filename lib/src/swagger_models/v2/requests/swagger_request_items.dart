@@ -4,7 +4,7 @@ part 'swagger_request_items.g2.dart';
 
 @JsonSerializable()
 class SwaggerRequestItems {
-  SwaggerRequestItems({this.type});
+  SwaggerRequestItems({this.type, this.enumValues});
 
   factory SwaggerRequestItems.fromJson(Map<String, dynamic> json) =>
       _$SwaggerRequestItemsFromJson(json);

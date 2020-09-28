@@ -2,6 +2,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_reque
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_parameter_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_items.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/responses/swagger_response.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_path.dart';
@@ -13,6 +14,34 @@ void main() {
   final generator = SwaggerRequestsGeneratorV2();
   const fileName = 'order_service';
   const className = 'OrderSerice';
+
+  group('Tests for getDefaultParameter', () {
+    test('Should use parameter -> schema -> enumValues', () {
+      final parameter = SwaggerRequestParameter(
+          isRequired: true,
+          inParameter: 'query',
+          name: 'number',
+          schema: SwaggerParameterSchema(enumValues: ['one', 'two']));
+
+      final result = generator.getDefaultParameter(parameter, '/path', 'get');
+
+      expect(
+          result, equals('@Query(\'number\') @required PathGetNumber number'));
+    });
+
+    test('Should use parameter -> items -> enumValues', () {
+      final parameter = SwaggerRequestParameter(
+          isRequired: true,
+          inParameter: 'query',
+          name: 'number',
+          items: SwaggerRequestItems(enumValues: ['one', 'two']));
+
+      final result = generator.getDefaultParameter(parameter, '/path', 'get');
+
+      expect(result,
+          equals('@Query(\'number\') @required List<PathGetNumber> number'));
+    });
+  });
 
   group('Tests for additional methids', () {
     test('Should transform "parametersGET1" to "parametersGet1"', () {
