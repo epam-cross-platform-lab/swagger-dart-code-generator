@@ -250,7 +250,10 @@ void main() {
           schema: SwaggerParameterSchema(originalRef: 'TestItem'));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result, contains('@Body() @required TestItem testParameter'));
     });
@@ -263,7 +266,10 @@ void main() {
           schema: SwaggerParameterSchema(originalRef: 'TestItem'));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result,
           contains("@Field('testParameter') @required dynamic testParameter"));
@@ -277,9 +283,13 @@ void main() {
           schema: SwaggerParameterSchema(enumValues: <String>['one', 'two']));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
-      expect(result, contains('@Body() @required TestParameter testParameter'));
+      expect(result,
+          contains('@Body() @required PathGetTestParameter testParameter'));
     });
 
     test('Shouod generate body parameter if no ref and no schema', () {
@@ -287,7 +297,10 @@ void main() {
           inParameter: 'body', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result, contains('@Body() @required String testParameter'));
     });
@@ -297,7 +310,10 @@ void main() {
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result,
           contains("@Header('testParameter') @required String testParameter"));
@@ -318,7 +334,10 @@ void main() {
           inParameter: 'cookie', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          path: '/path',
+          requestType: 'get');
 
       expect(result, contains(''));
     });
@@ -444,7 +463,7 @@ void main() {
           name: 'myName',
           isRequired: true,
           schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
-      final result = generator.getBodyParameter(parameter);
+      final result = generator.getBodyParameter(parameter, 'path', 'type');
 
       expect(result, equals('@Body() @required MyObject myName'));
     });

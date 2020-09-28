@@ -11,7 +11,7 @@ void main() {
       final result =
           generator.generate(request_with_enum_in_parameter, fileName);
 
-      expect(result, contains('enum OrderStateRequest'));
+      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
     });
 
     test('Should generate enum values', () {
