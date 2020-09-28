@@ -374,6 +374,13 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
 
   static String generateRequestEnumName(
       String path, String requestType, String parameterName) {
+    if (path == '/') {
+      path = '\$';
+    }
+
+    path = path.split('{').map((e) => e.capitalize).join();
+    path = path.split('}').map((e) => e.capitalize).join();
+
     final correctedPath = SwaggerModelsGeneratorV2.generateFieldName(path);
 
     return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
@@ -446,7 +453,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     var name = dynamicName.toString();
 
     exceptionWords.forEach((String forbiddenWord) {
-      if (name == forbiddenWord) {
+      if (name.toLowerCase() == forbiddenWord) {
         name = '\$' + name;
       }
     });

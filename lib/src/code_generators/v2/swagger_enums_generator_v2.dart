@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_root.dart';
 import 'package:meta/meta.dart';
@@ -123,11 +124,15 @@ $enumValuesContent
       name = defaultEnumFieldName + name;
     }
 
-    final result = name
+    var result = name
         .replaceAll(RegExp('[ -.,]'), '_')
         .split('_')
         .map((String word) => word.toLowerCase().capitalize)
         .join();
+
+    if (exceptionWords.contains(result)) {
+      result = '\$' + result;
+    }
 
     return result.lower;
   }

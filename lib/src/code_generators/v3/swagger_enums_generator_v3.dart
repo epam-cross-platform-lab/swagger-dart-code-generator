@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.dart';
 import 'package:meta/meta.dart';
@@ -28,7 +29,7 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+          var name = SwaggerModelsGeneratorV3.generateRequestEnumName(
               swaggerPath.path,
               swaggerRequest.type,
               swaggerRequestParameter.name);
@@ -71,7 +72,7 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+          var name = SwaggerModelsGeneratorV3.generateRequestEnumName(
               swaggerPath.path,
               swaggerRequest.type,
               swaggerRequestParameter.name);
@@ -84,7 +85,6 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
               swaggerRequestParameter.items?.enumValues;
 
           if (enumValues != null) {
-            final enumContent = generateEnumContent(name, enumValues);
             enumNames.add(swaggerRequestParameter.name);
           }
         }
@@ -124,11 +124,15 @@ $enumValuesContent
       name = defaultEnumFieldName + name;
     }
 
-    final result = name
+    var result = name
         .replaceAll(RegExp('[ -.,]'), '_')
         .split('_')
         .map((String word) => word.toLowerCase().capitalize)
         .join();
+
+    if (exceptionWords.contains(result)) {
+      result = '\$' + result;
+    }
 
     return result.lower;
   }

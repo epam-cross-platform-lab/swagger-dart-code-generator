@@ -309,7 +309,7 @@ abstract class $className extends ChopperService''';
       String path}) {
     switch (parameter.inParameter) {
       case 'body':
-        return getBodyParameter(parameter);
+        return getBodyParameter(parameter, path, requestType);
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
@@ -354,10 +354,12 @@ abstract class $className extends ChopperService''';
   }
 
   @visibleForTesting
-  String getBodyParameter(SwaggerRequestParameter parameter) {
+  String getBodyParameter(
+      SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
-      parameterType = parameter.name.capitalize;
+      parameterType = SwaggerModelsGeneratorV3.generateRequestEnumName(
+          path, requestType, parameter.name);
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
     } else if (parameter.schema?.ref != null) {
