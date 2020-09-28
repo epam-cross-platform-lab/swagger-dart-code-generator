@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.dart';
 import 'package:meta/meta.dart';
@@ -27,14 +28,20 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          if (enumNames.contains(swaggerRequestParameter.name)) {
+          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+              swaggerPath.path,
+              swaggerRequest.type,
+              swaggerRequestParameter.name);
+
+          if (enumNames.contains(name)) {
             continue;
           }
 
-          if (swaggerRequestParameter.schema?.enumValues != null) {
-            final enumContent = generateEnumContent(
-                swaggerRequestParameter.name.capitalize,
-                swaggerRequestParameter.schema?.enumValues);
+          final enumValues = swaggerRequestParameter.schema?.enumValues ??
+              swaggerRequestParameter.items?.enumValues;
+
+          if (enumValues != null) {
+            final enumContent = generateEnumContent(name, enumValues);
 
             result.writeln(enumContent);
             enumNames.add(swaggerRequestParameter.name);
@@ -64,11 +71,20 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          if (enumNames.contains(swaggerRequestParameter.name)) {
+          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+              swaggerPath.path,
+              swaggerRequest.type,
+              swaggerRequestParameter.name);
+
+          if (enumNames.contains(name)) {
             continue;
           }
 
-          if (swaggerRequestParameter.schema?.enumValues != null) {
+          final enumValues = swaggerRequestParameter.schema?.enumValues ??
+              swaggerRequestParameter.items?.enumValues;
+
+          if (enumValues != null) {
+            final enumContent = generateEnumContent(name, enumValues);
             enumNames.add(swaggerRequestParameter.name);
           }
         }

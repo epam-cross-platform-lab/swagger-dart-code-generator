@@ -372,8 +372,15 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     }
   }
 
+  static String generateRequestEnumName(
+      String path, String requestType, String parameterName) {
+    final correctedPath = SwaggerModelsGeneratorV2.generateFieldName(path);
+
+    return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
+  }
+
   @visibleForTesting
-  String generateFieldName(String jsonKey) {
+  static String generateFieldName(String jsonKey) {
     final forbiddenCharacters = <String>['#'];
     jsonKey = jsonKey.camelCase;
 

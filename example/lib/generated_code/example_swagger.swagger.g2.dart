@@ -14,7 +14,8 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
     shipDate: json['shipDate'] == null
         ? null
         : DateTime.parse(json['shipDate'] as String),
-    status: _$enumDecodeNullable(_$OrderStatusEnumMap, json['status']),
+    status: _$enumDecodeNullable(_$OrderStatusEnumMap, json['status'],
+        unknownValue: OrderStatus.swaggerGeneratedUnknown),
     complete: json['complete'] as bool,
   );
 }
@@ -129,7 +130,8 @@ Pet _$PetFromJson(Map<String, dynamic> json) {
                 e == null ? null : Tag.fromJson(e as Map<String, dynamic>))
             ?.toList() ??
         [],
-    status: _$enumDecodeNullable(_$PetStatusEnumMap, json['status']),
+    status: _$enumDecodeNullable(_$PetStatusEnumMap, json['status'],
+        unknownValue: PetStatus.swaggerGeneratedUnknown),
   );
 }
 

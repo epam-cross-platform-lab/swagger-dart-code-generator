@@ -12,5 +12,8 @@ class SwaggerRequestItems {
   @JsonKey(name: 'type')
   String type;
 
+  @JsonKey(name: 'enum')
+  List<String> enumValues;
+
   Map<String, dynamic> toJson() => _$SwaggerRequestItemsToJson(this);
 }
