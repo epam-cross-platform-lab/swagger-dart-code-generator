@@ -1,3 +1,9 @@
+## 1.0.7
+
+* Fixed a lot of issues with Enums in request parameters
+* Changed naming approach for Enums in request parameters
+* Fixed issue with key words in Enum/Model names
+
 ## 1.0.6
 
 * Added support of unknownEnumValue: MyClass.swaggerGeneratedUnknown
