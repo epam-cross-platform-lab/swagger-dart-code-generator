@@ -307,13 +307,14 @@ abstract class $className extends ChopperService''';
       bool ignoreHeaders,
       String requestType,
       String path}) {
+    final parameterType = validateParameterType(parameter.name);
     switch (parameter.inParameter) {
       case 'body':
         return getBodyParameter(parameter, path, requestType);
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
-        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? parameter.name.capitalize : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
+        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? parameterType : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
       case 'header':
         return ignoreHeaders
             ? ''
@@ -323,6 +324,19 @@ abstract class $className extends ChopperService''';
       default:
         return getDefaultParameter(parameter, path, requestType);
     }
+  }
+
+  @visibleForTesting
+  String validateParameterType(String parameterName) {
+    if (parameterName == null) {
+      return null;
+    }
+
+    return parameterName
+        .split('-')
+        .map((String str) => str.capitalize)
+        .toList()
+        .join();
   }
 
   @visibleForTesting
@@ -359,6 +373,8 @@ abstract class $className extends ChopperService''';
       parameterType = defaultBodyParameter;
     }
 
+    parameterType = validateParameterType(parameterType);
+
     return "@${parameter.inParameter.capitalize}() ${parameter.isRequired ? "@required" : ""} $parameterType ${validateParameterName(parameter.name)}";
   }
 
@@ -380,7 +396,7 @@ abstract class $className extends ChopperService''';
       case 'object':
         return 'Object';
       default:
-        return parameter ?? 'dynamic';
+        return validateParameterType(parameter) ?? 'dynamic';
     }
   }
 

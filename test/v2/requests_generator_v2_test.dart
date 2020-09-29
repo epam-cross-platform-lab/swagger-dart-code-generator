@@ -386,7 +386,7 @@ void main() {
     });
 
     test('Should convert array of int to List<int>', () {
-      final result = generator.getParameterTypeName('array', 'int');
+      final result = generator.getParameterTypeName('array', 'integer');
 
       expect(result, 'List<int>');
     });
@@ -398,9 +398,9 @@ void main() {
     });
 
     test('Should convert unknown type to unknown type', () {
-      final result = generator.getParameterTypeName('super_cool_type');
+      final result = generator.getParameterTypeName('Super_cool_type');
 
-      expect(result, 'super_cool_type');
+      expect(result, 'Super_cool_type');
     });
 
     test('Should convert null to dynamic', () {
