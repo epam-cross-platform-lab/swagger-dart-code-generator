@@ -109,7 +109,15 @@ $models
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
 
-    return _formatter.format(result);
+    try {
+      final formattedResult = _formatter.format(result);
+      return formattedResult;
+    } catch (e) {
+      print('''[WARNING] Code formatting failed.
+          Please raise an issue on https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/
+          Reason: $e''');
+      return result;
+    }
   }
 
   Future<void> _generateAdditionalFiles(String swaggerCode, AssetId inputId,
