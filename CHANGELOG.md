@@ -1,3 +1,7 @@
+## 1.0.9
+
+* Implemented possibility to have enums in request body
+
 ## 1.0.8
 
 * Fixed not standart request parameter Type names

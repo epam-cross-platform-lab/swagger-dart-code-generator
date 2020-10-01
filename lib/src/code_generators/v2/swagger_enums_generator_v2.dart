@@ -42,7 +42,8 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
               swaggerRequestParameter.items?.enumValues;
 
           if (enumValues != null) {
-            final enumContent = generateEnumContent(name, enumValues);
+            final enumContent = generateEnumContent(name, enumValues,
+                swaggerRequestParameter.inParameter == 'body');
 
             result.writeln(enumContent);
             enumNames.add(name);
@@ -94,8 +95,19 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
     return enumNames;
   }
 
-  String generateEnumContent(String enumName, List<String> enumValues) {
+  String generateEnumContent(
+      String enumName, List<String> enumValues, bool isBody) {
     final enumValuesContent = getEnumValuesContent(enumValues);
+
+    var enumMap = '';
+
+    if (isBody) {
+      enumMap = '''
+\n\tconst _\$${enumName}Map = {
+\t${getEnumValuesMapContent(enumName, enumValues)}
+      };
+      ''';
+    }
 
     final result = """
 enum $enumName{
@@ -103,6 +115,7 @@ enum $enumName{
 \tswaggerGeneratedUnknown,
 $enumValuesContent
 }
+$enumMap
  """;
 
     return result;
@@ -113,6 +126,16 @@ $enumValuesContent
     final result = enumValues
         .map((String enumFieldName) =>
             "\t@JsonValue('$enumFieldName')\n\t${getValidatedEnumFieldName(enumFieldName)}")
+        .join(',\n');
+
+    return result;
+  }
+
+  @visibleForTesting
+  String getEnumValuesMapContent(String enumName, List<String> enumValues) {
+    final result = enumValues
+        .map((String enumFieldName) =>
+            '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'$enumFieldName\'')
         .join(',\n');
 
     return result;
