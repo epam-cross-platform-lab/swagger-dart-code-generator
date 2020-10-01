@@ -402,7 +402,6 @@ abstract class $className extends ChopperService''';
       String typeRequest,
       String methodName,
       String requiredParameters,
-      String parametersForEnumBody,
       String parametersComments,
       String requestPath,
       bool hasFormData,
@@ -458,6 +457,7 @@ abstract class $className extends ChopperService''';
     return generatedMethod;
   }
 
+  @visibleForTesting
   String generatePublicMethod(
       String methodName,
       String returnTypeString,
@@ -469,7 +469,8 @@ abstract class $className extends ChopperService''';
 
     final newParametersPart = parametersPart
         .replaceAll(RegExp(r'@\w+\(\)'), '')
-        .replaceAll(RegExp(r"@\w+\(\'\w+\'\)"), '');
+        .replaceAll(RegExp(r"@\w+\(\'\w+\'\)"), '')
+        .trim();
 
     final result =
         '''\tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($newParametersPart){

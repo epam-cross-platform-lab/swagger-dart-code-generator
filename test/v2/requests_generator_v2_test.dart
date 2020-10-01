@@ -1,5 +1,6 @@
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/parameter_item.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_parameter_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_items.dart';
@@ -454,6 +455,66 @@ void main() {
 
       expect(result, contains('Future<Response> unnamedMethod0();'));
     });
+
+    test(
+        'Should generate additional method for enum in body for items -> enumValues',
+        () {
+      final result = generator.getAllMethodsContent(
+          SwaggerRoot(paths: <SwaggerPath>[
+            SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
+              SwaggerRequest(type: 'get', operationId: null, parameters: [
+                SwaggerRequestParameter(
+                    name: 'parameterName',
+                    inParameter: 'body',
+                    isRequired: true,
+                    items: SwaggerRequestItems(enumValues: ['one'])),
+              ], responses: <SwaggerResponse>[])
+            ])
+          ]),
+          GeneratorOptions());
+
+      expect(result, contains('Future<Response> _unnamedMethod'));
+    });
+
+    test(
+        'Should generate additional method for enum in body for -> schema -> enumValues',
+        () {
+      final result = generator.getAllMethodsContent(
+          SwaggerRoot(paths: <SwaggerPath>[
+            SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
+              SwaggerRequest(type: 'get', operationId: null, parameters: [
+                SwaggerRequestParameter(
+                    name: 'parameterName',
+                    inParameter: 'body',
+                    isRequired: true,
+                    schema: SwaggerParameterSchema(enumValues: ['one'])),
+              ], responses: <SwaggerResponse>[])
+            ])
+          ]),
+          GeneratorOptions());
+
+      expect(result, contains('Future<Response> _unnamedMethod'));
+    });
+
+    test(
+        'Should generate additional method for enum in body for item -> enumValues',
+        () {
+      final result = generator.getAllMethodsContent(
+          SwaggerRoot(paths: <SwaggerPath>[
+            SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
+              SwaggerRequest(type: 'get', operationId: null, parameters: [
+                SwaggerRequestParameter(
+                    name: 'parameterName',
+                    inParameter: 'body',
+                    isRequired: true,
+                    item: ParameterItem(enumValues: ['one'])),
+              ], responses: <SwaggerResponse>[])
+            ])
+          ]),
+          GeneratorOptions());
+
+      expect(result, contains('Future<Response> _unnamedMethod'));
+    });
   });
 
   group('Tests for getNeededRequestParameter', () {
@@ -479,9 +540,29 @@ void main() {
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
+          hasEnumInBody: false,
           typeRequest: 'typeRequests');
 
       expect(result, contains('@FactoryConverter'));
+    });
+
+    test('Should generate private and public methods for enums in bodies', () {
+      final result = generator.getMethodContent(
+          hasFormData: true,
+          methodName: 'methodName',
+          parametersComments: 'parameters',
+          requestPath: 'path',
+          requiredParameters: 'requiredParameters',
+          returnType: 'returnType',
+          summary: 'summary',
+          hasEnumInBody: true,
+          typeRequest: 'typeRequests',
+          enumInBodyName: 'enumInBody',
+          parameters: [
+            SwaggerRequestParameter(inParameter: 'body', name: 'pet')
+          ]);
+
+      expect(result, contains('Future<Response<ReturnType>> _methodName'));
     });
   });
 
@@ -495,6 +576,27 @@ void main() {
       final result = generator.getBodyParameter(parameter, 'path', 'type');
 
       expect(result, equals('@Body() @required MyObject myName'));
+    });
+  });
+
+  group('Tests for generatePublicMethod', () {
+    test('Should generate correct original method usage', () {
+      final methodName = 'getSomePet';
+      final returnType = 'String';
+      final enumName = 'MyEnum';
+      final enumInBodyName = 'MyEnumName';
+      final parameters = '@Body() pet';
+      final parametersList = [
+        SwaggerRequestParameter(
+            inParameter: 'body',
+            name: 'pet',
+            items: SwaggerRequestItems(enumValues: ['one']))
+      ];
+
+      final result = generator.generatePublicMethod(methodName, returnType,
+          parameters, parametersList, enumName, enumInBodyName);
+
+      expect(result, contains('getSomePet(pet)'));
     });
   });
 }
