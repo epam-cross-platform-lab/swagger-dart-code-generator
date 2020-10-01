@@ -1,3 +1,7 @@
+## 1.0.10
+
+* Fixed issue with enums in request bodies
+
 ## 1.0.9
 
 * Implemented possibility to have enums in request body

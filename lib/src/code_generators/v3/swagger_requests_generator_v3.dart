@@ -492,7 +492,7 @@ abstract class $className extends ChopperService''';
 
     final result =
         '''\tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($newParametersPart){
-          return _${methodName.camelCase}(${parameters.map((e) => "${e.name} : ${e.name == enumInBodyName ? '$mapName[$enumName]' : e.name}").join(', ')});
+          return _${methodName.camelCase}(${parameters.map((e) => "${e.name} : ${e.name == enumInBodyName ? '$mapName[$enumInBodyName]' : e.name}").join(', ')});
           }''';
 
     return result;
