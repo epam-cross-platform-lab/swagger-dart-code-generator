@@ -134,6 +134,20 @@ $allMethodsContent
             swaggerRequest.type,
             options.responseOverrideValueMap);
 
+        final hasEnumInBody = swaggerRequest.parameters.any((parameter) =>
+            parameter.inParameter == 'body' &&
+            (parameter.items?.enumValues != null ||
+                parameter.item?.enumValues != null ||
+                parameter.schema?.enumValues != null));
+
+        final enumInBodyName = swaggerRequest.parameters.firstWhere(
+            (parameter) =>
+                parameter.inParameter == 'body' &&
+                (parameter.items?.enumValues != null ||
+                    parameter.item?.enumValues != null ||
+                    parameter.schema?.enumValues != null),
+            orElse: () => null);
+
         final generatedMethod = getMethodContent(
             summary: swaggerRequest.summary,
             typeRequest: swaggerRequest.type,
@@ -142,7 +156,10 @@ $allMethodsContent
             parametersComments: parameterCommentsForMethod,
             requestPath: swaggerPath.path,
             hasFormData: hasFormData,
-            returnType: returnTypeName);
+            returnType: returnTypeName,
+            hasEnumInBody: hasEnumInBody,
+            enumInBodyName: enumInBodyName?.name,
+            parameters: swaggerRequest.parameters);
 
         methods.writeln(generatedMethod);
       });
@@ -406,10 +423,14 @@ abstract class $className extends ChopperService''';
       String typeRequest,
       String methodName,
       String requiredParameters,
+      String parametersForEnumBody,
       String parametersComments,
       String requestPath,
       bool hasFormData,
-      String returnType}) {
+      String returnType,
+      bool hasEnumInBody,
+      String enumInBodyName,
+      List<SwaggerRequestParameter> parameters}) {
     var typeReq = typeRequest.capitalize + "(path: '$requestPath')";
     if (hasFormData) {
       typeReq +=
@@ -421,20 +442,59 @@ abstract class $className extends ChopperService''';
     }
 
     final returnTypeString = returnType != null ? '<$returnType>' : '';
-    final parametersPart =
+    var parametersPart =
         requiredParameters.isEmpty ? '' : '{$requiredParameters}';
 
     if (summary != null) {
       summary = summary.replaceAll(RegExp(r'\n|\r|\t'), ' ');
     }
 
+    methodName = abbreviationToCamelCase(methodName.camelCase);
+    var publicMethod = '';
+
+    if (hasEnumInBody) {
+      final enumName = SwaggerModelsGeneratorV3.generateRequestEnumName(
+          requestPath, typeRequest, enumInBodyName);
+
+      publicMethod = generatePublicMethod(methodName, returnTypeString,
+              parametersPart, parameters, enumName, enumInBodyName)
+          .trim();
+
+      methodName = '_$methodName';
+
+      parametersPart = parametersPart.replaceFirst(enumName, 'String');
+    }
+
     final generatedMethod = """
 \t///$summary  ${parametersComments.isNotEmpty ? """\n$parametersComments""" : ''}
+\t$publicMethod
+
 \t@$typeReq
-\tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($parametersPart);
+\tFuture<Response$returnTypeString> ${methodName}($parametersPart);
 """;
 
     return generatedMethod;
+  }
+
+  String generatePublicMethod(
+      String methodName,
+      String returnTypeString,
+      String parametersPart,
+      List<SwaggerRequestParameter> parameters,
+      String enumName,
+      String enumInBodyName) {
+    final mapName = '_\$${enumName}Map';
+
+    final newParametersPart = parametersPart
+        .replaceAll(RegExp(r'@\w+\(\)'), '')
+        .replaceAll(RegExp(r"@\w+\(\'\w+\'\)"), '');
+
+    final result =
+        '''\tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($newParametersPart){
+          return _${methodName.camelCase}(${parameters.map((e) => "${e.name} : ${e.name == enumInBodyName ? '$mapName[$enumName]' : e.name}").join(', ')});
+          }''';
+
+    return result;
   }
 
   @visibleForTesting
