@@ -1,4 +1,4 @@
-## 1.0.9
+## 1.0.9+1
 
 * Fixed issue with enums in request bodies
 
