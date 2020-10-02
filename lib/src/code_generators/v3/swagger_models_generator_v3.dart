@@ -201,7 +201,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String generateEnumValuesContent(List<dynamic> values) {
     return values
-        .map((dynamic e) => "\t@JsonValue('$e')\n  ${getEnumFieldName(e)}")
+        .map((dynamic e) =>
+            "\t@JsonValue('${e.replaceAll("\$", "\\\$")}')\n  ${getEnumFieldName(e)}")
         .join(',\n');
   }
 
@@ -388,7 +389,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   @visibleForTesting
   String generatePropertyContentByDefault(Map<String, dynamic> propertyEntryMap,
       String propertyName, List<String> allEnumNames) {
-    final typeName = propertyEntryMap['originalRef'];
+    final typeName = propertyEntryMap['originalRef'] ?? 'dynamic';
 
     final unknownEnumValue = allEnumNames.contains(typeName)
         ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
@@ -491,25 +492,6 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   String getEnumFieldName(dynamic dynamicName) {
     var name = dynamicName.toString();
 
-    exceptionWords.forEach((String forbiddenWord) {
-      if (name.toLowerCase() == forbiddenWord) {
-        name = '\$' + name;
-      }
-    });
-
-    var result = name
-        .replaceAll(' ', '_')
-        .replaceAll('-', '_')
-        .replaceAll('.', '_')
-        .replaceAll(',', '_')
-        .split('_')
-        .map((String e) => e.toLowerCase().capitalize)
-        .join();
-
-    if (result.startsWith(RegExp('[0-9]'))) {
-      result = '\$' + result;
-    }
-
-    return result.lower;
+    return SwaggerEnumsGeneratorV3().getValidatedEnumFieldName(name);
   }
 }
