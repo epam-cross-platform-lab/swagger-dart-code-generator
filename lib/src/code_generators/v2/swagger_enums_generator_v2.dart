@@ -42,8 +42,7 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
               swaggerRequestParameter.items?.enumValues;
 
           if (enumValues != null) {
-            final enumContent = generateEnumContent(name, enumValues,
-                swaggerRequestParameter.inParameter == 'body');
+            final enumContent = generateEnumContent(name, enumValues);
 
             result.writeln(enumContent);
             enumNames.add(name);
@@ -95,19 +94,14 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
     return enumNames;
   }
 
-  String generateEnumContent(
-      String enumName, List<String> enumValues, bool isBody) {
+  String generateEnumContent(String enumName, List<String> enumValues) {
     final enumValuesContent = getEnumValuesContent(enumValues);
 
-    var enumMap = '';
-
-    if (isBody) {
-      enumMap = '''
+    final enumMap = '''
 \n\tconst _\$${enumName}Map = {
 \t${getEnumValuesMapContent(enumName, enumValues)}
       };
       ''';
-    }
 
     final result = """
 enum $enumName{
