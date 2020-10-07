@@ -119,7 +119,7 @@ $enumMap
   String getEnumValuesContent(List<String> enumValues) {
     final result = enumValues
         .map((String enumFieldName) =>
-            "\t@JsonValue('$enumFieldName')\n\t${getValidatedEnumFieldName(enumFieldName)}")
+            "\t@JsonValue('${enumFieldName.replaceAll("\$", "\\\$")}')\n\t${getValidatedEnumFieldName(enumFieldName)}")
         .join(',\n');
 
     return result;
@@ -135,15 +135,15 @@ $enumMap
     return result;
   }
 
-  @visibleForTesting
   String getValidatedEnumFieldName(String name) {
     if (name.startsWith(RegExp('[0-9]+'))) {
       name = defaultEnumFieldName + name;
     }
 
     var result = name
-        .replaceAll(RegExp('[ -.,]'), '_')
+        .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
+        .where((element) => element.isNotEmpty)
         .map((String word) => word.toLowerCase().capitalize)
         .join();
 
