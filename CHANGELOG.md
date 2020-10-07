@@ -1,4 +1,4 @@
-## 1.0.11
+## 1.1.0
 
 * Fixed issues with Enums usage
 * Fixed issues witn enum naming name
