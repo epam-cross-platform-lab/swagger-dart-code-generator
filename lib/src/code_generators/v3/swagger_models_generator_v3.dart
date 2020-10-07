@@ -202,7 +202,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   String generateEnumValuesContent(List<dynamic> values) {
     return values
         .map((dynamic e) =>
-            "\t@JsonValue('${e.replaceAll("\$", "\\\$")}')\n  ${getEnumFieldName(e)}")
+            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getEnumFieldName(e)}")
         .join(',\n');
   }
 

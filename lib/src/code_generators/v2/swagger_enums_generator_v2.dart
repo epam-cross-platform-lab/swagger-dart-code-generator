@@ -136,16 +136,16 @@ $enumMap
   }
 
   String getValidatedEnumFieldName(String name) {
-    if (name.startsWith(RegExp('[0-9]+'))) {
-      name = defaultEnumFieldName + name;
-    }
-
     var result = name
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
         .where((element) => element.isNotEmpty)
         .map((String word) => word.toLowerCase().capitalize)
         .join();
+
+    if (result.startsWith(RegExp('[0-9]+'))) {
+      result = defaultEnumFieldName + result;
+    }
 
     if (exceptionWords.contains(result.toLowerCase())) {
       return '\$' + result.lower;

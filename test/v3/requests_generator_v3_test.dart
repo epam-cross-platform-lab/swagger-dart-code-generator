@@ -615,7 +615,7 @@ void main() {
       ];
 
       final result = generator.generatePublicMethod(
-          methodName, returnType, parameters, path, type, parametersList);
+          methodName, returnType, parameters, path, type, true, parametersList);
 
       expect(result, contains('getSomePet(pet)'));
     });

@@ -158,6 +158,7 @@ $allMethodsContent
             returnType: returnTypeName,
             hasEnums: hasEnums,
             enumInBodyName: enumInBodyName?.name,
+            ignoreHeaders: options.ignoreHeaders,
             parameters: swaggerRequest.parameters);
 
         methods.writeln(generatedMethod);
@@ -428,6 +429,7 @@ abstract class $className extends ChopperService''';
       String returnType,
       bool hasEnums,
       String enumInBodyName,
+      bool ignoreHeaders,
       List<SwaggerRequestParameter> parameters}) {
     var typeReq = typeRequest.capitalize + "(path: '$requestPath')";
     if (hasFormData) {
@@ -460,8 +462,14 @@ abstract class $className extends ChopperService''';
               requestPath, typeRequest, e.name))
           .toList();
 
-      publicMethod = generatePublicMethod(methodName, returnTypeString,
-              parametersPart, typeRequest, requestPath, parameters)
+      publicMethod = generatePublicMethod(
+              methodName,
+              returnTypeString,
+              parametersPart,
+              typeRequest,
+              requestPath,
+              ignoreHeaders,
+              parameters)
           .trim();
 
       allEnumNames.forEach((element) {
@@ -489,7 +497,13 @@ abstract class $className extends ChopperService''';
       String parametersPart,
       String requestType,
       String requestPath,
+      bool ignoreHeaders,
       List<SwaggerRequestParameter> parameters) {
+    final filteredParameters = parameters
+        .where((parameter) =>
+            ignoreHeaders ? parameter.inParameter != 'header' : true)
+        .toList();
+
     final enumParametersNames = parameters
         .where((parameter) =>
             parameter.items?.enumValues != null ||
@@ -505,7 +519,7 @@ abstract class $className extends ChopperService''';
 
     final result =
         '''\tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($newParametersPart){
-          return _${methodName.camelCase}(${parameters.map((e) => "${e.name} : ${enumParametersNames.contains(e.name) ? getEnumParameter(requestPath, requestType, e.name, parameters) : e.name}").join(', ')});
+          return _${methodName.camelCase}(${filteredParameters.map((e) => "${validateParameterName(e.name)} : ${enumParametersNames.contains(e.name) ? getEnumParameter(requestPath, requestType, e.name, filteredParameters) : validateParameterName(e.name)}").join(', ')});
           }'''
             .replaceAll('@required', '');
 
