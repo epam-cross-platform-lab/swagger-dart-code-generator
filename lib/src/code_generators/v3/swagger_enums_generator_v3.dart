@@ -7,7 +7,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.d
 import 'package:meta/meta.dart';
 
 class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
-  static const String defaultEnumFieldName = 'VALUE_';
+  static const String defaultEnumFieldName = 'value_';
 
   @override
   String generate(String swagger, String fileName) {
@@ -42,8 +42,7 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
               swaggerRequestParameter.items?.enumValues;
 
           if (enumValues != null) {
-            final enumContent = generateEnumContent(name, enumValues,
-                swaggerRequestParameter.inParameter == 'body');
+            final enumContent = generateEnumContent(name, enumValues);
 
             result.writeln(enumContent);
             enumNames.add(swaggerRequestParameter.name);
@@ -95,19 +94,14 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
     return enumNames;
   }
 
-  String generateEnumContent(
-      String enumName, List<String> enumValues, bool isBody) {
+  String generateEnumContent(String enumName, List<String> enumValues) {
     final enumValuesContent = getEnumValuesContent(enumValues);
 
-    var enumMap = '';
-
-    if (isBody) {
-      enumMap = '''
+    final enumMap = '''
 \n\tconst _\$${enumName}Map = {
 \t${getEnumValuesMapContent(enumName, enumValues)}
       };
       ''';
-    }
 
     final result = """
 enum $enumName{
@@ -135,23 +129,23 @@ $enumMap
   String getEnumValuesContent(List<String> enumValues) {
     final result = enumValues
         .map((String enumFieldName) =>
-            "\t@JsonValue('$enumFieldName')\n\t${getValidatedEnumFieldName(enumFieldName)}")
+            "\t@JsonValue('${enumFieldName.replaceAll("\$", "\\\$")}')\n\t${getValidatedEnumFieldName(enumFieldName)}")
         .join(',\n');
 
     return result;
   }
 
-  @visibleForTesting
   String getValidatedEnumFieldName(String name) {
-    if (name.startsWith(RegExp('[0-9]+'))) {
-      name = defaultEnumFieldName + name;
-    }
-
     var result = name
-        .replaceAll(RegExp('[ -.,]'), '_')
+        .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
+        .where((element) => element.isNotEmpty)
         .map((String word) => word.toLowerCase().capitalize)
         .join();
+
+    if (result.startsWith(RegExp('[0-9]+'))) {
+      result = defaultEnumFieldName + result;
+    }
 
     if (exceptionWords.contains(result.toLowerCase())) {
       return '\$' + result.lower;

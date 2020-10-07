@@ -1,3 +1,9 @@
+## 1.1.0
+
+* Fixed issues with Enums usage
+* Fixed issues witn enum naming name
+* Fixed some bugs
+
 ## 1.0.10
 
 * Fixed issue with enums in request bodies

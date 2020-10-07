@@ -48,7 +48,7 @@ void main() {
   group('Tests for getValidatedEnumFieldName', () {
     test('Should remove numbers at beginning if it is key word', () {
       final result = generator.getValidatedEnumFieldName('007');
-      expect(result, equals('value007'));
+      expect(result, equals('value_007'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {

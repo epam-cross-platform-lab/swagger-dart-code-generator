@@ -116,11 +116,11 @@ class CustomJsonDecoder {
 
 class JsonSerializableConverter extends chopper.JsonConverter {
   @override
-  Response<ResultType> convertResponse<ResultType, Item>(Response response) {
+  chopper.Response<ResultType> convertResponse<ResultType, Item>(chopper.Response response) {
     if (response.bodyString.isEmpty) {
       // In rare cases, when let's say 204 (no content) is returned -
       // we cannot decode the missing json with the result type specified
-      return Response(response.base, null, error: response.error);
+      return chopper.Response(response.base, null, error: response.error);
     }
 
     final jsonRes = super.convertResponse(response);

@@ -540,7 +540,7 @@ void main() {
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
-          hasEnumInBody: false,
+          hasEnums: false,
           typeRequest: 'typeRequests');
 
       expect(result, contains('@FactoryConverter'));
@@ -555,7 +555,8 @@ void main() {
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
-          hasEnumInBody: true,
+          ignoreHeaders: true,
+          hasEnums: true,
           typeRequest: 'typeRequests',
           enumInBodyName: 'enumInBody',
           parameters: [
@@ -579,24 +580,54 @@ void main() {
     });
   });
 
-  group('Tests for generatePublicMethod', () {
-    test('Should generate correct original method usage', () {
-      final methodName = 'getSomePet';
-      final returnType = 'String';
-      final enumName = 'MyEnum';
-      final enumInBodyName = 'MyEnumName';
-      final parameters = '@Body() pet';
-      final parametersList = [
+  group('Tests for getEnumParameter', () {
+    test('Should generate enum parameter from items -> enum values', () {
+      final result = generator.getEnumParameter('path', 'get', 'myParameter', [
         SwaggerRequestParameter(
-            inParameter: 'body',
-            name: 'pet',
-            items: SwaggerRequestItems(enumValues: ['one']))
-      ];
+            type: 'array',
+            items: SwaggerRequestItems(enumValues: ['one', 'two']))
+      ]);
 
-      final result = generator.generatePublicMethod(methodName, returnType,
-          parameters, parametersList, enumName, enumInBodyName);
+      expect(result, equals('_\$PathGetMyParameterMap[myParameter]'));
+    });
 
-      expect(result, contains('getSomePet(pet)'));
+    test('Should generate enum parameter from item -> enum values', () {
+      final result = generator.getEnumParameter('path', 'get', 'myParameter', [
+        SwaggerRequestParameter(
+          item: ParameterItem(enumValues: ['one', 'two']),
+          type: 'array',
+        )
+      ]);
+
+      expect(result, equals('_\$PathGetMyParameterMap[myParameter]'));
+    });
+
+    test('Should generate enum parameter from schema -> enum values', () {
+      final result = generator.getEnumParameter('path', 'get', 'myParameter', [
+        SwaggerRequestParameter(
+          schema: SwaggerParameterSchema(enumValues: ['one', 'two']),
+          type: 'array',
+        )
+      ]);
+
+      expect(result, equals('_\$PathGetMyParameterMap[myParameter]'));
+    });
+
+    test('Should', () {
+      final result = generator.getEnumParameter('path', 'get', 'myParameter', [
+        SwaggerRequestParameter(
+          name: 'myParameter',
+          schema: SwaggerParameterSchema(
+            enumValues: ['one', 'two'],
+          ),
+          type: 'array',
+        )
+      ]);
+
+      expect(
+          result,
+          equals(
+              'myParameter.map((element) {_\$PathGetMyParameterMap[element];}).toList()'));
     });
   });
 }

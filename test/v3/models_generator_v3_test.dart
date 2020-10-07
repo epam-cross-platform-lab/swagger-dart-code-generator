@@ -187,7 +187,7 @@ void main() {
 
     test('Should return \$validateEnumFieldName', () {
       const name = '55element';
-      const expectedResult = '\$55element';
+      const expectedResult = 'value_55element';
       final result = generator.getEnumFieldName(name);
 
       expect(result, contains(expectedResult));

@@ -148,13 +148,27 @@
             "in": "query",
             "description": "Status values that need to be considered for filter",
             "required": true,
-            "type": "array",
-            "items": {
-              "type": "string",
+            "schema": {
               "enum": [
                 "available",
                 "pending",
                 "sold"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "description": "Status values that need to be considered for filter",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "red",
+                "green",
+                "yellow"
               ],
               "default": "available"
             },
