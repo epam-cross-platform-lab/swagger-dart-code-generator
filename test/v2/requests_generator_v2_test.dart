@@ -540,7 +540,7 @@ void main() {
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
-          hasEnumInBody: false,
+          hasEnums: false,
           typeRequest: 'typeRequests');
 
       expect(result, contains('@FactoryConverter'));
@@ -555,7 +555,7 @@ void main() {
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
-          hasEnumInBody: true,
+          hasEnums: true,
           typeRequest: 'typeRequests',
           enumInBodyName: 'enumInBody',
           parameters: [
@@ -576,27 +576,6 @@ void main() {
       final result = generator.getBodyParameter(parameter, 'path', 'type');
 
       expect(result, equals('@Body() @required MyObject myName'));
-    });
-  });
-
-  group('Tests for generatePublicMethod', () {
-    test('Should generate correct original method usage', () {
-      final methodName = 'getSomePet';
-      final returnType = 'String';
-      final enumName = 'MyEnum';
-      final enumInBodyName = 'MyEnumName';
-      final parameters = '@Body() pet';
-      final parametersList = [
-        SwaggerRequestParameter(
-            inParameter: 'body',
-            name: 'pet',
-            items: SwaggerRequestItems(enumValues: ['one']))
-      ];
-
-      final result = generator.generatePublicMethod(methodName, returnType,
-          parameters, parametersList, enumName, enumInBodyName);
-
-      expect(result, contains('getSomePet(pet)'));
     });
   });
 }
