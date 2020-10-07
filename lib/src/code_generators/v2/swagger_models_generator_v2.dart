@@ -8,13 +8,8 @@ import 'package:meta/meta.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
-  static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
-
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
-    final generatedEnums =
-        SwaggerEnumsGeneratorV2().generate(dartCode, fileName);
-
     final dynamic map = jsonDecode(dartCode);
 
     final definitions = map['definitions'] as Map<String, dynamic>;
@@ -35,7 +30,7 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
           allEnumsNames);
     }).join('\n');
 
-    return '''$generatedClasses\n$generatedEnums''';
+    return '$generatedClasses';
   }
 
   List<String> getAllEnumNames(
@@ -57,7 +52,8 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
         var property = propertyValue as Map<String, dynamic>;
 
         if (property.containsKey('enum')) {
-          results.add(generateEnumName(className, propertyName));
+          results.add(SwaggerEnumsGeneratorV2()
+              .generateEnumName(className, propertyName));
         }
       });
     });
@@ -81,8 +77,6 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
     final generatedProperties = generatePropertiesContent(properties, className,
         defaultValues, useDefaultNullForLists, allEnumNames);
 
-    final enums = generateEnumsContent(properties, className);
-
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $className{
@@ -93,8 +87,6 @@ $generatedProperties
 \tstatic const toJsonFactory = _\$${className}ToJson;
 \tMap<String, dynamic> toJson() => _\$${className}ToJson(this);
 }
-
-$enums
 ''';
 
     return generatedClass;
@@ -115,6 +107,7 @@ $enums
   }
 
   @visibleForTesting
+<<<<<<< HEAD
   String generateEnumsContent(Map<String, dynamic> map, String className) {
     if (map == null) {
       return '';
@@ -169,6 +162,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   }
 
   @visibleForTesting
+=======
+>>>>>>> duplicated-enums-and-models-names-fix
   String generatePropertiesContent(
       Map<String, dynamic> propertiesMap,
       String className,
@@ -248,13 +243,6 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
   }
 
   @visibleForTesting
-  String generateEnumPropertyContent(String key, String className) {
-    return '''
-  @JsonKey(unknownEnumValue: ${generateEnumName(className, key)}.swaggerGeneratedUnknown)
-  final ${className.capitalize + key.capitalize} ${generateFieldName(key)};''';
-  }
-
-  @visibleForTesting
   String generateGeneralPropertyContent(
       String propertyName,
       String propertyKey,
@@ -305,6 +293,15 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         return generateGeneralPropertyContent(propertyName, propertyKey,
             className, defaultValues, propertyEntryMap, allEnumsNames);
     }
+  }
+
+  @visibleForTesting
+  String generateEnumPropertyContent(String key, String className) {
+    final enumName = SwaggerEnumsGeneratorV2().generateEnumName(className, key);
+
+    return '''
+  @JsonKey(unknownEnumValue: enums.${enumName}.swaggerGeneratedUnknown)
+  final ${className.capitalize + key.capitalize} ${generateFieldName(key)};''';
   }
 
   @visibleForTesting
@@ -431,7 +428,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
             parameter['format'] == 'date') {
           return 'DateTime';
         } else if (parameter['enum'] != null) {
-          return generateEnumName(className, parameterName);
+          return 'enums.${SwaggerEnumsGeneratorV2().generateEnumName(className, parameterName)}';
         }
         return 'String';
       case 'number':

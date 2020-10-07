@@ -62,4 +62,28 @@ void main() {
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });
+
+  group('generateEnumName', () {
+    final generator = SwaggerEnumsGeneratorV2();
+
+    test('Should generate enum name', () {
+      const _className = 'animal';
+      const _enumName = 'cat';
+      const _expectedResult = 'AnimalCat';
+      final result = generator.generateEnumName(_className, _enumName);
+
+      expect(result, contains(_expectedResult));
+    });
+  });
+
+  group('generateEnumValuesContent', () {
+    final generator = SwaggerEnumsGeneratorV2();
+    test('Should return enum values', () {
+      final list = <String>['Cats', 'dogs', 'Forgs'];
+      const expectedResult = "\t@JsonValue('Cats')\n  cats";
+      final result = generator.generateEnumValuesContent(list);
+
+      expect(result, contains(expectedResult));
+    });
+  });
 }

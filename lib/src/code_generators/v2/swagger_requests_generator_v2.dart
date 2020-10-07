@@ -320,7 +320,7 @@ abstract class $className extends ChopperService''';
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
-        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? parameterType : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
+        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType' : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
       case 'header':
         return ignoreHeaders
             ? ''
@@ -337,11 +337,11 @@ abstract class $className extends ChopperService''';
       SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
-      parameterType = SwaggerModelsGeneratorV2.generateRequestEnumName(
-          path, requestType, parameter.name);
+      parameterType =
+          'enums.${SwaggerModelsGeneratorV2.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.items?.enumValues != null) {
-      final typeName = SwaggerModelsGeneratorV2.generateRequestEnumName(
-          path, requestType, parameter.name);
+      final typeName =
+          'enums.${SwaggerModelsGeneratorV2.generateRequestEnumName(path, requestType, parameter.name)}';
       parameterType = 'List<$typeName>';
     } else {
       parameterType = getParameterTypeName(
@@ -359,8 +359,8 @@ abstract class $className extends ChopperService''';
   ) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
-      parameterType = SwaggerModelsGeneratorV2.generateRequestEnumName(
-          path, requestType, parameter.name);
+      parameterType =
+          'enums.${SwaggerModelsGeneratorV2.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
     } else if (parameter.schema?.ref != null) {

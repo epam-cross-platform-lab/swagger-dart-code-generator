@@ -14,9 +14,6 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 
-    final generatedEnums =
-        SwaggerEnumsGeneratorV3().generate(dartCode, fileName);
-
     final components = map['components'] as Map<String, dynamic>;
     final schemas = components == null
         ? null
@@ -38,7 +35,7 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
           allEnumsNames);
     }).join('\n');
 
-    return '$generatedClasses$generatedEnums';
+    return '$generatedClasses';
   }
 
   List<String> getAllEnumNames(
@@ -64,7 +61,8 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
         var property = propertyValue as Map<String, dynamic>;
 
         if (property.containsKey('enum')) {
-          results.add(generateEnumName(className, propertyName));
+          results.add(SwaggerEnumsGeneratorV3()
+              .generateEnumName(className, propertyName));
         }
       });
     });
@@ -96,7 +94,7 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
       bool useDefaultNullForLists,
       List<String> allEnumNames) {
     if (map['enum'] != null) {
-      return generateEnumContentIfPossible(map, className);
+      return '';
     }
 
     final properties = getModelProperties(map);
@@ -119,8 +117,6 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
     final generatedProperties = generatePropertiesContent(properties, className,
         defaultValues, useDefaultNullForLists, allEnumNames);
 
-    final enums = generateEnumsContent(properties, className);
-
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $className $extendsString{
@@ -131,8 +127,6 @@ $generatedProperties
 \tstatic const toJsonFactory = _\$${className}ToJson;
 \tMap<String, dynamic> toJson() => _\$${className}ToJson(this);
 }
-
-$enums
 ''';
 
     return generatedClass;
@@ -150,60 +144,6 @@ $enums
     }).join('\n');
 
     return '{\n${generatedConstructorParameters.toString()}\n\t}';
-  }
-
-  @visibleForTesting
-  String generateEnumsContent(Map<String, dynamic> map, String className) {
-    if (map == null) {
-      return '';
-    }
-
-    final gemeratedEnumsContent = map.keys
-        .map((String key) {
-          final enumValuesMap = map[key] as Map<String, dynamic>;
-
-          if (enumValuesMap.containsKey('type')) {
-            return generateEnumContentIfPossible(
-                enumValuesMap, generateEnumName(className, key));
-          }
-
-          return '';
-        })
-        .where((String generatedEnum) => generatedEnum.isNotEmpty)
-        .join('\n');
-
-    return gemeratedEnumsContent;
-  }
-
-  @visibleForTesting
-  String generateEnumName(String className, String enumName) {
-    return '${className.capitalize}${enumName.capitalize}';
-  }
-
-  @visibleForTesting
-  String generateEnumContentIfPossible(
-      Map<String, dynamic> map, String enumName) {
-    if (map['enum'] != null) {
-      return """
-enum ${enumName.capitalize} {
-\t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
-${generateEnumValuesContent(map['enum'] as List<dynamic>)}
-}
-""";
-    } else if (map['items'] != null) {
-      return generateEnumContentIfPossible(
-          map['items'] as Map<String, dynamic>, enumName);
-    } else {
-      return '';
-    }
-  }
-
-  @visibleForTesting
-  String generateEnumValuesContent(List<dynamic> values) {
-    return values
-        .map((dynamic e) =>
-            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getEnumFieldName(e)}")
-        .join(',\n');
   }
 
   @visibleForTesting
@@ -470,7 +410,8 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
             parameter['format'] == 'date') {
           return 'DateTime';
         } else if (parameter['enum'] != null) {
-          return generateEnumName(className, parameterName);
+          return SwaggerEnumsGeneratorV3()
+              .generateEnumName(className, parameterName);
         }
         return 'String';
       case 'number':
@@ -486,12 +427,5 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
         }
         return 'undefinedType';
     }
-  }
-
-  @visibleForTesting
-  String getEnumFieldName(dynamic dynamicName) {
-    var name = dynamicName.toString();
-
-    return SwaggerEnumsGeneratorV3().getValidatedEnumFieldName(name);
   }
 }

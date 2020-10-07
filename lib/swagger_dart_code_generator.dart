@@ -10,6 +10,7 @@ SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
 
 const String inputFileExtension = '.swagger';
 const String outputFileExtension = '.swagger.dart';
+const String outputEnumsFileExtension = '.enums.swagger.dart';
 const String indexFileName = 'client_index.dart';
 const String mappingFileName = 'client_mapping.dart';
 
@@ -23,7 +24,8 @@ Map<String, List<String>> generateExtensions(GeneratorOptions options) {
   filesList.forEach((FileSystemEntity element) {
     final name = element.path.split('/').last.split('.').first;
     result[element.path] = <String>[
-      '${options.outputFolder}$name$outputFileExtension'
+      '${options.outputFolder}$name$outputFileExtension',
+      '${options.outputFolder}$name$outputEnumsFileExtension',
     ];
   });
 
@@ -61,8 +63,15 @@ class SwaggerDartCodeGenerator implements Builder {
     final models = codeGenerator.generateModels(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
-    final imports = codeGenerator.generateImportsContent(contents,
-        fileNameWithoutExtension, models.isNotEmpty, options.buildOnlyModels);
+    final enums = codeGenerator.generateEnums(
+        contents, getFileNameWithoutExtension(fileNameWithExtension));
+
+    final imports = codeGenerator.generateImportsContent(
+        contents,
+        fileNameWithoutExtension,
+        models.isNotEmpty,
+        options.buildOnlyModels,
+        enums.isNotEmpty);
 
     final converter = codeGenerator.generateConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
@@ -83,6 +92,14 @@ class SwaggerDartCodeGenerator implements Builder {
         copyAssetId,
         _generateFileContent(
             imports, requests, converter, models, customDecoder));
+
+    ///Write enums
+    final formatterEnums = _tryFormatCode(enums);
+
+    final enumsAssetId = AssetId(buildStep.inputId.package,
+        '${options.outputFolder}$fileNameWithoutExtension$outputEnumsFileExtension');
+
+    await buildStep.writeAsString(enumsAssetId, formatterEnums);
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
@@ -109,14 +126,18 @@ $models
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;
 
+    return _tryFormatCode(result);
+  }
+
+  String _tryFormatCode(String code) {
     try {
-      final formattedResult = _formatter.format(result);
+      final formattedResult = _formatter.format(code);
       return formattedResult;
     } catch (e) {
       print('''[WARNING] Code formatting failed.
           Please raise an issue on https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/
           Reason: $e''');
-      return result;
+      return code;
     }
   }
 

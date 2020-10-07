@@ -32,34 +32,6 @@ void main() {
     });
   });
 
-  group('generateEnumContentIfPossible', () {
-    final generator = SwaggerModelsGeneratorV3();
-    test('Should generate enum', () {
-      final map = <String, dynamic>{
-        'items': {
-          'enum': ['Item1', 'Item2']
-        }
-      };
-      const enumName = 'TestName';
-      final result = generator.generateEnumContentIfPossible(map, enumName);
-
-      expect(result, contains('enum TestName'));
-    });
-  });
-
-  group('generateEnumName', () {
-    final generator = SwaggerModelsGeneratorV3();
-
-    test('Should generate enum name', () {
-      const className = 'animal';
-      const enumName = 'cat';
-      const expectedResult = 'AnimalCat';
-      final result = generator.generateEnumName(className, enumName);
-
-      expect(result, contains(expectedResult));
-    });
-  });
-
   group('generateDefaultValueFromMap', () {
     final generator = SwaggerModelsGeneratorV3();
     test('Should return default value', () {
@@ -165,6 +137,7 @@ void main() {
     });
   });
 
+<<<<<<< HEAD
   group('getEnumFieldName', () {
     final generator = SwaggerModelsGeneratorV3();
 
@@ -202,6 +175,8 @@ void main() {
     });
   });
 
+=======
+>>>>>>> duplicated-enums-and-models-names-fix
   group('generateFieldName', () {
     test('Should return validate field name', () {
       const name = 'Cat_Dog-Animals';
@@ -290,17 +265,6 @@ void main() {
           propertyEntryMap, propertyName, propertyKey, className, ['Pet']);
 
       expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
-    });
-  });
-
-  group('generateEnumValuesContent', () {
-    final generator = SwaggerModelsGeneratorV3();
-    test('Should return enum values', () {
-      final list = <String>['Cats', 'dogs', 'Forgs'];
-      const expectedResult = "\t@JsonValue('Cats')\n  cats";
-      final result = generator.generateEnumValuesContent(list);
-
-      expect(result, contains(expectedResult));
     });
   });
 
