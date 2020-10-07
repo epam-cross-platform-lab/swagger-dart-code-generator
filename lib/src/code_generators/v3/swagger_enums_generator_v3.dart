@@ -7,7 +7,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.d
 import 'package:meta/meta.dart';
 
 class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
-  static const String defaultEnumFieldName = 'VALUE_';
+  static const String defaultEnumFieldName = 'value_';
 
   @override
   String generate(String swagger, String fileName) {

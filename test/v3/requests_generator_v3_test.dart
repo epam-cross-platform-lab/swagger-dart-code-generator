@@ -577,6 +577,7 @@ void main() {
           returnType: 'returnType',
           summary: 'summary',
           hasEnums: true,
+          ignoreHeaders: false,
           typeRequest: 'typeRequests',
           enumInBodyName: 'enumInBody',
           parameters: [
