@@ -464,7 +464,7 @@ abstract class $className extends ChopperService''';
 \t$publicMethod
 
 \t@$typeReq
-\tFuture<Response$returnTypeString> ${methodName}($parametersPart);
+\tFuture<Response$returnTypeString> $methodName($parametersPart);
 
 
 """;
