@@ -476,6 +476,10 @@ abstract class $className extends ChopperService''';
         parametersPart = parametersPart.replaceFirst(element, 'String');
       });
 
+      parametersPart = parametersPart
+          .replaceAll('@required enums.', '@required ')
+          .replaceAll('@required List<enums.', '@required List<');
+
       methodName = '_$methodName';
     }
 
@@ -550,7 +554,7 @@ abstract class $className extends ChopperService''';
     final enumName = SwaggerModelsGeneratorV3.generateRequestEnumName(
         path, requestType, parameterName);
 
-    return '_\$${enumName}Map';
+    return 'enums.\$${enumName}Map';
   }
 
   @visibleForTesting

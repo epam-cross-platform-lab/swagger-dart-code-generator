@@ -125,7 +125,7 @@ $enumsFromClasses\n$enumsFromRequests''';
     final enumValuesContent = getEnumValuesContent(enumValues);
 
     final enumMap = '''
-\n\tconst _\$${enumName}Map = {
+\n\tconst \$${enumName}Map = {
 \t${getEnumValuesMapContent(enumName, enumValues)}
       };
       ''';
@@ -136,6 +136,7 @@ enum $enumName{
 \tswaggerGeneratedUnknown,
 $enumValuesContent
 }
+
 $enumMap
  """;
 
@@ -154,7 +155,11 @@ $enumMap
 
   @visibleForTesting
   String getEnumValuesMapContent(String enumName, List<String> enumValues) {
-    final result = enumValues
+    final neededValues = <String>[];
+    neededValues.addAll(enumValues);
+    neededValues.add('swaggerGeneratedUnknown');
+
+    final result = neededValues
         .map((String enumFieldName) =>
             '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'$enumFieldName\'')
         .join(',\n');
@@ -167,7 +172,7 @@ $enumMap
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
         .where((element) => element.isNotEmpty)
-        .map((String word) => word.toLowerCase().capitalize)
+        .map((String word) => word.capitalize)
         .join();
 
     if (result.startsWith(RegExp('[0-9]+'))) {
@@ -211,7 +216,7 @@ $enumMap
       final enumValues = map['enum'] as List<dynamic>;
       final stringValues = enumValues.map((e) => e.toString()).toList();
       final enumMap = '''
-\n\tconst _\$${enumName}Map = {
+\n\tconst \$${enumName}Map = {
 \t${getEnumValuesMapContent(enumName, stringValues)}
       };
       ''';
