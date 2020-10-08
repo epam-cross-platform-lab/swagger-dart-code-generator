@@ -36,7 +36,7 @@ build/
 *.models.dart
 *.swagger.dart
 !example_swagger.swagger.dart
-!example_swaggerenums.swagger.dart
+!example_swagger.enums.swagger.dart
 *.converter.dart
 *.pubspec.lock
 *.swagger
