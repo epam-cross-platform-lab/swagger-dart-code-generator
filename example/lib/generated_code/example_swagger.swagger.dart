@@ -3,6 +3,9 @@ import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:flutter/widgets.dart';
 
+import 'package:example/generated_code/example_swagger.enums.swagger.dart'
+    as enums;
+
 part 'example_swagger.swagger.chopper2.dart';
 part 'example_swagger.swagger.g2.dart';
 
@@ -26,28 +29,44 @@ abstract class ExampleSwagger extends ChopperService {
 
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
+
   @Post(path: '/pet')
   Future<Response> addPet({@Body() @required Pet body});
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
+
   @Put(path: '/pet')
   Future<Response> updatePet({@Body() @required Pet body});
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
-  @Get(path: '/pet/findByStatus')
+  ///@param color Status values that need to be considered for filter
   Future<Response<List<Pet>>> findPetsByStatus(
-      {@Query('status') @required List<PetFindByStatusGetStatus> status});
+      {enums.PetFindByStatusGetStatus status,
+      List<enums.PetFindByStatusGetColor> color}) {
+    return _findPetsByStatus(
+        status: enums.$PetFindByStatusGetStatusMap[status],
+        color: color.map((element) {
+          enums.$PetFindByStatusGetColorMap[element];
+        }).toList());
+  }
+
+  @Get(path: '/pet/findByStatus')
+  Future<Response<List<Pet>>> _findPetsByStatus(
+      {@Query('status') @required String status,
+      @Query('color') @required List<String> color});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
+
   @Get(path: '/pet/findByTags')
   Future<Response<List<Pet>>> findPetsByTags(
       {@Query('tags') @required List<String> tags});
 
   ///Find pet by ID
   ///@param petId ID of pet to return
+
   @Get(path: '/pet/{petId}')
   Future<Response<Pet>> getPetById({@Path('petId') @required int petId});
 
@@ -55,6 +74,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param petId ID of pet that needs to be updated
   ///@param name Updated name of the pet
   ///@param status Updated status of the pet
+
   @Post(path: '/pet/{petId}')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
   Future<Response> updatePetWithForm(
@@ -64,6 +84,7 @@ abstract class ExampleSwagger extends ChopperService {
 
   ///Deletes a pet
   ///@param petId Pet id to delete
+
   @Delete(path: '/pet/{petId}')
   Future<Response> deletePet({@Path('petId') @required int petId});
 
@@ -71,6 +92,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param petId ID of pet to update
   ///@param additionalMetadata Additional data to pass to server
   ///@param file file to upload
+
   @Post(path: '/pet/{petId}/uploadImage')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
   Future<Response<ApiResponse>> uploadFile(
@@ -79,54 +101,64 @@ abstract class ExampleSwagger extends ChopperService {
       @Field('file') List<int> file});
 
   ///Returns pet inventories by status
+
   @Get(path: '/store/inventory')
   Future<Response<List<dynamic>>> getInventory();
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
+
   @Post(path: '/store/order')
   Future<Response<Order>> placeOrder({@Body() @required Order body});
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
+
   @Get(path: '/store/order/{orderId}')
   Future<Response<Order>> getOrderById(
       {@Path('orderId') @required int orderId});
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
+
   @Delete(path: '/store/order/{orderId}')
   Future<Response> deleteOrder({@Path('orderId') @required int orderId});
 
   ///Create user
   ///@param body Created user object
+
   @Post(path: '/user')
   Future<Response> createUser({@Body() @required User body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
+
   @Post(path: '/user/createWithArray')
   Future<Response> createUsersWithArrayInput({@Body() @required String body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
+
   @Post(path: '/user/createWithList')
   Future<Response> createUsersWithListInput({@Body() @required String body});
 
   ///Logs user into the system
   ///@param username The user name for login
   ///@param password The password for login in clear text
+
   @Get(path: '/user/login')
   Future<Response<String>> loginUser(
       {@Query('username') @required String username,
       @Query('password') @required String password});
 
   ///Logs out current logged in user session
+
   @Get(path: '/user/logout')
   Future<Response> logoutUser();
 
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
+
   @Get(path: '/user/{username}')
   Future<Response<User>> getUserByName(
       {@Path('username') @required String username});
@@ -134,6 +166,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///Updated user
   ///@param username name that need to be updated
   ///@param body Updated user object
+
   @Put(path: '/user/{username}')
   Future<Response> updateUser(
       {@Path('username') @required String username,
@@ -141,6 +174,7 @@ abstract class ExampleSwagger extends ChopperService {
 
   ///Delete user
   ///@param username The name that needs to be deleted
+
   @Delete(path: '/user/{username}')
   Future<Response> deleteUser({@Path('username') @required String username});
 }
@@ -177,24 +211,16 @@ class Order {
   @JsonKey(name: 'shipDate')
   final DateTime shipDate;
   @JsonKey(
-      name: 'status', unknownEnumValue: OrderStatus.swaggerGeneratedUnknown)
-  final OrderStatus status;
+      name: 'status',
+      unknownEnumValue: enums.OrderStatus.swaggerGeneratedUnknown,
+      toJson: orderStatusToJson,
+      fromJson: orderStatusFromJson)
+  final enums.OrderStatus status;
   @JsonKey(name: 'complete')
   final bool complete;
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
   Map<String, dynamic> toJson() => _$OrderToJson(this);
-}
-
-enum OrderStatus {
-  @JsonValue('swaggerGeneratedUnknown')
-  swaggerGeneratedUnknown,
-  @JsonValue('placed')
-  placed,
-  @JsonValue('approved')
-  approved,
-  @JsonValue('delivered')
-  delivered
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -293,22 +319,15 @@ class Pet {
   final List<String> photoUrls;
   @JsonKey(name: 'tags', defaultValue: <Tag>[])
   final List<Tag> tags;
-  @JsonKey(name: 'status', unknownEnumValue: PetStatus.swaggerGeneratedUnknown)
-  final PetStatus status;
+  @JsonKey(
+      name: 'status',
+      unknownEnumValue: enums.PetStatus.swaggerGeneratedUnknown,
+      toJson: petStatusToJson,
+      fromJson: petStatusFromJson)
+  final enums.PetStatus status;
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
   Map<String, dynamic> toJson() => _$PetToJson(this);
-}
-
-enum PetStatus {
-  @JsonValue('swaggerGeneratedUnknown')
-  swaggerGeneratedUnknown,
-  @JsonValue('available')
-  available,
-  @JsonValue('pending')
-  pending,
-  @JsonValue('sold')
-  sold
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -333,15 +352,40 @@ class ApiResponse {
   Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
 }
 
-enum PetFindByStatusGetStatus {
-  @JsonValue('swaggerGeneratedUnknown')
-  swaggerGeneratedUnknown,
-  @JsonValue('available')
-  available,
-  @JsonValue('pending')
-  pending,
-  @JsonValue('sold')
-  sold
+String petFindByStatusGetStatusToJson(
+    enums.PetFindByStatusGetStatus petFindByStatusGetStatus) {
+  return enums.$PetFindByStatusGetStatusMap[petFindByStatusGetStatus];
+}
+
+enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
+    String petFindByStatusGetStatus) {
+  return enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
+}
+
+String petFindByStatusGetColorToJson(
+    enums.PetFindByStatusGetColor petFindByStatusGetColor) {
+  return enums.$PetFindByStatusGetColorMap[petFindByStatusGetColor];
+}
+
+enums.PetFindByStatusGetColor petFindByStatusGetColorFromJson(
+    String petFindByStatusGetColor) {
+  return enums.PetFindByStatusGetColor.swaggerGeneratedUnknown;
+}
+
+String orderStatusToJson(enums.OrderStatus orderStatus) {
+  return enums.$OrderStatusMap[orderStatus];
+}
+
+enums.OrderStatus orderStatusFromJson(String orderStatus) {
+  return enums.OrderStatus.swaggerGeneratedUnknown;
+}
+
+String petStatusToJson(enums.PetStatus petStatus) {
+  return enums.$PetStatusMap[petStatus];
+}
+
+enums.PetStatus petStatusFromJson(String petStatus) {
+  return enums.PetStatus.swaggerGeneratedUnknown;
 }
 
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
@@ -382,11 +426,12 @@ class CustomJsonDecoder {
 
 class JsonSerializableConverter extends chopper.JsonConverter {
   @override
-  Response<ResultType> convertResponse<ResultType, Item>(Response response) {
+  chopper.Response<ResultType> convertResponse<ResultType, Item>(
+      chopper.Response response) {
     if (response.bodyString.isEmpty) {
       // In rare cases, when let's say 204 (no content) is returned -
       // we cannot decode the missing json with the result type specified
-      return Response(response.base, null, error: response.error);
+      return chopper.Response(response.base, null, error: response.error);
     }
 
     final jsonRes = super.convertResponse(response);
