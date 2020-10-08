@@ -273,7 +273,7 @@ void main() {
       const jsonKeyExpectedResult =
           '@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)';
       const expectedResult = 'final AnimalsDog dog;';
-      final result = generator.generateEnumPropertyContent(key, className);
+      final result = generator.generateEnumPropertyContent(key, className, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(expectedResult));

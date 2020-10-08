@@ -137,46 +137,6 @@ void main() {
     });
   });
 
-<<<<<<< HEAD
-  group('getEnumFieldName', () {
-    final generator = SwaggerModelsGeneratorV3();
-
-    test('Should return validate enum field name', () {
-      const name = 'cat-dog_ Cars';
-      const expectedResult = 'catDogCars';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should return validate enum field name without forbidden symbols',
-        () {
-      const name = 'cat,dog..Cars';
-      const expectedResult = 'catDogCars';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should return \$validateEnumFieldName', () {
-      const name = '55element';
-      const expectedResult = 'value_55element';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should return \$with', () {
-      const name = 'with';
-      const expectedResult = '\$with';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-  });
-
-=======
->>>>>>> duplicated-enums-and-models-names-fix
   group('generateFieldName', () {
     test('Should return validate field name', () {
       const name = 'Cat_Dog-Animals';
@@ -277,7 +237,7 @@ void main() {
       const jsonKeyExpectedResult =
           '@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)';
       const expectedResult = 'final AnimalsDog dog;';
-      final result = generator.generateEnumPropertyContent(key, className);
+      final result = generator.generateEnumPropertyContent(key, className, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(expectedResult));
