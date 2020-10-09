@@ -119,7 +119,7 @@ $enumsFromClasses\n$enumsFromRequests''';
               swaggerRequestParameter.items?.enumValues;
 
           if (enumValues != null) {
-            enumNames.add(swaggerRequestParameter.name);
+            enumNames.add(name);
           }
         }
       }
@@ -158,7 +158,7 @@ $enumMap
 
     final result = neededValues
         .map((String enumFieldName) =>
-            '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'$enumFieldName\'')
+            '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'${enumFieldName.replaceAll('\$', '\\\$')}\'')
         .join(',\n');
 
     return result;
@@ -225,7 +225,7 @@ $enumMap
   String generateEnumValuesContent(List<dynamic> values) {
     return values
         .map((dynamic e) =>
-            "\t@JsonValue('${e.replaceAll("\$", "\\\$")}')\n  ${getValidatedEnumFieldName(e?.toString())}")
+            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getValidatedEnumFieldName(e?.toString())}")
         .join(',\n');
   }
 

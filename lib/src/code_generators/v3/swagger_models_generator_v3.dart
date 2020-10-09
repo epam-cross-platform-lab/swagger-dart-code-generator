@@ -68,7 +68,7 @@ enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}
 
     schemas.forEach((className, map) {
       if ((map as Map<String, dynamic>).containsKey('enum')) {
-        results.add(className);
+        results.add(className.capitalize);
         return;
       }
       final properties = map['properties'] as Map<String, dynamic>;
@@ -265,7 +265,14 @@ $generatedProperties
       Map<String, dynamic> val,
       List<String> allEnumNames) {
     var jsonKeyContent = "@JsonKey(name: '$propertyKey'";
-    final typeName = getParameterTypeName(className, propertyName, val);
+    var typeName = getParameterTypeName(className, propertyName, val);
+
+    final allEnumsNamesWithoutPrefix =
+        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
+
+    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
+      typeName = 'enums.$typeName';
+    }
 
     final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
 
@@ -315,8 +322,15 @@ $generatedProperties
       List<String> allEnumNames) {
     final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
 
-    final typeName = getParameterTypeName(
+    var typeName = getParameterTypeName(
         className, propertyName, propertyEntryMap, parameterName);
+
+    final allEnumsNamesWithoutPrefix =
+        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
+
+    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
+      typeName = 'enums.$typeName';
+    }
 
     final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
 
@@ -336,8 +350,15 @@ $generatedProperties
 
     final parameterName = propertySchema['\$ref'].toString().split('/').last;
 
-    final typeName = getParameterTypeName(
+    var typeName = getParameterTypeName(
         className, propertyName, propertyEntryMap, parameterName);
+
+    final allEnumsNamesWithoutPrefix =
+        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
+
+    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
+      typeName = 'enums.$typeName';
+    }
 
     final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
 

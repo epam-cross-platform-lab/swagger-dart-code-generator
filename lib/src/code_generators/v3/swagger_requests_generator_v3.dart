@@ -247,6 +247,10 @@ $allMethodsContent
 
   @visibleForTesting
   String validateParameterName(String parameterName) {
+    if (parameterName == null) {
+      return parameterName;
+    }
+
     var name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
@@ -346,13 +350,14 @@ abstract class $className extends ChopperService''';
   @visibleForTesting
   String validateParameterType(String parameterName) {
     var isEnum = false;
-    if (parameterName.startsWith('enums.')) {
-      isEnum = true;
-      parameterName = parameterName.replaceFirst('enums.', '');
-    }
 
     if (parameterName == null) {
       return parameterName;
+    }
+
+    if (parameterName.startsWith('enums.')) {
+      isEnum = true;
+      parameterName = parameterName.replaceFirst('enums.', '');
     }
 
     final result = parameterName
