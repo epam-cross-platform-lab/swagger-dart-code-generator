@@ -331,7 +331,7 @@ abstract class $className extends ChopperService''';
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
-        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? parameterType : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
+        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType' : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
       case 'header':
         return ignoreHeaders
             ? ''
@@ -345,15 +345,27 @@ abstract class $className extends ChopperService''';
 
   @visibleForTesting
   String validateParameterType(String parameterName) {
-    if (parameterName == null) {
-      return null;
+    var isEnum = false;
+    if (parameterName.startsWith('enums.')) {
+      isEnum = true;
+      parameterName = parameterName.replaceFirst('enums.', '');
     }
 
-    return parameterName
+    if (parameterName == null) {
+      return parameterName;
+    }
+
+    final result = parameterName
         .split('-')
         .map((String str) => str.capitalize)
         .toList()
         .join();
+
+    if (isEnum) {
+      return 'enums.$result';
+    } else {
+      return result;
+    }
   }
 
   @visibleForTesting
@@ -361,11 +373,11 @@ abstract class $className extends ChopperService''';
       SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
-      parameterType = SwaggerModelsGeneratorV3.generateRequestEnumName(
-          path, requestType, parameter.name);
+      parameterType =
+          'enums.${SwaggerModelsGeneratorV3.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.items?.enumValues != null) {
-      final typeName = SwaggerModelsGeneratorV3.generateRequestEnumName(
-          path, requestType, parameter.name);
+      final typeName =
+          'enums.${SwaggerModelsGeneratorV3.generateRequestEnumName(path, requestType, parameter.name)}';
       parameterType = 'List<$typeName>';
     } else {
       parameterType = getParameterTypeName(
@@ -380,8 +392,8 @@ abstract class $className extends ChopperService''';
       SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
-      parameterType = SwaggerModelsGeneratorV3.generateRequestEnumName(
-          path, requestType, parameter.name);
+      parameterType =
+          'enums.${SwaggerModelsGeneratorV3.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
     } else if (parameter.schema?.ref != null) {
@@ -477,8 +489,8 @@ abstract class $className extends ChopperService''';
       });
 
       parametersPart = parametersPart
-          .replaceAll('@required enums.', '@required ')
-          .replaceAll('@required List<enums.', '@required List<');
+          .replaceAll('enums.', '')
+          .replaceAll('List<enums.', 'List<');
 
       methodName = '_$methodName';
     }

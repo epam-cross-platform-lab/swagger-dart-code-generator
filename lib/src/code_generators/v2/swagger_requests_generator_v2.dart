@@ -257,15 +257,27 @@ $allMethodsContent
 
   @visibleForTesting
   String validateParameterType(String parameterName) {
+    var isEnum = false;
+    if (parameterName.startsWith('enums.')) {
+      isEnum = true;
+      parameterName = parameterName.replaceFirst('enums.', '');
+    }
+
     if (parameterName == null) {
       return parameterName;
     }
 
-    return parameterName
+    final result = parameterName
         .split('-')
         .map((String str) => str.capitalize)
         .toList()
         .join();
+
+    if (isEnum) {
+      return 'enums.$result';
+    } else {
+      return result;
+    }
   }
 
   @visibleForTesting
@@ -456,9 +468,8 @@ abstract class $className extends ChopperService''';
         parametersPart = parametersPart.replaceFirst(element, 'String');
       });
 
-      parametersPart = parametersPart
-          .replaceAll('@required enums.', '@required ')
-          .replaceAll('@required List<enums.', '@required List<');
+      parametersPart =
+          parametersPart.replaceAll('enums.', '').replaceAll('List<enums.', '');
 
       methodName = '_$methodName';
     }
