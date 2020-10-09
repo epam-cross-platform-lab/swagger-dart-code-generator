@@ -7,20 +7,6 @@ void main() {
   final generator = SwaggerEnumsGeneratorV2();
   const fileName = 'orders_service';
   group('Converter generator tests', () {
-    test('Should do something', () {
-      final result =
-          generator.generate(request_with_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
-    test('Should generate list<enum>', () {
-      final result =
-          generator.generate(request_with_list_of_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
     test('Should generate enum values', () {
       final _values = <String>['file_sup'];
       const _output = "\t@JsonValue('file_sup')\n\tfileSup";

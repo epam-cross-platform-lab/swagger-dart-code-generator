@@ -278,6 +278,9 @@ $generatedProperties
   String generateEnumPropertyContent(
       String key, String className, List<String> allEnumNames) {
     final enumName = SwaggerEnumsGeneratorV3().generateEnumName(className, key);
+
+    allEnumNames.add(enumName);
+
     final unknownEnumValue =
         generateUnknownEnumValue(allEnumNames, enumName, false);
     return '''

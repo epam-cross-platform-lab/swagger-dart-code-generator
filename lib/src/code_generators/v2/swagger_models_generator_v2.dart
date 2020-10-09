@@ -300,6 +300,8 @@ $generatedProperties
       String key, String className, List<String> allEnumNames) {
     final enumName = SwaggerEnumsGeneratorV2().generateEnumName(className, key);
 
+    allEnumNames.add(enumName);
+
     final unknownEnumValue =
         generateUnknownEnumValue(allEnumNames, enumName, false);
     return '''
