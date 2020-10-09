@@ -57,7 +57,7 @@ $maps};
         buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
     final enumsImport = hasEnums
-        ? 'import \'package:example/generated_code/example_swagger.enums.swagger.dart\' as enums;\n'
+        ? 'import \'$swaggerFileName.enums.swagger.dart\' as enums;\n'
         : '';
 
     result.writeln("""import 'package:json_annotation/json_annotation.dart';

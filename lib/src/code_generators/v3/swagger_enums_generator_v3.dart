@@ -197,11 +197,21 @@ $enumMap
   String generateEnumContentIfPossible(
       Map<String, dynamic> map, String enumName) {
     if (map['enum'] != null) {
+      final enumValues = map['enum'] as List<dynamic>;
+      final stringValues = enumValues.map((e) => e.toString()).toList();
+      final enumMap = '''
+\n\tconst \$${enumName}Map = {
+\t${getEnumValuesMapContent(enumName, stringValues)}
+      };
+      ''';
+
       return """
 enum ${enumName.capitalize} {
 \t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
 ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
 }
+
+$enumMap
 """;
     } else if (map['items'] != null) {
       return generateEnumContentIfPossible(
@@ -228,7 +238,7 @@ ${generateEnumValuesContent(map['enum'] as List<dynamic>)}
     final properties = map['properties'] as Map<String, dynamic>;
 
     if (properties == null) {
-      return null;
+      return '';
     }
 
     return generateEnumsContent(properties, className);
