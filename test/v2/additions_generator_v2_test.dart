@@ -23,6 +23,14 @@ void main() {
       expect(result, contains("part 'swagger.fileName.swagger.g.dart';"));
     });
 
+    test('Should generate correct imports', () {
+      final result = generator.generateImportsContent(
+          'swagger.fileName', true, false, true);
+
+      expect(result,
+          contains("import 'swagger.fileName.enums.swagger.dart' as enums;"));
+    });
+
     test('Should generate indexes file', () {
       final result = generator.generateIndexes(<String, List<String>>{
         'someFile.dart': <String>['someFile.swagger.dart'],

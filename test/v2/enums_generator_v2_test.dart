@@ -5,7 +5,6 @@ import 'requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV2();
-  const fileName = 'orders_service';
   group('Converter generator tests', () {
     test('Should generate enum values', () {
       final _values = <String>['file_sup'];

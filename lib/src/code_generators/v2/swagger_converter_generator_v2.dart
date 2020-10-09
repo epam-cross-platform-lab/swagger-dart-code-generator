@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/definitions.dart';
-import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:recase/recase.dart';
 
 class SwaggerConverterGeneratorV2 implements SwaggerConverterGenerator {

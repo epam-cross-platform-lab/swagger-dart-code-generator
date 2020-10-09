@@ -87,7 +87,6 @@ $enumsFromClasses\n$enumsFromRequests''';
     return result.toString();
   }
 
-  @visibleForTesting
   List<String> getEnumNames(String swagger) {
     final enumNames = <String>[];
     final map = jsonDecode(swagger) as Map<String, dynamic>;

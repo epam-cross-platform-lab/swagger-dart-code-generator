@@ -474,4 +474,13 @@ void main() {
           result, contains('class ExtendedErrorModel extends BasicErrorModel'));
     });
   });
+
+  group('Tests for getValidatedClassName', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should', () {
+      final result = generator.getValidatedClassName('Request');
+
+      expect(result, equals('Request\$'));
+    });
+  });
 }

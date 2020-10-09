@@ -8,7 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
-  List<String> _keyClasses = ['Response', 'Request'];
+  final List<String> _keyClasses = ['Response', 'Request'];
 
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {

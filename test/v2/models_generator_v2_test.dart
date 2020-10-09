@@ -446,4 +446,24 @@ void main() {
       expect(result, contains('unknownEnumValue: Dog.swaggerGeneratedUnknown'));
     });
   });
+
+  group('Tests for getValidatedClassName', () {
+    final generator = SwaggerModelsGeneratorV2();
+    test('Should rename Request to \$Request', () {
+      final result = generator.getValidatedClassName('Request');
+
+      expect(result, equals('Request\$'));
+    });
+  });
+
+  group('Tests for generateGeneralPropertyContent', () {
+    final generator = SwaggerModelsGeneratorV2();
+
+    test('Should', () {
+      final result = generator.generateGeneralPropertyContent('name', 'key',
+          'className', [], {'\$ref': 'ClassNameName'}, ['enums.ClassNameName']);
+
+      expect(result, contains('final enums.ClassNameName name;'));
+    });
+  });
 }
