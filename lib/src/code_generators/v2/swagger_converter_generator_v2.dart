@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:recase/recase.dart';
@@ -26,8 +27,10 @@ ${_generateModelsMapping(dartCode)}};''';
     for (var i = 0; i < definitions.keys.length; i++) {
       final key = definitions.keys.elementAt(i).toString();
 
-      result.writeln(
-          '''\t${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,''');
+      final validatedName =
+          SwaggerModelsGeneratorV2().getValidatedClassName(key);
+
+      result.writeln('\t$validatedName: $validatedName.fromJsonFactory,');
     }
 
     return result.toString();

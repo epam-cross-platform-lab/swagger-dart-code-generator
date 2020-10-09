@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
+  List<String> _keyClasses = ['Response', 'Request'];
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
@@ -34,6 +35,16 @@ class SwaggerModelsGeneratorV2 implements SwaggerModelsGenerator {
     }).join('\n');
 
     return '$generatedClasses\n$generatedEnumFromJsonToJson';
+  }
+
+  String getValidatedClassName(String className) {
+    final result = className.pascalCase;
+
+    if (_keyClasses.contains(result)) {
+      return '$result\$';
+    }
+
+    return result;
   }
 
   String genetateEnumFromJsonToJsonMethods(List<String> enumNames) {
@@ -116,15 +127,17 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final generatedProperties = generatePropertiesContent(properties, className,
         defaultValues, useDefaultNullForLists, allEnumNames);
 
+    final validatedClassName = getValidatedClassName(className);
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
-class $className{
-\t$className($generatedConstructorProperties);\n
-\tfactory $className.fromJson(Map<String, dynamic> json) => _\$${className}FromJson(json);\n
+class $validatedClassName{
+\t$validatedClassName($generatedConstructorProperties);\n
+\tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
 $generatedProperties
-\tstatic const fromJsonFactory = _\$${className}FromJson;
-\tstatic const toJsonFactory = _\$${className}ToJson;
-\tMap<String, dynamic> toJson() => _\$${className}ToJson(this);
+\tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
+\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 }
 ''';
 
