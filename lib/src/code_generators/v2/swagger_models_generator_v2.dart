@@ -50,6 +50,20 @@ String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) 
 enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}) {
   return enums.$neededName.swaggerGeneratedUnknown;
 }
+
+List<String> ${neededName.camelCase}ListToJson(
+    List<enums.$neededName> ${neededName.camelCase}) {
+  return ${neededName.camelCase}
+      .map((e) => enums.\$${neededName}Map[e])
+      .toList();
+}
+
+List<enums.$neededName> ${neededName.camelCase}ListFromJson(
+    List<String> ${neededName.camelCase}) {
+  return ${neededName.camelCase}
+      .map((e) => enums.$neededName.swaggerGeneratedUnknown)
+      .toList();
+}
     ''';
   }
 
@@ -71,7 +85,8 @@ enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}
       properties.forEach((propertyName, propertyValue) {
         var property = propertyValue as Map<String, dynamic>;
 
-        if (property.containsKey('enum')) {
+        if (property.containsKey('enum') ||
+            (property['items'] != null && property['items']['enum'] != null)) {
           results.add(SwaggerEnumsGeneratorV2()
               .generateEnumName(className, propertyName));
         }
@@ -197,7 +212,8 @@ $generatedProperties
     typeName ??= getParameterTypeName(
         className, propertyName, items as Map<String, dynamic>);
 
-    final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, typeName, true);
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'}$unknownEnumValue)\n";
@@ -225,7 +241,8 @@ $generatedProperties
       typeName = 'enums.$typeName';
     }
 
-    final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, typeName, false);
 
     jsonKeyContent += unknownEnumValue;
 
@@ -270,7 +287,8 @@ $generatedProperties
       String key, String className, List<String> allEnumNames) {
     final enumName = SwaggerEnumsGeneratorV2().generateEnumName(className, key);
 
-    final unknownEnumValue = generateUnknownEnumValue(allEnumNames, enumName);
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, enumName, false);
     return '''
   @JsonKey($unknownEnumValue)
   final ${className.capitalize + key.capitalize} ${generateFieldName(key)};''';
@@ -294,7 +312,8 @@ $generatedProperties
       typeName = 'enums.$typeName';
     }
 
-    final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, typeName, false);
 
     final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
 
@@ -321,24 +340,35 @@ $generatedProperties
       typeName = 'enums.$typeName';
     }
 
-    final unknownEnumValue = generateUnknownEnumValue(allEnumNames, typeName);
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, typeName, false);
 
     final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
 
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
   }
 
-  String generateUnknownEnumValue(List<String> allEnumNames, String typeName) {
+  @visibleForTesting
+  String generateUnknownEnumValue(
+      List<String> allEnumNames, String typeName, bool isList) {
     var unknownEnumValue = allEnumNames.contains(typeName)
         ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
         : '';
 
     if (unknownEnumValue.isNotEmpty) {
-      final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
-      final toJsonFromJson =
-          ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson';
+      if (!isList) {
+        final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
+        final toJsonFromJson =
+            ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson';
 
-      unknownEnumValue += toJsonFromJson;
+        unknownEnumValue += toJsonFromJson;
+      } else {
+        final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
+        final toJsonFromJson =
+            ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson';
+
+        unknownEnumValue += toJsonFromJson;
+      }
     }
 
     return unknownEnumValue;
@@ -350,7 +380,7 @@ $generatedProperties
     final typeName = propertyEntryMap['originalRef'] ?? 'dynamic';
 
     final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName.toString());
+        generateUnknownEnumValue(allEnumNames, typeName.toString(), false);
 
     final jsonKeyContent = "@JsonKey(name: '$propertyName'$unknownEnumValue)\n";
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
