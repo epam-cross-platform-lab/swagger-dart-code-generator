@@ -5,22 +5,7 @@ import 'requests_generator_v3_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3();
-  const fileName = 'orders_service';
   group('Converter generator tests', () {
-    test('Should do something', () {
-      final result =
-          generator.generate(request_with_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
-    test('Should generate list<enum>', () {
-      final result =
-          generator.generate(request_with_list_of_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
     test('Should generate enum values', () {
       final values = <String>['file_sup'];
       const output = "\t@JsonValue('file_sup')\n\tfileSup";
@@ -53,13 +38,13 @@ void main() {
 
     test('Should remove numbers at beginning if it is key word', () {
       final result = generator.getEnumNames(request_with_enum);
-      expect(result[0], equals('contentType'));
+      expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
       final result =
           generator.getEnumNames(request_with_list_of_enum_in_parameter);
-      expect(result[0], equals('orderStateRequest'));
+      expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });
 

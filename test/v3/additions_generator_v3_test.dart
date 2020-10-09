@@ -16,8 +16,8 @@ void main() {
     });
 
     test('Should generate correct imports', () {
-      final result =
-          generator.generateImportsContent('swagger.fileName', true, false);
+      final result = generator.generateImportsContent(
+          'swagger.fileName', true, false, false);
 
       expect(result, contains("part 'swagger.fileName.swagger.chopper.dart';"));
       expect(result, contains("part 'swagger.fileName.swagger.g.dart';"));

@@ -26,8 +26,8 @@ void main() {
 
       final result = generator.getDefaultParameter(parameter, '/path', 'get');
 
-      expect(
-          result, equals('@Query(\'number\') @required PathGetNumber number'));
+      expect(result,
+          equals('@Query(\'number\') @required enums.PathGetNumber number'));
     });
 
     test('Should use parameter -> items -> enumValues', () {
@@ -39,8 +39,10 @@ void main() {
 
       final result = generator.getDefaultParameter(parameter, '/path', 'get');
 
-      expect(result,
-          equals('@Query(\'number\') @required List<PathGetNumber> number'));
+      expect(
+          result,
+          equals(
+              '@Query(\'number\') @required List<enums.PathGetNumber> number'));
     });
   });
 
@@ -147,7 +149,7 @@ void main() {
             ignoreHeaders: false,
           ));
 
-      expect(result, contains('Future<Response<List<ItemSummary>>>'));
+      expect(result, contains('Future<chopper.Response<List<ItemSummary>>>'));
     });
   });
 
@@ -163,7 +165,7 @@ void main() {
             ignoreHeaders: false,
           ));
 
-      expect(result, contains('Future<Response<List<String>>>'));
+      expect(result, contains('Future<chopper.Response<List<String>>>'));
     });
 
     test('Should generate MyObject if ref is #definitions/MyObject', () {
@@ -175,7 +177,7 @@ void main() {
             ignoreHeaders: false,
           ));
 
-      expect(result, contains('Future<Response<MyObject>>'));
+      expect(result, contains('Future<chopper.Response<MyObject>>'));
     });
 
     test(
@@ -189,7 +191,7 @@ void main() {
             ignoreHeaders: false,
           ));
 
-      expect(result, contains('Future<Response<List<TestItem>>>'));
+      expect(result, contains('Future<chopper.Response<List<TestItem>>>'));
     });
 
     test(
@@ -208,14 +210,14 @@ void main() {
                     overridenValue: 'List<OverridenType>')
               ]));
 
-      expect(result, contains('Future<Response<List<OverridenType>>>'));
+      expect(result, contains('Future<chopper.Response<List<OverridenType>>>'));
     });
 
     test('Should generate return type by originalRef', () {
       final result = generator.generate(request_with_original_ref_return_type,
           className, fileName, GeneratorOptions(ignoreHeaders: false));
 
-      expect(result, contains('Future<Response<TestItem>>'));
+      expect(result, contains('Future<chopper.Response<TestItem>>'));
     });
 
     test(
@@ -227,7 +229,7 @@ void main() {
           fileName,
           GeneratorOptions(ignoreHeaders: false));
 
-      expect(result, contains('Future<Response<String>>'));
+      expect(result, contains('Future<chopper.Response<String>>'));
     });
 
     test('Should generate return type by content -> first -> responseType ref',
@@ -235,7 +237,8 @@ void main() {
       final result = generator.generate(request_with_content_first_response_ref,
           className, fileName, GeneratorOptions(ignoreHeaders: false));
 
-      expect(result, contains('Future<Response<TestType>> getModelItems();'));
+      expect(result,
+          contains('Future<chopper.Response<TestType>> getModelItems();'));
     });
 
     test('Should generate return type by content -> first -> ref', () {
@@ -332,8 +335,10 @@ void main() {
           path: '/path',
           requestType: 'get');
 
-      expect(result,
-          contains('@Body() @required PathGetTestParameter testParameter'));
+      expect(
+          result,
+          contains(
+              '@Body() @required enums.PathGetTestParameter testParameter'));
     });
 
     test('Should generate body parameter if no ref and no schema', () {
@@ -474,7 +479,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<Response> unnamedMethod0();'));
+      expect(result, contains('Future<chopper.Response> unnamedMethod0();'));
     });
 
     test(
@@ -494,7 +499,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<Response> _unnamedMethod'));
+      expect(result, contains('Future<chopper.Response> _unnamedMethod'));
     });
 
     test(
@@ -514,7 +519,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<Response> _unnamedMethod'));
+      expect(result, contains('Future<chopper.Response> _unnamedMethod'));
     });
 
     test(
@@ -534,7 +539,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<Response> _unnamedMethod'));
+      expect(result, contains('Future<chopper.Response> _unnamedMethod'));
     });
   });
 
@@ -584,7 +589,8 @@ void main() {
             SwaggerRequestParameter(inParameter: 'body', name: 'pet')
           ]);
 
-      expect(result, contains('Future<Response<ReturnType>> _methodName'));
+      expect(
+          result, contains('Future<chopper.Response<ReturnType>> _methodName'));
     });
   });
 
@@ -630,7 +636,7 @@ void main() {
             items: SwaggerRequestItems(enumValues: ['one', 'two']))
       ]);
 
-      expect(result, equals('_\$PathGetMyParameterMap[myParameter]'));
+      expect(result, equals('enums.\$PathGetMyParameterMap[myParameter]'));
     });
 
     test('Should generate enum parameter from item -> enum values', () {
@@ -641,7 +647,7 @@ void main() {
         )
       ]);
 
-      expect(result, equals('_\$PathGetMyParameterMap[myParameter]'));
+      expect(result, equals('enums.\$PathGetMyParameterMap[myParameter]'));
     });
 
     test('Should generate enum parameter from schema -> enum values', () {
@@ -652,7 +658,7 @@ void main() {
         )
       ]);
 
-      expect(result, equals('_\$PathGetMyParameterMap[myParameter]'));
+      expect(result, equals('enums.\$PathGetMyParameterMap[myParameter]'));
     });
 
     test('Should', () {
@@ -669,7 +675,7 @@ void main() {
       expect(
           result,
           equals(
-              'myParameter.map((element) {_\$PathGetMyParameterMap[element];}).toList()'));
+              'myParameter.map((element) {enums.\$PathGetMyParameterMap[element];}).toList()'));
     });
   });
 }
