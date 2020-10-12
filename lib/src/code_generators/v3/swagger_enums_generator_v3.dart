@@ -23,7 +23,7 @@ class SwaggerEnumsGeneratorV3 implements SwaggerEnumsGenerator {
         : components['schemas'] as Map<String, dynamic>;
 
     if (schemas == null) {
-      return '';
+      return enumsFromRequests;
     }
 
     final enumsFromClasses = schemas.keys.map((String className) {

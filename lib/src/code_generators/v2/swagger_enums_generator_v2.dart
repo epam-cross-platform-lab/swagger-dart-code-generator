@@ -20,7 +20,7 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
     final definitions = map['definitions'] as Map<String, dynamic>;
 
     if (definitions == null) {
-      return '';
+      return enumsFromRequests;
     }
 
     final enumsFromClasses = definitions.keys.map((String className) {

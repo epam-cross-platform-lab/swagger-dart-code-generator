@@ -5,6 +5,20 @@ import 'requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV2();
+
+  group('Generate', () {
+    test('Should generate enum from models', () {
+      final result = generator.generate(model_with_parameters_v2, 'test_file');
+      expect(result, contains('enum ActiveOrderAndListSummaryShoppingType'));
+    });
+
+    test('Should generate enum from request parameter', () {
+      final result =
+          generator.generate(request_with_enum_in_parameter, 'test_file');
+      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+  });
+
   group('Converter generator tests', () {
     test('Should generate enum values', () {
       final _values = <String>['file_sup'];
