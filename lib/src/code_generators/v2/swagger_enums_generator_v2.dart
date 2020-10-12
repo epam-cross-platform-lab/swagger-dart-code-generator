@@ -157,12 +157,15 @@ $enumMap
   String getEnumValuesMapContent(String enumName, List<String> enumValues) {
     final neededValues = <String>[];
     neededValues.addAll(enumValues);
-    neededValues.add('swaggerGeneratedUnknown');
+
+    final unknownEnumPart =
+        ',\n\t$enumName.swaggerGeneratedUnknown: \'swaggerGeneratedUnknown\'';
 
     final result = neededValues
-        .map((String enumFieldName) =>
-            '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'${enumFieldName.replaceAll('\$', '\\\$')}\'')
-        .join(',\n');
+            .map((String enumFieldName) =>
+                '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'${enumFieldName.replaceAll('\$', '\\\$')}\'')
+            .join(',\n') +
+        unknownEnumPart;
 
     return result;
   }
@@ -172,7 +175,7 @@ $enumMap
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
         .where((element) => element.isNotEmpty)
-        .map((String word) => word.capitalize)
+        .map((String word) => word.toLowerCase().capitalize)
         .join();
 
     if (result.startsWith(RegExp('[0-9]+'))) {

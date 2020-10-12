@@ -36,6 +36,30 @@ void main() {
       expect(result, contains(_output));
     });
 
+    test('Should return enum field name', () {
+      const _name = 'reopened';
+      const _output = 'reopened';
+      final result = generator.getValidatedEnumFieldName(_name);
+
+      expect(result, contains(_output));
+    });
+
+    test('Should return enum field name', () {
+      const _name = 'REOPENED';
+      const _output = 'reopened';
+      final result = generator.getValidatedEnumFieldName(_name);
+
+      expect(result, contains(_output));
+    });
+
+    test('Should return enum field name', () {
+      const _name = 'PLANNED_FOR_DELIVERY';
+      const _output = 'plannedForDelivery';
+      final result = generator.getValidatedEnumFieldName(_name);
+
+      expect(result, contains(_output));
+    });
+
     test('Should return \$null if name is null', () {
       const name = 'null';
       const output = '\$null';
