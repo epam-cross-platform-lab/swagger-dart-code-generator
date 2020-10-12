@@ -1,3 +1,7 @@
+# 1.2.1
+
+* Added sorting of imports and exports in alphabetical order
+
 # 1.2.0
 
 * Enums becobe being generated in separate file
