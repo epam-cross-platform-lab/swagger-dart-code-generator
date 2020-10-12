@@ -8,16 +8,16 @@ class SwaggerAdditionsGeneratorV3 implements SwaggerAdditionsGenerator {
 
   @override
   String generateIndexes(Map<String, List<String>> buildExtensions) {
-    final imports = StringBuffer();
-
-    buildExtensions.keys.forEach((String key) {
+    final importsList = buildExtensions.keys.map((String key) {
       final fileName = key.split('/').last;
       final className = getClassNameFromFileName(key.split('/').last);
 
-      imports.writeln("export '$fileName.dart' show $className;");
-    });
+      return 'export \'$fileName.dart\' show $className;';
+    }).toList();
 
-    return imports.toString();
+    importsList.sort();
+
+    return importsList.join('\n');
   }
 
   @override
@@ -28,18 +28,20 @@ class SwaggerAdditionsGeneratorV3 implements SwaggerAdditionsGenerator {
     }
 
     final maps = StringBuffer();
-    final imports = StringBuffer();
+    final imports = <String>[];
     buildExtensions.keys.forEach((String key) {
       final className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
       final fileName = key.split('/').last;
       maps.writeln('  ...$className,');
-      imports.writeln("import '$fileName.dart';");
+      imports.add("import '$fileName.dart';");
     });
 
+    imports.sort();
+
     final mapping = '''
-$imports
+${imports.join('\n')}
 
 final Map<Type, Object Function(Map<String, dynamic>)> $mappingVariableName = {
 $maps};
