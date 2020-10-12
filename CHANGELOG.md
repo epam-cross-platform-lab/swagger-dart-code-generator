@@ -1,3 +1,7 @@
+# 1.2.2
+
+* Fixed enums names
+
 # 1.2.1
 
 * Added sorting of imports and exports in alphabetical order
