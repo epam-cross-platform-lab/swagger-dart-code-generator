@@ -65,9 +65,9 @@ class SwaggerCodeGenerator {
           .generateConverterMappings(buildExtensions, hasModels);
 
   String generateImportsContent(String dartCode, String swaggerFileName,
-          bool hasModels, bool buildOnlyModels) =>
-      _getSwaggerAdditionsGenerator(dartCode)
-          .generateImportsContent(swaggerFileName, hasModels, buildOnlyModels);
+          bool hasModels, bool buildOnlyModels, bool hasEnums) =>
+      _getSwaggerAdditionsGenerator(dartCode).generateImportsContent(
+          swaggerFileName, hasModels, buildOnlyModels, hasEnums);
 
   String generateConverter(String dartCode, String fileName) =>
       _getSwaggerConverterGenerator(dartCode).generate(dartCode, fileName);

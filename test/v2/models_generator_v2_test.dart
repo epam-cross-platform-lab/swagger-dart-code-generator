@@ -31,19 +31,6 @@ void main() {
     });
   });
 
-  group('generateEnumName', () {
-    final generator = SwaggerModelsGeneratorV2();
-
-    test('Should generate enum name', () {
-      const _className = 'animal';
-      const _enumName = 'cat';
-      const _expectedResult = 'AnimalCat';
-      final result = generator.generateEnumName(_className, _enumName);
-
-      expect(result, contains(_expectedResult));
-    });
-  });
-
   group('generateDefaultValueFromMap', () {
     final _generator = SwaggerModelsGeneratorV2();
     test('Should return default value', () {
@@ -270,21 +257,11 @@ void main() {
       const propertyKey = 'shipDateGet';
       const className = 'Animals';
 
-      final result = generator.generatePropertyContentByRef(
-          propertyEntryMap, propertyName, propertyKey, className, ['Pet']);
+      final result = generator.generatePropertyContentByRef(propertyEntryMap,
+          propertyName, propertyKey, className, ['enums.Pet']);
 
-      expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
-    });
-  });
-
-  group('generateEnumValuesContent', () {
-    final generator = SwaggerModelsGeneratorV2();
-    test('Should return enum values', () {
-      final list = <String>['Cats', 'dogs', 'Forgs'];
-      const expectedResult = "\t@JsonValue('Cats')\n  cats";
-      final result = generator.generateEnumValuesContent(list);
-
-      expect(result, contains(expectedResult));
+      expect(result,
+          contains('unknownEnumValue: enums.Pet.swaggerGeneratedUnknown'));
     });
   });
 
@@ -295,9 +272,9 @@ void main() {
       final key = 'dog';
       const className = 'animals';
       const jsonKeyExpectedResult =
-          '@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)';
+          'unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown';
       const expectedResult = 'final AnimalsDog dog;';
-      final result = generator.generateEnumPropertyContent(key, className);
+      final result = generator.generateEnumPropertyContent(key, className, []);
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(expectedResult));
@@ -367,9 +344,10 @@ void main() {
       const propertyKey = 'Dog';
 
       final result = generator.generatePropertyContentBySchema(
-          map, propertyName, propertyKey, className, ['Pet']);
+          map, propertyName, propertyKey, className, ['enums.Pet']);
 
-      expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
+      expect(result,
+          contains('unknownEnumValue: enums.Pet.swaggerGeneratedUnknown'));
     });
   });
 
@@ -469,22 +447,23 @@ void main() {
     });
   });
 
-  group('generatePropertyContentByType', () {
+  group('Tests for getValidatedClassName', () {
     final generator = SwaggerModelsGeneratorV2();
-    test('Should return property content by schema', () {
-      final map = <String, String>{'type': 'enum'};
-      const propertyName = 'dog';
-      const className = 'Animals';
-      const propertyKey = 'Dog';
-      const jsonKeyExpectedResult =
-          '@JsonKey(unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown)';
+    test('Should rename Request to \$Request', () {
+      final result = generator.getValidatedClassName('Request');
 
-      const propertyExpectedResult = 'final AnimalsDog dog';
-      final result = generator.generatePropertyContentByType(map, propertyName,
-          propertyKey, className, <DefaultValueMap>[], false, []);
+      expect(result, equals('Request\$'));
+    });
+  });
 
-      expect(result, contains(jsonKeyExpectedResult));
-      expect(result, contains(propertyExpectedResult));
+  group('Tests for generateGeneralPropertyContent', () {
+    final generator = SwaggerModelsGeneratorV2();
+
+    test('Should', () {
+      final result = generator.generateGeneralPropertyContent('name', 'key',
+          'className', [], {'\$ref': 'ClassNameName'}, ['enums.ClassNameName']);
+
+      expect(result, contains('final enums.ClassNameName name;'));
     });
   });
 }

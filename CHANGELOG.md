@@ -1,3 +1,9 @@
+# 1.2.0
+
+* Enums becobe being generated in separate file
+* Fixed Issue #58
+* Fixed some bugs
+
 ## 1.1.0
 
 * Fixed issues with Enums usage

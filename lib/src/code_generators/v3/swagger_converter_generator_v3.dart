@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/definitions.dart';
-import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:recase/recase.dart';
 
 class SwaggerConverterGeneratorV3 implements SwaggerConverterGenerator {
@@ -30,8 +30,10 @@ ${_generateModelsMapping(dartCode)}};''';
         continue;
       }
 
-      result.writeln(
-          '\t${key.capitalize.pascalCase}: ${key.capitalize.pascalCase}.fromJsonFactory,');
+      final validatedName =
+          SwaggerModelsGeneratorV3().getValidatedClassName(key);
+
+      result.writeln('\t$validatedName: $validatedName.fromJsonFactory,');
     }
 
     return result.toString();

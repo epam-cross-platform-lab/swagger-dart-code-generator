@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
@@ -8,9 +9,35 @@ import 'package:meta/meta.dart';
 
 class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
+  static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
   @override
-  String generate(String swagger, String fileName) {
+  String generate(String dartCode, String fileName) {
+    final enumsFromRequests = generateEnumsFromRequests(dartCode, fileName);
+
+    final dynamic map = jsonDecode(dartCode);
+
+    final definitions = map['definitions'] as Map<String, dynamic>;
+
+    if (definitions == null) {
+      return enumsFromRequests;
+    }
+
+    final enumsFromClasses = definitions.keys.map((String className) {
+      return generateEnumsFromClasses(
+          className.pascalCase, definitions[className] as Map<String, dynamic>);
+    }).join('\n');
+
+    if (enumsFromClasses.isEmpty && enumsFromRequests.isEmpty) {
+      return '';
+    }
+
+    return '''
+import 'package:json_annotation/json_annotation.dart';
+$enumsFromClasses\n$enumsFromRequests''';
+  }
+
+  String generateEnumsFromRequests(String swagger, String fileName) {
     final enumNames = <String>[];
     final result = StringBuffer();
     final map = jsonDecode(swagger) as Map<String, dynamic>;
@@ -98,7 +125,7 @@ class SwaggerEnumsGeneratorV2 implements SwaggerEnumsGenerator {
     final enumValuesContent = getEnumValuesContent(enumValues);
 
     final enumMap = '''
-\n\tconst _\$${enumName}Map = {
+\n\tconst \$${enumName}Map = {
 \t${getEnumValuesMapContent(enumName, enumValues)}
       };
       ''';
@@ -109,6 +136,7 @@ enum $enumName{
 \tswaggerGeneratedUnknown,
 $enumValuesContent
 }
+
 $enumMap
  """;
 
@@ -127,9 +155,13 @@ $enumMap
 
   @visibleForTesting
   String getEnumValuesMapContent(String enumName, List<String> enumValues) {
-    final result = enumValues
+    final neededValues = <String>[];
+    neededValues.addAll(enumValues);
+    neededValues.add('swaggerGeneratedUnknown');
+
+    final result = neededValues
         .map((String enumFieldName) =>
-            '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'$enumFieldName\'')
+            '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'${enumFieldName.replaceAll('\$', '\\\$')}\'')
         .join(',\n');
 
     return result;
@@ -140,7 +172,7 @@ $enumMap
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
         .where((element) => element.isNotEmpty)
-        .map((String word) => word.toLowerCase().capitalize)
+        .map((String word) => word.capitalize)
         .join();
 
     if (result.startsWith(RegExp('[0-9]+'))) {
@@ -152,5 +184,77 @@ $enumMap
     }
 
     return result.lower;
+  }
+
+  @visibleForTesting
+  String generateEnumsContent(Map<String, dynamic> map, String className) {
+    if (map == null) {
+      return '';
+    }
+
+    final gemeratedEnumsContent = map.keys
+        .map((String key) {
+          final enumValuesMap = map[key] as Map<String, dynamic>;
+
+          if (enumValuesMap.containsKey('type')) {
+            return generateEnumContentIfPossible(
+                enumValuesMap, generateEnumName(className, key));
+          }
+
+          return '';
+        })
+        .where((String generatedEnum) => generatedEnum.isNotEmpty)
+        .join('\n');
+
+    return gemeratedEnumsContent;
+  }
+
+  @visibleForTesting
+  String generateEnumContentIfPossible(
+      Map<String, dynamic> map, String enumName) {
+    if (map['enum'] != null) {
+      final enumValues = map['enum'] as List<dynamic>;
+      final stringValues = enumValues.map((e) => e.toString()).toList();
+      final enumMap = '''
+\n\tconst \$${enumName}Map = {
+\t${getEnumValuesMapContent(enumName, stringValues)}
+      };
+      ''';
+
+      return """
+enum ${enumName.capitalize} {
+\t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
+${generateEnumValuesContent(enumValues)}
+}
+
+$enumMap
+""";
+    } else if (map['items'] != null) {
+      return generateEnumContentIfPossible(
+          map['items'] as Map<String, dynamic>, enumName);
+    } else {
+      return '';
+    }
+  }
+
+  String generateEnumName(String className, String enumName) {
+    return '${className.capitalize}${enumName.capitalize}';
+  }
+
+  @visibleForTesting
+  String generateEnumValuesContent(List<dynamic> values) {
+    return values
+        .map((dynamic e) =>
+            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getValidatedEnumFieldName(e?.toString())}")
+        .join(',\n');
+  }
+
+  @visibleForTesting
+  String generateEnumsFromClasses(
+    String className,
+    Map<String, dynamic> map,
+  ) {
+    final properties = map['properties'] as Map<String, dynamic>;
+    return generateEnumsContent(properties, className);
   }
 }

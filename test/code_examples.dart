@@ -3,6 +3,9 @@ const String model_with_parameters_v3 = '''
 {
  "components": {
     "schemas": {
+      "SomeEnumModel" : {
+        "enum" : ["one", "two"]
+      },
       "AuthorizationDetails": {
         "type": "object",
         "properties": {
@@ -17,6 +20,10 @@ const String model_with_parameters_v3 = '''
             "format": "uri",
             "description": "URI to follow for authorization",
             "example": "https://sso.service.some.country/oidc/authorize?response_type=code&state=00001-00002-00003-00004&nonce=54345345-345345345-345345345-435345&client_id=some-client-id&redirect_uri=https%3A%2F%2Fsome-success-uri.com%2Fen_gb%2Flogin_success"
+          },
+          "enumValue": {
+            "type": "enum",
+            "enum": ["one", "two"]
           },
           "redirectUri": {
             "type": "string",
@@ -147,6 +154,10 @@ const String model_with_parameters_v2 = '''
           "type": "string",
           "format": "date-time"
         },
+        "enumValue": {
+            "type": "enum",
+            "enum": ["one", "two"]
+          },
         "orderLastChangedTime": {
           "type": "string",
           "format": "date-time"

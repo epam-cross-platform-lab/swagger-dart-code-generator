@@ -49,18 +49,23 @@ $maps};
   }
 
   @override
-  String generateImportsContent(
-      String swaggerFileName, bool hasModels, bool buildOnlyModels) {
+  String generateImportsContent(String swaggerFileName, bool hasModels,
+      bool buildOnlyModels, bool hasEnums) {
     final result = StringBuffer();
 
     final chopperImport =
         buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
+
+    final enumsImport = hasEnums
+        ? 'import \'$swaggerFileName.enums.swagger.dart\' as enums;\n'
+        : '';
 
     result.writeln("""import 'package:json_annotation/json_annotation.dart';
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:flutter/widgets.dart';
 
+$enumsImport
 $chopperImport""");
 
     if (hasModels) {

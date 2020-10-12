@@ -5,22 +5,20 @@ import 'requests_generator_v3_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3();
-  const fileName = 'orders_service';
+
+  group('Generate', () {
+    test('Should generate enum from models', () {
+      final result = generator.generate(model_with_parameters_v3, 'test_file');
+      expect(result, contains('enum SomeEnumModel'));
+    });
+
+    test('Should generate enum from request parameter', () {
+      final result =
+          generator.generate(request_with_enum_in_parameter, 'test_file');
+      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+  });
   group('Converter generator tests', () {
-    test('Should do something', () {
-      final result =
-          generator.generate(request_with_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
-    test('Should generate list<enum>', () {
-      final result =
-          generator.generate(request_with_list_of_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
     test('Should generate enum values', () {
       final values = <String>['file_sup'];
       const output = "\t@JsonValue('file_sup')\n\tfileSup";
@@ -53,13 +51,52 @@ void main() {
 
     test('Should remove numbers at beginning if it is key word', () {
       final result = generator.getEnumNames(request_with_enum);
-      expect(result[0], equals('contentType'));
+      expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
       final result =
           generator.getEnumNames(request_with_list_of_enum_in_parameter);
-      expect(result[0], equals('orderStateRequest'));
+      expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+  });
+
+  group('generateEnumContentIfPossible', () {
+    final generator = SwaggerEnumsGeneratorV3();
+    test('Should generate enum', () {
+      final map = <String, dynamic>{
+        'items': {
+          'enum': ['Item1', 'Item2']
+        }
+      };
+      const enumName = 'TestName';
+      final result = generator.generateEnumContentIfPossible(map, enumName);
+
+      expect(result, contains('enum TestName'));
+    });
+  });
+
+  group('generateEnumName', () {
+    final generator = SwaggerEnumsGeneratorV3();
+
+    test('Should generate enum name', () {
+      const className = 'animal';
+      const enumName = 'cat';
+      const expectedResult = 'AnimalCat';
+      final result = generator.generateEnumName(className, enumName);
+
+      expect(result, contains(expectedResult));
+    });
+  });
+
+  group('generateEnumValuesContent', () {
+    final generator = SwaggerEnumsGeneratorV3();
+    test('Should return enum values', () {
+      final list = <String>['Cats', 'dogs', 'Forgs'];
+      const expectedResult = "\t@JsonValue('Cats')\n  cats";
+      final result = generator.generateEnumValuesContent(list);
+
+      expect(result, contains(expectedResult));
     });
   });
 }

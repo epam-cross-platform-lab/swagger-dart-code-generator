@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:example/generated_code/example_swagger.enums.swagger.dart';
 import 'package:example/generated_code/example_swagger.swagger.dart';
 
 Future main() async {

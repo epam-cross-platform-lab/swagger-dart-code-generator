@@ -5,22 +5,21 @@ import 'requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV2();
-  const fileName = 'orders_service';
+
+  group('Generate', () {
+    test('Should generate enum from models', () {
+      final result = generator.generate(model_with_parameters_v2, 'test_file');
+      expect(result, contains('enum ActiveOrderAndListSummaryShoppingType'));
+    });
+
+    test('Should generate enum from request parameter', () {
+      final result =
+          generator.generate(request_with_enum_in_parameter, 'test_file');
+      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+  });
+
   group('Converter generator tests', () {
-    test('Should do something', () {
-      final result =
-          generator.generate(request_with_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
-    test('Should generate list<enum>', () {
-      final result =
-          generator.generate(request_with_list_of_enum_in_parameter, fileName);
-
-      expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
-    });
-
     test('Should generate enum values', () {
       final _values = <String>['file_sup'];
       const _output = "\t@JsonValue('file_sup')\n\tfileSup";
@@ -60,6 +59,30 @@ void main() {
       final result =
           generator.getEnumNames(request_with_list_of_enum_in_parameter);
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+  });
+
+  group('generateEnumName', () {
+    final generator = SwaggerEnumsGeneratorV2();
+
+    test('Should generate enum name', () {
+      const _className = 'animal';
+      const _enumName = 'cat';
+      const _expectedResult = 'AnimalCat';
+      final result = generator.generateEnumName(_className, _enumName);
+
+      expect(result, contains(_expectedResult));
+    });
+  });
+
+  group('generateEnumValuesContent', () {
+    final generator = SwaggerEnumsGeneratorV2();
+    test('Should return enum values', () {
+      final list = <String>['Cats', 'dogs', 'Forgs'];
+      const expectedResult = "\t@JsonValue('Cats')\n  cats";
+      final result = generator.generateEnumValuesContent(list);
+
+      expect(result, contains(expectedResult));
     });
   });
 }

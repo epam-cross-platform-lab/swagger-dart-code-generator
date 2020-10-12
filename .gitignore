@@ -33,16 +33,14 @@ build/
 *.g.dart
 *.chopper.dart
 *.lock
-*.models.dart
 *.swagger.dart
 !example_swagger.swagger.dart
-*.converter.dart
+!example_swagger.enums.swagger.dart
 *.pubspec.lock
 *.swagger
 *.test_coverage.dart
 lcov.info
 !example_swagger.swagger
-example/lib/generated_code/
 doc/
 
 # Android related
