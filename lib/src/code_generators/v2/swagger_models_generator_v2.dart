@@ -59,7 +59,9 @@ String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) 
 }
 
 enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}) {
-  return enums.$neededName.swaggerGeneratedUnknown;
+  return enums.\$${neededName}Map.entries
+      .firstWhere((element) => element.value == ${neededName.camelCase})
+      .key;
 }
 
 List<String> ${neededName.camelCase}ListToJson(
@@ -72,7 +74,7 @@ List<String> ${neededName.camelCase}ListToJson(
 List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     List<String> ${neededName.camelCase}) {
   return ${neededName.camelCase}
-      .map((e) => enums.$neededName.swaggerGeneratedUnknown)
+      .map((e) => ${neededName.camelCase}FromJson(e))
       .toList();
 }
     ''';
