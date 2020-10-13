@@ -92,4 +92,78 @@ abstract class SwaggerModelsGenerator {
 
     return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
   }
+
+  String generateDefaultValueFromMap(DefaultValueMap map) {
+    switch (map.typeName) {
+      case 'int':
+      case 'double':
+      case 'bool':
+        return map.defaultValue;
+      default:
+        return "'${map.defaultValue}'";
+    }
+  }
+
+  String generatePropertyContentByDefault(Map<String, dynamic> propertyEntryMap,
+      String propertyName, List<String> allEnumNames) {
+    final typeName = propertyEntryMap['originalRef'] ?? 'dynamic';
+
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, typeName.toString(), false);
+
+    final jsonKeyContent = "@JsonKey(name: '$propertyName'$unknownEnumValue)\n";
+    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+  }
+
+  String generateUnknownEnumValue(
+      List<String> allEnumNames, String typeName, bool isList) {
+    var unknownEnumValue = allEnumNames.contains(typeName)
+        ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
+        : '';
+
+    if (unknownEnumValue.isNotEmpty) {
+      if (!isList) {
+        final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
+        final toJsonFromJson =
+            ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson';
+
+        unknownEnumValue += toJsonFromJson;
+      } else {
+        final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
+        final toJsonFromJson =
+            ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson';
+
+        unknownEnumValue += toJsonFromJson;
+      }
+    }
+
+    return unknownEnumValue;
+  }
+
+  String generatePropertyContentBySchema(
+      Map<String, dynamic> propertyEntryMap,
+      String propertyName,
+      String propertyKey,
+      String className,
+      List<String> allEnumNames) {
+    final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
+    final parameterName = propertySchema['\$ref'].toString().split('/').last;
+
+    var typeName = getParameterTypeName(
+        className, propertyName, propertyEntryMap, parameterName);
+
+    final allEnumsNamesWithoutPrefix =
+        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
+
+    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
+      typeName = 'enums.$typeName';
+    }
+
+    final unknownEnumValue =
+        generateUnknownEnumValue(allEnumNames, typeName, false);
+
+    final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
+
+    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+  }
 }
