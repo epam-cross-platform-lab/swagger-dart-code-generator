@@ -13,11 +13,6 @@ import 'package:meta/meta.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
-  List<String> successDescriptions = <String>[
-    'Success',
-    'OK',
-    'default response'
-  ];
   static const String requestTypeOptions = 'options';
   static const String defaultMethodName = 'unnamedMethod';
   static const String successResponseCode = '200';
@@ -217,84 +212,5 @@ $allMethodsContent
     }
 
     return null;
-  }
-
-  @visibleForTesting
-  SwaggerResponse getSuccessedResponse(List<SwaggerResponse> responses) {
-    return responses.firstWhere(
-        (SwaggerResponse response) =>
-            successDescriptions.contains(response.description) ||
-            response.code == successResponseCode,
-        orElse: () => null);
-  }
-
-  @visibleForTesting
-  String getRequiredParametersContent(
-      {List<SwaggerRequestParameter> listParameters,
-      bool ignoreHeaders,
-      String path,
-      String requestType}) {
-    return listParameters
-        .map((SwaggerRequestParameter parameter) => getParameterContent(
-            parameter: parameter,
-            ignoreHeaders: ignoreHeaders,
-            path: path,
-            requestType: requestType))
-        .where((String element) => element.isNotEmpty)
-        .join(', ');
-  }
-
-  @visibleForTesting
-  String getRequestClassContent(String host, String className, String fileName,
-      GeneratorOptions options) {
-    final classWithoutChopper = '''
-${getBaseUrlContent(host, options.withBaseUrl)}
-abstract class $className extends ChopperService''';
-
-    return classWithoutChopper;
-  }
-
-  @visibleForTesting
-  String getBaseUrlContent(String baseUrl, bool withBaseUrl) {
-    if (withBaseUrl) {
-      if (baseUrl != null) {
-        return '''
-@ChopperApi()
-''';
-      } else {
-        return '''@ChopperApi()''';
-      }
-    } else {
-      return '''@ChopperApi()''';
-    }
-  }
-
-  @visibleForTesting
-  String getChopperClientContent(String fileName, String host, String basePath,
-      GeneratorOptions options, bool hasModels) {
-    final baseUrlString = options.withBaseUrl
-        ? "baseUrl:  'https://$host${basePath ?? ''}'"
-        : '/*baseUrl: YOUR_BASE_URL*/';
-
-    final converterString =
-        options.withBaseUrl && options.withConverter && hasModels
-            ? 'converter: JsonSerializableConverter(),'
-            : 'converter: chopper.JsonConverter(),';
-
-    final generatedChopperClient = '''
-  static $fileName create([ChopperClient client]) {
-    if(client!=null){
-      return _\$$fileName(client);
-    }
-
-    final newClient = ChopperClient(
-      services: [_\$$fileName()],
-      $converterString
-      $baseUrlString);
-    return _\$$fileName(newClient);
-  }
-  
-''';
-    return generatedChopperClient;
   }
 }

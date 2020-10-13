@@ -15,6 +15,11 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 abstract class SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'String';
+  List<String> successDescriptions = <String>[
+    'Success',
+    'OK',
+    'default response'
+  ];
   String generate(
       String code, String className, String fileName, GeneratorOptions options);
 
@@ -334,5 +339,65 @@ abstract class SwaggerRequestsGenerator {
       default:
         return getDefaultParameter(parameter, path, requestType);
     }
+  }
+
+  String getChopperClientContent(String fileName, String host, String basePath,
+      GeneratorOptions options, bool hadModels) {
+    final baseUrlString = options.withBaseUrl
+        ? "baseUrl:  'https://$host${basePath ?? ''}'"
+        : '/*baseUrl: YOUR_BASE_URL*/';
+
+    final converterString =
+        options.withBaseUrl && options.withConverter && hadModels
+            ? 'converter: JsonSerializableConverter(),'
+            : 'converter: chopper.JsonConverter(),';
+
+    final generatedChopperClient = '''
+  static $fileName create([ChopperClient client]) {
+    if(client!=null){
+      return _\$$fileName(client);
+    }
+
+    final newClient = ChopperClient(
+      services: [_\$$fileName()],
+      $converterString
+      $baseUrlString);
+    return _\$$fileName(newClient);
+  }
+  
+''';
+    return generatedChopperClient;
+  }
+
+  String getRequestClassContent(String host, String className, String fileName,
+      GeneratorOptions options) {
+    final classWithoutChopper = '''
+@ChopperApi()
+abstract class $className extends ChopperService''';
+
+    return classWithoutChopper;
+  }
+
+  String getRequiredParametersContent(
+      {List<SwaggerRequestParameter> listParameters,
+      bool ignoreHeaders,
+      String path,
+      String requestType}) {
+    return listParameters
+        .map((SwaggerRequestParameter parameter) => getParameterContent(
+            parameter: parameter,
+            ignoreHeaders: ignoreHeaders,
+            path: path,
+            requestType: requestType))
+        .where((String element) => element.isNotEmpty)
+        .join(', ');
+  }
+
+  SwaggerResponse getSuccessedResponse(List<SwaggerResponse> responses) {
+    return responses.firstWhere(
+        (SwaggerResponse response) =>
+            successDescriptions.contains(response.description) ||
+            response.code == successResponseCode,
+        orElse: () => null);
   }
 }
