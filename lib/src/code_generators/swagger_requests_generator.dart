@@ -16,14 +16,15 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 abstract class SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'String';
   static const String successResponseCode = '200';
+  static const String defaultMethodName = 'unnamedMethod';
+  int unnamedMethodsCounter = 0;
+  static const String requestTypeOptions = 'options';
   List<String> successDescriptions = <String>[
     'Success',
     'OK',
     'default response'
   ];
 
-  String getAllMethodsContent(
-      SwaggerRoot swaggerRoot, GeneratorOptions options);
   String generate(
       String code, String className, String fileName, GeneratorOptions options);
 
@@ -45,6 +46,77 @@ abstract class SwaggerRequestsGenerator {
     }
 
     return '$mapName[$parameterName]';
+  }
+
+  String getAllMethodsContent(
+      SwaggerRoot swaggerRoot, GeneratorOptions options) {
+    final methods = StringBuffer();
+
+    swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
+      swaggerPath.requests
+          .where((SwaggerRequest swaggerRequest) =>
+              swaggerRequest.type.toLowerCase() != requestTypeOptions)
+          .forEach((SwaggerRequest swaggerRequest) {
+        final hasFormData = swaggerRequest.parameters.any(
+            (SwaggerRequestParameter swaggerRequestParameter) =>
+                swaggerRequestParameter.inParameter == 'formData');
+
+        var methodName = swaggerRequest.operationId;
+
+        if (methodName == null) {
+          methodName = defaultMethodName + unnamedMethodsCounter.toString();
+
+          ///To avoid dublicated default method names
+          unnamedMethodsCounter++;
+        }
+
+        final requiredParameters = getRequiredParametersContent(
+            listParameters: swaggerRequest.parameters,
+            ignoreHeaders: options.ignoreHeaders,
+            path: swaggerPath.path,
+            requestType: swaggerRequest.type);
+
+        final hasEnums = swaggerRequest.parameters.any((parameter) =>
+            parameter.items?.enumValues != null ||
+            parameter.item?.enumValues != null ||
+            parameter.schema?.enumValues != null);
+
+        final enumInBodyName = swaggerRequest.parameters.firstWhere(
+            (parameter) =>
+                parameter.inParameter == 'body' &&
+                (parameter.items?.enumValues != null ||
+                    parameter.item?.enumValues != null ||
+                    parameter.schema?.enumValues != null),
+            orElse: () => null);
+
+        final parameterCommentsForMethod =
+            getParameterCommentsForMethod(swaggerRequest.parameters, options);
+
+        final returnTypeName = getReturnTypeName(
+            swaggerRequest.responses,
+            swaggerPath.path,
+            swaggerRequest.type,
+            options.responseOverrideValueMap);
+
+        final generatedMethod = getMethodContent(
+            summary: swaggerRequest.summary,
+            typeRequest: swaggerRequest.type,
+            methodName: methodName,
+            requiredParameters: requiredParameters,
+            parametersComments: parameterCommentsForMethod,
+            requestPath: swaggerPath.path,
+            hasFormData: hasFormData,
+            returnType: returnTypeName,
+            hasEnums: hasEnums,
+            enumInBodyName: enumInBodyName?.name,
+            ignoreHeaders: options.ignoreHeaders,
+            parameters: swaggerRequest.parameters);
+
+        methods.writeln(generatedMethod);
+      });
+    });
+
+    return methods.toString();
   }
 
   String getMapName(String path, String requestType, String parameterName) {
@@ -478,5 +550,21 @@ $allMethodsContent
         classContent, chopperClientContent, allMethodsContent);
 
     return result;
+  }
+
+  SwaggerRequestParameter getNeededRequestParameter(
+      SwaggerRequestParameter swaggerRequestParameter,
+      List<SwaggerRequestParameter> definedParameters) {
+    if (swaggerRequestParameter.ref == null) {
+      return swaggerRequestParameter;
+    }
+
+    final parameterClassName = swaggerRequestParameter.ref.split('/').last;
+
+    final neededParameter = definedParameters.firstWhere(
+        (SwaggerRequestParameter element) =>
+            element.name == parameterClassName);
+
+    return neededParameter;
   }
 }
