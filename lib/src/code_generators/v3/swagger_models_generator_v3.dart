@@ -238,47 +238,6 @@ $generatedProperties
   }
 
   @visibleForTesting
-  String generateListPropertyContent(
-      String propertyName,
-      String propertyKey,
-      String className,
-      Map<String, dynamic> propertyEntryMap,
-      bool useDefaultNullForLists,
-      List<String> allEnumNames) {
-    final dynamic items = propertyEntryMap['items'];
-
-    String typeName;
-    if (items != null) {
-      typeName = items['originalRef'] as String;
-    }
-
-    typeName ??= getParameterTypeName(
-        className, propertyName, items as Map<String, dynamic>);
-
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, true);
-
-    final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'}$unknownEnumValue)\n";
-
-    return '\t$jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
-  }
-
-  @visibleForTesting
-  String generateEnumPropertyContent(
-      String key, String className, List<String> allEnumNames) {
-    final enumName = SwaggerEnumsGeneratorV3().generateEnumName(className, key);
-
-    allEnumNames.add(enumName);
-
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, enumName, false);
-    return '''
-  @JsonKey($unknownEnumValue)
-  final ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
-  }
-
-  @visibleForTesting
   String generateGeneralPropertyContent(
       String propertyName,
       String propertyKey,
@@ -334,60 +293,5 @@ $generatedProperties
         return generateGeneralPropertyContent(propertyName, propertyKey,
             className, defaultValues, propertyEntryMap, allEnumNames);
     }
-  }
-
-  @visibleForTesting
-  String generatePropertyContentByRef(
-      Map<String, dynamic> propertyEntryMap,
-      String propertyName,
-      String propertyKey,
-      String className,
-      List<String> allEnumNames) {
-    final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
-
-    var typeName = getParameterTypeName(
-        className, propertyName, propertyEntryMap, parameterName);
-
-    final allEnumsNamesWithoutPrefix =
-        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
-
-    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
-      typeName = 'enums.$typeName';
-    }
-
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, false);
-
-    final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue";
-
-    return '\t$jsonKeyContent)\n  final $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
-  }
-
-  @visibleForTesting
-  String generatePropertyContentBySchema2(
-      Map<String, dynamic> propertyEntryMap,
-      String propertyName,
-      String propertyKey,
-      String className,
-      List<String> allEnumNames) {
-    final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
-    final parameterName = propertySchema['\$ref'].toString().split('/').last;
-
-    var typeName = getParameterTypeName(
-        className, propertyName, propertyEntryMap, parameterName);
-
-    final allEnumsNamesWithoutPrefix =
-        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
-
-    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
-      typeName = 'enums.$typeName';
-    }
-
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, false);
-
-    final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue";
-
-    return '\t$jsonKeyContent)\n\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 }
