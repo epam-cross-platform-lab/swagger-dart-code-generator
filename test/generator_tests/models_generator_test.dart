@@ -1,4 +1,5 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
@@ -8,6 +9,8 @@ import '../requests_generator_definitions.dart';
 void main() {
   group('generate', () {
     final generator = SwaggerModelsGeneratorV3();
+    final generator2 = SwaggerModelsGeneratorV2();
+
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
@@ -16,6 +19,16 @@ void main() {
 
       expect(
           result, contains('final enums.TokensResponseToken_type tokenType'));
+    });
+
+    test('Should parse object name as a field Type', () {
+      final result = generator2.generate(
+          model_with_parameters_v2, fileName, GeneratorOptions());
+
+      expect(
+          result,
+          contains(
+              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
     });
 
     test('Should parse object name as a field Type', () {
@@ -245,6 +258,7 @@ void main() {
 
   group('generateModelClassContent', () {
     final generator = SwaggerModelsGeneratorV3();
+    final generator2 = SwaggerModelsGeneratorV2();
     test('Should return model class content', () {
       const map = <String, dynamic>{};
       const className = 'Animals';
@@ -253,6 +267,20 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
+          className, map, <DefaultValueMap>[], useDefaultNullForLists, []);
+
+      expect(result, contains(classExpectedResult));
+      expect(result, contains(factoryConstructorExpectedResult));
+    });
+
+    test('Should return model class content', () {
+      const map = <String, dynamic>{};
+      const className = 'Animals';
+      const useDefaultNullForLists = false;
+      const classExpectedResult = 'class Animals {';
+      const factoryConstructorExpectedResult =
+          '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
+      final result = generator2.generateModelClassContent(
           className, map, <DefaultValueMap>[], useDefaultNullForLists, []);
 
       expect(result, contains(classExpectedResult));
@@ -481,6 +509,17 @@ void main() {
       final result = generator.getValidatedClassName('Request');
 
       expect(result, equals('Request\$'));
+    });
+  });
+
+  group('Tests for generateGeneralPropertyContent', () {
+    final generator = SwaggerModelsGeneratorV3();
+
+    test('Should', () {
+      final result = generator.generateGeneralPropertyContent('name', 'key',
+          'className', [], {'\$ref': 'ClassNameName'}, ['enums.ClassNameName']);
+
+      expect(result, contains('final enums.ClassNameName name;'));
     });
   });
 }

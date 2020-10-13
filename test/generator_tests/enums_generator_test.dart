@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
@@ -5,11 +6,18 @@ import '../requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3();
+  final generatorv2 = SwaggerEnumsGeneratorV2();
 
   group('Generate', () {
     test('Should generate enum from models', () {
       final result = generator.generate(model_with_parameters_v3, 'test_file');
       expect(result, contains('enum SomeEnumModel'));
+    });
+
+    test('Should generate enum from models', () {
+      final result =
+          generatorv2.generate(model_with_parameters_v2, 'test_file');
+      expect(result, contains('enum ActiveOrderAndListSummaryEnumValue'));
     });
 
     test('Should generate enum from request parameter', () {
