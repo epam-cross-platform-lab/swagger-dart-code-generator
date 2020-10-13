@@ -15,11 +15,15 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 abstract class SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'String';
+  static const String successResponseCode = '200';
   List<String> successDescriptions = <String>[
     'Success',
     'OK',
     'default response'
   ];
+
+  String getAllMethodsContent(
+      SwaggerRoot swaggerRoot, GeneratorOptions options);
   String generate(
       String code, String className, String fileName, GeneratorOptions options);
 
@@ -152,7 +156,6 @@ abstract class SwaggerRequestsGenerator {
     return name.join();
   }
 
-  @visibleForTesting
   String getMethodContent(
       {String summary,
       String typeRequest,
@@ -399,5 +402,81 @@ abstract class $className extends ChopperService''';
             successDescriptions.contains(response.description) ||
             response.code == successResponseCode,
         orElse: () => null);
+  }
+
+  String getReturnTypeName(List<SwaggerResponse> responses, String url,
+      String methodName, List<ResponseOverrideValueMap> overridenRequests) {
+    if (overridenRequests
+            ?.any((ResponseOverrideValueMap element) => element.url == url) ==
+        true) {
+      final overridenResponse = overridenRequests
+          .firstWhere((ResponseOverrideValueMap element) => element.url == url);
+
+      if (overridenResponse.method == methodName) {
+        return overridenResponse.overridenValue;
+      }
+    }
+
+    final neededResponse = getSuccessedResponse(responses);
+
+    if (neededResponse == null) {
+      return null;
+    }
+
+    if (neededResponse.schema?.type != null) {
+      return getParameterTypeName(
+          neededResponse.schema.type,
+          neededResponse.schema?.items?.originalRef ??
+              neededResponse.schema?.items?.type ??
+              neededResponse.schema.items?.ref?.split('/')?.last);
+    }
+
+    if (neededResponse.schema?.ref != null) {
+      return neededResponse.schema?.ref?.split('/')?.last;
+    }
+
+    if (neededResponse.schema?.originalRef != null) {
+      return neededResponse.schema.originalRef;
+    }
+
+    if (neededResponse.content?.isNotEmpty == true &&
+        neededResponse.content != null) {
+      if (neededResponse.content.first.ref != null) {
+        return neededResponse.content.first.ref.split('/').last;
+      }
+      if (neededResponse.content.first.responseType?.isNotEmpty == true) {
+        return getParameterTypeName(
+            neededResponse.content.first.responseType,
+            neededResponse.schema?.items?.originalRef ??
+                neededResponse.content?.first?.items?.ref?.split('/')?.last);
+      }
+    }
+
+    return null;
+  }
+
+  String generateFileContent(String classContent, String chopperClientContent,
+      String allMethodsContent) {
+    final result = '''
+$classContent
+{
+$chopperClientContent
+$allMethodsContent
+}''';
+
+    return result;
+  }
+
+  String getFileContent(SwaggerRoot swaggerRoot, String className,
+      String fileName, GeneratorOptions options, bool hasModels) {
+    final classContent =
+        getRequestClassContent(swaggerRoot.host, className, fileName, options);
+    final chopperClientContent = getChopperClientContent(
+        className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
+    final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
+    final result = generateFileContent(
+        classContent, chopperClientContent, allMethodsContent);
+
+    return result;
   }
 }

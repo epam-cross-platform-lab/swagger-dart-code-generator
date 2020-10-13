@@ -60,34 +60,7 @@ class SwaggerRequestsGeneratorV2 extends SwaggerRequestsGenerator {
     return neededParameter;
   }
 
-  @visibleForTesting
-  String getFileContent(SwaggerRoot swaggerRoot, String className,
-      String fileName, GeneratorOptions options, bool hasModels) {
-    final classContent =
-        getRequestClassContent(swaggerRoot.host, className, fileName, options);
-    final chopperClientContent = getChopperClientContent(
-        className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
-    final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
-    final result = generateFileContent(
-        classContent, chopperClientContent, allMethodsContent);
-
-    return result;
-  }
-
-  @visibleForTesting
-  String generateFileContent(String classContent, String chopperClientContent,
-      String allMethodsContent) {
-    final result = '''
-$classContent
-{
-$chopperClientContent
-$allMethodsContent
-}''';
-
-    return result;
-  }
-
-  @visibleForTesting
+  @override
   String getAllMethodsContent(
       SwaggerRoot swaggerRoot, GeneratorOptions options) {
     final methods = StringBuffer();
@@ -157,52 +130,5 @@ $allMethodsContent
     });
 
     return methods.toString();
-  }
-
-  @visibleForTesting
-  String getReturnTypeName(List<SwaggerResponse> responses, String url,
-      String methodName, List<ResponseOverrideValueMap> overridenRequests) {
-    if (overridenRequests
-            ?.any((ResponseOverrideValueMap element) => element.url == url) ==
-        true) {
-      final overridenResponse = overridenRequests
-          .firstWhere((ResponseOverrideValueMap element) => element.url == url);
-
-      if (overridenResponse.method == methodName) {
-        return overridenResponse.overridenValue;
-      }
-    }
-
-    final neededResponse = getSuccessedResponse(responses);
-
-    if (neededResponse == null) {
-      return null;
-    }
-
-    if (neededResponse.schema?.type != null) {
-      return getParameterTypeName(
-          neededResponse.schema.type,
-          neededResponse.schema?.items?.originalRef ??
-              neededResponse.schema?.items?.type ??
-              neededResponse.schema.items?.ref?.split('/')?.last);
-    }
-
-    if (neededResponse.schema?.ref != null) {
-      return neededResponse.schema?.ref?.split('/')?.last;
-    }
-
-    if (neededResponse.schema?.originalRef != null) {
-      return neededResponse.schema.originalRef;
-    }
-
-    if (neededResponse.content?.isNotEmpty == true &&
-        neededResponse.content != null) {
-      if (neededResponse.content.first.responseType != null) {
-        return getParameterTypeName(neededResponse.content.first.responseType,
-            neededResponse.schema?.items?.originalRef);
-      }
-    }
-
-    return null;
   }
 }
