@@ -1,18 +1,19 @@
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/parameter_item.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_parameter_schema.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_items.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/responses/swagger_response.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_path.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_root.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/parameter_item.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_parameter_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_items.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_response.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:test/test.dart';
-import 'requests_generator_definitions.dart';
+
+import '../requests_generator_definitions.dart';
 
 void main() {
-  final generator = SwaggerRequestsGeneratorV2();
+  final generator = SwaggerRequestsGeneratorV3();
   const fileName = 'order_service';
   const className = 'OrderSerice';
 
@@ -58,7 +59,7 @@ void main() {
       const name = 'orderId';
       const description = 'Id of the order';
       final result = generator.createSummaryParameters(
-          name, description, 'body', GeneratorOptions());
+          name, description, 'query', GeneratorOptions());
 
       expect(result, contains('///@param orderId Id of the order'));
     });
@@ -240,6 +241,20 @@ void main() {
       expect(result,
           contains('Future<chopper.Response<TestType>> getModelItems();'));
     });
+
+    test('Should generate return type by content -> first -> ref', () {
+      final result = generator.getReturnTypeName(
+          <SwaggerResponse>[
+            SwaggerResponse(code: '200', content: <Content>[
+              Content(ref: '#components/schemas/TestItem')
+            ])
+          ],
+          '/test/items',
+          'get',
+          <ResponseOverrideValueMap>[]);
+
+      expect(result, equals('TestItem'));
+    });
   });
 
   group('Tests for getSuccessedResponse', () {
@@ -275,7 +290,7 @@ void main() {
   });
 
   group('Tests for getParameterContent', () {
-    test('Shouod generate body parameter by schema -> ref', () {
+    test('Should generate body parameter by schema -> ref', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'body',
           name: 'testParameter',
@@ -291,7 +306,7 @@ void main() {
       expect(result, contains('@Body() @required TestItem testParameter'));
     });
 
-    test('Shouod generate formData parameter by schema -> ref', () {
+    test('Should generate formData parameter by schema -> ref', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'formData',
           name: 'testParameter',
@@ -308,7 +323,7 @@ void main() {
           contains("@Field('testParameter') @required dynamic testParameter"));
     });
 
-    test('Shouod generate body parameter by schema -> enum values', () {
+    test('Should generate body parameter by schema -> enum values', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'body',
           name: 'testParameter',
@@ -327,52 +342,59 @@ void main() {
               '@Body() @required enums.PathGetTestParameter testParameter'));
     });
 
-    test('Shouod generate body parameter if no ref and no schema', () {
+    test('Should generate body parameter if no ref and no schema', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'body', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          path: '/path',
-          requestType: 'get');
+          parameter: parameter, ignoreHeaders: false);
 
       expect(result, contains('@Body() @required String testParameter'));
     });
 
-    test('Shouod generate header parameter if not ignore', () {
+    test('Should generate header parameter if not ignore', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          path: '/path',
-          requestType: 'get');
+          parameter: parameter, ignoreHeaders: false);
 
       expect(result,
           contains("@Header('testParameter') @required String testParameter"));
     });
 
-    test('Shouod generate header parameter if ignore headers == true', () {
+    test('Should generate header parameter if ignore headers == true', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
           parameter: parameter, ignoreHeaders: true);
 
-      expect(result, contains(''));
+      expect(result, equals(''));
     });
 
-    test('Shouod ignore cookie parameters', () {
+    test('Should generate custom parameter types -> schema', () {
+      final parameter = SwaggerRequestParameter(
+          inParameter: 'MyCustomType',
+          name: 'testParameter',
+          isRequired: true,
+          schema: SwaggerParameterSchema(type: 'MyCustomType'));
+
+      final result = generator.getParameterContent(
+          parameter: parameter, ignoreHeaders: true);
+
+      expect(
+          result,
+          equals(
+              "@MyCustomType('testParameter') @required MyCustomType testParameter"));
+    });
+
+    test('Should ignore cookie parameters', () {
       final parameter = SwaggerRequestParameter(
           inParameter: 'cookie', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          path: '/path',
-          requestType: 'get');
+          parameter: parameter, ignoreHeaders: false);
 
       expect(result, contains(''));
     });
@@ -544,8 +566,8 @@ void main() {
           requestPath: 'path',
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
-          summary: 'summary',
           hasEnums: false,
+          summary: 'summary',
           typeRequest: 'typeRequests');
 
       expect(result, contains('@FactoryConverter'));
@@ -560,8 +582,8 @@ void main() {
           requiredParameters: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
-          ignoreHeaders: true,
           hasEnums: true,
+          ignoreHeaders: true,
           typeRequest: 'typeRequests',
           enumInBodyName: 'enumInBody',
           parameters: [
@@ -583,6 +605,27 @@ void main() {
       final result = generator.getBodyParameter(parameter, 'path', 'type');
 
       expect(result, equals('@Body() @required MyObject myName'));
+    });
+  });
+
+  group('Tests for generatePublicMethod', () {
+    test('Should generate correct original method usage', () {
+      final methodName = 'getSomePet';
+      final returnType = 'String';
+      final path = 'path';
+      final type = 'type';
+      final parameters = '@Body() pet';
+      final parametersList = [
+        SwaggerRequestParameter(
+            inParameter: 'body',
+            name: 'pet',
+            items: SwaggerRequestItems(enumValues: ['one']))
+      ];
+
+      final result = generator.generatePublicMethod(
+          methodName, returnType, parameters, path, type, true, parametersList);
+
+      expect(result, contains('getSomePet(pet)'));
     });
   });
 

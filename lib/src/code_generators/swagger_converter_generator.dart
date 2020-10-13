@@ -4,7 +4,6 @@ import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:recase/recase.dart';
 
 class SwaggerConverterGenerator {
-  @override
   String generate(String dartCode, String fileName) {
     return '''
 final Map<Type, Object Function(Map<String, dynamic>)> ${fileName.pascalCase}$converterClassEnding = 
@@ -16,7 +15,7 @@ ${_generateModelsMapping(dartCode)}};''';
     final result = StringBuffer();
     final dynamic map = jsonDecode(dartCode);
 
-    final definitions = map['definitions'] as Map<String, dynamic>;
+    final definitions = getDefinitions(map);
 
     if (definitions == null) {
       return '';
@@ -32,5 +31,17 @@ ${_generateModelsMapping(dartCode)}};''';
     }
 
     return result.toString();
+  }
+
+  Map<String, dynamic> getDefinitions(dynamic map) {
+    if (map['definitions'] != null) {
+      return map['definitions'] as Map<String, dynamic>;
+    }
+
+    if (map['components'] != null) {
+      return map['components']['schemas'] as Map<String, dynamic>;
+    }
+
+    return null;
   }
 }

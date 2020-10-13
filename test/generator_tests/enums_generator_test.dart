@@ -1,7 +1,7 @@
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
-import 'requests_generator_v3_definitions.dart';
+import '../requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3();

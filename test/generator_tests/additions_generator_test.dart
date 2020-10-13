@@ -1,9 +1,9 @@
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_additions_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Additions generator tests', () {
-    final generator = SwaggerAdditionsGeneratorV3();
+    final generator = SwaggerAdditionsGenerator();
 
     test('Should generate mapping for files', () {
       final result = generator.generateConverterMappings(<String, List<String>>{
@@ -44,7 +44,7 @@ void main() {
   });
 
   group('Test for generateCustomJsonConverter', () {
-    final generator = SwaggerAdditionsGeneratorV3();
+    final generator = SwaggerAdditionsGenerator();
     test('Should generate custom json converter', () {
       const fileName = 'example_swagger';
       const expectedResult =

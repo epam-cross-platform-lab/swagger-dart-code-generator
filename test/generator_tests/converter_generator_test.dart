@@ -1,14 +1,15 @@
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_converter_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
 import 'package:test/test.dart';
-import '../code_examples.dart';
+
+import '../converter_generator_definitions.dart';
 
 void main() {
   group('Converter generator tests', () {
-    final generator = SwaggerConverterGeneratorV2();
+    final generator = SwaggerConverterGenerator();
     const fileName = 'file_name';
 
     test('Should create fromJsonFactory for model', () {
-      final result = generator.generate(model_with_parameters_v2, fileName);
+      final result = generator.generate(model_with_parameters, fileName);
 
       expect(
           result,

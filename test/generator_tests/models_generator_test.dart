@@ -1,22 +1,25 @@
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
+import '../requests_generator_definitions.dart';
 
 void main() {
   group('generate', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
       final result = generator.generate(
-          model_with_parameters_v2, fileName, GeneratorOptions());
+          model_with_parameters_v3, fileName, GeneratorOptions());
 
-      expect(result, contains('final DeliveryDto deliveryDate'));
+      expect(
+          result, contains('final enums.TokensResponseToken_type tokenType'));
     });
 
     test('Should parse object name as a field Type', () {
-      const expectedResult = "@JsonKey(name: 'id', defaultValue: 19)";
+      const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
       final generatorOptions =
           GeneratorOptions(defaultValuesMap: <DefaultValueMap>[
         DefaultValueMap(
@@ -25,19 +28,19 @@ void main() {
         )
       ]);
       final result = generator.generate(
-          model_with_parameters_v2, fileName, generatorOptions);
+          model_with_parameters_v3, fileName, generatorOptions);
 
       expect(result, contains(expectedResult));
     });
   });
 
   group('generateDefaultValueFromMap', () {
-    final _generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return default value', () {
       const defaultValue = 'true';
       const typeName = 'bool';
       const expectedResult = 'true';
-      final result = _generator.generateDefaultValueFromMap(
+      final result = generator.generateDefaultValueFromMap(
           DefaultValueMap(defaultValue: defaultValue, typeName: typeName));
 
       expect(result, contains(expectedResult));
@@ -47,7 +50,7 @@ void main() {
       const defaultValue = 'Animal';
       const typeName = 'Object';
       const expectedResult = 'Animal';
-      final result = _generator.generateDefaultValueFromMap(
+      final result = generator.generateDefaultValueFromMap(
           DefaultValueMap(defaultValue: defaultValue, typeName: typeName));
 
       expect(result, contains(expectedResult));
@@ -55,7 +58,7 @@ void main() {
   });
 
   group('getParameterTypeName', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return validate parameter type name', () {
       const className = 'Animal';
       const parameterName = 'orderId';
@@ -136,48 +139,11 @@ void main() {
     });
   });
 
-  group('getEnumFieldName', () {
-    final generator = SwaggerModelsGeneratorV2();
-
-    test('Should return validate enum field name', () {
-      const name = 'cat-dog_ Cars';
-      const expectedResult = 'catDogCars';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should return validate enum field name without forbidden symbols',
-        () {
-      const name = 'cat,dog..Cars';
-      const expectedResult = 'catDogCars';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should return \$validateEnumFieldName', () {
-      const name = '55element';
-      const expectedResult = 'value_55element';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should return \$with', () {
-      const name = 'with';
-      const expectedResult = '\$with';
-      final result = generator.getEnumFieldName(name);
-
-      expect(result, contains(expectedResult));
-    });
-  });
-
   group('generateFieldName', () {
     test('Should return validate field name', () {
       const name = 'Cat_Dog-Animals';
       const expectedResult = 'catDogAnimals';
-      final result = SwaggerModelsGeneratorV2.generateFieldName(name);
+      final result = SwaggerModelsGenerator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -185,7 +151,7 @@ void main() {
     test('Should return \$forbiddenFieldName', () {
       const name = '#';
       const expectedResult = '\$forbiddenFieldName';
-      final result = SwaggerModelsGeneratorV2.generateFieldName(name);
+      final result = SwaggerModelsGenerator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -193,7 +159,7 @@ void main() {
     test('Should return \$null', () {
       const name = 'null';
       const expectedResult = '\$null';
-      final result = SwaggerModelsGeneratorV2.generateFieldName(name);
+      final result = SwaggerModelsGenerator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -201,26 +167,22 @@ void main() {
     test('Should return \$number', () {
       const name = '5element';
       const expectedResult = '\$5element';
-      final result = SwaggerModelsGeneratorV2.generateFieldName(name);
+      final result = SwaggerModelsGenerator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
   });
 
   group('generatePropertyContentByDefault', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return property with JsonKey', () {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyName'";
-      final expectedResult =
-          "\t$jsonKeyExpendedResult)\n\tfinal ${propertyEntryMap['originalRef']} $propertyName;";
-
       final result = generator
           .generatePropertyContentByDefault(propertyEntryMap, propertyName, []);
 
       expect(result, contains(jsonKeyExpendedResult));
-      expect(result, contains(expectedResult));
     });
 
     test('Should add unknownEnumValue', () {
@@ -234,7 +196,7 @@ void main() {
   });
 
   group('generatePropertyContentByRef', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return property with JsonKey', () {
       final propertyEntryMap = <String, dynamic>{'\$ref': '#/definitions/Pet'};
       const propertyName = 'shipDate';
@@ -266,7 +228,7 @@ void main() {
   });
 
   group('generateEnumPropertyContent', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return enum property with JsonKey', () {
       // ignore: prefer_const_declarations
       final key = 'dog';
@@ -282,17 +244,16 @@ void main() {
   });
 
   group('generateModelClassContent', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return model class content', () {
       const map = <String, dynamic>{};
-      const fileName = 'order_service.dart';
       const className = 'Animals';
       const useDefaultNullForLists = false;
-      const classExpectedResult = 'class Animals{';
+      const classExpectedResult = 'class Animals {';
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
-      final result = generator.generateModelClassContent(className, map,
-          fileName, <DefaultValueMap>[], useDefaultNullForLists, []);
+      final result = generator.generateModelClassContent(
+          className, map, <DefaultValueMap>[], useDefaultNullForLists, []);
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -300,7 +261,7 @@ void main() {
   });
 
   group('generateConstructorPropertiesContent', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return empty', () {
       const expectedResult = '';
       final result = generator.generateConstructorPropertiesContent(null);
@@ -318,7 +279,7 @@ void main() {
   });
 
   group('generatePropertyContentBySchema', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return property content by schema', () {
       final map = <String, dynamic>{
         'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
@@ -352,7 +313,7 @@ void main() {
   });
 
   group('generatePropertiesContent', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return properties from ref', () {
       final map = <String, dynamic>{
         'Animals': <String, dynamic>{'\$ref': '#/definitions/Pet'}
@@ -416,7 +377,7 @@ void main() {
   });
 
   group('generateListPropertyContent', () {
-    final generator = SwaggerModelsGeneratorV2();
+    final generator = SwaggerModelsGeneratorV3();
     test('Should return List<Object>', () {
       final map = <String, dynamic>{'items': null};
       const propertyName = 'dog';
@@ -445,25 +406,81 @@ void main() {
 
       expect(result, contains('unknownEnumValue: Dog.swaggerGeneratedUnknown'));
     });
-  });
 
-  group('Tests for getValidatedClassName', () {
-    final generator = SwaggerModelsGeneratorV2();
-    test('Should rename Request to \$Request', () {
-      final result = generator.getValidatedClassName('Request');
+    test('Should return List<Object>', () {
+      final map = <String, dynamic>{
+        'items': {'originalRef': 'TestOriginalRef'}
+      };
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
 
-      expect(result, equals('Request\$'));
+      final result = generator.generateListPropertyContent(
+          propertyName, propertyKey, className, map, false, []);
+
+      expect(result, contains('final List<TestOriginalRef> dog;'));
     });
   });
 
-  group('Tests for generateGeneralPropertyContent', () {
-    final generator = SwaggerModelsGeneratorV2();
+  group('generatePropertyContentByType', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should return property content by schema', () {
+      final map = <String, String>{'type': 'enum'};
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+      const jsonKeyExpectedResult =
+          'unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown';
 
+      const propertyExpectedResult = 'final AnimalsDog dog';
+      final result = generator.generatePropertyContentByType(map, propertyName,
+          propertyKey, className, <DefaultValueMap>[], false, []);
+
+      expect(result, contains(jsonKeyExpectedResult));
+      expect(result, contains(propertyExpectedResult));
+    });
+
+    test('Should return property content by schema', () {
+      final map = <String, String>{'type': 'array'};
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generatePropertyContentByType(map, propertyName,
+          propertyKey, className, <DefaultValueMap>[], false, []);
+
+      expect(result, contains('final List<Object> dog;'));
+    });
+  });
+
+  group('getModelInheritedProperties', () {
+    final generator = SwaggerModelsGeneratorV3();
+    test('Should generate 2 levels of inheritance', () {
+      final result = generator.generate(
+          model_with_inheritance, 'MyClass', GeneratorOptions());
+
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
+    });
+
+    test('Should generate 3 levels of inheritance', () {
+      final result = generator.generate(
+          model_with_inheritance_3_levels, 'MyClass', GeneratorOptions());
+
+      expect(result,
+          contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
+
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
+    });
+  });
+
+  group('Tests for getValidatedClassName', () {
+    final generator = SwaggerModelsGeneratorV3();
     test('Should', () {
-      final result = generator.generateGeneralPropertyContent('name', 'key',
-          'className', [], {'\$ref': 'ClassNameName'}, ['enums.ClassNameName']);
+      final result = generator.getValidatedClassName('Request');
 
-      expect(result, contains('final enums.ClassNameName name;'));
+      expect(result, equals('Request\$'));
     });
   });
 }
