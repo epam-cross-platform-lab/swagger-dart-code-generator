@@ -1,3 +1,7 @@
+# 1.3.0
+
+* Fixed Issue ([#68](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/68))
+
 # 1.2.2
 
 * Fixed enums names
@@ -9,7 +13,7 @@
 # 1.2.0
 
 * Enums becobe being generated in separate file
-* Fixed Issue #58
+* Fixed Issue ([#58](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/58))
 * Fixed some bugs
 
 ## 1.1.0

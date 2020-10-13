@@ -5,31 +5,15 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_converte
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_additions_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_converter_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_additions_generator_v3.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_converter_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class SwaggerCodeGenerator {
-  final Map<int, SwaggerAdditionsGenerator> _additionsMap =
-      <int, SwaggerAdditionsGenerator>{
-    2: SwaggerAdditionsGeneratorV2(),
-    3: SwaggerAdditionsGeneratorV3()
-  };
-
-  final Map<int, SwaggerConverterGenerator> _converterMap =
-      <int, SwaggerConverterGenerator>{
-    2: SwaggerConverterGeneratorV2(),
-    3: SwaggerConverterGeneratorV3()
-  };
-
   final Map<int, SwaggerEnumsGenerator> _enumsMap =
       <int, SwaggerEnumsGenerator>{
     2: SwaggerEnumsGeneratorV2(),
@@ -91,10 +75,10 @@ class SwaggerCodeGenerator {
           .generateCustomJsonConverter(fileName, hasModels);
 
   SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator(String dartCode) =>
-      _additionsMap[_getApiVersion(dartCode)];
+      SwaggerAdditionsGenerator();
 
   SwaggerConverterGenerator _getSwaggerConverterGenerator(String dartCode) =>
-      _converterMap[_getApiVersion(dartCode)];
+      SwaggerConverterGenerator();
 
   SwaggerEnumsGenerator _getSwaggerEnumsGenerator(String dartCode) =>
       _enumsMap[_getApiVersion(dartCode)];

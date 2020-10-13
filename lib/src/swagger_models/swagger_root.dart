@@ -1,14 +1,16 @@
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request_parameter.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_info.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_path.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/swagger_tag.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_components.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_info.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_tag.dart';
 
 class SwaggerRoot {
   SwaggerRoot(
-      {this.info,
+      {this.basePath,
+      this.components,
+      this.info,
       this.host,
-      this.basePath,
       this.paths,
       this.tags,
       this.schemes,
@@ -28,7 +30,11 @@ class SwaggerRoot {
             : <SwaggerPath>[],
         parameters = json.containsKey('parameters')
             ? mapParameters(json['parameters'] as Map<String, dynamic>)
-            : <SwaggerRequestParameter>[];
+            : <SwaggerRequestParameter>[],
+        components = json.containsKey('components')
+            ? SwaggerComponents.fromJson(
+                json['components'] as Map<String, dynamic>)
+            : null;
 
   SwaggerInfo info;
   String host;
@@ -37,6 +43,7 @@ class SwaggerRoot {
   List<String> schemes;
   List<SwaggerPath> paths;
   List<SwaggerRequestParameter> parameters;
+  SwaggerComponents components;
 
   static List<SwaggerTag> mapTags(List<dynamic> map) {
     return map
