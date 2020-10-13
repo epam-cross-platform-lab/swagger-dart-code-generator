@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:recase/recase.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.dart';
@@ -53,7 +52,7 @@ $enumsFromClasses\n$enumsFromRequests''';
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = SwaggerModelsGeneratorV3.generateRequestEnumName(
+          var name = SwaggerModelsGenerator.generateRequestEnumName(
               swaggerPath.path,
               swaggerRequest.type,
               swaggerRequestParameter.name);
@@ -162,7 +161,7 @@ $enumMap
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = SwaggerModelsGeneratorV2.generateRequestEnumName(
+          var name = SwaggerModelsGenerator.generateRequestEnumName(
               swaggerPath.path,
               swaggerRequest.type,
               swaggerRequestParameter.name);

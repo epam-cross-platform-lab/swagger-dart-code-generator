@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/v2/requests/swagger_request.dart';
@@ -355,10 +355,10 @@ abstract class $className extends ChopperService''';
     String parameterType;
     if (parameter.schema?.enumValues != null) {
       parameterType =
-          'enums.${SwaggerModelsGeneratorV2.generateRequestEnumName(path, requestType, parameter.name)}';
+          'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.items?.enumValues != null) {
       final typeName =
-          'enums.${SwaggerModelsGeneratorV2.generateRequestEnumName(path, requestType, parameter.name)}';
+          'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
       parameterType = 'List<$typeName>';
     } else {
       parameterType = getParameterTypeName(
@@ -377,7 +377,7 @@ abstract class $className extends ChopperService''';
     String parameterType;
     if (parameter.schema?.enumValues != null) {
       parameterType =
-          'enums.${SwaggerModelsGeneratorV2.generateRequestEnumName(path, requestType, parameter.name)}';
+          'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
     } else if (parameter.schema?.ref != null) {
@@ -455,7 +455,7 @@ abstract class $className extends ChopperService''';
               parameter.items?.enumValues != null ||
               parameter.item?.enumValues != null ||
               parameter.schema?.enumValues != null)
-          .map((e) => SwaggerModelsGeneratorV2.generateRequestEnumName(
+          .map((e) => SwaggerModelsGenerator.generateRequestEnumName(
               requestPath, typeRequest, e.name))
           .toList();
 
@@ -548,7 +548,7 @@ abstract class $className extends ChopperService''';
   }
 
   String getMapName(String path, String requestType, String parameterName) {
-    final enumName = SwaggerModelsGeneratorV2.generateRequestEnumName(
+    final enumName = SwaggerModelsGenerator.generateRequestEnumName(
         path, requestType, parameterName);
 
     return 'enums.\$${enumName}Map';

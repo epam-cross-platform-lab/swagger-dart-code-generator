@@ -7,9 +7,7 @@ import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:meta/meta.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
-class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
-  final List<String> _keyClasses = ['Response', 'Request'];
-
+class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
@@ -39,16 +37,6 @@ class SwaggerModelsGeneratorV3 implements SwaggerModelsGenerator {
     }).join('\n');
 
     return '$generatedClasses\n$generatedEnumFromJsonToJson';
-  }
-
-  String getValidatedClassName(String className) {
-    final result = className.pascalCase;
-
-    if (_keyClasses.contains(result)) {
-      return '$result\$';
-    }
-
-    return result;
   }
 
   String genetateEnumFromJsonToJsonMethods(List<String> enumNames) {
@@ -192,7 +180,7 @@ $generatedProperties
     }
 
     final generatedConstructorParameters = entityMap.keys.map((String key) {
-      final fieldName = generateFieldName(key);
+      final fieldName = SwaggerModelsGenerator.generateFieldName(key);
       return '\t\tthis.$fieldName,';
     }).join('\n');
 
@@ -273,7 +261,7 @@ $generatedProperties
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'}$unknownEnumValue)\n";
 
-    return '\t$jsonKeyContent  final List<$typeName> ${generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   @visibleForTesting
@@ -287,7 +275,7 @@ $generatedProperties
         generateUnknownEnumValue(allEnumNames, enumName, false);
     return '''
   @JsonKey($unknownEnumValue)
-  final ${className.capitalize + key.capitalize} ${generateFieldName(key)};''';
+  final ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
   }
 
   @visibleForTesting
@@ -320,7 +308,7 @@ $generatedProperties
       jsonKeyContent +=
           ', defaultValue: ${generateDefaultValueFromMap(defaultValue)}';
     }
-    return '''  $jsonKeyContent)\n  final $typeName ${generateFieldName(propertyName)};''';
+    return '''  $jsonKeyContent)\n  final $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   @visibleForTesting
@@ -372,7 +360,7 @@ $generatedProperties
 
     final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue";
 
-    return '\t$jsonKeyContent)\n  final $typeName ${generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent)\n  final $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   @visibleForTesting
@@ -401,7 +389,7 @@ $generatedProperties
 
     final jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue";
 
-    return '\t$jsonKeyContent)\n\tfinal $typeName ${generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent)\n\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   @visibleForTesting
@@ -439,7 +427,7 @@ $generatedProperties
         generateUnknownEnumValue(allEnumNames, typeName.toString(), false);
 
     final jsonKeyContent = "@JsonKey(name: '$propertyName'$unknownEnumValue)\n";
-    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   @visibleForTesting
@@ -451,83 +439,6 @@ $generatedProperties
         return map.defaultValue;
       default:
         return "'${map.defaultValue}'";
-    }
-  }
-
-  static String generateRequestEnumName(
-      String path, String requestType, String parameterName) {
-    if (path == '/') {
-      path = '\$';
-    }
-
-    path = path.split('{').map((e) => e.capitalize).join();
-    path = path.split('}').map((e) => e.capitalize).join();
-
-    final correctedPath = SwaggerModelsGeneratorV3.generateFieldName(path);
-
-    return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
-  }
-
-  @visibleForTesting
-  static String generateFieldName(String jsonKey) {
-    final forbiddenCharacters = <String>['#'];
-    jsonKey = jsonKey.camelCase;
-
-    forbiddenCharacters.forEach((String element) {
-      if (jsonKey.startsWith(element)) {
-        jsonKey = '\$forbiddenFieldName';
-      }
-    });
-
-    if (jsonKey.startsWith(RegExp('[0-9]')) ||
-        exceptionWords.contains(jsonKey)) {
-      jsonKey = '\$' + jsonKey;
-    }
-    return jsonKey;
-  }
-
-  @visibleForTesting
-  String getParameterTypeName(
-      String className, String parameterName, Map<String, dynamic> parameter,
-      [String nameParameter]) {
-    if (nameParameter != null) {
-      return nameParameter.pascalCase;
-    }
-
-    if (parameter == null) {
-      return 'Object';
-    }
-
-    if (parameter['\$ref'] != null) {
-      return parameter['\$ref'].toString().split('/').last.pascalCase;
-    }
-
-    switch (parameter['type'] as String) {
-      case 'integer':
-        return 'int';
-      case 'boolean':
-        return 'bool';
-      case 'string':
-        if (parameter['format'] == 'date-time' ||
-            parameter['format'] == 'date') {
-          return 'DateTime';
-        } else if (parameter['enum'] != null) {
-          return SwaggerEnumsGeneratorV3()
-              .generateEnumName(className, parameterName);
-        }
-        return 'String';
-      case 'number':
-        return 'double';
-      case 'object':
-        return 'Object';
-      case 'array':
-        final items = parameter['items'] as Map<String, dynamic>;
-        return getParameterTypeName(className, parameterName, items);
-      default:
-        if (parameter['oneOf'] != null) {
-          return 'Object';
-        }
-        return 'undefinedType';
     }
   }
 }
