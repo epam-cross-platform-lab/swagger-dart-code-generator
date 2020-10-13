@@ -1,3 +1,7 @@
+# 1.3.0
+
+* Global code refactoring
+
 # 1.2.2
 
 * Fixed enums names
