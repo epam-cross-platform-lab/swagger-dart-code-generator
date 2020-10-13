@@ -1,4 +1,5 @@
-import 'package:swagger_dart_code_generator/src/swagger_models/v2/responses/response_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/item_schema.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/response_schema.dart';
 
 class SwaggerResponse {
   SwaggerResponse(
@@ -33,10 +34,19 @@ class SwaggerResponse {
 }
 
 class Content {
+  Content({this.items, this.ref, this.responseType, this.type});
+
   Content.fromJson(this.type, Map<dynamic, dynamic> json)
       : responseType =
-            json['schema'] != null ? json['schema']['type'] as String : '';
+            json['schema'] != null ? json['schema']['type'] as String : '',
+        items = json['schema'] != null && json['schema']['items'] != null
+            ? ItemSchema.fromJson(
+                json['schema']['items'] as Map<String, dynamic>)
+            : null,
+        ref = json['schema'] != null ? json['schema']['\$ref'] as String : null;
 
   final String responseType;
   final String type;
+  final ItemSchema items;
+  final String ref;
 }

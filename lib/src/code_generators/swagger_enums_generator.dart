@@ -3,7 +3,7 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/v3/swagger_root.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
 abstract class SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
