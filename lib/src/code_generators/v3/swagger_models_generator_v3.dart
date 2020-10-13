@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:meta/meta.dart';
 
 class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
@@ -16,28 +14,10 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         ? null
         : components['schemas'] as Map<String, dynamic>;
 
-    final allEnumsNames = getAllEnumNames(schemas, dartCode);
-
-    final generatedEnumFromJsonToJson =
-        genetateEnumFromJsonToJsonMethods(allEnumsNames);
-
-    if (schemas == null) {
-      return '';
-    }
-
-    final generatedClasses = schemas.keys.map((String className) {
-      return generateModelClassContent(
-          className.pascalCase,
-          schemas[className] as Map<String, dynamic>,
-          schemas,
-          options.defaultValuesMap,
-          options.useDefaultNullForLists,
-          allEnumsNames);
-    }).join('\n');
-
-    return '$generatedClasses\n$generatedEnumFromJsonToJson';
+    return generateBase(dartCode, fileName, options, schemas);
   }
 
+  @override
   List<String> getAllEnumNames(
       Map<String, dynamic> schemas, String swaggerFile) {
     final results = SwaggerEnumsGeneratorV3().getEnumNames(swaggerFile);
@@ -75,7 +55,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     return resultsWithPrefix;
   }
 
-  @visibleForTesting
+  @override
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
     if (!modelMap.containsKey('allOf')) {
       return modelMap['properties'] as Map<String, dynamic>;
@@ -90,22 +70,8 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     return currentProperties;
   }
 
-  @visibleForTesting
-  String generateModelClassContent(
-      String className,
-      Map<String, dynamic> map,
-      Map<String, dynamic> schemes,
-      List<DefaultValueMap> defaultValues,
-      bool useDefaultNullForLists,
-      List<String> allEnumNames) {
-    if (map['enum'] != null) {
-      return '';
-    }
-
-    final properties = getModelProperties(map);
-
-    var extendsString = '';
-
+  @override
+  String getExtendsString(Map<String, dynamic> map) {
     if (map.containsKey('allOf')) {
       final allOf = map['allOf'] as List<dynamic>;
       final refItem = allOf
@@ -113,29 +79,24 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
       final ref = refItem['\$ref'].toString().split('/').last;
 
-      extendsString = 'extends $ref';
+      return 'extends $ref';
     }
 
-    final generatedConstructorProperties =
-        generateConstructorPropertiesContent(properties);
+    return '';
+  }
 
-    final generatedProperties = generatePropertiesContent(properties, className,
-        defaultValues, useDefaultNullForLists, allEnumNames);
+  @override
+  String generateModelClassContent(
+      String className,
+      Map<String, dynamic> map,
+      List<DefaultValueMap> defaultValues,
+      bool useDefaultNullForLists,
+      List<String> allEnumNames) {
+    if (map['enum'] != null) {
+      return '';
+    }
 
-    final validatedClassName = getValidatedClassName(className);
-
-    final generatedClass = '''
-@JsonSerializable(explicitToJson: true)
-class $validatedClassName $extendsString{
-\t$validatedClassName($generatedConstructorProperties);\n
-\tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
-$generatedProperties
-\tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
-\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
-\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
-}
-''';
-
-    return generatedClass;
+    return generateModelClassString(
+        className, map, defaultValues, useDefaultNullForLists, allEnumNames);
   }
 }

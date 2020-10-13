@@ -8,6 +8,40 @@ abstract class SwaggerModelsGenerator {
   final List<String> _keyClasses = ['Response', 'Request'];
 
   String generate(String dartCode, String fileName, GeneratorOptions options);
+  Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
+  String getExtendsString(Map<String, dynamic> map);
+  List<String> getAllEnumNames(
+      Map<String, dynamic> definitions, String swaggerFile);
+  String generateModelClassContent(
+    String className,
+    Map<String, dynamic> map,
+    List<DefaultValueMap> defaultValues,
+    bool useDefaultNullForLists,
+    List<String> allEnumNames,
+  );
+
+  String generateBase(String dartCode, String fileName,
+      GeneratorOptions options, Map<String, dynamic> definitions) {
+    final allEnumsNames = getAllEnumNames(definitions, dartCode);
+
+    final generatedEnumFromJsonToJson =
+        genetateEnumFromJsonToJsonMethods(allEnumsNames);
+
+    if (definitions == null) {
+      return '';
+    }
+
+    final generatedClasses = definitions.keys.map((String className) {
+      return generateModelClassString(
+          className.pascalCase,
+          definitions[className] as Map<String, dynamic>,
+          options.defaultValuesMap,
+          options.useDefaultNullForLists,
+          allEnumsNames);
+    }).join('\n');
+
+    return '$generatedClasses\n$generatedEnumFromJsonToJson';
+  }
 
   String getValidatedClassName(String className) {
     final result = className.pascalCase;
@@ -381,5 +415,39 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     }).join('\n');
 
     return '{\n${generatedConstructorParameters.toString()}\n\t}';
+  }
+
+  String generateModelClassString(
+    String className,
+    Map<String, dynamic> map,
+    List<DefaultValueMap> defaultValues,
+    bool useDefaultNullForLists,
+    List<String> allEnumNames,
+  ) {
+    final properties = getModelProperties(map);
+
+    var extendsString = getExtendsString(map);
+
+    final generatedConstructorProperties =
+        generateConstructorPropertiesContent(properties);
+
+    final generatedProperties = generatePropertiesContent(properties, className,
+        defaultValues, useDefaultNullForLists, allEnumNames);
+
+    final validatedClassName = getValidatedClassName(className);
+
+    final generatedClass = '''
+@JsonSerializable(explicitToJson: true)
+class $validatedClassName $extendsString{
+\t$validatedClassName($generatedConstructorProperties);\n
+\tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
+$generatedProperties
+\tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
+\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
+}
+''';
+
+    return generatedClass;
   }
 }
