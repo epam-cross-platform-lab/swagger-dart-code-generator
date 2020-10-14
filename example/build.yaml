@@ -2,6 +2,7 @@ targets:
   $default:
     sources:
     - lib/**
+    - swagger_examples/**
     - $package$
     builders:
       swagger_dart_code_generator:

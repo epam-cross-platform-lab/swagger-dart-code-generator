@@ -21,20 +21,20 @@ abstract class SwaggerModelsGenerator {
   );
 
   String generateBase(String dartCode, String fileName,
-      GeneratorOptions options, Map<String, dynamic> definitions) {
-    final allEnumsNames = getAllEnumNames(definitions, dartCode);
+      GeneratorOptions options, Map<String, dynamic> classes) {
+    final allEnumsNames = getAllEnumNames(classes, dartCode);
 
     final generatedEnumFromJsonToJson =
         genetateEnumFromJsonToJsonMethods(allEnumsNames);
 
-    if (definitions == null) {
+    if (classes == null) {
       return '';
     }
 
-    final generatedClasses = definitions.keys.map((String className) {
+    final generatedClasses = classes.keys.map((String className) {
       return generateModelClassString(
           className.pascalCase,
-          definitions[className] as Map<String, dynamic>,
+          classes[className] as Map<String, dynamic>,
           options.defaultValuesMap,
           options.useDefaultNullForLists,
           allEnumsNames);
@@ -151,27 +151,17 @@ abstract class SwaggerModelsGenerator {
 
   String generateUnknownEnumValue(
       List<String> allEnumNames, String typeName, bool isList) {
-    var unknownEnumValue = allEnumNames.contains(typeName)
-        ? ', unknownEnumValue: $typeName.swaggerGeneratedUnknown'
-        : '';
-
-    if (unknownEnumValue.isNotEmpty) {
+    if (allEnumNames.contains(typeName)) {
       if (!isList) {
         final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
-        final toJsonFromJson =
-            ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson';
-
-        unknownEnumValue += toJsonFromJson;
+        return ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson';
       } else {
         final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
-        final toJsonFromJson =
-            ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson';
-
-        unknownEnumValue += toJsonFromJson;
+        return ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson';
       }
     }
 
-    return unknownEnumValue;
+    return '';
   }
 
   String generatePropertyContentBySchema(

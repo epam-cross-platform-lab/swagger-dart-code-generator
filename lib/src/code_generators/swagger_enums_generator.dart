@@ -13,7 +13,8 @@ abstract class SwaggerEnumsGenerator {
 
   String generateFromMap(
       String dartCode, String fileName, Map<String, dynamic> definitions) {
-    final enumsFromRequests = generateEnumsFromRequests(dartCode, fileName);
+    final enumsFromRequests =
+        generateEnumsContentFromRequests(dartCode, fileName);
 
     if (definitions == null) {
       return enumsFromRequests;
@@ -33,7 +34,7 @@ import 'package:json_annotation/json_annotation.dart';
 $enumsFromClasses\n$enumsFromRequests''';
   }
 
-  String generateEnumsFromRequests(String swagger, String fileName) {
+  String generateEnumsContentFromRequests(String swagger, String fileName) {
     final enumNames = <String>[];
     final result = StringBuffer();
     final map = jsonDecode(swagger) as Map<String, dynamic>;
@@ -143,7 +144,7 @@ $enumMap
     return result.lower;
   }
 
-  List<String> getEnumNames(String swagger) {
+  static List<String> getEnumNamesFromRequests(String swagger) {
     final enumNames = <String>[];
     final map = jsonDecode(swagger) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
@@ -183,7 +184,8 @@ $enumMap
     return enumNames;
   }
 
-  String generateEnumsContent(Map<String, dynamic> map, String className) {
+  String generateEnumsContentFromModelProperties(
+      Map<String, dynamic> map, String className) {
     if (map == null) {
       return '';
     }
@@ -257,6 +259,6 @@ $enumMap
       return '';
     }
 
-    return generateEnumsContent(properties, className);
+    return generateEnumsContentFromModelProperties(properties, className);
   }
 }

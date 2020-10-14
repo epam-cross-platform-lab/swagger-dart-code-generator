@@ -16,5 +16,14 @@ void main() {
           contains(
               'ActiveOrderAndListSummary: ActiveOrderAndListSummary.fromJsonFactory'));
     });
+
+    test('Should create fromJsonFactory for model', () {
+      final result = generator.generate(model_with_parameters_v2, fileName);
+
+      expect(
+          result,
+          contains(
+              'ActiveOrderAndListSummary: ActiveOrderAndListSummary.fromJsonFactory'));
+    });
   });
 }

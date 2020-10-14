@@ -546,7 +546,7 @@ void main() {
 
   group('Tests for getNeededRequestParameter', () {
     test('Should get needed parameter from defined parameters using ref', () {
-      final result = generator.getNeededRequestParameter(
+      final result = generator.getOriginalOrOverridenRequestParameter(
           SwaggerRequestParameter(ref: '#definitions/TestItem'),
           <SwaggerRequestParameter>[
             SwaggerRequestParameter(name: 'TestItem'),
@@ -564,7 +564,7 @@ void main() {
           methodName: 'methodName',
           parametersComments: 'parameters',
           requestPath: 'path',
-          requiredParameters: 'requiredParameters',
+          parametersContent: 'requiredParameters',
           returnType: 'returnType',
           hasEnums: false,
           summary: 'summary',
@@ -579,7 +579,7 @@ void main() {
           methodName: 'methodName',
           parametersComments: 'parameters',
           requestPath: 'path',
-          requiredParameters: 'requiredParameters',
+          parametersContent: 'requiredParameters',
           returnType: 'returnType',
           summary: 'summary',
           hasEnums: true,
