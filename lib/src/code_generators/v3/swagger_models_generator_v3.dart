@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -20,7 +21,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
   List<String> getAllEnumNames(
       Map<String, dynamic> schemas, String swaggerFile) {
-    final results = SwaggerEnumsGeneratorV3().getEnumNames(swaggerFile);
+    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
 
     if (schemas == null) {
       return results;

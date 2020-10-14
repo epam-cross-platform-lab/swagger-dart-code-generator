@@ -197,15 +197,6 @@ void main() {
 
       expect(result, contains(jsonKeyExpendedResult));
     });
-
-    test('Should add unknownEnumValue', () {
-      final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
-      const propertyName = 'shipDate';
-      final result = generator.generatePropertyContentByDefault(
-          propertyEntryMap, propertyName, ['Pet']);
-
-      expect(result, contains('unknownEnumValue: Pet.swaggerGeneratedUnknown'));
-    });
   });
 
   group('generatePropertyContentByRef', () {
@@ -226,7 +217,7 @@ void main() {
       expect(result, contains(expectedResult));
     });
 
-    test('Should add unknownEnumValue', () {
+    test('Should add toJsonFromJson', () {
       final propertyEntryMap = <String, dynamic>{'\$ref': '#/definitions/Pet'};
       const propertyName = 'shipDate';
       const propertyKey = 'shipDateGet';
@@ -235,19 +226,19 @@ void main() {
       final result = generator.generatePropertyContentByRef(propertyEntryMap,
           propertyName, propertyKey, className, ['enums.Pet']);
 
-      expect(result,
-          contains('unknownEnumValue: enums.Pet.swaggerGeneratedUnknown'));
+      expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
     });
   });
 
   group('generateEnumPropertyContent', () {
     final generator = SwaggerModelsGeneratorV3();
-    test('Should return enum property with JsonKey', () {
+    test('Should return enum property with JsonKey with fromJson and toJson',
+        () {
       // ignore: prefer_const_declarations
       final key = 'dog';
       const className = 'animals';
       const jsonKeyExpectedResult =
-          'unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown';
+          'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
       const expectedResult = 'final AnimalsDog dog;';
       final result = generator.generateEnumPropertyContent(key, className, []);
 
@@ -324,7 +315,7 @@ void main() {
       expect(result, contains(fieldExpectedResult));
     });
 
-    test('Should add unknownEnumValue', () {
+    test('Should add fromJson and toJson by ref', () {
       final map = <String, dynamic>{
         'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
       };
@@ -335,8 +326,7 @@ void main() {
       final result = generator.generatePropertyContentBySchema(
           map, propertyName, propertyKey, className, ['enums.Pet']);
 
-      expect(result,
-          contains('unknownEnumValue: enums.Pet.swaggerGeneratedUnknown'));
+      expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
     });
   });
 
@@ -422,7 +412,7 @@ void main() {
       expect(result, contains(propertyExpectedResult));
     });
 
-    test('Should add unknownEnumValue', () {
+    test('Should add fromJson and toJson', () {
       final map = <String, dynamic>{
         'items': {'originalRef': 'Dog'}
       };
@@ -432,7 +422,8 @@ void main() {
       final result = generator.generateListPropertyContent(
           propertyName, propertyKey, className, map, false, ['Dog']);
 
-      expect(result, contains('unknownEnumValue: Dog.swaggerGeneratedUnknown'));
+      expect(
+          result, contains('toJson: dogListToJson, fromJson: dogListFromJson'));
     });
 
     test('Should return List<Object>', () {
@@ -457,15 +448,11 @@ void main() {
       const propertyName = 'dog';
       const className = 'Animals';
       const propertyKey = 'Dog';
-      const jsonKeyExpectedResult =
-          'unknownEnumValue: AnimalsDog.swaggerGeneratedUnknown';
-
-      const propertyExpectedResult = 'final AnimalsDog dog';
       final result = generator.generatePropertyContentByType(map, propertyName,
           propertyKey, className, <DefaultValueMap>[], false, []);
 
-      expect(result, contains(jsonKeyExpectedResult));
-      expect(result, contains(propertyExpectedResult));
+      expect(result,
+          contains('toJson: animalsDogToJson, fromJson: animalsDogFromJson'));
     });
 
     test('Should return property content by schema', () {

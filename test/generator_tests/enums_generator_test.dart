@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:test/test.dart';
@@ -58,13 +59,14 @@ void main() {
     });
 
     test('Should remove numbers at beginning if it is key word', () {
-      final result = generator.getEnumNames(request_with_enum);
+      final result =
+          SwaggerEnumsGenerator.getEnumNamesFromRequests(request_with_enum);
       expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
-      final result =
-          generator.getEnumNames(request_with_list_of_enum_in_parameter);
+      final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(
+          request_with_list_of_enum_in_parameter);
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });

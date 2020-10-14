@@ -27,3 +27,31 @@ const String model_with_parameters = '''
     }
 }
 ''';
+
+const String model_with_parameters_v2 = '''
+{
+    "definitions": {
+            "ActiveOrderAndListSummary": {
+                "type": "object",
+                "properties": {
+                    "closingTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "orderLastChangedTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "orderedProducts": {
+                        "type": "array",
+                        "items": {
+                            "originalRef": "OrderedProductCard",
+                            "\$ref": "#/definitions/OrderedProductCard"
+                        }
+                    }
+                },
+                "title": "ActiveOrderAndListSummary"
+            }
+        }
+}
+''';

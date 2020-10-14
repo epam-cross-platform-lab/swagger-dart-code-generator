@@ -2,6 +2,7 @@ targets:
   $default:
     sources:
     - lib/**
+    - swagger_examples/**
     - $package$
     builders:
       swagger_dart_code_generator:
@@ -11,7 +12,7 @@ targets:
           ignore_headers: true
           use_default_null_for_lists: false
           build_only_models: false
-          input_folder: 'lib/'
+          input_folder: 'swagger_examples/'
           output_folder: 'lib/generated_code/'
           default_values_map:
             - type_name: int
