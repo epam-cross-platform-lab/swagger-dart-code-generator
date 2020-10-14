@@ -24,24 +24,29 @@ abstract class SwaggerRequestsGenerator {
   String generate(
       String code, String className, String fileName, GeneratorOptions options);
 
-  String getEnumParameter(String requestPath, String requestType,
-      String parameterName, List<SwaggerRequestParameter> parameters) {
-    final enumListParametersNames = parameters
-        .where((parameter) =>
-            parameter.type == 'array' &&
-            (parameter.items?.enumValues != null ||
-                parameter.item?.enumValues != null ||
-                parameter.schema?.enumValues != null))
-        .map((e) => e.name)
-        .toList();
+  String generateFileContent(String classContent, String chopperClientContent,
+      String allMethodsContent) {
+    final result = '''
+$classContent
+{
+$chopperClientContent
+$allMethodsContent
+}''';
 
-    final mapName = getMapName(requestPath, requestType, parameterName);
+    return result;
+  }
 
-    if (enumListParametersNames.contains(parameterName)) {
-      return '$parameterName.map((element) {$mapName[element];}).toList()';
-    }
+  String getFileContent(SwaggerRoot swaggerRoot, String className,
+      String fileName, GeneratorOptions options, bool hasModels) {
+    final classContent =
+        getRequestClassContent(swaggerRoot.host, className, fileName, options);
+    final chopperClientContent = getChopperClientContent(
+        className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
+    final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
+    final result = generateFileContent(
+        classContent, chopperClientContent, allMethodsContent);
 
-    return '$mapName[$parameterName]';
+    return result;
   }
 
   String getAllMethodsContent(
@@ -66,7 +71,7 @@ abstract class SwaggerRequestsGenerator {
           unnamedMethodsCounter++;
         }
 
-        final requiredParameters = getRequiredParametersContent(
+        final allParametersContent = getAllParametersContent(
             listParameters: swaggerRequest.parameters,
             ignoreHeaders: options.ignoreHeaders,
             path: swaggerPath.path,
@@ -98,7 +103,7 @@ abstract class SwaggerRequestsGenerator {
             summary: swaggerRequest.summary,
             typeRequest: swaggerRequest.type,
             methodName: methodName,
-            requiredParameters: requiredParameters,
+            parametersContent: allParametersContent,
             parametersComments: parameterCommentsForMethod,
             requestPath: swaggerPath.path,
             hasFormData: hasFormData,
@@ -113,13 +118,6 @@ abstract class SwaggerRequestsGenerator {
     });
 
     return methods.toString();
-  }
-
-  String getMapName(String path, String requestType, String parameterName) {
-    final enumName = SwaggerModelsGenerator.generateRequestEnumName(
-        path, requestType, parameterName);
-
-    return 'enums.\$${enumName}Map';
   }
 
   String getParameterCommentsForMethod(
@@ -202,6 +200,26 @@ abstract class SwaggerRequestsGenerator {
     return result;
   }
 
+  String getEnumParameter(String requestPath, String requestType,
+      String parameterName, List<SwaggerRequestParameter> parameters) {
+    final enumListParametersNames = parameters
+        .where((parameter) =>
+            parameter.type == 'array' &&
+            (parameter.items?.enumValues != null ||
+                parameter.item?.enumValues != null ||
+                parameter.schema?.enumValues != null))
+        .map((e) => e.name)
+        .toList();
+
+    final mapName = getMapName(requestPath, requestType, parameterName);
+
+    if (enumListParametersNames.contains(parameterName)) {
+      return '$parameterName.map((element) {$mapName[element];}).toList()';
+    }
+
+    return '$mapName[$parameterName]';
+  }
+
   String validateParameterName(String parameterName) {
     if (parameterName == null) {
       return parameterName;
@@ -228,7 +246,7 @@ abstract class SwaggerRequestsGenerator {
       {String summary,
       String typeRequest,
       String methodName,
-      String requiredParameters,
+      String parametersContent,
       String parametersComments,
       String requestPath,
       bool hasFormData,
@@ -249,7 +267,7 @@ abstract class SwaggerRequestsGenerator {
 
     final returnTypeString = returnType != null ? '<$returnType>' : '';
     var parametersPart =
-        requiredParameters.isEmpty ? '' : '{$requiredParameters}';
+        parametersContent.isEmpty ? '' : '{$parametersContent}';
 
     if (summary != null) {
       summary = summary.replaceAll(RegExp(r'\n|\r|\t'), ' ');
@@ -435,7 +453,7 @@ abstract class SwaggerRequestsGenerator {
       $baseUrlString);
     return _\$$fileName(newClient);
   }
-  
+
 ''';
     return generatedChopperClient;
   }
@@ -449,7 +467,7 @@ abstract class $className extends ChopperService''';
     return classWithoutChopper;
   }
 
-  String getRequiredParametersContent(
+  String getAllParametersContent(
       {List<SwaggerRequestParameter> listParameters,
       bool ignoreHeaders,
       String path,
@@ -523,32 +541,7 @@ abstract class $className extends ChopperService''';
     return null;
   }
 
-  String generateFileContent(String classContent, String chopperClientContent,
-      String allMethodsContent) {
-    final result = '''
-$classContent
-{
-$chopperClientContent
-$allMethodsContent
-}''';
-
-    return result;
-  }
-
-  String getFileContent(SwaggerRoot swaggerRoot, String className,
-      String fileName, GeneratorOptions options, bool hasModels) {
-    final classContent =
-        getRequestClassContent(swaggerRoot.host, className, fileName, options);
-    final chopperClientContent = getChopperClientContent(
-        className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
-    final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
-    final result = generateFileContent(
-        classContent, chopperClientContent, allMethodsContent);
-
-    return result;
-  }
-
-  SwaggerRequestParameter getNeededRequestParameter(
+  SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
       SwaggerRequestParameter swaggerRequestParameter,
       List<SwaggerRequestParameter> definedParameters) {
     if (swaggerRequestParameter.ref == null) {
@@ -562,5 +555,12 @@ $allMethodsContent
             element.name == parameterClassName);
 
     return neededParameter;
+  }
+
+  String getMapName(String path, String requestType, String parameterName) {
+    final enumName = SwaggerModelsGenerator.generateRequestEnumName(
+        path, requestType, parameterName);
+
+    return 'enums.\$${enumName}Map';
   }
 }

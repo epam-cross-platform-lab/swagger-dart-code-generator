@@ -19,7 +19,8 @@ class SwaggerRequestsGeneratorV2 extends SwaggerRequestsGenerator {
       swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                getNeededRequestParameter(parameter, swaggerRoot.parameters))
+                getOriginalOrOverridenRequestParameter(
+                    parameter, swaggerRoot.parameters))
             .toList();
       });
     });
