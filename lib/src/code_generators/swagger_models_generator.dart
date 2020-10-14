@@ -386,9 +386,9 @@ List<String> ${neededName.camelCase}ListToJson(
 }
 
 List<enums.$neededName> ${neededName.camelCase}ListFromJson(
-    List<String> ${neededName.camelCase}) {
+    List ${neededName.camelCase}) {
   return ${neededName.camelCase}
-      .map((e) => ${neededName.camelCase}FromJson(e))
+      .map((e) => ${neededName.camelCase}FromJson(e.toString()))
       .toList();
 }
     ''';
