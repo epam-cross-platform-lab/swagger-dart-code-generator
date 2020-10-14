@@ -1,3 +1,8 @@
+# 1.3.1
+
+* Code refactoring
+* Removed swaggerGeneratedUnknown for Enums
+
 # 1.3.0
 
 * Fixed Issue ([#68](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/68))
