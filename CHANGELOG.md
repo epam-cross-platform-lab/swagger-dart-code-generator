@@ -1,3 +1,9 @@
+# 1.3.2
+
+* Fixed issue when parsing List of Enums
+
+# 1.3.0
+
 # 1.3.1
 
 * Code refactoring
