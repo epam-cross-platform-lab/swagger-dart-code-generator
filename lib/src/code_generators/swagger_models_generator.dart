@@ -373,6 +373,12 @@ String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) 
 }
 
 enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return enums.$neededName.swaggerGeneratedUnknown;
+  }
+
   return enums.\$${neededName}Map.entries
       .firstWhere((element) => element.value == ${neededName.camelCase})
       .key;
@@ -380,6 +386,12 @@ enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}
 
 List<String> ${neededName.camelCase}ListToJson(
     List<enums.$neededName> ${neededName.camelCase}) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return null;
+  }
+
   return ${neededName.camelCase}
       .map((e) => enums.\$${neededName}Map[e])
       .toList();
@@ -387,6 +399,12 @@ List<String> ${neededName.camelCase}ListToJson(
 
 List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     List ${neededName.camelCase}) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return null;
+  }
+
   return ${neededName.camelCase}
       .map((e) => ${neededName.camelCase}FromJson(e.toString()))
       .toList();
