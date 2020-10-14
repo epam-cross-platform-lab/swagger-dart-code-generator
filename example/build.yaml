@@ -12,7 +12,7 @@ targets:
           ignore_headers: true
           use_default_null_for_lists: false
           build_only_models: false
-          input_folder: 'swagger_examples/'
+          input_folder: 'lib/'
           output_folder: 'lib/generated_code/'
           default_values_map:
             - type_name: int
