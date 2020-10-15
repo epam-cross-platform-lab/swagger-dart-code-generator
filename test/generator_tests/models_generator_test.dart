@@ -21,6 +21,16 @@ void main() {
           result, contains('final enums.TokensResponseToken_type tokenType'));
     });
 
+    test('Should generate .toLower() when caseSensitive: false', () {
+      final result = generator.generate(model_with_parameters_v3, fileName,
+          GeneratorOptions(enumsCaseSensitive: false));
+
+      expect(
+          result,
+          contains(
+              'element.value.toLowerCase() == someEnumModel.toLowerCase()'));
+    });
+
     test('Should parse object name as a field Type', () {
       final result = generator2.generate(
           model_with_parameters_v2, fileName, GeneratorOptions());
