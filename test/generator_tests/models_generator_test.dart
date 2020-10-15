@@ -31,6 +31,13 @@ void main() {
               'element.value.toLowerCase() == someEnumModel.toLowerCase()'));
     });
 
+    test('Should NOT generate .toLower() when caseSensitive: false', () {
+      final result = generator.generate(model_with_parameters_v3, fileName,
+          GeneratorOptions(enumsCaseSensitive: true));
+
+      expect(result, contains('element.value == someEnumModel'));
+    });
+
     test('Should parse object name as a field Type', () {
       final result = generator2.generate(
           model_with_parameters_v2, fileName, GeneratorOptions());
