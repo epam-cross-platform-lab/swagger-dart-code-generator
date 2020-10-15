@@ -73,6 +73,7 @@ targets:
 | `with_base_url` | `true` | `false` | If this option is false, generator will ignore base url in swagger file. |
 | `with_converter` | `true` | `false` | If option is true, combination of all mappings will be generated. |
 | `ignore_headers` | `false` | `false` | If option is true, headers will not be generated. |
+| `enums_case_sensitive` | `true` | `false` | If value is false, 'enumValue' will be defined like Enum.enumValue even it's json key equals 'ENUMVALUE' |
 | `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwice - [] |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
 | `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
