@@ -1,3 +1,7 @@
+# 1.3.3
+
+* Added new property to build config named enums_case_sensitive
+
 # 1.3.2
 
 * Fixed issue when parsing List of Enums

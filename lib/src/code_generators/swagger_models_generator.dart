@@ -24,8 +24,8 @@ abstract class SwaggerModelsGenerator {
       GeneratorOptions options, Map<String, dynamic> classes) {
     final allEnumsNames = getAllEnumNames(classes, dartCode);
 
-    final generatedEnumFromJsonToJson =
-        genetateEnumFromJsonToJsonMethods(allEnumsNames);
+    final generatedEnumFromJsonToJson = genetateEnumFromJsonToJsonMethods(
+        allEnumsNames, options.enumsCaseSensitive);
 
     if (classes == null) {
       return '';
@@ -361,12 +361,18 @@ abstract class SwaggerModelsGenerator {
     return results.join('\n');
   }
 
-  String genetateEnumFromJsonToJsonMethods(List<String> enumNames) {
-    return enumNames.map((e) => generateEnumFromJsonToJson(e)).join('\n');
+  String genetateEnumFromJsonToJsonMethods(
+      List<String> enumNames, bool enumsCaseSensitive) {
+    return enumNames
+        .map((e) => generateEnumFromJsonToJson(e, enumsCaseSensitive))
+        .join('\n');
   }
 
-  String generateEnumFromJsonToJson(String enumName) {
+  String generateEnumFromJsonToJson(String enumName, bool enumsCaseSensitive) {
     final neededName = enumName.replaceFirst('enums.', '');
+    final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
+    print(enumsCaseSensitive);
+
     return '''
 String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) {
   return enums.\$${neededName}Map[${neededName.camelCase}];
@@ -380,7 +386,7 @@ enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}
   }
 
   return enums.\$${neededName}Map.entries
-      .firstWhere((element) => element.value == ${neededName.camelCase})
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString)
       .key;
 }
 
