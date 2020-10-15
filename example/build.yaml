@@ -14,6 +14,7 @@ targets:
           build_only_models: false
           input_folder: 'lib/'
           output_folder: 'lib/generated_code/'
+          enums_case_sensitive: true
           default_values_map:
             - type_name: int
               default_value: '36'
