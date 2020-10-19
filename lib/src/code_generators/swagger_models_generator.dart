@@ -127,6 +127,20 @@ abstract class SwaggerModelsGenerator {
     return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
   }
 
+  static String generateRequestName(String path, String requestType) {
+    if (path == '/') {
+      path = '\$';
+    }
+
+    path = path.split('{').map((e) => e.capitalize).join();
+    path = path.split('}').map((e) => e.capitalize).join();
+    path = path.split(',').map((e) => e.capitalize).join();
+
+    final correctedPath = generateFieldName(path);
+
+    return '${correctedPath.capitalize}${requestType.capitalize}'.camelCase;
+  }
+
   String generateDefaultValueFromMap(DefaultValueMap map) {
     switch (map.typeName) {
       case 'int':
@@ -371,7 +385,6 @@ abstract class SwaggerModelsGenerator {
   String generateEnumFromJsonToJson(String enumName, bool enumsCaseSensitive) {
     final neededName = enumName.replaceFirst('enums.', '');
     final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
-    print(enumsCaseSensitive);
 
     return '''
 String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) {

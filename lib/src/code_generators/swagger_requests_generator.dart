@@ -12,8 +12,6 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 abstract class SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'String';
   static const String successResponseCode = '200';
-  static const String defaultMethodName = 'unnamedMethod';
-  int unnamedMethodsCounter = 0;
   static const String requestTypeOptions = 'options';
   List<String> successDescriptions = <String>[
     'Success',
@@ -62,13 +60,13 @@ $allMethodsContent
             (SwaggerRequestParameter swaggerRequestParameter) =>
                 swaggerRequestParameter.inParameter == 'formData');
 
-        var methodName = swaggerRequest.operationId;
-
-        if (methodName == null) {
-          methodName = defaultMethodName + unnamedMethodsCounter.toString();
-
-          ///To avoid dublicated default method names
-          unnamedMethodsCounter++;
+        String methodName;
+        if (options.usePathForRequestNames ||
+            swaggerRequest.operationId == null) {
+          methodName = SwaggerModelsGenerator.generateRequestName(
+              swaggerPath.path, swaggerRequest.type);
+        } else {
+          methodName = swaggerRequest.operationId;
         }
 
         final allParametersContent = getAllParametersContent(
@@ -232,7 +230,6 @@ $allMethodsContent
         name.add(result);
       }
     });
-
     if (name.isEmpty) {
       name =
           parameterName.split('-').map((String str) => str.capitalize).toList();
