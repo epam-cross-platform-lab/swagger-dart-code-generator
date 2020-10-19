@@ -387,7 +387,7 @@ enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}
 
   return enums.\$${neededName}Map.entries
       .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString, orElse: () => null)
-      .key ?? enums.$neededName.swaggerGeneratedUnknown;
+      ?.key ?? enums.$neededName.swaggerGeneratedUnknown;
 }
 
 List<String> ${neededName.camelCase}ListToJson(
