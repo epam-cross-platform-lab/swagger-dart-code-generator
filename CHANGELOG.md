@@ -1,3 +1,10 @@
+# 1.3.5
+
+* Fixed commas in request parameters
+* Removed defaultValue property for generated Lists of Enums
+* Added new flag use_path_for_request_names. Read README to learn more about it
+* Fixed extends+ClassName structure for Swagger v3
+
 # 1.3.4
 
 * Fixed not valid strings in FromJson method
