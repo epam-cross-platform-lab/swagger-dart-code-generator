@@ -223,6 +223,8 @@ $allMethodsContent
       return parameterName;
     }
 
+    parameterName = parameterName.replaceAll(',', '');
+
     var name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
