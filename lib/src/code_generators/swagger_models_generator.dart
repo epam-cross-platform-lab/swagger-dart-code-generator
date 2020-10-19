@@ -263,8 +263,13 @@ abstract class SwaggerModelsGenerator {
     final unknownEnumValue =
         generateUnknownEnumValue(allEnumNames, typeName, true);
 
-    final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'}$unknownEnumValue)\n";
+    String jsonKeyContent;
+    if (unknownEnumValue.isEmpty) {
+      jsonKeyContent =
+          "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'})\n";
+    } else {
+      jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
+    }
 
     return '''  $jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
@@ -421,7 +426,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
   if(${neededName.camelCase} == null)
   {
-    return null;
+    return [];
   }
 
   return ${neededName.camelCase}
