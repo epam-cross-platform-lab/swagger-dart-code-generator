@@ -1,3 +1,7 @@
+# 1.3.4
+
+* Fixed not valid strings in FromJson method
+
 # 1.3.3
 
 * Added new property to build config named enums_case_sensitive
