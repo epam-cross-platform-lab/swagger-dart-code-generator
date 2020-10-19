@@ -127,6 +127,20 @@ abstract class SwaggerModelsGenerator {
     return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
   }
 
+  static String generateRequestName(String path, String requestType) {
+    if (path == '/') {
+      path = '\$';
+    }
+
+    path = path.split('{').map((e) => e.capitalize).join();
+    path = path.split('}').map((e) => e.capitalize).join();
+    path = path.split(',').map((e) => e.capitalize).join();
+
+    final correctedPath = generateFieldName(path);
+
+    return '${correctedPath.capitalize}${requestType.capitalize}'.camelCase;
+  }
+
   String generateDefaultValueFromMap(DefaultValueMap map) {
     switch (map.typeName) {
       case 'int':
@@ -249,8 +263,13 @@ abstract class SwaggerModelsGenerator {
     final unknownEnumValue =
         generateUnknownEnumValue(allEnumNames, typeName, true);
 
-    final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'}$unknownEnumValue)\n";
+    String jsonKeyContent;
+    if (unknownEnumValue.isEmpty) {
+      jsonKeyContent =
+          "@JsonKey(name: '$propertyKey'${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'})\n";
+    } else {
+      jsonKeyContent = "@JsonKey(name: '$propertyKey'$unknownEnumValue)\n";
+    }
 
     return '''  $jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
@@ -371,7 +390,6 @@ abstract class SwaggerModelsGenerator {
   String generateEnumFromJsonToJson(String enumName, bool enumsCaseSensitive) {
     final neededName = enumName.replaceFirst('enums.', '');
     final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
-    print(enumsCaseSensitive);
 
     return '''
 String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) {
@@ -408,7 +426,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
   if(${neededName.camelCase} == null)
   {
-    return null;
+    return [];
   }
 
   return ${neededName.camelCase}

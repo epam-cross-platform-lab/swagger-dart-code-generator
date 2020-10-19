@@ -10,7 +10,6 @@ class SwaggerRequestsGeneratorV2 extends SwaggerRequestsGenerator {
   @override
   String generate(String code, String className, String fileName,
       GeneratorOptions options) {
-    unnamedMethodsCounter = 0;
     final map = jsonDecode(code) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
 

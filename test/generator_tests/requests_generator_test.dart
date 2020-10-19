@@ -111,6 +111,18 @@ void main() {
       expect(isContainHeader, equals(false));
     });
 
+    test('Should generate method name from path if such option is true', () {
+      final result = generator.generate(
+          request_with_header,
+          className,
+          fileName,
+          GeneratorOptions(
+            usePathForRequestNames: true,
+          ));
+
+      expect(result, contains('modelItemsGet'));
+    });
+
     test('Should NOT ignore headers if option is true', () {
       final result = generator.generate(
           request_with_header,
@@ -480,7 +492,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<chopper.Response> unnamedMethod0();'));
+      expect(result, contains('Future<chopper.Response> testPathGet();'));
     });
 
     test(
@@ -500,7 +512,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<chopper.Response> _unnamedMethod'));
+      expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
 
     test(
@@ -520,7 +532,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<chopper.Response> _unnamedMethod'));
+      expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
 
     test(
@@ -540,7 +552,7 @@ void main() {
           ]),
           GeneratorOptions());
 
-      expect(result, contains('Future<chopper.Response> _unnamedMethod'));
+      expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
   });
 

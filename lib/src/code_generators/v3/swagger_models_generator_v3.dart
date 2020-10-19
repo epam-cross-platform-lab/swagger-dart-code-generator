@@ -80,7 +80,9 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
       final ref = refItem['\$ref'].toString().split('/').last;
 
-      return 'extends $ref';
+      final className = getValidatedClassName(ref);
+
+      return 'extends $className';
     }
 
     return '';

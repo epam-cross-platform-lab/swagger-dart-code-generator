@@ -14,7 +14,8 @@ class GeneratorOptions {
       this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
       this.inputFolder,
       this.outputFolder,
-      this.enumsCaseSensitive = true});
+      this.enumsCaseSensitive = true,
+      this.usePathForRequestNames = false});
 
   /// Build options from a JSON map.
   factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
@@ -31,6 +32,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool enumsCaseSensitive;
+
+  @JsonKey(defaultValue: false)
+  final bool usePathForRequestNames;
 
   @JsonKey(defaultValue: '')
   final String inputFolder;
