@@ -93,13 +93,15 @@ class SwaggerDartCodeGenerator implements Builder {
         _generateFileContent(
             imports, requests, converter, models, customDecoder));
 
-    ///Write enums
-    final formatterEnums = _tryFormatCode(enums);
+    if (enums.isNotEmpty) {
+      ///Write enums
+      final formatterEnums = _tryFormatCode(enums);
 
-    final enumsAssetId = AssetId(buildStep.inputId.package,
-        '${options.outputFolder}$fileNameWithoutExtension$outputEnumsFileExtension');
+      final enumsAssetId = AssetId(buildStep.inputId.package,
+          '${options.outputFolder}$fileNameWithoutExtension$outputEnumsFileExtension');
 
-    await buildStep.writeAsString(enumsAssetId, formatterEnums);
+      await buildStep.writeAsString(enumsAssetId, formatterEnums);
+    }
 
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
