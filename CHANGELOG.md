@@ -1,3 +1,7 @@
+# 1.3.7
+
+* Fixed case when empty Enums generated from models
+
 # 1.3.6
 
 * Removed generation of empty Enums files
