@@ -20,10 +20,13 @@ abstract class SwaggerEnumsGenerator {
       return enumsFromRequests;
     }
 
-    final enumsFromClasses = definitions.keys.map((String className) {
-      return generateEnumsFromClasses(
-          className.pascalCase, definitions[className] as Map<String, dynamic>);
-    }).join('\n');
+    final enumsFromClasses = definitions.keys
+        .map((String className) {
+          return generateEnumsFromClasses(className.pascalCase,
+              definitions[className] as Map<String, dynamic>);
+        })
+        .where((element) => element.isNotEmpty)
+        .join('\n');
 
     if (enumsFromClasses.isEmpty && enumsFromRequests.isEmpty) {
       return '';
