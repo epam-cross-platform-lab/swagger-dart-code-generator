@@ -1,3 +1,7 @@
+# 1.3.6
+
+* Removed generation of empty Enums files
+
 # 1.3.5
 
 * Fixed commas in request parameters
