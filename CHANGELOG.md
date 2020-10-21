@@ -1,3 +1,7 @@
+# 1.3.8
+
+* Added includeIfEmpty option to build options
+
 # 1.3.7
 
 * Fixed case when empty Enums generated from models

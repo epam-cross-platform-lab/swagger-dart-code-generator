@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'generator_options.g2.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, anyMap: true)
@@ -15,7 +16,8 @@ class GeneratorOptions {
       this.inputFolder,
       this.outputFolder,
       this.enumsCaseSensitive = true,
-      this.usePathForRequestNames = false});
+      this.usePathForRequestNames = false,
+      this.includeIfNull});
 
   /// Build options from a JSON map.
   factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
@@ -35,6 +37,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool usePathForRequestNames;
+
+  @JsonKey(defaultValue: null)
+  final IncludeIfNull includeIfNull;
 
   @JsonKey(defaultValue: '')
   final String inputFolder;
@@ -74,6 +79,22 @@ class DefaultValueMap {
 
   /// Convert this default value map instance to JSON.
   Map<String, dynamic> toJson() => _$DefaultValueMapToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class IncludeIfNull {
+  IncludeIfNull({this.enabled, this.value});
+
+  @JsonKey(defaultValue: false)
+  final bool enabled;
+
+  @JsonKey(defaultValue: false)
+  final bool value;
+
+  factory IncludeIfNull.fromJson(Map<String, dynamic> json) =>
+      _$IncludeIfNullFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IncludeIfNullToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

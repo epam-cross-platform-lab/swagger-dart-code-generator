@@ -13,8 +13,6 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     ignoreHeaders: json['ignore_headers'] as bool ?? false,
     useDefaultNullForLists: json['use_default_null_for_lists'] as bool ?? false,
     buildOnlyModels: json['build_only_models'] as bool ?? false,
-    enumsCaseSensitive: json['enums_case_sensitive'] as bool ?? true,
-    usePathForRequestNames: json['use_path_for_request_names'] as bool ?? false,
     defaultValuesMap: (json['default_values_map'] as List)
             ?.map((e) => e == null
                 ? null
@@ -33,6 +31,13 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
         [],
     inputFolder: json['input_folder'] as String ?? '',
     outputFolder: json['output_folder'] as String ?? '',
+    enumsCaseSensitive: json['enums_case_sensitive'] as bool ?? false,
+    usePathForRequestNames: json['use_path_for_request_names'] as bool ?? false,
+    includeIfNull: json['include_if_null'] == null
+        ? null
+        : IncludeIfNull.fromJson((json['include_if_null'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
   );
 }
 
@@ -41,10 +46,11 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'with_base_url': instance.withBaseUrl,
       'with_converter': instance.withConverter,
       'ignore_headers': instance.ignoreHeaders,
-      'input_folder': instance.inputFolder,
-      'output_folder': instance.outputFolder,
       'enums_case_sensitive': instance.enumsCaseSensitive,
       'use_path_for_request_names': instance.usePathForRequestNames,
+      'include_if_null': instance.includeIfNull,
+      'input_folder': instance.inputFolder,
+      'output_folder': instance.outputFolder,
       'use_default_null_for_lists': instance.useDefaultNullForLists,
       'build_only_models': instance.buildOnlyModels,
       'default_values_map': instance.defaultValuesMap,
@@ -62,6 +68,19 @@ Map<String, dynamic> _$DefaultValueMapToJson(DefaultValueMap instance) =>
     <String, dynamic>{
       'type_name': instance.typeName,
       'default_value': instance.defaultValue,
+    };
+
+IncludeIfNull _$IncludeIfNullFromJson(Map<String, dynamic> json) {
+  return IncludeIfNull(
+    enabled: json['enabled'] as bool ?? false,
+    value: json['value'] as bool ?? false,
+  );
+}
+
+Map<String, dynamic> _$IncludeIfNullToJson(IncludeIfNull instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'value': instance.value,
     };
 
 ResponseOverrideValueMap _$ResponseOverrideValueMapFromJson(
