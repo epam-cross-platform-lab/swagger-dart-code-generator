@@ -58,13 +58,13 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
   @override
   String generateModelClassContent(
-    String className,
-    Map<String, dynamic> map,
-    List<DefaultValueMap> defaultValues,
-    bool useDefaultNullForLists,
-    List<String> allEnumNames,
-  ) {
-    return generateModelClassString(
-        className, map, defaultValues, useDefaultNullForLists, allEnumNames);
+      String className,
+      Map<String, dynamic> map,
+      List<DefaultValueMap> defaultValues,
+      bool useDefaultNullForLists,
+      List<String> allEnumNames,
+      GeneratorOptions options) {
+    return generateModelClassString(className, map, defaultValues,
+        useDefaultNullForLists, allEnumNames, options);
   }
 }

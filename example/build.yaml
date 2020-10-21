@@ -13,7 +13,10 @@ targets:
           use_default_null_for_lists: false
           build_only_models: false
           use_path_for_request_names: false
-          input_folder: 'swagger_examples/'
+          include_if_null:
+            enabled: true
+            value: false
+          input_folder: 'lib/'
           output_folder: 'lib/generated_code/'
           enums_case_sensitive: true
           default_values_map:

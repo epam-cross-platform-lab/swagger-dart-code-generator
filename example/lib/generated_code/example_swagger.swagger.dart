@@ -3,11 +3,10 @@ import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:flutter/widgets.dart';
 
-import 'package:example/generated_code/example_swagger.enums.swagger.dart'
-    as enums;
+import 'example_swagger.enums.swagger.dart' as enums;
 
-part 'example_swagger.swagger.chopper2.dart';
-part 'example_swagger.swagger.g2.dart';
+part 'example_swagger.swagger.chopper.dart';
+part 'example_swagger.swagger.g.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
@@ -31,13 +30,13 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param body Pet object that needs to be added to the store
 
   @Post(path: '/pet')
-  Future<Response> addPet({@Body() @required Pet body});
+  Future<chopper.Response> addPet({@Body() @required Pet body});
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
 
   @Put(path: '/pet')
-  Future<Response> updatePet({@Body() @required Pet body});
+  Future<chopper.Response> updatePet({@Body() @required Pet body});
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
@@ -53,7 +52,7 @@ abstract class ExampleSwagger extends ChopperService {
   }
 
   @Get(path: '/pet/findByStatus')
-  Future<Response<List<Pet>>> _findPetsByStatus(
+  Future<chopper.Response<List<Pet>>> _findPetsByStatus(
       {@Query('status') @required String status,
       @Query('color') @required List<String> color});
 
@@ -61,14 +60,15 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param tags Tags to filter by
 
   @Get(path: '/pet/findByTags')
-  Future<Response<List<Pet>>> findPetsByTags(
+  Future<chopper.Response<List<Pet>>> findPetsByTags(
       {@Query('tags') @required List<String> tags});
 
   ///Find pet by ID
   ///@param petId ID of pet to return
 
   @Get(path: '/pet/{petId}')
-  Future<Response<Pet>> getPetById({@Path('petId') @required int petId});
+  Future<chopper.Response<Pet>> getPetById(
+      {@Path('petId') @required int petId});
 
   ///Updates a pet in the store with form data
   ///@param petId ID of pet that needs to be updated
@@ -77,7 +77,7 @@ abstract class ExampleSwagger extends ChopperService {
 
   @Post(path: '/pet/{petId}')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
-  Future<Response> updatePetWithForm(
+  Future<chopper.Response> updatePetWithForm(
       {@Path('petId') @required int petId,
       @Field('name') String name,
       @Field('status') String status});
@@ -86,7 +86,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param petId Pet id to delete
 
   @Delete(path: '/pet/{petId}')
-  Future<Response> deletePet({@Path('petId') @required int petId});
+  Future<chopper.Response> deletePet({@Path('petId') @required int petId});
 
   ///uploads an image
   ///@param petId ID of pet to update
@@ -95,7 +95,7 @@ abstract class ExampleSwagger extends ChopperService {
 
   @Post(path: '/pet/{petId}/uploadImage')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
-  Future<Response<ApiResponse>> uploadFile(
+  Future<chopper.Response<ApiResponse>> uploadFile(
       {@Path('petId') @required int petId,
       @Field('additionalMetadata') String additionalMetadata,
       @Field('file') List<int> file});
@@ -103,64 +103,67 @@ abstract class ExampleSwagger extends ChopperService {
   ///Returns pet inventories by status
 
   @Get(path: '/store/inventory')
-  Future<Response<List<dynamic>>> getInventory();
+  Future<chopper.Response<List<dynamic>>> getInventory();
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
 
   @Post(path: '/store/order')
-  Future<Response<Order>> placeOrder({@Body() @required Order body});
+  Future<chopper.Response<Order>> placeOrder({@Body() @required Order body});
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
 
   @Get(path: '/store/order/{orderId}')
-  Future<Response<Order>> getOrderById(
+  Future<chopper.Response<Order>> getOrderById(
       {@Path('orderId') @required int orderId});
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
 
   @Delete(path: '/store/order/{orderId}')
-  Future<Response> deleteOrder({@Path('orderId') @required int orderId});
+  Future<chopper.Response> deleteOrder(
+      {@Path('orderId') @required int orderId});
 
   ///Create user
   ///@param body Created user object
 
   @Post(path: '/user')
-  Future<Response> createUser({@Body() @required User body});
+  Future<chopper.Response> createUser({@Body() @required User body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
 
   @Post(path: '/user/createWithArray')
-  Future<Response> createUsersWithArrayInput({@Body() @required String body});
+  Future<chopper.Response> createUsersWithArrayInput(
+      {@Body() @required String body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
 
   @Post(path: '/user/createWithList')
-  Future<Response> createUsersWithListInput({@Body() @required String body});
+  Future<chopper.Response> createUsersWithListInput(
+      {@Body() @required String body});
 
   ///Logs user into the system
   ///@param username The user name for login
   ///@param password The password for login in clear text
 
   @Get(path: '/user/login')
-  Future<Response<String>> loginUser(
+  Future<chopper.Response<String>> loginUser(
       {@Query('username') @required String username,
       @Query('password') @required String password});
 
   ///Logs out current logged in user session
 
   @Get(path: '/user/logout')
-  Future<Response> logoutUser();
+  Future<chopper.Response> logoutUser();
 
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
 
   @Get(path: '/user/{username}')
-  Future<Response<User>> getUserByName(
+  Future<chopper.Response<User>> getUserByName(
       {@Path('username') @required String username});
 
   ///Updated user
@@ -168,7 +171,7 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param body Updated user object
 
   @Put(path: '/user/{username}')
-  Future<Response> updateUser(
+  Future<chopper.Response> updateUser(
       {@Path('username') @required String username,
       @Body() @required User body});
 
@@ -176,7 +179,8 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param username The name that needs to be deleted
 
   @Delete(path: '/user/{username}')
-  Future<Response> deleteUser({@Path('username') @required String username});
+  Future<chopper.Response> deleteUser(
+      {@Path('username') @required String username});
 }
 
 final Map<Type, Object Function(Map<String, dynamic>)>
@@ -202,21 +206,21 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
-  @JsonKey(name: 'id', defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
   final int id;
-  @JsonKey(name: 'petId', defaultValue: 36)
+  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
   final int petId;
-  @JsonKey(name: 'quantity', defaultValue: 36)
+  @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
   final int quantity;
-  @JsonKey(name: 'shipDate')
+  @JsonKey(name: 'shipDate', includeIfNull: false)
   final DateTime shipDate;
   @JsonKey(
       name: 'status',
-      unknownEnumValue: enums.OrderStatus.swaggerGeneratedUnknown,
+      includeIfNull: false,
       toJson: orderStatusToJson,
       fromJson: orderStatusFromJson)
   final enums.OrderStatus status;
-  @JsonKey(name: 'complete')
+  @JsonKey(name: 'complete', includeIfNull: false)
   final bool complete;
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
@@ -233,9 +237,9 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 
-  @JsonKey(name: 'id', defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
   final int id;
-  @JsonKey(name: 'name')
+  @JsonKey(name: 'name', includeIfNull: false)
   final String name;
   static const fromJsonFactory = _$CategoryFromJson;
   static const toJsonFactory = _$CategoryToJson;
@@ -257,21 +261,21 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  @JsonKey(name: 'id', defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
   final int id;
-  @JsonKey(name: 'username')
+  @JsonKey(name: 'username', includeIfNull: false)
   final String username;
-  @JsonKey(name: 'firstName')
+  @JsonKey(name: 'firstName', includeIfNull: false)
   final String firstName;
-  @JsonKey(name: 'lastName')
+  @JsonKey(name: 'lastName', includeIfNull: false)
   final String lastName;
-  @JsonKey(name: 'email')
+  @JsonKey(name: 'email', includeIfNull: false)
   final String email;
-  @JsonKey(name: 'password')
+  @JsonKey(name: 'password', includeIfNull: false)
   final String password;
-  @JsonKey(name: 'phone')
+  @JsonKey(name: 'phone', includeIfNull: false)
   final String phone;
-  @JsonKey(name: 'userStatus', defaultValue: 36)
+  @JsonKey(name: 'userStatus', includeIfNull: false, defaultValue: 36)
   final int userStatus;
   static const fromJsonFactory = _$UserFromJson;
   static const toJsonFactory = _$UserToJson;
@@ -287,9 +291,9 @@ class Tag {
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  @JsonKey(name: 'id', defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
   final int id;
-  @JsonKey(name: 'name')
+  @JsonKey(name: 'name', includeIfNull: false)
   final String name;
   static const fromJsonFactory = _$TagFromJson;
   static const toJsonFactory = _$TagToJson;
@@ -309,19 +313,19 @@ class Pet {
 
   factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
 
-  @JsonKey(name: 'id', defaultValue: 36)
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
   final int id;
-  @JsonKey(name: 'category')
+  @JsonKey(name: 'category', includeIfNull: false)
   final Category category;
-  @JsonKey(name: 'name')
+  @JsonKey(name: 'name', includeIfNull: false)
   final String name;
-  @JsonKey(name: 'photoUrls', defaultValue: <String>[])
+  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <String>[])
   final List<String> photoUrls;
-  @JsonKey(name: 'tags', defaultValue: <Tag>[])
+  @JsonKey(name: 'tags', includeIfNull: false, defaultValue: <Tag>[])
   final List<Tag> tags;
   @JsonKey(
       name: 'status',
-      unknownEnumValue: enums.PetStatus.swaggerGeneratedUnknown,
+      includeIfNull: false,
       toJson: petStatusToJson,
       fromJson: petStatusFromJson)
   final enums.PetStatus status;
@@ -341,11 +345,11 @@ class ApiResponse {
   factory ApiResponse.fromJson(Map<String, dynamic> json) =>
       _$ApiResponseFromJson(json);
 
-  @JsonKey(name: 'code', defaultValue: 36)
+  @JsonKey(name: 'code', includeIfNull: false, defaultValue: 36)
   final int code;
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', includeIfNull: false)
   final String type;
-  @JsonKey(name: 'message')
+  @JsonKey(name: 'message', includeIfNull: false)
   final String message;
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
@@ -359,7 +363,37 @@ String petFindByStatusGetStatusToJson(
 
 enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
     String petFindByStatusGetStatus) {
-  return enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
+  if (petFindByStatusGetStatus == null) {
+    return enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PetFindByStatusGetStatusMap.entries
+          .firstWhere((element) => element.value == petFindByStatusGetStatus,
+              orElse: () => null)
+          ?.key ??
+      enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
+}
+
+List<String> petFindByStatusGetStatusListToJson(
+    List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatus) {
+  if (petFindByStatusGetStatus == null) {
+    return null;
+  }
+
+  return petFindByStatusGetStatus
+      .map((e) => enums.$PetFindByStatusGetStatusMap[e])
+      .toList();
+}
+
+List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatusListFromJson(
+    List petFindByStatusGetStatus) {
+  if (petFindByStatusGetStatus == null) {
+    return [];
+  }
+
+  return petFindByStatusGetStatus
+      .map((e) => petFindByStatusGetStatusFromJson(e.toString()))
+      .toList();
 }
 
 String petFindByStatusGetColorToJson(
@@ -369,7 +403,37 @@ String petFindByStatusGetColorToJson(
 
 enums.PetFindByStatusGetColor petFindByStatusGetColorFromJson(
     String petFindByStatusGetColor) {
-  return enums.PetFindByStatusGetColor.swaggerGeneratedUnknown;
+  if (petFindByStatusGetColor == null) {
+    return enums.PetFindByStatusGetColor.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PetFindByStatusGetColorMap.entries
+          .firstWhere((element) => element.value == petFindByStatusGetColor,
+              orElse: () => null)
+          ?.key ??
+      enums.PetFindByStatusGetColor.swaggerGeneratedUnknown;
+}
+
+List<String> petFindByStatusGetColorListToJson(
+    List<enums.PetFindByStatusGetColor> petFindByStatusGetColor) {
+  if (petFindByStatusGetColor == null) {
+    return null;
+  }
+
+  return petFindByStatusGetColor
+      .map((e) => enums.$PetFindByStatusGetColorMap[e])
+      .toList();
+}
+
+List<enums.PetFindByStatusGetColor> petFindByStatusGetColorListFromJson(
+    List petFindByStatusGetColor) {
+  if (petFindByStatusGetColor == null) {
+    return [];
+  }
+
+  return petFindByStatusGetColor
+      .map((e) => petFindByStatusGetColorFromJson(e.toString()))
+      .toList();
 }
 
 String orderStatusToJson(enums.OrderStatus orderStatus) {
@@ -377,7 +441,31 @@ String orderStatusToJson(enums.OrderStatus orderStatus) {
 }
 
 enums.OrderStatus orderStatusFromJson(String orderStatus) {
-  return enums.OrderStatus.swaggerGeneratedUnknown;
+  if (orderStatus == null) {
+    return enums.OrderStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$OrderStatusMap.entries
+          .firstWhere((element) => element.value == orderStatus,
+              orElse: () => null)
+          ?.key ??
+      enums.OrderStatus.swaggerGeneratedUnknown;
+}
+
+List<String> orderStatusListToJson(List<enums.OrderStatus> orderStatus) {
+  if (orderStatus == null) {
+    return null;
+  }
+
+  return orderStatus.map((e) => enums.$OrderStatusMap[e]).toList();
+}
+
+List<enums.OrderStatus> orderStatusListFromJson(List orderStatus) {
+  if (orderStatus == null) {
+    return [];
+  }
+
+  return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
 }
 
 String petStatusToJson(enums.PetStatus petStatus) {
@@ -385,7 +473,31 @@ String petStatusToJson(enums.PetStatus petStatus) {
 }
 
 enums.PetStatus petStatusFromJson(String petStatus) {
-  return enums.PetStatus.swaggerGeneratedUnknown;
+  if (petStatus == null) {
+    return enums.PetStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PetStatusMap.entries
+          .firstWhere((element) => element.value == petStatus,
+              orElse: () => null)
+          ?.key ??
+      enums.PetStatus.swaggerGeneratedUnknown;
+}
+
+List<String> petStatusListToJson(List<enums.PetStatus> petStatus) {
+  if (petStatus == null) {
+    return null;
+  }
+
+  return petStatus.map((e) => enums.$PetStatusMap[e]).toList();
+}
+
+List<enums.PetStatus> petStatusListFromJson(List petStatus) {
+  if (petStatus == null) {
+    return [];
+  }
+
+  return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
 }
 
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);

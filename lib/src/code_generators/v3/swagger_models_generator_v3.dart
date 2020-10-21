@@ -94,12 +94,13 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       Map<String, dynamic> map,
       List<DefaultValueMap> defaultValues,
       bool useDefaultNullForLists,
-      List<String> allEnumNames) {
+      List<String> allEnumNames,
+      GeneratorOptions options) {
     if (map['enum'] != null) {
       return '';
     }
 
-    return generateModelClassString(
-        className, map, defaultValues, useDefaultNullForLists, allEnumNames);
+    return generateModelClassString(className, map, defaultValues,
+        useDefaultNullForLists, allEnumNames, options);
   }
 }
