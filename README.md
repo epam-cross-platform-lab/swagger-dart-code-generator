@@ -77,6 +77,7 @@ targets:
 | `enums_case_sensitive` | `true` | `false` | If value is false, 'enumValue' will be defined like Enum.enumValue even it's json key equals 'ENUMVALUE' |
 | `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwice - [] |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
+| `include_if_null` | `null` | `false` | Enables or disables includeIfNull JsonAnnotation feature and sets value for it. See [IncludeIfNull](#includeifnull-for-model-generation). |
 | `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
 | `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overriden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |
 | `input_folder` | `-` | `true` | Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers). |
@@ -91,6 +92,23 @@ targets:
       - lib/**
       - swagger_examples/**
       - swaggers/**
+```
+
+### **IncludeIfNull for model generation**
+
+This option is used to add includeIfEmpty annotation for model fields. If option not enabled or empty - includeIfNull annotation will not added to fields. For mode details see [oficial documentation](https://pub.dev/documentation/json_annotation/latest/json_annotation/JsonSerializable/includeIfNull.html) Please see next example:
+
+```yaml
+targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: 'lib/swaggers'
+          output_folder: 'lib/generated_code/'
+          include_if_null:
+            enabled: true
+            value: false
 ```
 
 ### **Default Value Map for model generation**
