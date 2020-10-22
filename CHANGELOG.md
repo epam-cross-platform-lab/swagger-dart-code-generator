@@ -1,3 +1,7 @@
+# 1.3.9
+
+* Added ignoring of request parameters with empty IN parameter
+
 # 1.3.8
 
 * Added includeIfEmpty option to build options

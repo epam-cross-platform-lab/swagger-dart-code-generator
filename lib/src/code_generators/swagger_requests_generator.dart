@@ -65,6 +65,10 @@ $allMethodsContent
           .where((SwaggerRequest swaggerRequest) =>
               swaggerRequest.type.toLowerCase() != requestTypeOptions)
           .forEach((SwaggerRequest swaggerRequest) {
+        swaggerRequest.parameters = swaggerRequest.parameters
+            .where((element) => element.inParameter != null)
+            .toList();
+
         final hasFormData = swaggerRequest.parameters.any(
             (SwaggerRequestParameter swaggerRequestParameter) =>
                 swaggerRequestParameter.inParameter == 'formData');
