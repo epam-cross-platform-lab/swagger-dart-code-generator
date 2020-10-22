@@ -24,6 +24,10 @@ ${_generateModelsMapping(dartCode)}};''';
     for (var i = 0; i < definitions.keys.length; i++) {
       final key = definitions.keys.elementAt(i).toString();
 
+      if (definitions[key]['enum'] != null) {
+        continue;
+      }
+
       final validatedName =
           SwaggerModelsGeneratorV2().getValidatedClassName(key);
 
