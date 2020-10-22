@@ -82,6 +82,7 @@ abstract class SwaggerModelsGenerator {
 
     switch (parameter['type'] as String) {
       case 'integer':
+      case 'int':
         return 'int';
       case 'boolean':
         return 'bool';

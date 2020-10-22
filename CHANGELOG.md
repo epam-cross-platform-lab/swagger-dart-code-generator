@@ -1,3 +1,7 @@
+# 1.4.0
+
+* Added support of int in request fields and models fields (Previosly was only integer)
+
 # 1.3.9
 
 * Added ignoring of request parameters with empty IN parameter

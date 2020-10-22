@@ -371,6 +371,7 @@ $allMethodsContent
   String getParameterTypeName(String parameter, [String itemsType]) {
     switch (parameter) {
       case 'integer':
+      case 'int':
         return 'int';
       case 'boolean':
         return 'bool';
