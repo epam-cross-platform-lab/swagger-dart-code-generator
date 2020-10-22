@@ -45,8 +45,11 @@ $allMethodsContent
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
     final chopperClientContent = getChopperClientContent(
         className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
-    final allMethodsContent =
-        getAllMethodsContent(swaggerRoot, options, allEnumNames);
+    final allMethodsContent = getAllMethodsContent(
+      swaggerRoot,
+      options,
+      allEnumNames,
+    );
     final result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
 
@@ -221,12 +224,9 @@ $allMethodsContent
     return result;
   }
 
-  String getEnumParameter(
-      String requestPath,
-      String requestType,
-      String parameterName,
-      List<SwaggerRequestParameter> parameters,
-      String ref) {
+  String getEnumParameter(String requestPath, String requestType,
+      String parameterName, List<SwaggerRequestParameter> parameters,
+      [String ref]) {
     final enumListParametersNames = parameters
         .where((parameter) =>
             parameter.type == 'array' &&
