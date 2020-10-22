@@ -111,6 +111,18 @@ void main() {
       expect(isContainHeader, equals(false));
     });
 
+    test('Should accept requestBody enum', () {
+      final result = generator.generate(
+          request_with_enum_request_body,
+          className,
+          fileName,
+          GeneratorOptions(
+            ignoreHeaders: true,
+          ));
+
+      expect(result, contains('@Body() @required String body'));
+    });
+
     test('Should generate method name from path if such option is true', () {
       final result = generator.generate(
           request_with_header,
