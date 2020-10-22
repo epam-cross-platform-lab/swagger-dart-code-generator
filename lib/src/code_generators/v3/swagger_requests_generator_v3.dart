@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
@@ -26,10 +27,13 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
 
     final components = map['components'] as Map<String, dynamic>;
     final schemes = components != null
-        ? components['schemes'] as Map<String, dynamic>
+        ? components['schemas'] as Map<String, dynamic>
         : null;
 
+    final allEnumNames =
+        SwaggerModelsGeneratorV3().getAllEnumNames(schemes, code);
+
     return getFileContent(swaggerRoot, className, fileName, options,
-        schemes != null && schemes.keys.isNotEmpty);
+        schemes != null && schemes.keys.isNotEmpty, allEnumNames);
   }
 }
