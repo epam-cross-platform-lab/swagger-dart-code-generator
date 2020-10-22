@@ -1,6 +1,8 @@
 # 1.3.8
 
 * Added includeIfEmpty option to build options
+* Added support of requestBody parameter (And enums as requestBody parameter)
+* Fixed some minor bugs
 
 # 1.3.7
 

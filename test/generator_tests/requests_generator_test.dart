@@ -111,6 +111,18 @@ void main() {
       expect(isContainHeader, equals(false));
     });
 
+    test('Should accept requestBody enum', () {
+      final result = generator.generate(
+          request_with_enum_request_body,
+          className,
+          fileName,
+          GeneratorOptions(
+            ignoreHeaders: true,
+          ));
+
+      expect(result, contains('@Body() @required String body'));
+    });
+
     test('Should generate method name from path if such option is true', () {
       final result = generator.generate(
           request_with_header,
@@ -490,7 +502,8 @@ void main() {
                   responses: <SwaggerResponse>[])
             ])
           ]),
-          GeneratorOptions());
+          GeneratorOptions(),
+          []);
 
       expect(result, contains('Future<chopper.Response> testPathGet();'));
     });
@@ -510,7 +523,8 @@ void main() {
               ], responses: <SwaggerResponse>[])
             ])
           ]),
-          GeneratorOptions());
+          GeneratorOptions(),
+          []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
@@ -530,7 +544,8 @@ void main() {
               ], responses: <SwaggerResponse>[])
             ])
           ]),
-          GeneratorOptions());
+          GeneratorOptions(),
+          []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
@@ -550,7 +565,8 @@ void main() {
               ], responses: <SwaggerResponse>[])
             ])
           ]),
-          GeneratorOptions());
+          GeneratorOptions(),
+          []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
@@ -598,6 +614,7 @@ void main() {
           ignoreHeaders: true,
           typeRequest: 'typeRequests',
           enumInBodyName: 'enumInBody',
+          allEnumNames: [],
           parameters: [
             SwaggerRequestParameter(inParameter: 'body', name: 'pet')
           ]);
@@ -614,7 +631,7 @@ void main() {
           name: 'myName',
           isRequired: true,
           schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
-      final result = generator.getBodyParameter(parameter, 'path', 'type');
+      final result = generator.getBodyParameter(parameter, 'path', 'type', []);
 
       expect(result, equals('@Body() @required MyObject myName'));
     });
@@ -634,8 +651,8 @@ void main() {
             items: SwaggerRequestItems(enumValues: ['one']))
       ];
 
-      final result = generator.generatePublicMethod(
-          methodName, returnType, parameters, path, type, true, parametersList);
+      final result = generator.generatePublicMethod(methodName, returnType,
+          parameters, path, type, true, parametersList, []);
 
       expect(result, contains('getSomePet(pet)'));
     });

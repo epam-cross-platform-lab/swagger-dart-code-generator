@@ -34,6 +34,18 @@ const String request_with_header = '''
             "type": "string"
           }
         ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "\$ref" : "#/components/schemas/ContentRequest"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -464,6 +476,63 @@ const request_with_enum = '''
             }
           }
         }
+      }
+    }
+  }
+}
+''';
+
+const request_with_enum_request_body = '''
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Test service",
+    "version": "0.18.0"
+  },
+  "paths": {
+    "/v3/customers/{customerId}/status": {
+      "put": {
+        "description": "Test request",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "Test desc",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Test desc",
+          "content": {
+            "application/json": {
+              "schema": {
+                "\$ref": "#/components/schemas/CustomerStatus"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Customer Status was changed."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomerStatus": {
+        "title": "Customer Status",
+        "type": "string",
+        "enum": [
+          "active",
+          "inactive",
+          "deleted"
+        ]
       }
     }
   }

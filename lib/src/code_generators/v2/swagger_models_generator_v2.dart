@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
@@ -22,6 +23,11 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
     }
 
     definitions.forEach((className, map) {
+      if ((map as Map<String, dynamic>).containsKey('enum')) {
+        results.add(className.capitalize);
+        return;
+      }
+
       final properties = map['properties'] as Map<String, dynamic>;
 
       if (properties == null) {
@@ -54,17 +60,5 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   @override
   String getExtendsString(Map<String, dynamic> map) {
     return '';
-  }
-
-  @override
-  String generateModelClassContent(
-      String className,
-      Map<String, dynamic> map,
-      List<DefaultValueMap> defaultValues,
-      bool useDefaultNullForLists,
-      List<String> allEnumNames,
-      GeneratorOptions options) {
-    return generateModelClassString(className, map, defaultValues,
-        useDefaultNullForLists, allEnumNames, options);
   }
 }

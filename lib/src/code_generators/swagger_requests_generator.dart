@@ -34,21 +34,30 @@ $allMethodsContent
     return result;
   }
 
-  String getFileContent(SwaggerRoot swaggerRoot, String className,
-      String fileName, GeneratorOptions options, bool hasModels) {
+  String getFileContent(
+      SwaggerRoot swaggerRoot,
+      String className,
+      String fileName,
+      GeneratorOptions options,
+      bool hasModels,
+      List<String> allEnumNames) {
     final classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
     final chopperClientContent = getChopperClientContent(
         className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
-    final allMethodsContent = getAllMethodsContent(swaggerRoot, options);
+    final allMethodsContent = getAllMethodsContent(
+      swaggerRoot,
+      options,
+      allEnumNames,
+    );
     final result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
 
     return result;
   }
 
-  String getAllMethodsContent(
-      SwaggerRoot swaggerRoot, GeneratorOptions options) {
+  String getAllMethodsContent(SwaggerRoot swaggerRoot, GeneratorOptions options,
+      List<String> allEnumNames) {
     final methods = StringBuffer();
 
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
@@ -69,16 +78,29 @@ $allMethodsContent
           methodName = swaggerRequest.operationId;
         }
 
+        if (swaggerRequest.requestBody?.content != null) {
+          final additionalParameter = swaggerRequest.requestBody?.content;
+          swaggerRequest.parameters.add(SwaggerRequestParameter(
+              inParameter: 'body',
+              name: 'body',
+              isRequired: true,
+              type: additionalParameter.type,
+              ref: additionalParameter.ref ?? additionalParameter.items?.ref));
+        }
+
         final allParametersContent = getAllParametersContent(
             listParameters: swaggerRequest.parameters,
             ignoreHeaders: options.ignoreHeaders,
             path: swaggerPath.path,
+            allEnumNames: allEnumNames,
             requestType: swaggerRequest.type);
 
         final hasEnums = swaggerRequest.parameters.any((parameter) =>
             parameter.items?.enumValues != null ||
             parameter.item?.enumValues != null ||
-            parameter.schema?.enumValues != null);
+            parameter.schema?.enumValues != null ||
+            allEnumNames.contains(
+                'enums.${parameter.ref?.split("/")?.last?.pascalCase}'));
 
         final enumInBodyName = swaggerRequest.parameters.firstWhere(
             (parameter) =>
@@ -109,6 +131,7 @@ $allMethodsContent
             hasEnums: hasEnums,
             enumInBodyName: enumInBodyName?.name,
             ignoreHeaders: options.ignoreHeaders,
+            allEnumNames: allEnumNames,
             parameters: swaggerRequest.parameters);
 
         methods.writeln(generatedMethod);
@@ -171,7 +194,8 @@ $allMethodsContent
       String requestType,
       String requestPath,
       bool ignoreHeaders,
-      List<SwaggerRequestParameter> parameters) {
+      List<SwaggerRequestParameter> parameters,
+      List<String> allEnumNames) {
     final filteredParameters = parameters
         .where((parameter) =>
             ignoreHeaders ? parameter.inParameter != 'header' : true)
@@ -180,7 +204,9 @@ $allMethodsContent
     final enumParametersNames = parameters
         .where((parameter) => (parameter.items?.enumValues != null ||
             parameter.item?.enumValues != null ||
-            parameter.schema?.enumValues != null))
+            parameter.schema?.enumValues != null ||
+            allEnumNames.contains(
+                'enums.${parameter.ref?.split("/")?.last?.pascalCase}')))
         .map((e) => e.name)
         .toList();
 
@@ -191,7 +217,7 @@ $allMethodsContent
 
     final result =
         '''\tFuture<Response$returnTypeString> ${abbreviationToCamelCase(methodName.camelCase)}($newParametersPart){
-          return _${methodName.camelCase}(${filteredParameters.map((e) => "${validateParameterName(e.name)} : ${enumParametersNames.contains(e.name) ? getEnumParameter(requestPath, requestType, e.name, filteredParameters) : validateParameterName(e.name)}").join(', ')});
+          return _${methodName.camelCase}(${filteredParameters.map((e) => "${validateParameterName(e.name)} : ${enumParametersNames.contains(e.name) ? getEnumParameter(requestPath, requestType, e.name, filteredParameters, e.ref) : validateParameterName(e.name)}").join(', ')});
           }'''
             .replaceAll('@required', '');
 
@@ -199,7 +225,8 @@ $allMethodsContent
   }
 
   String getEnumParameter(String requestPath, String requestType,
-      String parameterName, List<SwaggerRequestParameter> parameters) {
+      String parameterName, List<SwaggerRequestParameter> parameters,
+      [String ref]) {
     final enumListParametersNames = parameters
         .where((parameter) =>
             parameter.type == 'array' &&
@@ -209,7 +236,7 @@ $allMethodsContent
         .map((e) => e.name)
         .toList();
 
-    final mapName = getMapName(requestPath, requestType, parameterName);
+    final mapName = getMapName(requestPath, requestType, parameterName, ref);
 
     if (enumListParametersNames.contains(parameterName)) {
       return '$parameterName.map((element) {$mapName[element];}).toList()';
@@ -253,7 +280,8 @@ $allMethodsContent
       bool hasEnums,
       String enumInBodyName,
       bool ignoreHeaders,
-      List<SwaggerRequestParameter> parameters}) {
+      List<SwaggerRequestParameter> parameters,
+      List<String> allEnumNames}) {
     var typeReq = typeRequest.capitalize + "(path: '$requestPath')";
     if (hasFormData) {
       typeReq +=
@@ -276,15 +304,6 @@ $allMethodsContent
     var publicMethod = '';
 
     if (hasEnums) {
-      final allEnumNames = parameters
-          .where((parameter) =>
-              parameter.items?.enumValues != null ||
-              parameter.item?.enumValues != null ||
-              parameter.schema?.enumValues != null)
-          .map((e) => SwaggerModelsGenerator.generateRequestEnumName(
-              requestPath, typeRequest, e.name))
-          .toList();
-
       publicMethod = generatePublicMethod(
               methodName,
               returnTypeString,
@@ -292,10 +311,11 @@ $allMethodsContent
               typeRequest,
               requestPath,
               ignoreHeaders,
-              parameters)
+              parameters,
+              allEnumNames)
           .trim();
 
-      allEnumNames.forEach((element) {
+      allEnumNames.map((e) => e.replaceAll('enums.', '')).forEach((element) {
         parametersPart = parametersPart
             .replaceAll('enums.', '')
             .replaceFirst(element, 'String');
@@ -365,17 +385,25 @@ $allMethodsContent
     }
   }
 
-  String getBodyParameter(
-    SwaggerRequestParameter parameter,
-    String path,
-    String requestType,
-  ) {
+  String getBodyParameter(SwaggerRequestParameter parameter, String path,
+      String requestType, List<String> allEnumNames) {
     String parameterType;
     if (parameter.schema?.enumValues != null) {
       parameterType =
           'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.schema?.originalRef != null) {
       parameterType = parameter.schema.originalRef;
+    } else if (parameter.ref != null) {
+      parameterType = parameter.ref.split('/').last;
+      parameterType = parameterType.split('_').map((e) => e.capitalize).join();
+
+      if (allEnumNames.contains('enums.$parameterType')) {
+        parameterType = 'enums.$parameterType';
+      }
+
+      if (parameter.type == 'array') {
+        parameterType = 'List<$parameterType>';
+      }
     } else if (parameter.schema?.ref != null) {
       parameterType = parameter.schema.ref.split('/').last;
     } else {
@@ -409,11 +437,12 @@ $allMethodsContent
       {SwaggerRequestParameter parameter,
       bool ignoreHeaders,
       String requestType,
-      String path}) {
+      String path,
+      List<String> allEnumNames}) {
     final parameterType = validateParameterType(parameter.name);
     switch (parameter.inParameter) {
       case 'body':
-        return getBodyParameter(parameter, path, requestType);
+        return getBodyParameter(parameter, path, requestType, allEnumNames);
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
@@ -470,12 +499,14 @@ abstract class $className extends ChopperService''';
       {List<SwaggerRequestParameter> listParameters,
       bool ignoreHeaders,
       String path,
-      String requestType}) {
+      String requestType,
+      List<String> allEnumNames}) {
     return listParameters
         .map((SwaggerRequestParameter parameter) => getParameterContent(
             parameter: parameter,
             ignoreHeaders: ignoreHeaders,
             path: path,
+            allEnumNames: allEnumNames,
             requestType: requestType))
         .where((String element) => element.isNotEmpty)
         .join(', ');
@@ -556,9 +587,11 @@ abstract class $className extends ChopperService''';
     return neededParameter;
   }
 
-  String getMapName(String path, String requestType, String parameterName) {
-    final enumName = SwaggerModelsGenerator.generateRequestEnumName(
-        path, requestType, parameterName);
+  String getMapName(
+      String path, String requestType, String parameterName, String ref) {
+    final enumName = ref?.split('/')?.last?.pascalCase ??
+        SwaggerModelsGenerator.generateRequestEnumName(
+            path, requestType, parameterName);
 
     return 'enums.\$${enumName}Map';
   }

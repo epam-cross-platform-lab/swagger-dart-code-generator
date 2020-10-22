@@ -12,13 +12,21 @@ abstract class SwaggerModelsGenerator {
   String getExtendsString(Map<String, dynamic> map);
   List<String> getAllEnumNames(
       Map<String, dynamic> definitions, String swaggerFile);
+
   String generateModelClassContent(
       String className,
       Map<String, dynamic> map,
       List<DefaultValueMap> defaultValues,
       bool useDefaultNullForLists,
       List<String> allEnumNames,
-      GeneratorOptions options);
+      GeneratorOptions options) {
+    if (map['enum'] != null) {
+      return '';
+    }
+
+    return generateModelClassString(className, map, defaultValues,
+        useDefaultNullForLists, allEnumNames, options);
+  }
 
   String generateBase(String dartCode, String fileName,
       GeneratorOptions options, Map<String, dynamic> classes) {
@@ -32,7 +40,10 @@ abstract class SwaggerModelsGenerator {
     }
 
     final generatedClasses = classes.keys.map((String className) {
-      return generateModelClassString(
+      if (classes['enum'] != null) {
+        return '';
+      }
+      return generateModelClassContent(
           className.pascalCase,
           classes[className] as Map<String, dynamic>,
           options.defaultValuesMap,
@@ -282,6 +293,15 @@ abstract class SwaggerModelsGenerator {
     String typeName;
     if (items != null) {
       typeName = items['originalRef'] as String;
+
+      if (typeName == null) {
+        final ref = items['\$ref'] as String;
+        typeName = ref?.split('/')?.last?.pascalCase;
+      }
+
+      if (allEnumNames.contains('enums.$typeName')) {
+        typeName = 'enums.$typeName';
+      }
     }
 
     typeName ??= getParameterTypeName(

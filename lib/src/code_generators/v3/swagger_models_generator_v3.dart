@@ -87,20 +87,4 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     return '';
   }
-
-  @override
-  String generateModelClassContent(
-      String className,
-      Map<String, dynamic> map,
-      List<DefaultValueMap> defaultValues,
-      bool useDefaultNullForLists,
-      List<String> allEnumNames,
-      GeneratorOptions options) {
-    if (map['enum'] != null) {
-      return '';
-    }
-
-    return generateModelClassString(className, map, defaultValues,
-        useDefaultNullForLists, allEnumNames, options);
-  }
 }
