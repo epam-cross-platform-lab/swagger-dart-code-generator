@@ -8,10 +8,12 @@ class SwaggerResponse {
       this.type,
       this.schema,
       this.enumValue,
-      this.content});
+      this.content,
+      this.ref});
 
   SwaggerResponse.fromJson(Map<String, dynamic> json)
       : code = json['code'] as String,
+        ref = json['\$ref'] as String,
         description = json['description'] as String,
         type = json['type'] as String,
         content = json['content'] == null
@@ -26,6 +28,7 @@ class SwaggerResponse {
             : null;
 
   String code;
+  String ref;
   String description;
   String type;
   ResponseSchema schema;

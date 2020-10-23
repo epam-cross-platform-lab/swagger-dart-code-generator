@@ -554,6 +554,10 @@ abstract class $className extends ChopperService''';
       return neededResponse.schema?.ref?.split('/')?.last;
     }
 
+    if (neededResponse.ref != null) {
+      return neededResponse.ref.split('/').last;
+    }
+
     if (neededResponse.schema?.originalRef != null) {
       return neededResponse.schema.originalRef;
     }
