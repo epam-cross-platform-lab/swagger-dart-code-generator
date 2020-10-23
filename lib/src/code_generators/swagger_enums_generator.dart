@@ -159,6 +159,8 @@ $enumMap
   }
 
   String getValidatedEnumFieldName(String name) {
+    name ??= 'null';
+
     var result = name
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
