@@ -66,7 +66,7 @@ $allMethodsContent
               swaggerRequest.type.toLowerCase() != requestTypeOptions)
           .forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
-            .where((element) => element.inParameter != null)
+            .where((element) => element?.inParameter != null)
             .toList();
 
         final hasFormData = swaggerRequest.parameters.any(
@@ -577,15 +577,15 @@ abstract class $className extends ChopperService''';
   SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
       SwaggerRequestParameter swaggerRequestParameter,
       List<SwaggerRequestParameter> definedParameters) {
-    if (swaggerRequestParameter.ref == null) {
+    if (swaggerRequestParameter.ref == null || definedParameters == null) {
       return swaggerRequestParameter;
     }
 
     final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
     final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) =>
-            element.name == parameterClassName);
+        (SwaggerRequestParameter element) => element.key == parameterClassName,
+        orElse: () => null);
 
     return neededParameter;
   }
