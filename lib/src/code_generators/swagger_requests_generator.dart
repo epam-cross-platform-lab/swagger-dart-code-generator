@@ -319,10 +319,8 @@ $allMethodsContent
               allEnumNames)
           .trim();
 
-      allEnumNames.map((e) => e.replaceAll('enums.', '')).forEach((element) {
-        parametersPart = parametersPart
-            .replaceAll('enums.', '')
-            .replaceFirst(element, 'String');
+      allEnumNames.forEach((element) {
+        parametersPart = parametersPart.replaceFirst('$element ', 'String ');
       });
 
       parametersPart = parametersPart
