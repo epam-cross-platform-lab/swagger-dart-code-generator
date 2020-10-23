@@ -1,3 +1,8 @@
+# 1.4.1
+
+* Fixed issue with enum names in requests
+* Fixed reusable Components - Parameters map
+
 # 1.4.0
 
 * Added support of int in request fields and models fields (Previosly was only integer)
