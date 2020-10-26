@@ -628,7 +628,7 @@ abstract class $className extends ChopperService''';
     final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
     final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) => element.key == parameterClassName,
+        (SwaggerRequestParameter element) => element.name == parameterClassName,
         orElse: () => null);
 
     return neededParameter;
