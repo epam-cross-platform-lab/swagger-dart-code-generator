@@ -275,7 +275,8 @@ void main() {
           ],
           '/test/items',
           'get',
-          <ResponseOverrideValueMap>[]);
+          <ResponseOverrideValueMap>[],
+          []);
 
       expect(result, equals('TestItem'));
     });
@@ -503,6 +504,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> testPathGet();'));
@@ -524,6 +526,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
@@ -545,6 +548,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
@@ -566,6 +570,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));

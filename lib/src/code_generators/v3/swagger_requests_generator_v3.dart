@@ -30,10 +30,18 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
         ? components['schemas'] as Map<String, dynamic>
         : null;
 
-    final allEnumNames =
-        SwaggerModelsGeneratorV3().getAllEnumNames(schemes, code);
+    final allEnumNames = SwaggerModelsGeneratorV3().getAllEnumNames(code);
 
-    return getFileContent(swaggerRoot, className, fileName, options,
-        schemes != null && schemes.keys.isNotEmpty, allEnumNames);
+    final dynamicResponses =
+        SwaggerRequestsGenerator.getAllDynamicResponses(code);
+
+    return getFileContent(
+        swaggerRoot,
+        className,
+        fileName,
+        options,
+        schemes != null && schemes.keys.isNotEmpty,
+        allEnumNames,
+        dynamicResponses);
   }
 }

@@ -8,10 +8,11 @@ abstract class SwaggerModelsGenerator {
   final List<String> _keyClasses = ['Response', 'Request'];
 
   String generate(String dartCode, String fileName, GeneratorOptions options);
+  String generateResponses(
+      String dartCode, String fileName, GeneratorOptions options);
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
   String getExtendsString(Map<String, dynamic> map);
-  List<String> getAllEnumNames(
-      Map<String, dynamic> definitions, String swaggerFile);
+  List<String> getAllEnumNames(String swaggerFile);
 
   String generateModelClassContent(
       String className,
@@ -24,16 +25,26 @@ abstract class SwaggerModelsGenerator {
       return '';
     }
 
+    if (map.containsKey('\$ref')) {
+      return '';
+    }
+
     return generateModelClassString(className, map, defaultValues,
         useDefaultNullForLists, allEnumNames, options);
   }
 
-  String generateBase(String dartCode, String fileName,
-      GeneratorOptions options, Map<String, dynamic> classes) {
-    final allEnumsNames = getAllEnumNames(classes, dartCode);
+  String generateBase(
+      String dartCode,
+      String fileName,
+      GeneratorOptions options,
+      Map<String, dynamic> classes,
+      bool generateFromJsonToJsonForRequests) {
+    final allEnumsNames = getAllEnumNames(dartCode);
 
-    final generatedEnumFromJsonToJson = genetateEnumFromJsonToJsonMethods(
-        allEnumsNames, options.enumsCaseSensitive);
+    final generatedEnumFromJsonToJson = generateFromJsonToJsonForRequests
+        ? genetateEnumFromJsonToJsonMethods(
+            allEnumsNames, options.enumsCaseSensitive)
+        : '';
 
     if (classes == null) {
       return '';

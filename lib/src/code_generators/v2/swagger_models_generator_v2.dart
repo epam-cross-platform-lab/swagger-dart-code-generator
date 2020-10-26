@@ -10,40 +10,48 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
     final definitions = map['definitions'] as Map<String, dynamic>;
-    return generateBase(dartCode, fileName, options, definitions);
+    return generateBase(dartCode, fileName, options, definitions, true);
   }
 
   @override
-  List<String> getAllEnumNames(
-      Map<String, dynamic> definitions, String swaggerFile) {
+  String generateResponses(
+      String dartCode, String fileName, GeneratorOptions options) {
+    return '';
+  }
+
+  @override
+  List<String> getAllEnumNames(String swaggerFile) {
     final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
 
-    if (definitions == null) {
-      return results;
-    }
+    final swagger = jsonDecode(swaggerFile);
 
-    definitions.forEach((className, map) {
-      if ((map as Map<String, dynamic>).containsKey('enum')) {
-        results.add(className.capitalize);
-        return;
-      }
+    final definitions = swagger['definitions'] as Map<String, dynamic>;
 
-      final properties = map['properties'] as Map<String, dynamic>;
-
-      if (properties == null) {
-        return;
-      }
-
-      properties.forEach((propertyName, propertyValue) {
-        var property = propertyValue as Map<String, dynamic>;
-
-        if (property.containsKey('enum') ||
-            (property['items'] != null && property['items']['enum'] != null)) {
-          results.add(SwaggerEnumsGeneratorV2()
-              .generateEnumName(className, propertyName));
+    if (definitions != null) {
+      definitions.forEach((className, map) {
+        if ((map as Map<String, dynamic>).containsKey('enum')) {
+          results.add(className.capitalize);
+          return;
         }
+
+        final properties = map['properties'] as Map<String, dynamic>;
+
+        if (properties == null) {
+          return;
+        }
+
+        properties.forEach((propertyName, propertyValue) {
+          var property = propertyValue as Map<String, dynamic>;
+
+          if (property.containsKey('enum') ||
+              (property['items'] != null &&
+                  property['items']['enum'] != null)) {
+            results.add(SwaggerEnumsGeneratorV2()
+                .generateEnumName(className, propertyName));
+          }
+        });
       });
-    });
+    }
 
     final resultsWithPrefix = results.map((element) {
       return 'enums.$element';

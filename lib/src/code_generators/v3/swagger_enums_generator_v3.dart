@@ -11,6 +11,10 @@ class SwaggerEnumsGeneratorV3 extends SwaggerEnumsGenerator {
         ? null
         : components['schemas'] as Map<String, dynamic>;
 
-    return generateFromMap(dartCode, fileName, schemas);
+    final responses = components == null
+        ? null
+        : components['responses'] as Map<String, dynamic>;
+
+    return generateFromMap(dartCode, fileName, schemas, responses);
   }
 }

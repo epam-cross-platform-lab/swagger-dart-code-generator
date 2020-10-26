@@ -56,6 +56,11 @@ class SwaggerCodeGenerator {
   String generateConverter(String dartCode, String fileName) =>
       _getSwaggerConverterGenerator(dartCode).generate(dartCode, fileName);
 
+  String generateResponses(
+          String dartCode, String fileName, GeneratorOptions options) =>
+      _getSwaggerModelsGenerator(dartCode)
+          .generateResponses(dartCode, fileName, options);
+
   String generateEnums(String dartCode, String fileName) =>
       _getSwaggerEnumsGenerator(dartCode).generate(dartCode, fileName);
 

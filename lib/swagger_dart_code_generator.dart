@@ -11,6 +11,7 @@ SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
 const String inputFileExtension = '.swagger';
 const String outputFileExtension = '.swagger.dart';
 const String outputEnumsFileExtension = '.enums.swagger.dart';
+const String outputResponsesFileExtension = '.responses.swagger.dart';
 const String indexFileName = 'client_index.dart';
 const String mappingFileName = 'client_mapping.dart';
 
@@ -26,6 +27,7 @@ Map<String, List<String>> generateExtensions(GeneratorOptions options) {
     result[element.path] = <String>[
       '${options.outputFolder}$name$outputFileExtension',
       '${options.outputFolder}$name$outputEnumsFileExtension',
+      '${options.outputFolder}$name$outputResponsesFileExtension',
     ];
   });
 
@@ -63,6 +65,9 @@ class SwaggerDartCodeGenerator implements Builder {
     final models = codeGenerator.generateModels(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
+    final responses = codeGenerator.generateResponses(
+        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+
     final enums = codeGenerator.generateEnums(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
@@ -91,7 +96,7 @@ class SwaggerDartCodeGenerator implements Builder {
     await buildStep.writeAsString(
         copyAssetId,
         _generateFileContent(
-            imports, requests, converter, models, customDecoder));
+            imports, requests, converter, models, responses, customDecoder));
 
     if (enums.isNotEmpty) {
       ///Write enums
@@ -111,7 +116,7 @@ class SwaggerDartCodeGenerator implements Builder {
   }
 
   String _generateFileContent(String imports, String requests, String converter,
-      String models, String customDecoder) {
+      String models, String responses, String customDecoder) {
     final result = """
 $imports
 
@@ -124,6 +129,8 @@ ${options.buildOnlyModels ? '' : requests}
 ${options.withConverter ? converter : ''}
 
 $models
+
+$responses
 
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 """;

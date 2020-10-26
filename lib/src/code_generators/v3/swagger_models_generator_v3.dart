@@ -15,39 +15,126 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         ? null
         : components['schemas'] as Map<String, dynamic>;
 
-    return generateBase(dartCode, fileName, options, schemas);
+    return generateBase(dartCode, fileName, options, schemas, true);
   }
 
   @override
-  List<String> getAllEnumNames(
-      Map<String, dynamic> schemas, String swaggerFile) {
-    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
+  String generateResponses(
+      String dartCode, String fileName, GeneratorOptions options) {
+    final dynamic map = jsonDecode(dartCode);
 
-    if (schemas == null) {
-      return results;
+    final components = map['components'] as Map<String, dynamic>;
+    final responses = components == null
+        ? null
+        : components['responses'] as Map<String, dynamic>;
+
+    if (responses == null) {
+      return '';
     }
 
-    schemas.forEach((className, map) {
-      if ((map as Map<String, dynamic>).containsKey('enum')) {
-        results.add(className.capitalize);
-        return;
-      }
-      final properties = map['properties'] as Map<String, dynamic>;
+    var result = <String, dynamic>{};
 
-      if (properties == null) {
-        return;
-      }
+    final allModelNames = components.containsKey('schemas')
+        ? (components['schemas'] as Map<String, dynamic>)
+            .keys
+            .map((e) => getValidatedClassName(e))
+        : <String>[];
 
-      properties.forEach((propertyName, propertyValue) {
-        var property = propertyValue as Map<String, dynamic>;
+    responses.keys.forEach((key) {
+      if (!allModelNames.contains(key)) {
+        final response = responses[key] as Map<String, dynamic>;
 
-        if (property.containsKey('enum') ||
-            (property['items'] != null && property['items']['enum'] != null)) {
-          results.add(SwaggerEnumsGeneratorV3()
-              .generateEnumName(className, propertyName));
+        final content = response == null
+            ? null
+            : response['content'] as Map<String, dynamic>;
+
+        final firstContent = content == null
+            ? null
+            : content.entries?.first?.value as Map<String, dynamic>;
+
+        final schema = firstContent == null ? null : firstContent['schema'];
+
+        if (schema != null) {
+          result.addAll({key: schema});
         }
-      });
+      }
     });
+
+    return generateBase(dartCode, fileName, options, result, false);
+  }
+
+  @override
+  List<String> getAllEnumNames(String swaggerFile) {
+    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
+
+    final swagger = jsonDecode(swaggerFile);
+
+    final components = swagger['components'] as Map<String, dynamic>;
+
+    final schemas = components == null
+        ? null
+        : components['schemas'] as Map<String, dynamic>;
+
+    final responses = components == null
+        ? null
+        : components['responses'] as Map<String, dynamic>;
+
+    if (schemas != null) {
+      schemas.forEach((className, map) {
+        if ((map as Map<String, dynamic>).containsKey('enum')) {
+          results.add(className.capitalize);
+          return;
+        }
+        final properties = map['properties'] as Map<String, dynamic>;
+
+        if (properties == null) {
+          return;
+        }
+
+        properties.forEach((propertyName, propertyValue) {
+          var property = propertyValue as Map<String, dynamic>;
+
+          if (property.containsKey('enum') ||
+              (property['items'] != null &&
+                  property['items']['enum'] != null)) {
+            results.add(SwaggerEnumsGeneratorV3()
+                .generateEnumName(className, propertyName));
+          }
+        });
+      });
+    }
+
+    if (responses != null) {
+      responses.forEach((className, map) {
+        final response = responses[className];
+        final content = response['content'] as Map<String, dynamic>;
+        final firstContent = content?.entries?.first?.value;
+        final schema = firstContent == null ? null : firstContent['schema'];
+        if (schema != null &&
+            (schema as Map<String, dynamic>).containsKey('enum')) {
+          results.add(className.capitalize);
+          return;
+        }
+        final properties = schema == null
+            ? null
+            : schema['properties'] as Map<String, dynamic>;
+
+        if (properties == null) {
+          return;
+        }
+
+        properties.forEach((propertyName, propertyValue) {
+          var property = propertyValue as Map<String, dynamic>;
+
+          if (property.containsKey('enum') ||
+              (property['items'] != null &&
+                  property['items']['enum'] != null)) {
+            results.add(SwaggerEnumsGeneratorV3()
+                .generateEnumName(className, propertyName));
+          }
+        });
+      });
+    }
 
     final resultsWithPrefix = results.map((element) {
       return 'enums.$element';

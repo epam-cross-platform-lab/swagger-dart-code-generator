@@ -14,13 +14,15 @@ abstract class SwaggerEnumsGenerator {
 
   String generate(String swagger, String fileName);
 
-  String generateFromMap(
-      String dartCode, String fileName, Map<String, dynamic> definitions) {
+  String generateFromMap(String dartCode, String fileName,
+      Map<String, dynamic> definitions, Map<String, dynamic> responses) {
     final enumsFromRequests =
         generateEnumsContentFromRequests(dartCode, fileName);
 
+    final enumsFromResponses = generateEnumsFromResponses(responses);
+
     if (definitions == null) {
-      return enumsFromRequests;
+      return '$enumsFromRequests$enumsFromResponses';
     }
 
     final enumsFromClasses = definitions.keys
@@ -37,7 +39,32 @@ abstract class SwaggerEnumsGenerator {
 
     return '''
 import 'package:json_annotation/json_annotation.dart';
-$enumsFromClasses\n$enumsFromRequests''';
+$enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
+  }
+
+  String generateEnumsFromResponses(Map<String, dynamic> responses) {
+    if (responses == null) {
+      return '';
+    }
+
+    final enumsFromClasses = responses.keys
+        .map((String className) {
+          final response = responses[className];
+          final content = response['content'] as Map<String, dynamic>;
+          final firstContent = content?.entries?.first?.value;
+          final schema = firstContent == null ? null : firstContent['schema'];
+
+          if (schema == null) {
+            return '';
+          }
+
+          return generateEnumsFromClasses(
+              className.pascalCase, schema as Map<String, dynamic>);
+        })
+        .where((element) => element.isNotEmpty)
+        .join('\n');
+
+    return enumsFromClasses;
   }
 
   static SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
