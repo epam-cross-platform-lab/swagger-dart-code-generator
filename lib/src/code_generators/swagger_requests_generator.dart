@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -40,24 +42,50 @@ $allMethodsContent
       String fileName,
       GeneratorOptions options,
       bool hasModels,
-      List<String> allEnumNames) {
+      List<String> allEnumNames,
+      List<String> dynamicResponses) {
     final classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
     final chopperClientContent = getChopperClientContent(
         className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
     final allMethodsContent = getAllMethodsContent(
-      swaggerRoot,
-      options,
-      allEnumNames,
-    );
+        swaggerRoot, options, allEnumNames, dynamicResponses);
     final result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
 
     return result;
   }
 
+  static List<String> getAllDynamicResponses(String dartCode) {
+    final dynamic map = jsonDecode(dartCode);
+
+    final components = map['components'] as Map<String, dynamic>;
+    final responses = components == null
+        ? null
+        : components['responses'] as Map<String, dynamic>;
+
+    if (responses == null) {
+      return [];
+    }
+
+    var results = <String>[];
+
+    responses.keys.forEach((key) {
+      final response = responses[key] as Map<String, dynamic>;
+
+      final content =
+          response == null ? null : response['content'] as Map<String, dynamic>;
+
+      if (content != null && content.entries.length > 1) {
+        results.add(key.capitalize);
+      }
+    });
+
+    return results;
+  }
+
   String getAllMethodsContent(SwaggerRoot swaggerRoot, GeneratorOptions options,
-      List<String> allEnumNames) {
+      List<String> allEnumNames, List<String> dynamicResponses) {
     final methods = StringBuffer();
 
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
@@ -66,7 +94,7 @@ $allMethodsContent
               swaggerRequest.type.toLowerCase() != requestTypeOptions)
           .forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
-            .where((element) => element.inParameter != null)
+            .where((element) => element?.inParameter != null)
             .toList();
 
         final hasFormData = swaggerRequest.parameters.any(
@@ -121,7 +149,8 @@ $allMethodsContent
             swaggerRequest.responses,
             swaggerPath.path,
             swaggerRequest.type,
-            options.responseOverrideValueMap);
+            options.responseOverrideValueMap,
+            dynamicResponses);
 
         final generatedMethod = getMethodContent(
             summary: swaggerRequest.summary,
@@ -319,10 +348,8 @@ $allMethodsContent
               allEnumNames)
           .trim();
 
-      allEnumNames.map((e) => e.replaceAll('enums.', '')).forEach((element) {
-        parametersPart = parametersPart
-            .replaceAll('enums.', '')
-            .replaceFirst(element, 'String');
+      allEnumNames.forEach((element) {
+        parametersPart = parametersPart.replaceFirst('$element ', 'String ');
       });
 
       parametersPart = parametersPart
@@ -525,8 +552,12 @@ abstract class $className extends ChopperService''';
         orElse: () => null);
   }
 
-  String getReturnTypeName(List<SwaggerResponse> responses, String url,
-      String methodName, List<ResponseOverrideValueMap> overridenRequests) {
+  String getReturnTypeName(
+      List<SwaggerResponse> responses,
+      String url,
+      String methodName,
+      List<ResponseOverrideValueMap> overridenRequests,
+      List<String> dynamicResponses) {
     if (overridenRequests
             ?.any((ResponseOverrideValueMap element) => element.url == url) ==
         true) {
@@ -556,6 +587,17 @@ abstract class $className extends ChopperService''';
       return neededResponse.schema?.ref?.split('/')?.last;
     }
 
+    if (neededResponse.ref != null) {
+      final ref = neededResponse.ref.split('/').last.capitalize;
+
+      if (neededResponse.ref.contains('/responses') &&
+          dynamicResponses.contains(ref)) {
+        return 'object';
+      } else {
+        return ref;
+      }
+    }
+
     if (neededResponse.schema?.originalRef != null) {
       return neededResponse.schema.originalRef;
     }
@@ -574,22 +616,6 @@ abstract class $className extends ChopperService''';
     }
 
     return null;
-  }
-
-  SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
-      SwaggerRequestParameter swaggerRequestParameter,
-      List<SwaggerRequestParameter> definedParameters) {
-    if (swaggerRequestParameter.ref == null) {
-      return swaggerRequestParameter;
-    }
-
-    final parameterClassName = swaggerRequestParameter.ref.split('/').last;
-
-    final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) =>
-            element.name == parameterClassName);
-
-    return neededParameter;
   }
 
   String getMapName(

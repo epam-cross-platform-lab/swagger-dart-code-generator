@@ -17,7 +17,8 @@ class SwaggerRequestParameter {
       this.collectionFormat,
       this.items,
       this.schema,
-      this.ref});
+      this.ref,
+      this.key});
 
   factory SwaggerRequestParameter.fromJson(Map<String, dynamic> json) =>
       _$SwaggerRequestParameterFromJson(json);
@@ -51,6 +52,9 @@ class SwaggerRequestParameter {
 
   @JsonKey(name: 'items')
   SwaggerRequestItems items;
+
+  @JsonKey(ignore: true)
+  String key;
 
   Map<String, dynamic> toJson() => _$SwaggerRequestParameterToJson(this);
 }

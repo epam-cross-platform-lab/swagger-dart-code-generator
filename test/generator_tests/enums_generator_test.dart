@@ -1,6 +1,7 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
 import '../requests_generator_definitions.dart';
@@ -25,6 +26,12 @@ void main() {
       final result =
           generator.generate(request_with_enum_in_parameter, 'test_file');
       expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
+    });
+
+    test('Should generate enums from responses', () {
+      final result =
+          generator.generate(schemas_with_enums_in_properties, 'test_file');
+      expect(result, contains('enum SpaResponse'));
     });
   });
   group('Converter generator tests', () {
@@ -107,6 +114,38 @@ void main() {
       final result = generator.generateEnumValuesContent(list);
 
       expect(result, contains(expectedResult));
+    });
+  });
+
+  group('getOriginalOrOverridenRequestParameter', () {
+    test('Should override parameter if needed', () {
+      final incoming =
+          SwaggerRequestParameter(ref: "#definitions/TestParameter");
+      final overridenParameters = [
+        SwaggerRequestParameter(
+            key: 'TestParameter', name: 'Overriden parameter')
+      ];
+
+      final result =
+          SwaggerEnumsGenerator.getOriginalOrOverridenRequestParameter(
+              incoming, overridenParameters);
+
+      expect(result.name, equals('Overriden parameter'));
+    });
+
+    test('Should NOT override parameter if needed', () {
+      final incoming = SwaggerRequestParameter(
+          ref: "#definitions/TestParameterWrong", name: 'Original parameter');
+      final overridenParameters = [
+        SwaggerRequestParameter(
+            key: 'TestParameter', name: 'Overriden parameter')
+      ];
+
+      final result =
+          SwaggerEnumsGenerator.getOriginalOrOverridenRequestParameter(
+              incoming, overridenParameters);
+
+      expect(result.name, equals('Original parameter'));
     });
   });
 }

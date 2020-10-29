@@ -111,6 +111,18 @@ void main() {
       expect(isContainHeader, equals(false));
     });
 
+    test('Should generate response from ref for Dynamic types', () {
+      final result = generator.generate(
+          request_with_ref_response,
+          className,
+          fileName,
+          GeneratorOptions(
+            ignoreHeaders: true,
+          ));
+
+      expect(result, contains('Response<Object>'));
+    });
+
     test('Should accept requestBody enum', () {
       final result = generator.generate(
           request_with_enum_request_body,
@@ -275,7 +287,8 @@ void main() {
           ],
           '/test/items',
           'get',
-          <ResponseOverrideValueMap>[]);
+          <ResponseOverrideValueMap>[],
+          []);
 
       expect(result, equals('TestItem'));
     });
@@ -503,6 +516,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> testPathGet();'));
@@ -524,6 +538,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
@@ -545,6 +560,7 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
@@ -566,25 +582,12 @@ void main() {
             ])
           ]),
           GeneratorOptions(),
+          [],
           []);
 
       expect(result, contains('Future<chopper.Response> _testPathGet'));
     });
   });
-
-  group('Tests for getNeededRequestParameter', () {
-    test('Should get needed parameter from defined parameters using ref', () {
-      final result = generator.getOriginalOrOverridenRequestParameter(
-          SwaggerRequestParameter(ref: '#definitions/TestItem'),
-          <SwaggerRequestParameter>[
-            SwaggerRequestParameter(name: 'TestItem'),
-            SwaggerRequestParameter(name: 'MyTestItem')
-          ]);
-
-      expect(result.name, equals('TestItem'));
-    });
-  });
-
   group('Tests for getMethodContent', () {
     test('Should', () {
       final result = generator.getMethodContent(

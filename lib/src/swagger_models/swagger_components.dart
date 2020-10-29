@@ -1,17 +1,25 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 
-part 'swagger_components.g2.dart';
-
-@JsonSerializable()
 class SwaggerComponents {
   SwaggerComponents({this.parameters});
 
-  factory SwaggerComponents.fromJson(Map<String, dynamic> json) =>
-      _$SwaggerComponentsFromJson(json);
-
-  @JsonKey(name: 'parameters')
   List<SwaggerRequestParameter> parameters;
 
-  Map<String, dynamic> toJson() => _$SwaggerComponentsToJson(this);
+  SwaggerComponents.fromJson(Map<String, dynamic> json)
+      : parameters = json['parameters'] == null
+            ? null
+            : mapParameters(json['parameters'] as Map<String, dynamic>);
+
+  static List<SwaggerRequestParameter> mapParameters(
+      Map<String, dynamic> parameters) {
+    final parametersList = parameters.keys.map((e) {
+      final parameter = SwaggerRequestParameter.fromJson(
+          parameters[e] as Map<String, dynamic>);
+      parameter.key = e;
+
+      return parameter;
+    }).toList();
+
+    return parametersList;
+  }
 }

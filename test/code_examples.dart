@@ -594,3 +594,173 @@ const String request_with_list_string_return_type = '''
   }
 }
 ''';
+
+const String schemas_responses_with_response = '''
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Some service",
+    "version": "1.0"
+  },
+  "components": {
+    "responses": {
+      "SpaResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": [
+                "showPageAvailable"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Some description"
+                },
+                "showPageAvailable": {
+                  "type": "boolean",
+                  "description": "Flag indicating showPage availability"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+''';
+
+const String schemas_responses_with_response_and_schemas = '''
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Some service",
+    "version": "1.0"
+  },
+  "components": {
+    "responses": {
+      "SpaResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": [
+                "showPageAvailable"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Some description"
+                },
+                "showPageAvailable": {
+                  "type": "boolean",
+                  "description": "Flag indicating showPage availability"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SpaSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Some description"
+          },
+          "showPageAvailable": {
+            "type": "boolean",
+            "description": "Flag indicating showPage availability"
+          }
+        }
+      }
+    }
+  }
+}
+''';
+
+const String enum_as_definition_v2 = '''
+{
+  "openapi": "2.0.1",
+  "definitions": {
+      "SpaResponse": {
+        "description": "Success",
+        "enum": [
+          "one",
+          "two"
+        ]
+    }
+  }
+}
+''';
+
+const String schemas_with_enums_in_properties = '''
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Some service",
+    "version": "1.0"
+  },
+  "components": {
+    "schemas": {
+      "SpaSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Some description"
+          },
+          "showPageAvailable": {
+            "type": "boolean",
+            "description": "Flag indicating showPage availability"
+          },
+          "successValues": {
+            "items": {
+              "enum": [
+                "one, two"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "SpaResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "enum": [
+                "one",
+                "two"
+              ]
+            }
+          }
+        }
+      },
+      "SpaEnumResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "failedValued": {
+                  "items": {
+                    "enum": [
+                      "one",
+                      "two"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+''';

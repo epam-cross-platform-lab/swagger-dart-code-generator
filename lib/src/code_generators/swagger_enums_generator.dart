@@ -3,6 +3,9 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
 abstract class SwaggerEnumsGenerator {
@@ -11,13 +14,15 @@ abstract class SwaggerEnumsGenerator {
 
   String generate(String swagger, String fileName);
 
-  String generateFromMap(
-      String dartCode, String fileName, Map<String, dynamic> definitions) {
+  String generateFromMap(String dartCode, String fileName,
+      Map<String, dynamic> definitions, Map<String, dynamic> responses) {
     final enumsFromRequests =
         generateEnumsContentFromRequests(dartCode, fileName);
 
+    final enumsFromResponses = generateEnumsFromResponses(responses);
+
     if (definitions == null) {
-      return enumsFromRequests;
+      return '$enumsFromRequests$enumsFromResponses';
     }
 
     final enumsFromClasses = definitions.keys
@@ -28,13 +33,56 @@ abstract class SwaggerEnumsGenerator {
         .where((element) => element.isNotEmpty)
         .join('\n');
 
-    if (enumsFromClasses.isEmpty && enumsFromRequests.isEmpty) {
+    if (enumsFromClasses.isEmpty &&
+        enumsFromRequests.isEmpty &&
+        enumsFromResponses.isEmpty) {
       return '';
     }
 
     return '''
 import 'package:json_annotation/json_annotation.dart';
-$enumsFromClasses\n$enumsFromRequests''';
+$enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
+  }
+
+  String generateEnumsFromResponses(Map<String, dynamic> responses) {
+    if (responses == null) {
+      return '';
+    }
+
+    final enumsFromClasses = responses.keys
+        .map((String className) {
+          final response = responses[className];
+          final content = response['content'] as Map<String, dynamic>;
+          final firstContent = content?.entries?.first?.value;
+          final schema = firstContent == null ? null : firstContent['schema'];
+
+          if (schema == null) {
+            return '';
+          }
+
+          return generateEnumsFromClasses(
+              className.pascalCase, schema as Map<String, dynamic>);
+        })
+        .where((element) => element.isNotEmpty)
+        .join('\n');
+
+    return enumsFromClasses;
+  }
+
+  static SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
+      SwaggerRequestParameter swaggerRequestParameter,
+      List<SwaggerRequestParameter> definedParameters) {
+    if (swaggerRequestParameter.ref == null || definedParameters == null) {
+      return swaggerRequestParameter;
+    }
+
+    final parameterClassName = swaggerRequestParameter.ref.split('/').last;
+
+    final neededParameter = definedParameters.firstWhere(
+        (SwaggerRequestParameter element) => element.key == parameterClassName,
+        orElse: () => swaggerRequestParameter);
+
+    return neededParameter;
   }
 
   String generateEnumsContentFromRequests(String swagger, String fileName) {
@@ -42,6 +90,17 @@ $enumsFromClasses\n$enumsFromRequests''';
     final result = StringBuffer();
     final map = jsonDecode(swagger) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
+
+    //Link defined parameters with requests
+    swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
+      swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
+        swaggerRequest.parameters = swaggerRequest.parameters
+            .map((SwaggerRequestParameter parameter) =>
+                getOriginalOrOverridenRequestParameter(
+                    parameter, swaggerRoot.components?.parameters))
+            .toList();
+      });
+    });
 
     for (var i = 0; i < swaggerRoot.paths.length; i++) {
       final swaggerPath = swaggerRoot.paths[i];
@@ -129,6 +188,8 @@ $enumMap
   }
 
   String getValidatedEnumFieldName(String name) {
+    name ??= 'null';
+
     var result = name
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
@@ -151,6 +212,17 @@ $enumMap
     final enumNames = <String>[];
     final map = jsonDecode(swagger) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
+
+    //Link defined parameters with requests
+    swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
+      swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
+        swaggerRequest.parameters = swaggerRequest.parameters
+            .map((SwaggerRequestParameter parameter) =>
+                getOriginalOrOverridenRequestParameter(
+                    parameter, swaggerRoot.components?.parameters))
+            .toList();
+      });
+    });
 
     for (var i = 0; i < swaggerRoot.paths.length; i++) {
       final swaggerPath = swaggerRoot.paths[i];
