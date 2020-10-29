@@ -64,6 +64,102 @@ const String request_with_header = '''
 }
 ''';
 
+const String request_with_ref_response = '''
+{
+  "components": {
+    "schemes": {
+      "MyCoolDefinition": {
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "format": "date"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        },
+        "title": "MyCoolDefinition"
+      }
+    },
+    "responses": {
+      "SpaSingleResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "enum": [
+                "one",
+                "two"
+              ]
+            }
+          }
+        }
+      },
+      "SpaResponse": {
+        "description": "Success",
+        "content": {
+          "application/json(1)": {
+            "schema": {
+              "enum": [
+                "one",
+                "two"
+              ]
+            }
+          },
+          "application/json(2)": {
+            "schema": {
+              "enum": [
+                "one",
+                "two"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/model/items": {
+      "get": {
+        "summary": "Some test request",
+        "operationId": "someOperationId",
+        "parameters": [
+          {
+            "name": "headerParameter",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "\$ref": "#/components/responses/SpaResponse"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "\$ref": "#/responses/SpaResponse"
+          }
+        }
+      }
+    }
+  }
+}
+''';
+
 const String request_with_array_string = '''
 {
   "paths": {

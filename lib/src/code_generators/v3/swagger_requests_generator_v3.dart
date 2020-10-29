@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -19,7 +20,7 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
       swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverridenRequestParameter(
+                SwaggerEnumsGenerator.getOriginalOrOverridenRequestParameter(
                     parameter, swaggerRoot.components?.parameters))
             .toList();
       });

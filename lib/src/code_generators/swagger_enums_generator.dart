@@ -33,7 +33,9 @@ abstract class SwaggerEnumsGenerator {
         .where((element) => element.isNotEmpty)
         .join('\n');
 
-    if (enumsFromClasses.isEmpty && enumsFromRequests.isEmpty) {
+    if (enumsFromClasses.isEmpty &&
+        enumsFromRequests.isEmpty &&
+        enumsFromResponses.isEmpty) {
       return '';
     }
 
@@ -78,7 +80,7 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
 
     final neededParameter = definedParameters.firstWhere(
         (SwaggerRequestParameter element) => element.key == parameterClassName,
-        orElse: () => null);
+        orElse: () => swaggerRequestParameter);
 
     return neededParameter;
   }

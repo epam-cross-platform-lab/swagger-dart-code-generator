@@ -618,22 +618,6 @@ abstract class $className extends ChopperService''';
     return null;
   }
 
-  SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
-      SwaggerRequestParameter swaggerRequestParameter,
-      List<SwaggerRequestParameter> definedParameters) {
-    if (swaggerRequestParameter.ref == null || definedParameters == null) {
-      return swaggerRequestParameter;
-    }
-
-    final parameterClassName = swaggerRequestParameter.ref.split('/').last;
-
-    final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) => element.name == parameterClassName,
-        orElse: () => null);
-
-    return neededParameter;
-  }
-
   String getMapName(
       String path, String requestType, String parameterName, String ref) {
     final enumName = ref?.split('/')?.last?.pascalCase ??
