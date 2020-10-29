@@ -7,10 +7,9 @@ import '../code_examples.dart';
 import '../requests_generator_definitions.dart';
 
 void main() {
+  final generator = SwaggerModelsGeneratorV3();
+  final generator2 = SwaggerModelsGeneratorV2();
   group('generate', () {
-    final generator = SwaggerModelsGeneratorV3();
-    final generator2 = SwaggerModelsGeneratorV2();
-
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
@@ -65,7 +64,6 @@ void main() {
   });
 
   group('generateDefaultValueFromMap', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return default value', () {
       const defaultValue = 'true';
       const typeName = 'bool';
@@ -88,7 +86,6 @@ void main() {
   });
 
   group('getParameterTypeName', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return validate parameter type name', () {
       const className = 'Animal';
       const parameterName = 'orderId';
@@ -204,7 +201,6 @@ void main() {
   });
 
   group('generatePropertyContentByDefault', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return property with JsonKey', () {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
@@ -245,7 +241,6 @@ void main() {
   });
 
   group('generatePropertyContentByRef', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return property with JsonKey', () {
       final propertyEntryMap = <String, dynamic>{'\$ref': '#/definitions/Pet'};
       const propertyName = 'shipDate';
@@ -281,7 +276,6 @@ void main() {
   });
 
   group('generateEnumPropertyContent', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return enum property with JsonKey with fromJson and toJson',
         () {
       // ignore: prefer_const_declarations
@@ -299,8 +293,6 @@ void main() {
   });
 
   group('generateModelClassContent', () {
-    final generator = SwaggerModelsGeneratorV3();
-    final generator2 = SwaggerModelsGeneratorV2();
     test('Should return model class content', () {
       const map = <String, dynamic>{};
       const className = 'Animals';
@@ -331,7 +323,6 @@ void main() {
   });
 
   group('generateConstructorPropertiesContent', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return empty', () {
       const expectedResult = '';
       final result = generator.generateConstructorPropertiesContent(null);
@@ -349,7 +340,6 @@ void main() {
   });
 
   group('generatePropertyContentBySchema', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return property content by schema', () {
       final map = <String, dynamic>{
         'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
@@ -387,7 +377,6 @@ void main() {
   });
 
   group('generatePropertiesContent', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return properties from ref', () {
       final map = <String, dynamic>{
         'Animals': <String, dynamic>{'\$ref': '#/definitions/Pet'}
@@ -451,7 +440,6 @@ void main() {
   });
 
   group('generateListPropertyContent', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return List<Object>', () {
       final map = <String, dynamic>{'items': null};
       const propertyName = 'dog';
@@ -498,7 +486,6 @@ void main() {
   });
 
   group('generatePropertyContentByType', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should return property content by schema', () {
       final map = <String, String>{'type': 'enum'};
       const propertyName = 'dog';
@@ -539,7 +526,6 @@ void main() {
   });
 
   group('getModelInheritedProperties', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should generate 2 levels of inheritance', () {
       final result = generator.generate(
           model_with_inheritance, 'MyClass', GeneratorOptions());
@@ -561,7 +547,6 @@ void main() {
   });
 
   group('Tests for getValidatedClassName', () {
-    final generator = SwaggerModelsGeneratorV3();
     test('Should', () {
       final result = generator.getValidatedClassName('Request');
 
@@ -570,8 +555,6 @@ void main() {
   });
 
   group('Tests for generateGeneralPropertyContent', () {
-    final generator = SwaggerModelsGeneratorV3();
-
     test('Should', () {
       final result = generator.generateGeneralPropertyContent(
           'name',
@@ -583,6 +566,60 @@ void main() {
           GeneratorOptions());
 
       expect(result, contains('final enums.ClassNameName name;'));
+    });
+  });
+
+  group('Tests for generateResponses', () {
+    test('Should generate empty string for V2', () {
+      final result = generator2.generateResponses(
+          schemas_responses_with_response, 'fileName', GeneratorOptions());
+
+      expect(result, equals(''));
+    });
+
+    test('Should generate class from responses V3', () {
+      final result = generator.generateResponses(
+          schemas_responses_with_response, 'fileName', GeneratorOptions());
+
+      expect(result, contains('class SpaResponse'));
+    });
+
+    test('Should generate class from responses V3 and Schemas', () {
+      final result = generator.generateResponses(
+          schemas_responses_with_response_and_schemas,
+          'fileName',
+          GeneratorOptions());
+
+      expect(result, contains('class SpaResponse'));
+    });
+  });
+
+  group('Tests for getAllEnumNames', () {
+    test('Should', () {
+      final result = generator2.getAllEnumNames(enum_as_definition_v2);
+
+      expect(result, contains('enums.SpaResponse'));
+    });
+
+    test('Should get enum name from schemas', () {
+      final result =
+          generator.getAllEnumNames(schemas_with_enums_in_properties);
+
+      expect(result, contains('enums.SpaSchemaSuccessValues'));
+    });
+
+    test('Should get enum name from responses', () {
+      final result =
+          generator.getAllEnumNames(schemas_with_enums_in_properties);
+
+      expect(result, contains('enums.SpaResponse'));
+    });
+
+    test('Should get enum name from responses with Enum items', () {
+      final result =
+          generator.getAllEnumNames(schemas_with_enums_in_properties);
+
+      expect(result, contains('enums.SpaEnumResponseFailedValued'));
     });
   });
 }
