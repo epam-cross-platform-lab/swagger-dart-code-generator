@@ -23,6 +23,30 @@ const String model_with_parameters = '''
                 },
                 "title": "ActiveOrderAndListSummary"
             }
+        },
+        "responses": {
+            "SpaResponse": {
+                "description": "Success",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "showPageAvailable"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "Crid show (VOD)"
+                                },
+                                "showPageAvailable": {
+                                    "type": "boolean",
+                                    "description": "Flag indicating showPage availability"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
