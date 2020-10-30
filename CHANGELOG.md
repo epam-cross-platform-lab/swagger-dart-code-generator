@@ -1,3 +1,7 @@
+# 1.4.2
+
+* Fixed issue with adding responses to JsonSerializableConverter mapping
+
 # 1.4.1
 
 * Fixed issue with enum names in requests
