@@ -1,3 +1,7 @@
+# 1.4.3
+
+* Fixed error with ref in allOf and bool values in enums
+
 # 1.4.2
 
 * Fixed issue with adding responses to JsonSerializableConverter mapping
