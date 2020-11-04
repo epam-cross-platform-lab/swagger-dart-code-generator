@@ -150,8 +150,15 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     }
 
     final allOf = modelMap['allOf'] as List<dynamic>;
+
     final newModelMap = allOf.firstWhere(
-        (m) => (m as Map<String, dynamic>).containsKey('properties'));
+      (m) => (m as Map<String, dynamic>).containsKey('properties'),
+      orElse: () => null,
+    );
+
+    if (newModelMap == null) {
+      return null;
+    }
 
     final currentProperties = newModelMap['properties'] as Map<String, dynamic>;
 

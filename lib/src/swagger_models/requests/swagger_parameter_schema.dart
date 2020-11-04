@@ -13,7 +13,7 @@ class SwaggerParameterSchema {
   @JsonKey(name: 'type')
   String type;
 
-  @JsonKey(name: 'enum')
+  @JsonKey(name: 'enum', fromJson: enumsFromJson)
   List<String> enumValues;
 
   @JsonKey(name: 'originalRef')
@@ -23,4 +23,7 @@ class SwaggerParameterSchema {
   String ref;
 
   Map<String, dynamic> toJson() => _$SwaggerParameterSchemaToJson(this);
+
+  static List<String> enumsFromJson(List list) =>
+      list?.map((e) => e.toString())?.toList();
 }
