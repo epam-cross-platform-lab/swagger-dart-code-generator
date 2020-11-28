@@ -51,24 +51,36 @@ $maps};
       bool buildOnlyModels, bool hasEnums) {
     final result = StringBuffer();
 
-    final chopperImport =
+    final chopperPartImport =
         buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
+    final chopperImports = buildOnlyModels
+        ? ''
+        : '''import 'package:chopper/chopper.dart';
+import 'package:chopper/chopper.dart' as chopper;''';
+
     final enumsImport = hasEnums
-        ? 'import \'$swaggerFileName.enums.swagger.dart\' as enums;\n'
+        ? "import '$swaggerFileName.enums.swagger.dart' as enums;"
         : '';
 
-    result.writeln("""import 'package:json_annotation/json_annotation.dart';
-import 'package:chopper/chopper.dart';
-import 'package:chopper/chopper.dart' as chopper;
-import 'package:flutter/widgets.dart';
+    result.writeln("""
+import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/widgets.dart';""");
 
-$enumsImport
-$chopperImport""");
+    if (chopperImports.isNotEmpty) {
+      result.write(chopperImports);
+    }
+    if (enumsImport.isNotEmpty) {
+      result.write(enumsImport);
+    }
 
+    result.write('\n\n');
+
+    if (chopperPartImport.isNotEmpty) {
+      result.write(chopperPartImport);
+    }
     if (hasModels) {
-      result.writeln("""
-part '$swaggerFileName.swagger.g.dart';""");
+      result.write("part '$swaggerFileName.swagger.g.dart';");
     }
 
     return result.toString();
