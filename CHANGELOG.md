@@ -1,3 +1,8 @@
+# 1.4.4
+
+* Fixed issue with build_only_models flag
+* **BREAKING**: fix misspelling with `overridden` word. If you use it, please add additional `d`.
+
 # 1.4.3
 
 * Fixed error with ref in allOf and bool values in enums
@@ -13,7 +18,7 @@
 
 # 1.4.0
 
-* Added support of int in request fields and models fields (Previosly was only integer)
+* Added support of int in request fields and models fields (Previously was only integer)
 
 # 1.3.9
 
@@ -73,14 +78,14 @@
 
 # 1.2.0
 
-* Enums becobe being generated in separate file
+* Enums become being generated in separate file
 * Fixed Issue ([#58](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/58))
 * Fixed some bugs
 
 ## 1.1.0
 
 * Fixed issues with Enums usage
-* Fixed issues witn enum naming name
+* Fixed issues with enum naming name
 * Fixed some bugs
 
 ## 1.0.10
@@ -93,7 +98,7 @@
 
 ## 1.0.8
 
-* Fixed not standart request parameter Type names
+* Fixed not standard request parameter Type names
 * Added output message in case of formatting error
 
 ## 1.0.7
@@ -108,7 +113,7 @@
 
 ## 1.0.5
 
-* Added usage of autoformatting code
+* Added usage of auto formatting code
 
 ## 1.0.4
 
@@ -140,7 +145,7 @@
 
 * Add more info to readme
 * Fix warnings
-* Add codecoverage(codecov)
+* Add code coverage(codecov)
 
 ## 1.0.0
 
