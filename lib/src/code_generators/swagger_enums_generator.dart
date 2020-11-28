@@ -69,7 +69,7 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
     return enumsFromClasses;
   }
 
-  static SwaggerRequestParameter getOriginalOrOverridenRequestParameter(
+  static SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(
       SwaggerRequestParameter swaggerRequestParameter,
       List<SwaggerRequestParameter> definedParameters) {
     if (swaggerRequestParameter.ref == null || definedParameters == null) {
@@ -96,7 +96,7 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
       swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverridenRequestParameter(
+                getOriginalOrOverriddenRequestParameter(
                     parameter, swaggerRoot.components?.parameters))
             .toList();
       });
@@ -218,7 +218,7 @@ $enumMap
       swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverridenRequestParameter(
+                getOriginalOrOverriddenRequestParameter(
                     parameter, swaggerRoot.components?.parameters))
             .toList();
       });

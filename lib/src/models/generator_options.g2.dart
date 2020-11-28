@@ -88,7 +88,7 @@ ResponseOverrideValueMap _$ResponseOverrideValueMapFromJson(
   return ResponseOverrideValueMap(
     url: json['url'] as String ?? '',
     method: json['method'] as String ?? '',
-    overridenValue: json['overriden_value'] as String ?? '',
+    overriddenValue: json['overridden_value'] as String ?? '',
   );
 }
 
@@ -97,5 +97,5 @@ Map<String, dynamic> _$ResponseOverrideValueMapToJson(
     <String, dynamic>{
       'url': instance.url,
       'method': instance.method,
-      'overriden_value': instance.overridenValue,
+      'overridden_value': instance.overriddenValue,
     };

@@ -1,12 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
-import 'package:flutter/widgets.dart';
-
 import 'example_swagger.enums.swagger.dart' as enums;
 
-part 'example_swagger.swagger.chopper2.dart';
-part 'example_swagger.swagger.g2.dart';
+part 'example_swagger.swagger.chopper.dart';
+part 'example_swagger.swagger.g.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
@@ -54,7 +53,7 @@ abstract class ExampleSwagger extends ChopperService {
   @Get(path: '/pet/findByStatus')
   Future<chopper.Response<List<Pet>>> _findPetsByStatus(
       {@Query('status') @required String status,
-      @Query('color') @required List<String> color});
+      @Query('color') @required List<PetFindByStatusGetColor> color});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
