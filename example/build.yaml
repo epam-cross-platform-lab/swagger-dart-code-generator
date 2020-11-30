@@ -1,9 +1,9 @@
 targets:
   $default:
     sources:
-    - lib/**
-    - swagger_examples/**
-    - $package$
+      - lib/**
+      - swagger_examples/**
+      - $package$
     builders:
       swagger_dart_code_generator:
         options:
@@ -16,13 +16,13 @@ targets:
           include_if_null:
             enabled: true
             value: false
-          input_folder: 'lib/'
-          output_folder: 'lib/generated_code/'
+          input_folder: "lib/"
+          output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:
             - type_name: int
-              default_value: '36'
+              default_value: "36"
           response_override_value_map:
-            - url: '/store/inventory'
+            - url: "/store/inventory"
               method: get
-              overriden_value: 'List<dynamic>'
+              overridden_value: "List<dynamic>"

@@ -556,16 +556,16 @@ abstract class $className extends ChopperService''';
       List<SwaggerResponse> responses,
       String url,
       String methodName,
-      List<ResponseOverrideValueMap> overridenRequests,
+      List<ResponseOverrideValueMap> overriddenRequests,
       List<String> dynamicResponses) {
-    if (overridenRequests
+    if (overriddenRequests
             ?.any((ResponseOverrideValueMap element) => element.url == url) ==
         true) {
-      final overridenResponse = overridenRequests
+      final overriddenResponse = overriddenRequests
           .firstWhere((ResponseOverrideValueMap element) => element.url == url);
 
-      if (overridenResponse.method == methodName) {
-        return overridenResponse.overridenValue;
+      if (overriddenResponse.method == methodName) {
+        return overriddenResponse.overriddenValue;
       }
     }
 

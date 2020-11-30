@@ -10,7 +10,7 @@
 [![codecov](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator)
 <a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator"><img src="https://img.shields.io/github/stars/epam-cross-platform-lab/swagger-dart-code-generator?style=social" alt="Discord"></a>
 
-SwaggerDartCodeGenerator is a code generator that looks for `*.swagger` files and builds `.swagger.dart` files, based on the schema. Codegenration based on Chopper and JsonAnnotation models and can be configured for your needs.
+SwaggerDartCodeGenerator is a code generator that looks for `*.swagger` files and builds `.swagger.dart` files, based on the schema. Code generation based on Chopper and JsonAnnotation models and can be configured for your needs.
 
 ---
 
@@ -75,11 +75,11 @@ targets:
 | `ignore_headers` | `false` | `false` | If option is true, headers will not be generated. |
 | `use_path_for_request_names` | `false` | `false` | If property == `false`, then method name == operationId ?? path+methodType. If `true` - only path+methodType. |
 | `enums_case_sensitive` | `true` | `false` | If value is false, 'enumValue' will be defined like Enum.enumValue even it's json key equals 'ENUMVALUE' |
-| `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwice - [] |
+| `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwise - [] |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
-| `include_if_null` | `null` | `false` | Enables or disables includeIfNull JsonAnnotation feature and sets value for it. See [IncludeIfNull](#includeifnull-for-model-generation). |
+| `include_if_null` | `null` | `false` | Enables or disables includeIfNull JsonAnnotation feature and sets value for it. See [IncludeIfNull](#includeIfNull-for-model-generation). |
 | `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
-| `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overriden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |
+| `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overridden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |
 | `input_folder` | `-` | `true` | Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers). |
 | `output_folder` | `-` | `true` | Path to output folder (for ex. lib/generated). |
 
@@ -96,7 +96,7 @@ targets:
 
 ### **IncludeIfNull for model generation**
 
-This option is used to add includeIfEmpty annotation for model fields. If option not enabled or empty - includeIfNull annotation will not added to fields. For mode details see [oficial documentation](https://pub.dev/documentation/json_annotation/latest/json_annotation/JsonSerializable/includeIfNull.html) Please see next example:
+This option is used to add includeIfEmpty annotation for model fields. If option not enabled or empty - includeIfNull annotation will not added to fields. For mode details see [official documentation](https://pub.dev/documentation/json_annotation/latest/json_annotation/JsonSerializable/includeIfNull.html) Please see next example:
 
 ```yaml
 targets:
@@ -127,7 +127,7 @@ targets:
             - type_name: int
               default_value: '36'
             - type_name: String
-              default_value: 'defaut'
+              default_value: 'default'
             - type_name: 'List<String>'
               default_value: '[]'
 ```
@@ -147,10 +147,10 @@ targets:
           response_override_value_map:
             - url: '/store/inventory'
               method: get
-              overriden_value: 'List<dynamic>'
+              overridden_value: 'List<dynamic>'
               - url: '/news/latest'
               method: put
-              overriden_value: 'MyPerfectType'
+              overridden_value: 'MyPerfectType'
 ```
 
 Check the [examples](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/tree/master/example) to see how to use it in details.

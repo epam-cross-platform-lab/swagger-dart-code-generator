@@ -99,7 +99,7 @@ class IncludeIfNull {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ResponseOverrideValueMap {
-  ResponseOverrideValueMap({this.url, this.method, this.overridenValue});
+  ResponseOverrideValueMap({this.url, this.method, this.overriddenValue});
 
   /// Build a default value map from a JSON map.
   factory ResponseOverrideValueMap.fromJson(Map<String, dynamic> json) =>
@@ -112,7 +112,7 @@ class ResponseOverrideValueMap {
   final String method;
 
   @JsonKey(defaultValue: '')
-  final String overridenValue;
+  final String overriddenValue;
 
   /// Convert this default value map instance to JSON.
   Map<String, dynamic> toJson() => _$ResponseOverrideValueMapToJson(this);

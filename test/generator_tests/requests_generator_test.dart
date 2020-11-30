@@ -232,7 +232,7 @@ void main() {
     });
 
     test(
-        'Should generate List<OverridenType> for return type parameters type array and items.type string',
+        'Should generate List<OverriddenType> for return type parameters type array and items.type string',
         () {
       final result = generator.generate(
           request_with_list_test_item_return_type,
@@ -244,10 +244,10 @@ void main() {
                 ResponseOverrideValueMap(
                     method: 'get',
                     url: '/model/items',
-                    overridenValue: 'List<OverridenType>')
+                    overriddenValue: 'List<OverriddenType>')
               ]));
 
-      expect(result, contains('Future<chopper.Response<List<OverridenType>>>'));
+      expect(result, contains('Future<chopper.Response<List<OverriddenType>>>'));
     });
 
     test('Should generate return type by originalRef', () {

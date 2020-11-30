@@ -117,33 +117,33 @@ void main() {
     });
   });
 
-  group('getOriginalOrOverridenRequestParameter', () {
+  group('getOriginalOrOverriddenRequestParameter', () {
     test('Should override parameter if needed', () {
       final incoming =
           SwaggerRequestParameter(ref: "#definitions/TestParameter");
-      final overridenParameters = [
+      final overriddenParameters = [
         SwaggerRequestParameter(
-            key: 'TestParameter', name: 'Overriden parameter')
+            key: 'TestParameter', name: 'Overridden parameter')
       ];
 
       final result =
-          SwaggerEnumsGenerator.getOriginalOrOverridenRequestParameter(
-              incoming, overridenParameters);
+          SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
+              incoming, overriddenParameters);
 
-      expect(result.name, equals('Overriden parameter'));
+      expect(result.name, equals('Overridden parameter'));
     });
 
     test('Should NOT override parameter if needed', () {
       final incoming = SwaggerRequestParameter(
           ref: "#definitions/TestParameterWrong", name: 'Original parameter');
-      final overridenParameters = [
+      final overriddenParameters = [
         SwaggerRequestParameter(
-            key: 'TestParameter', name: 'Overriden parameter')
+            key: 'TestParameter', name: 'Overridden parameter')
       ];
 
       final result =
-          SwaggerEnumsGenerator.getOriginalOrOverridenRequestParameter(
-              incoming, overridenParameters);
+          SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
+              incoming, overriddenParameters);
 
       expect(result.name, equals('Original parameter'));
     });
