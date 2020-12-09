@@ -564,6 +564,9 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
     final validatedClassName = getValidatedClassName(className);
 
+    final copyWithMethod =
+        generateCopyWithContent(generatedProperties, validatedClassName);
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $validatedClassName $extendsString{
@@ -574,8 +577,31 @@ $generatedProperties
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 }
+$copyWithMethod
 ''';
 
     return generatedClass;
+  }
+
+  String generateCopyWithContent(
+      String generatedProperties, String validatedClassName) {
+    final splittedProperties = generatedProperties
+        .split(';')
+        .where((element) => element.isNotEmpty)
+        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .toList();
+
+    if (splittedProperties.isEmpty) {
+      return '';
+    }
+
+    final spittedPropertiesJoined = splittedProperties.join(', ');
+
+    final splittedPropertiesNamesContent = splittedProperties
+        .map((e) => e.substring(e.indexOf(' ') + 1))
+        .map((e) => '$e: $e ?? this.$e')
+        .join(',\n');
+
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
   }
 }
