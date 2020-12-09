@@ -18,6 +18,24 @@ const $OrderStatusMap = {
   OrderStatus.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
 };
 
+enum OrderWithDashStatus {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('placed')
+  placed,
+  @JsonValue('approved')
+  approved,
+  @JsonValue('delivered')
+  delivered
+}
+
+const $OrderWithDashStatusMap = {
+  OrderWithDashStatus.placed: 'placed',
+  OrderWithDashStatus.approved: 'approved',
+  OrderWithDashStatus.delivered: 'delivered',
+  OrderWithDashStatus.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
+};
+
 enum PetStatus {
   @JsonValue('swaggerGeneratedUnknown')
   swaggerGeneratedUnknown,

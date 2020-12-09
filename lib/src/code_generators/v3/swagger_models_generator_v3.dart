@@ -37,7 +37,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final allModelNames = components.containsKey('schemas')
         ? (components['schemas'] as Map<String, dynamic>)
             .keys
-            .map((e) => getValidatedClassName(e))
+            .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
         : <String>[];
 
     responses.keys.forEach((key) {
@@ -82,7 +82,8 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     if (schemas != null) {
       schemas.forEach((className, map) {
         if ((map as Map<String, dynamic>).containsKey('enum')) {
-          results.add(className.capitalize);
+          results.add(SwaggerModelsGenerator.getValidatedClassName(
+              className.capitalize));
           return;
         }
         final properties = map['properties'] as Map<String, dynamic>;
@@ -97,8 +98,9 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
           if (property.containsKey('enum') ||
               (property['items'] != null &&
                   property['items']['enum'] != null)) {
-            results.add(SwaggerEnumsGeneratorV3()
-                .generateEnumName(className, propertyName));
+            results.add(SwaggerModelsGenerator.getValidatedClassName(
+                SwaggerEnumsGeneratorV3()
+                    .generateEnumName(className, propertyName)));
           }
         });
       });
@@ -174,7 +176,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
       final ref = refItem['\$ref'].toString().split('/').last;
 
-      final className = getValidatedClassName(ref);
+      final className = SwaggerModelsGenerator.getValidatedClassName(ref);
 
       return 'extends $className';
     }

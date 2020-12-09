@@ -1,3 +1,8 @@
+# 1.4.5
+
+* Fixed Issue ([#99](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/99))
+* **BREAKING**: Fixed enums naming. Enums with _ are replaced by PascalCase. For example, Response_type replaced by ResponseType.
+
 # 1.4.4
 
 * Fixed issue with build_only_models flag
