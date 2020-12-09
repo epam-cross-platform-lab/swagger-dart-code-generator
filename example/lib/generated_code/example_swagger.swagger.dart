@@ -4,8 +4,8 @@ import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'example_swagger.enums.swagger.dart' as enums;
 
-part 'example_swagger.swagger.chopper.dart';
-part 'example_swagger.swagger.g.dart';
+part 'example_swagger.swagger.chopper2.dart';
+part 'example_swagger.swagger.g2.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
