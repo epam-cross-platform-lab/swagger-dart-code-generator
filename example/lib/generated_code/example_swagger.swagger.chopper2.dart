@@ -94,11 +94,11 @@ class _$ExampleSwagger extends ExampleSwagger {
   }
 
   @override
-  Future<Response<Order>> placeOrder({Order body}) {
+  Future<Response<OrderWithDash>> placeOrder({Order body}) {
     final $url = '/store/order';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
-    return client.send<Order, Order>($request);
+    return client.send<OrderWithDash, OrderWithDash>($request);
   }
 
   @override

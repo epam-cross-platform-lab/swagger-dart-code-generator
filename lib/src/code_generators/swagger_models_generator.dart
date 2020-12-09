@@ -5,7 +5,7 @@ import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 abstract class SwaggerModelsGenerator {
-  final List<String> _keyClasses = ['Response', 'Request'];
+  static const List<String> _keyClasses = ['Response', 'Request'];
 
   String generate(String dartCode, String fileName, GeneratorOptions options);
   String generateResponses(
@@ -66,11 +66,28 @@ abstract class SwaggerModelsGenerator {
     return '$generatedClasses\n$generatedEnumFromJsonToJson';
   }
 
-  String getValidatedClassName(String className) {
-    final result = className.pascalCase;
+  static String getValidatedClassName(String className) {
+    if (className == null) {
+      return className;
+    }
+
+    final isEnum = className.startsWith('enums.');
+
+    if (isEnum) {
+      className = className.substring(6);
+    }
+
+    final result = className.pascalCase
+        .split('-')
+        .map((String str) => str.capitalize)
+        .join();
 
     if (_keyClasses.contains(result)) {
       return '$result\$';
+    }
+
+    if (isEnum) {
+      return 'enums.$result';
     }
 
     return result;
@@ -189,7 +206,9 @@ abstract class SwaggerModelsGenerator {
       String propertyName,
       List<String> allEnumNames,
       GeneratorOptions options) {
-    final typeName = propertyEntryMap['originalRef'] ?? 'dynamic';
+    final typeName =
+        getValidatedClassName(propertyEntryMap['originalRef'].toString()) ??
+            'dynamic';
 
     final unknownEnumValue =
         generateUnknownEnumValue(allEnumNames, typeName.toString(), false);
@@ -203,6 +222,8 @@ abstract class SwaggerModelsGenerator {
 
   String generateUnknownEnumValue(
       List<String> allEnumNames, String typeName, bool isList) {
+    typeName = getValidatedClassName(typeName);
+
     if (allEnumNames.contains(typeName)) {
       if (!isList) {
         final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
@@ -226,8 +247,8 @@ abstract class SwaggerModelsGenerator {
     final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
     final parameterName = propertySchema['\$ref'].toString().split('/').last;
 
-    var typeName = getParameterTypeName(
-        className, propertyName, propertyEntryMap, parameterName);
+    var typeName = getValidatedClassName(getParameterTypeName(
+        className, propertyName, propertyEntryMap, parameterName));
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -304,7 +325,7 @@ abstract class SwaggerModelsGenerator {
 
     String typeName;
     if (items != null) {
-      typeName = items['originalRef'] as String;
+      typeName = getValidatedClassName(items['originalRef'] as String);
 
       if (typeName == null) {
         final ref = items['\$ref'] as String;

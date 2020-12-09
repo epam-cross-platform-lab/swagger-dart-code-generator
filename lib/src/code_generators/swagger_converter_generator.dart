@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -26,8 +27,7 @@ ${_generateModelsMapping(dartCode)}};''';
           continue;
         }
 
-        final validatedName =
-            SwaggerModelsGeneratorV2().getValidatedClassName(key);
+        final validatedName = SwaggerModelsGenerator.getValidatedClassName(key);
 
         result.add('\t$validatedName: $validatedName.fromJsonFactory,');
       }

@@ -350,6 +350,7 @@ $allMethodsContent
 
       allEnumNames.forEach((element) {
         parametersPart = parametersPart.replaceFirst('$element ', 'String ');
+        parametersPart = parametersPart.replaceFirst('$element>', 'String>');
       });
 
       parametersPart = parametersPart
@@ -424,7 +425,8 @@ $allMethodsContent
       parameterType =
           'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.schema?.originalRef != null) {
-      parameterType = parameter.schema.originalRef;
+      parameterType = SwaggerModelsGenerator.getValidatedClassName(
+          parameter.schema.originalRef.toString());
     } else if (parameter.ref != null) {
       parameterType = parameter.ref.split('/').last;
       parameterType = parameterType.split('_').map((e) => e.capitalize).join();

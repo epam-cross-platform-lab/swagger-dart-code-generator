@@ -37,6 +37,37 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
   return val;
 }
 
+OrderWithDash _$OrderWithDashFromJson(Map<String, dynamic> json) {
+  return OrderWithDash(
+    id: json['id'] as int ?? 36,
+    petId: json['petId'] as int ?? 36,
+    quantity: json['quantity'] as int ?? 36,
+    shipDate: json['shipDate'] == null
+        ? null
+        : DateTime.parse(json['shipDate'] as String),
+    status: orderWithDashStatusFromJson(json['status'] as String),
+    complete: json['complete'] as bool,
+  );
+}
+
+Map<String, dynamic> _$OrderWithDashToJson(OrderWithDash instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('petId', instance.petId);
+  writeNotNull('quantity', instance.quantity);
+  writeNotNull('shipDate', instance.shipDate?.toIso8601String());
+  writeNotNull('status', orderWithDashStatusToJson(instance.status));
+  writeNotNull('complete', instance.complete);
+  return val;
+}
+
 Category _$CategoryFromJson(Map<String, dynamic> json) {
   return Category(
     id: json['id'] as int ?? 36,

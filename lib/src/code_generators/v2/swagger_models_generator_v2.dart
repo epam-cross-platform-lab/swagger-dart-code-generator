@@ -30,7 +30,8 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
     if (definitions != null) {
       definitions.forEach((className, map) {
         if ((map as Map<String, dynamic>).containsKey('enum')) {
-          results.add(className.capitalize);
+          results.add(SwaggerModelsGenerator.getValidatedClassName(
+              className.capitalize));
           return;
         }
 
@@ -46,8 +47,9 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
           if (property.containsKey('enum') ||
               (property['items'] != null &&
                   property['items']['enum'] != null)) {
-            results.add(SwaggerEnumsGeneratorV2()
-                .generateEnumName(className, propertyName));
+            results.add(SwaggerEnumsGeneratorV2().generateEnumName(
+                SwaggerModelsGenerator.getValidatedClassName(className),
+                propertyName));
           }
         });
       });

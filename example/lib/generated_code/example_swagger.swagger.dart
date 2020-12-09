@@ -53,7 +53,7 @@ abstract class ExampleSwagger extends ChopperService {
   @Get(path: '/pet/findByStatus')
   Future<chopper.Response<List<Pet>>> _findPetsByStatus(
       {@Query('status') @required String status,
-      @Query('color') @required List<PetFindByStatusGetColor> color});
+      @Query('color') @required List<String> color});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
@@ -108,7 +108,8 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param body order placed for purchasing the pet
 
   @Post(path: '/store/order')
-  Future<chopper.Response<Order>> placeOrder({@Body() @required Order body});
+  Future<chopper.Response<OrderWithDash>> placeOrder(
+      {@Body() @required Order body});
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
@@ -185,6 +186,7 @@ abstract class ExampleSwagger extends ChopperService {
 final Map<Type, Object Function(Map<String, dynamic>)>
     ExampleSwaggerJsonDecoderMappings = {
   Order: Order.fromJsonFactory,
+  OrderWithDash: OrderWithDash.fromJsonFactory,
   Category: Category.fromJsonFactory,
   User: User.fromJsonFactory,
   Tag: Tag.fromJsonFactory,
@@ -224,6 +226,41 @@ class Order {
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
   Map<String, dynamic> toJson() => _$OrderToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class OrderWithDash {
+  OrderWithDash({
+    this.id,
+    this.petId,
+    this.quantity,
+    this.shipDate,
+    this.status,
+    this.complete,
+  });
+
+  factory OrderWithDash.fromJson(Map<String, dynamic> json) =>
+      _$OrderWithDashFromJson(json);
+
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  final int id;
+  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
+  final int petId;
+  @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
+  final int quantity;
+  @JsonKey(name: 'shipDate', includeIfNull: false)
+  final DateTime shipDate;
+  @JsonKey(
+      name: 'status',
+      includeIfNull: false,
+      toJson: orderWithDashStatusToJson,
+      fromJson: orderWithDashStatusFromJson)
+  final enums.OrderWithDashStatus status;
+  @JsonKey(name: 'complete', includeIfNull: false)
+  final bool complete;
+  static const fromJsonFactory = _$OrderWithDashFromJson;
+  static const toJsonFactory = _$OrderWithDashToJson;
+  Map<String, dynamic> toJson() => _$OrderWithDashToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -465,6 +502,46 @@ List<enums.OrderStatus> orderStatusListFromJson(List orderStatus) {
   }
 
   return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
+}
+
+String orderWithDashStatusToJson(
+    enums.OrderWithDashStatus orderWithDashStatus) {
+  return enums.$OrderWithDashStatusMap[orderWithDashStatus];
+}
+
+enums.OrderWithDashStatus orderWithDashStatusFromJson(
+    String orderWithDashStatus) {
+  if (orderWithDashStatus == null) {
+    return enums.OrderWithDashStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$OrderWithDashStatusMap.entries
+          .firstWhere((element) => element.value == orderWithDashStatus,
+              orElse: () => null)
+          ?.key ??
+      enums.OrderWithDashStatus.swaggerGeneratedUnknown;
+}
+
+List<String> orderWithDashStatusListToJson(
+    List<enums.OrderWithDashStatus> orderWithDashStatus) {
+  if (orderWithDashStatus == null) {
+    return null;
+  }
+
+  return orderWithDashStatus
+      .map((e) => enums.$OrderWithDashStatusMap[e])
+      .toList();
+}
+
+List<enums.OrderWithDashStatus> orderWithDashStatusListFromJson(
+    List orderWithDashStatus) {
+  if (orderWithDashStatus == null) {
+    return [];
+  }
+
+  return orderWithDashStatus
+      .map((e) => orderWithDashStatusFromJson(e.toString()))
+      .toList();
 }
 
 String petStatusToJson(enums.PetStatus petStatus) {
