@@ -576,9 +576,8 @@ $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
-
-\t$copyWithMethod
 }
+$copyWithMethod
 ''';
 
     return generatedClass;
@@ -603,6 +602,6 @@ $generatedProperties
         .map((e) => '$e: $e ?? this.$e')
         .join(',\n');
 
-    return '$validatedClassName copyWith({$spittedPropertiesJoined}) => $validatedClassName($splittedPropertiesNamesContent);';
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
   }
 }
