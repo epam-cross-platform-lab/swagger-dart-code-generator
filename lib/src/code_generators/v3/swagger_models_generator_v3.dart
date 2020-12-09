@@ -98,9 +98,9 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
           if (property.containsKey('enum') ||
               (property['items'] != null &&
                   property['items']['enum'] != null)) {
-            results.add(SwaggerEnumsGeneratorV3().generateEnumName(
-                SwaggerModelsGenerator.getValidatedClassName(className),
-                propertyName));
+            results.add(SwaggerModelsGenerator.getValidatedClassName(
+                SwaggerEnumsGeneratorV3()
+                    .generateEnumName(className, propertyName)));
           }
         });
       });

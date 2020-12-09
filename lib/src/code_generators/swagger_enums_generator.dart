@@ -27,7 +27,9 @@ abstract class SwaggerEnumsGenerator {
 
     final enumsFromClasses = definitions.keys
         .map((String className) {
-          return generateEnumsFromClasses(className.pascalCase,
+          return generateEnumsFromClasses(
+              SwaggerModelsGenerator.getValidatedClassName(
+                  className.pascalCase),
               definitions[className] as Map<String, dynamic>);
         })
         .where((element) => element.isNotEmpty)
@@ -49,7 +51,7 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
       return '';
     }
 
-    final enumsFromClasses = responses.keys
+    final enumsFromResponses = responses.keys
         .map((String className) {
           final response = responses[className];
           final content = response['content'] as Map<String, dynamic>;
@@ -61,12 +63,14 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
           }
 
           return generateEnumsFromClasses(
-              className.pascalCase, schema as Map<String, dynamic>);
+              SwaggerModelsGenerator.getValidatedClassName(
+                  className.pascalCase),
+              schema as Map<String, dynamic>);
         })
         .where((element) => element.isNotEmpty)
         .join('\n');
 
-    return enumsFromClasses;
+    return enumsFromResponses;
   }
 
   static SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(
@@ -119,6 +123,8 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
               swaggerPath.path,
               swaggerRequest.type,
               swaggerRequestParameter.name);
+
+          name = SwaggerModelsGenerator.getValidatedClassName(name);
 
           if (enumNames.contains(name)) {
             continue;
@@ -284,6 +290,8 @@ $enumMap
 
   String generateEnumContentIfPossible(
       Map<String, dynamic> map, String enumName) {
+    enumName = SwaggerModelsGenerator.getValidatedClassName(enumName);
+
     if (map['enum'] != null) {
       final enumValues = map['enum'] as List<dynamic>;
       final stringValues = enumValues.map((e) => e.toString()).toList();

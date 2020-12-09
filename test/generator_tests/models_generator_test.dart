@@ -16,8 +16,7 @@ void main() {
       final result = generator.generate(
           model_with_parameters_v3, fileName, GeneratorOptions());
 
-      expect(
-          result, contains('final enums.TokensResponseToken_type tokenType'));
+      expect(result, contains('final enums.TokensResponseTokenType tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
@@ -548,7 +547,7 @@ void main() {
 
   group('Tests for getValidatedClassName', () {
     test('Should', () {
-      final result = generator.getValidatedClassName('Request');
+      final result = SwaggerModelsGenerator.getValidatedClassName('Request');
 
       expect(result, equals('Request\$'));
     });

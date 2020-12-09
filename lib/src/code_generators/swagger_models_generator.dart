@@ -119,7 +119,7 @@ abstract class SwaggerModelsGenerator {
             parameter['format'] == 'date') {
           return 'DateTime';
         } else if (parameter['enum'] != null) {
-          return 'enums.${SwaggerEnumsGeneratorV2().generateEnumName(className, parameterName)}';
+          return 'enums.${SwaggerModelsGenerator.getValidatedClassName(SwaggerEnumsGeneratorV2().generateEnumName(className, parameterName))}';
         }
         return 'String';
       case 'number':
@@ -165,7 +165,10 @@ abstract class SwaggerModelsGenerator {
 
     final correctedPath = generateFieldName(path);
 
-    return '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
+    final result =
+        '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
+
+    return SwaggerModelsGenerator.getValidatedClassName(result);
   }
 
   static String generateRequestName(String path, String requestType) {
@@ -299,7 +302,8 @@ abstract class SwaggerModelsGenerator {
 
   String generateEnumPropertyContent(String key, String className,
       List<String> allEnumNames, GeneratorOptions options) {
-    final enumName = SwaggerEnumsGeneratorV2().generateEnumName(className, key);
+    final enumName = SwaggerModelsGenerator.getValidatedClassName(
+        SwaggerEnumsGeneratorV2().generateEnumName(className, key));
 
     allEnumNames.add(enumName);
 
@@ -478,7 +482,9 @@ abstract class SwaggerModelsGenerator {
   }
 
   String generateEnumFromJsonToJson(String enumName, bool enumsCaseSensitive) {
-    final neededName = enumName.replaceFirst('enums.', '');
+    final neededName = SwaggerModelsGenerator.getValidatedClassName(
+        enumName.replaceFirst('enums.', ''));
+
     final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
 
     return '''
