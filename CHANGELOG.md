@@ -1,3 +1,7 @@
+# 1.4.7
+
+* Fixed Issue ([#102](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/102))
+
 # 1.4.6
 
 * Added generation of copyWith method for models
