@@ -7,7 +7,7 @@ class SwaggerAdditionsGenerator {
 
   String generateIndexes(Map<String, List<String>> buildExtensions) {
     final importsList = buildExtensions.keys.map((String key) {
-      final fileName = key.split('/').last;
+      final fileName = key.split('/').last.replaceAll('-', '_');
       final className = getClassNameFromFileName(key.split('/').last);
 
       return 'export \'$fileName.dart\' show $className;';
