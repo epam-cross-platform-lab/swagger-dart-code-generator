@@ -247,7 +247,8 @@ void main() {
                     overriddenValue: 'List<OverriddenType>')
               ]));
 
-      expect(result, contains('Future<chopper.Response<List<OverriddenType>>>'));
+      expect(
+          result, contains('Future<chopper.Response<List<OverriddenType>>>'));
     });
 
     test('Should generate return type by originalRef', () {
@@ -394,7 +395,9 @@ void main() {
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+          parameter: parameter,
+          ignoreHeaders: false,
+          useRequiredAttribute: true);
 
       expect(result,
           contains("@Header('testParameter') @required String testParameter"));
@@ -405,9 +408,24 @@ void main() {
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: true);
+          parameter: parameter,
+          ignoreHeaders: true,
+          useRequiredAttribute: true);
 
       expect(result, equals(''));
+    });
+
+    test('Should NOT generate header parameter if ignore headers == false', () {
+      final parameter = SwaggerRequestParameter(
+          inParameter: 'header', name: 'testParameter', isRequired: true);
+
+      final result = generator.getParameterContent(
+          parameter: parameter,
+          ignoreHeaders: false,
+          useRequiredAttribute: false);
+
+      expect(
+          result, equals('@Header(\'testParameter\')  String testParameter'));
     });
 
     test('Should generate custom parameter types -> schema', () {

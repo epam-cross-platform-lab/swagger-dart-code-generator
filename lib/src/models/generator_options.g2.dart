@@ -31,6 +31,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
         [],
     inputFolder: json['input_folder'] as String ?? '',
     outputFolder: json['output_folder'] as String ?? '',
+    useRequiredAttributeForHeaders:
+        json['use_required_attribute_for_headers'] as bool ?? true,
     enumsCaseSensitive: json['enums_case_sensitive'] as bool ?? false,
     usePathForRequestNames: json['use_path_for_request_names'] as bool ?? false,
     includeIfNull: json['include_if_null'] == null

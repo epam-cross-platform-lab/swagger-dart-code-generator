@@ -121,11 +121,13 @@ $allMethodsContent
         }
 
         final allParametersContent = getAllParametersContent(
-            listParameters: swaggerRequest.parameters,
-            ignoreHeaders: options.ignoreHeaders,
-            path: swaggerPath.path,
-            allEnumNames: allEnumNames,
-            requestType: swaggerRequest.type);
+          listParameters: swaggerRequest.parameters,
+          ignoreHeaders: options.ignoreHeaders,
+          path: swaggerPath.path,
+          allEnumNames: allEnumNames,
+          requestType: swaggerRequest.type,
+          useRequiredAttribute: options.useRequiredAttributeForHeaders,
+        );
 
         final hasEnums = swaggerRequest.parameters.any((parameter) =>
             parameter.items?.enumValues != null ||
@@ -472,7 +474,8 @@ $allMethodsContent
       bool ignoreHeaders,
       String requestType,
       String path,
-      List<String> allEnumNames}) {
+      List<String> allEnumNames,
+      bool useRequiredAttribute}) {
     final parameterType = validateParameterType(parameter.name);
     switch (parameter.inParameter) {
       case 'body':
@@ -482,9 +485,11 @@ $allMethodsContent
 
         return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType' : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
       case 'header':
+        final needRequiredAttribute =
+            parameter.isRequired && useRequiredAttribute;
         return ignoreHeaders
             ? ''
-            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${parameter.isRequired ? "@required" : ""} String ${validateParameterName(parameter.name)}";
+            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "@required" : ""} String ${validateParameterName(parameter.name)}";
       case 'cookie':
         return '';
       default:
@@ -534,14 +539,17 @@ abstract class $className extends ChopperService''';
       bool ignoreHeaders,
       String path,
       String requestType,
-      List<String> allEnumNames}) {
+      List<String> allEnumNames,
+      bool useRequiredAttribute}) {
     return listParameters
         .map((SwaggerRequestParameter parameter) => getParameterContent(
-            parameter: parameter,
-            ignoreHeaders: ignoreHeaders,
-            path: path,
-            allEnumNames: allEnumNames,
-            requestType: requestType))
+              parameter: parameter,
+              ignoreHeaders: ignoreHeaders,
+              path: path,
+              allEnumNames: allEnumNames,
+              requestType: requestType,
+              useRequiredAttribute: useRequiredAttribute,
+            ))
         .where((String element) => element.isNotEmpty)
         .join(', ');
   }
