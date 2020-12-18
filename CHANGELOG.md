@@ -1,3 +1,7 @@
+# 1.4.8
+
+* Implemented new flag to manage @required attribute of Headers
+
 # 1.4.7
 
 * Fixed Issue ([#102](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/102))
