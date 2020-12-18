@@ -1,6 +1,6 @@
 # 1.4.8
 
-* Implemented new flag to manage @required attribute of Headers
+* Introduced new flag to manage @required attribute of Headers
 
 # 1.4.7
 
