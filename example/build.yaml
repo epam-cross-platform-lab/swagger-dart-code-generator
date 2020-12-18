@@ -9,6 +9,7 @@ targets:
         options:
           with_base_url: true
           with_converter: true
+          use_required_attribute_for_headers: true
           ignore_headers: true
           use_default_null_for_lists: false
           build_only_models: false

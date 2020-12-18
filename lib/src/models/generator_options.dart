@@ -17,6 +17,7 @@ class GeneratorOptions {
       this.outputFolder,
       this.enumsCaseSensitive = true,
       this.usePathForRequestNames = false,
+      this.useRequiredAttributeForHeaders = true,
       this.includeIfNull});
 
   /// Build options from a JSON map.
@@ -28,6 +29,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
+
+  @JsonKey(defaultValue: true)
+  final bool useRequiredAttributeForHeaders;
 
   @JsonKey(defaultValue: false)
   final bool ignoreHeaders;
