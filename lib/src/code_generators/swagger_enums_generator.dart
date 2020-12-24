@@ -336,6 +336,11 @@ $enumMap
       return generateEnumContentIfPossible(map, className);
     }
 
+    if (map['items'] != null && map['items']['enum'] != null) {
+      return generateEnumContentIfPossible(
+          map['items'] as Map<String, dynamic>, className);
+    }
+
     final properties = map['properties'] as Map<String, dynamic>;
 
     if (properties == null) {
