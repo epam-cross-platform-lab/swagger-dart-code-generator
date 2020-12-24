@@ -27,7 +27,9 @@ abstract class SwaggerModelsGenerator {
       return '';
     }
 
-    if (map['type'] == 'array') {
+    if (map['type'] == 'array' &&
+        map['items'] != null &&
+        map['items']['type'] == 'enum') {
       return '';
     }
 
