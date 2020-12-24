@@ -6,6 +6,21 @@ const String model_with_parameters_v3 = '''
       "SomeEnumModel" : {
         "enum" : ["one", "two"]
       },
+      "trickPlayControl": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "disallowFastForward",
+          "disallowPause",
+          "disallowPlay",
+          "disallowRewind",
+          "disallowSkipForward",
+          "disallowSkipBackward",
+          "adRestrictionOnly"
+        ]
+      }
+    },
       "AuthorizationDetails": {
         "type": "object",
         "properties": {
