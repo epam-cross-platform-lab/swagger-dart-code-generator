@@ -1,3 +1,8 @@
+# 1.4.9
+
+* Fixed issue with Lists of enums in definitions
+* Fixed issue with defined parameters on v2
+
 # 1.4.8
 
 * Introduced new flag to manage @required attribute of Headers
