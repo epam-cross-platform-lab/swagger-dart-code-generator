@@ -123,14 +123,14 @@ void main() {
           SwaggerRequestParameter(ref: "#definitions/TestParameter");
       final overriddenParameters = [
         SwaggerRequestParameter(
-            key: 'TestParameter', name: 'Overridden parameter')
+            name: 'TestParameter', type: 'Overridden parameter')
       ];
 
       final result =
           SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
               incoming, overriddenParameters);
 
-      expect(result.name, equals('Overridden parameter'));
+      expect(result.type, equals('Overridden parameter'));
     });
 
     test('Should NOT override parameter if needed', () {
