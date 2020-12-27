@@ -79,3 +79,17 @@ const String model_with_parameters_v2 = '''
         }
 }
 ''';
+
+const String model_with_enunm_array_parameters_v2 = '''
+{
+    "definitions": {
+            "ActiveOrderAndListSummary": {
+                "type": "array",
+                "items" : {
+                  "type" : "enum",
+                  "items" :[ "one" ]
+                }
+            }
+        }
+}
+''';

@@ -516,6 +516,19 @@ const String model_with_inheritance_3_levels = '''
           }
         ]
       },
+      "ErrorModelWithBadAllof": {
+        "allOf": [
+          {
+            "\$ref": "#/components/schemas/NotExistingError"
+          },
+          {
+            "type": "object",
+            "required": [
+              "rootCause"
+            ]
+          }
+        ]
+      },
       "MostExtendedErrorModel": {
         "allOf": [
           {
