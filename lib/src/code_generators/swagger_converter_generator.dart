@@ -26,6 +26,12 @@ ${_generateModelsMapping(dartCode)}};''';
           continue;
         }
 
+        if (definitions[key]['type'] == 'array' &&
+            definitions[key]['items'] != null &&
+            definitions[key]['items']['type'] == 'enum') {
+          continue;
+        }
+
         final validatedName = SwaggerModelsGenerator.getValidatedClassName(key);
 
         result.add('\t$validatedName: $validatedName.fromJsonFactory,');

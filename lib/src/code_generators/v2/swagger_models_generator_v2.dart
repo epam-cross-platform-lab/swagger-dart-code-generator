@@ -29,7 +29,16 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
     if (definitions != null) {
       definitions.forEach((className, map) {
-        if ((map as Map<String, dynamic>).containsKey('enum')) {
+        final mapMap = map as Map<String, dynamic>;
+        if (mapMap.containsKey('enum')) {
+          results.add(SwaggerModelsGenerator.getValidatedClassName(
+              className.capitalize));
+          return;
+        }
+
+        if (mapMap['type'] == 'array' &&
+            mapMap['items'] != null &&
+            mapMap['items']['enum'] != null) {
           results.add(SwaggerModelsGenerator.getValidatedClassName(
               className.capitalize));
           return;
@@ -52,6 +61,35 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
                 propertyName));
           }
         });
+      });
+    }
+
+    final resultsWithPrefix = results.map((element) {
+      return 'enums.$element';
+    }).toList();
+
+    return resultsWithPrefix;
+  }
+
+  @override
+  List<String> getAllListEnumNames(String swaggerFile) {
+    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
+
+    final swagger = jsonDecode(swaggerFile);
+
+    final definitions = swagger['definitions'] as Map<String, dynamic>;
+
+    if (definitions != null) {
+      definitions.forEach((className, map) {
+        final mapMap = map as Map<String, dynamic>;
+
+        if (mapMap['type'] == 'array' &&
+            mapMap['items'] != null &&
+            mapMap['items']['enum'] != null) {
+          results.add(SwaggerModelsGenerator.getValidatedClassName(
+              className.capitalize));
+          return;
+        }
       });
     }
 

@@ -17,6 +17,18 @@ void main() {
               'ActiveOrderAndListSummary: ActiveOrderAndListSummary.fromJsonFactory'));
     });
 
+    test(
+        'Should not create fromJsonFactory for model with array enums parameters',
+        () {
+      final result =
+          generator.generate(model_with_enunm_array_parameters_v2, fileName);
+
+      final isContains = result.contains(
+          'ActiveOrderAndListSummary: ActiveOrderAndListSummary.fromJsonFactory');
+
+      expect(isContains, equals(false));
+    });
+
     test('Should create fromJsonFactory for model', () {
       final result = generator.generate(model_with_parameters_v2, fileName);
 

@@ -13,6 +13,7 @@ abstract class SwaggerModelsGenerator {
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
   String getExtendsString(Map<String, dynamic> map);
   List<String> getAllEnumNames(String swaggerFile);
+  List<String> getAllListEnumNames(String swaggerFile);
 
   String generateModelClassContent(
       String className,
@@ -20,8 +21,15 @@ abstract class SwaggerModelsGenerator {
       List<DefaultValueMap> defaultValues,
       bool useDefaultNullForLists,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     if (map['enum'] != null) {
+      return '';
+    }
+
+    if (map['type'] == 'array' &&
+        map['items'] != null &&
+        map['items']['type'] == 'enum') {
       return '';
     }
 
@@ -29,8 +37,15 @@ abstract class SwaggerModelsGenerator {
       return '';
     }
 
-    return generateModelClassString(className, map, defaultValues,
-        useDefaultNullForLists, allEnumNames, options);
+    return generateModelClassString(
+      className,
+      map,
+      defaultValues,
+      useDefaultNullForLists,
+      allEnumNames,
+      allEnumListNames,
+      options,
+    );
   }
 
   String generateBase(
@@ -40,6 +55,7 @@ abstract class SwaggerModelsGenerator {
       Map<String, dynamic> classes,
       bool generateFromJsonToJsonForRequests) {
     final allEnumsNames = getAllEnumNames(dartCode);
+    final allEnumListNames = getAllListEnumNames(dartCode);
 
     final generatedEnumFromJsonToJson = generateFromJsonToJsonForRequests
         ? genetateEnumFromJsonToJsonMethods(
@@ -55,15 +71,25 @@ abstract class SwaggerModelsGenerator {
         return '';
       }
       return generateModelClassContent(
-          className.pascalCase,
-          classes[className] as Map<String, dynamic>,
-          options.defaultValuesMap,
-          options.useDefaultNullForLists,
-          allEnumsNames,
-          options);
+        className.pascalCase,
+        classes[className] as Map<String, dynamic>,
+        options.defaultValuesMap,
+        options.useDefaultNullForLists,
+        allEnumsNames,
+        allEnumListNames,
+        options,
+      );
     }).join('\n');
 
-    return '$generatedClasses\n$generatedEnumFromJsonToJson';
+    var results = '$generatedClasses\n$generatedEnumFromJsonToJson';
+
+    final listEnums = getAllListEnumNames(dartCode);
+
+    listEnums.forEach((listEnum) {
+      results = results.replaceAll(' $listEnum ', ' List<$listEnum> ');
+    });
+
+    return results;
   }
 
   static String getValidatedClassName(String className) {
@@ -208,13 +234,14 @@ abstract class SwaggerModelsGenerator {
       Map<String, dynamic> propertyEntryMap,
       String propertyName,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     final typeName =
         getValidatedClassName(propertyEntryMap['originalRef'].toString()) ??
             'dynamic';
 
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName.toString(), false);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName.toString(), false);
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -223,9 +250,13 @@ abstract class SwaggerModelsGenerator {
     return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
-  String generateUnknownEnumValue(
-      List<String> allEnumNames, String typeName, bool isList) {
+  String generateUnknownEnumValue(List<String> allEnumNames,
+      List<String> allEnumListNames, String typeName, bool isList) {
     typeName = getValidatedClassName(typeName);
+
+    if (allEnumListNames.contains(typeName)) {
+      isList = true;
+    }
 
     if (allEnumNames.contains(typeName)) {
       if (!isList) {
@@ -246,6 +277,7 @@ abstract class SwaggerModelsGenerator {
       String propertyKey,
       String className,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
     final parameterName = propertySchema['\$ref'].toString().split('/').last;
@@ -262,8 +294,8 @@ abstract class SwaggerModelsGenerator {
       typeName = 'enums.$typeName';
     }
 
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, false);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, false);
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
@@ -277,6 +309,7 @@ abstract class SwaggerModelsGenerator {
       String propertyKey,
       String className,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
     var typeName = getParameterTypeName(
@@ -289,8 +322,8 @@ abstract class SwaggerModelsGenerator {
       typeName = 'enums.$typeName';
     }
 
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, false);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, false);
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -300,15 +333,20 @@ abstract class SwaggerModelsGenerator {
     return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
-  String generateEnumPropertyContent(String key, String className,
-      List<String> allEnumNames, GeneratorOptions options) {
+  String generateEnumPropertyContent(
+    String key,
+    String className,
+    List<String> allEnumNames,
+    List<String> allEnumListNames,
+    GeneratorOptions options,
+  ) {
     final enumName = SwaggerModelsGenerator.getValidatedClassName(
         SwaggerEnumsGeneratorV2().generateEnumName(className, key));
 
     allEnumNames.add(enumName);
 
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, enumName, false);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, enumName, false);
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -324,6 +362,7 @@ abstract class SwaggerModelsGenerator {
       Map<String, dynamic> propertyEntryMap,
       bool useDefaultNullForLists,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     final dynamic items = propertyEntryMap['items'];
 
@@ -344,8 +383,8 @@ abstract class SwaggerModelsGenerator {
     typeName ??= getParameterTypeName(
         className, propertyName, items as Map<String, dynamic>);
 
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, true);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, true);
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -368,6 +407,7 @@ abstract class SwaggerModelsGenerator {
       List<DefaultValueMap> defaultValues,
       Map<String, dynamic> val,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -382,8 +422,8 @@ abstract class SwaggerModelsGenerator {
       typeName = 'enums.$typeName';
     }
 
-    final unknownEnumValue =
-        generateUnknownEnumValue(allEnumNames, typeName, false);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, false);
 
     jsonKeyContent += unknownEnumValue;
 
@@ -408,19 +448,41 @@ abstract class SwaggerModelsGenerator {
       List<DefaultValueMap> defaultValues,
       bool useDefaultNullForLists,
       List<String> allEnumsNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     switch (propertyEntryMap['type'] as String) {
       case 'array':
-        return generateListPropertyContent(propertyName, propertyKey, className,
-            propertyEntryMap, useDefaultNullForLists, allEnumsNames, options);
+        return generateListPropertyContent(
+          propertyName,
+          propertyKey,
+          className,
+          propertyEntryMap,
+          useDefaultNullForLists,
+          allEnumsNames,
+          allEnumListNames,
+          options,
+        );
         break;
       case 'enum':
         return generateEnumPropertyContent(
-            propertyName, className, allEnumsNames, options);
+          propertyName,
+          className,
+          allEnumsNames,
+          allEnumListNames,
+          options,
+        );
         break;
       default:
-        return generateGeneralPropertyContent(propertyName, propertyKey,
-            className, defaultValues, propertyEntryMap, allEnumsNames, options);
+        return generateGeneralPropertyContent(
+          propertyName,
+          propertyKey,
+          className,
+          defaultValues,
+          propertyEntryMap,
+          allEnumsNames,
+          allEnumListNames,
+          options,
+        );
     }
   }
 
@@ -430,6 +492,7 @@ abstract class SwaggerModelsGenerator {
       List<DefaultValueMap> defaultValues,
       bool useDefaultNullForLists,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     if (propertiesMap == null) {
       return '';
@@ -458,16 +521,23 @@ abstract class SwaggerModelsGenerator {
             defaultValues,
             useDefaultNullForLists,
             allEnumNames,
+            allEnumListNames,
             options));
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(propertyEntryMap, propertyName,
-            propertyKey, className, allEnumNames, options));
+            propertyKey, className, allEnumNames, allEnumListNames, options));
       } else if (propertyEntryMap['schema'] != null) {
-        results.add(generatePropertyContentBySchema(propertyEntryMap,
-            propertyName, propertyKey, className, allEnumNames, options));
+        results.add(generatePropertyContentBySchema(
+            propertyEntryMap,
+            propertyName,
+            propertyKey,
+            className,
+            allEnumNames,
+            allEnumListNames,
+            options));
       } else {
-        results.add(generatePropertyContentByDefault(
-            propertyEntryMap, propertyName, allEnumNames, options));
+        results.add(generatePropertyContentByDefault(propertyEntryMap,
+            propertyName, allEnumNames, allEnumListNames, options));
       }
     }
 
@@ -551,6 +621,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       List<DefaultValueMap> defaultValues,
       bool useDefaultNullForLists,
       List<String> allEnumNames,
+      List<String> allEnumListNames,
       GeneratorOptions options) {
     final properties = getModelProperties(map);
 
@@ -559,8 +630,15 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final generatedConstructorProperties =
         generateConstructorPropertiesContent(properties);
 
-    final generatedProperties = generatePropertiesContent(properties, className,
-        defaultValues, useDefaultNullForLists, allEnumNames, options);
+    final generatedProperties = generatePropertiesContent(
+      properties,
+      className,
+      defaultValues,
+      useDefaultNullForLists,
+      allEnumNames,
+      allEnumListNames,
+      options,
+    );
 
     final validatedClassName = getValidatedClassName(className);
 

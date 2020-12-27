@@ -83,7 +83,7 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
     final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
     final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) => element.key == parameterClassName,
+        (SwaggerRequestParameter element) => element.name == parameterClassName,
         orElse: () => swaggerRequestParameter);
 
     return neededParameter;
@@ -334,6 +334,11 @@ $enumMap
   ) {
     if (map['enum'] != null) {
       return generateEnumContentIfPossible(map, className);
+    }
+
+    if (map['items'] != null && map['items']['enum'] != null) {
+      return generateEnumContentIfPossible(
+          map['items'] as Map<String, dynamic>, className);
     }
 
     final properties = map['properties'] as Map<String, dynamic>;
