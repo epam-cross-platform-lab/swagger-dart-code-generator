@@ -21,7 +21,7 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
                 SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
-                    parameter, swaggerRoot.parameters))
+                    parameter, swaggerRoot.components?.parameters))
             .toList();
       });
     });
