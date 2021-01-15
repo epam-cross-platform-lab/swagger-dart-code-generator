@@ -1,3 +1,7 @@
+# 1.5.0
+
+* Fixed issue with pre-defined parameters on V3 version
+
 # 1.4.9
 
 * Fixed issue with Lists of enums in definitions

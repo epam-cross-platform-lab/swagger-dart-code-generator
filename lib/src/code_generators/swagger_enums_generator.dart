@@ -83,7 +83,9 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
     final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
     final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) => element.name == parameterClassName,
+        (SwaggerRequestParameter element) =>
+            element.name == parameterClassName ||
+            element.key == parameterClassName,
         orElse: () => swaggerRequestParameter);
 
     return neededParameter;
