@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'example_swagger.enums.swagger.dart' as enums;
+export 'example_swagger.enums.swagger.dart';
 
 part 'example_swagger.swagger.chopper2.dart';
 part 'example_swagger.swagger.g2.dart';
@@ -226,21 +227,24 @@ class Order {
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
   Map<String, dynamic> toJson() => _$OrderToJson(this);
+}
 
+extension $OrderExtension on Order {
   Order copyWith(
-          {int id,
-          int petId,
-          int quantity,
-          DateTime shipDate,
-          enums.OrderStatus status,
-          bool complete}) =>
-      Order(
-          id: id ?? this.id,
-          petId: petId ?? this.petId,
-          quantity: quantity ?? this.quantity,
-          shipDate: shipDate ?? this.shipDate,
-          status: status ?? this.status,
-          complete: complete ?? this.complete);
+      {int id,
+      int petId,
+      int quantity,
+      DateTime shipDate,
+      enums.OrderStatus status,
+      bool complete}) {
+    return Order(
+        id: id ?? this.id,
+        petId: petId ?? this.petId,
+        quantity: quantity ?? this.quantity,
+        shipDate: shipDate ?? this.shipDate,
+        status: status ?? this.status,
+        complete: complete ?? this.complete);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -276,21 +280,24 @@ class OrderWithDash {
   static const fromJsonFactory = _$OrderWithDashFromJson;
   static const toJsonFactory = _$OrderWithDashToJson;
   Map<String, dynamic> toJson() => _$OrderWithDashToJson(this);
+}
 
+extension $OrderWithDashExtension on OrderWithDash {
   OrderWithDash copyWith(
-          {int id,
-          int petId,
-          int quantity,
-          DateTime shipDate,
-          enums.OrderWithDashStatus status,
-          bool complete}) =>
-      OrderWithDash(
-          id: id ?? this.id,
-          petId: petId ?? this.petId,
-          quantity: quantity ?? this.quantity,
-          shipDate: shipDate ?? this.shipDate,
-          status: status ?? this.status,
-          complete: complete ?? this.complete);
+      {int id,
+      int petId,
+      int quantity,
+      DateTime shipDate,
+      enums.OrderWithDashStatus status,
+      bool complete}) {
+    return OrderWithDash(
+        id: id ?? this.id,
+        petId: petId ?? this.petId,
+        quantity: quantity ?? this.quantity,
+        shipDate: shipDate ?? this.shipDate,
+        status: status ?? this.status,
+        complete: complete ?? this.complete);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -310,9 +317,12 @@ class Category {
   static const fromJsonFactory = _$CategoryFromJson;
   static const toJsonFactory = _$CategoryToJson;
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
+}
 
-  Category copyWith({int id, String name}) =>
-      Category(id: id ?? this.id, name: name ?? this.name);
+extension $CategoryExtension on Category {
+  Category copyWith({int id, String name}) {
+    return Category(id: id ?? this.id, name: name ?? this.name);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -349,25 +359,28 @@ class User {
   static const fromJsonFactory = _$UserFromJson;
   static const toJsonFactory = _$UserToJson;
   Map<String, dynamic> toJson() => _$UserToJson(this);
+}
 
+extension $UserExtension on User {
   User copyWith(
-          {int id,
-          String username,
-          String firstName,
-          String lastName,
-          String email,
-          String password,
-          String phone,
-          int userStatus}) =>
-      User(
-          id: id ?? this.id,
-          username: username ?? this.username,
-          firstName: firstName ?? this.firstName,
-          lastName: lastName ?? this.lastName,
-          email: email ?? this.email,
-          password: password ?? this.password,
-          phone: phone ?? this.phone,
-          userStatus: userStatus ?? this.userStatus);
+      {int id,
+      String username,
+      String firstName,
+      String lastName,
+      String email,
+      String password,
+      String phone,
+      int userStatus}) {
+    return User(
+        id: id ?? this.id,
+        username: username ?? this.username,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        phone: phone ?? this.phone,
+        userStatus: userStatus ?? this.userStatus);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -386,9 +399,12 @@ class Tag {
   static const fromJsonFactory = _$TagFromJson;
   static const toJsonFactory = _$TagToJson;
   Map<String, dynamic> toJson() => _$TagToJson(this);
+}
 
-  Tag copyWith({int id, String name}) =>
-      Tag(id: id ?? this.id, name: name ?? this.name);
+extension $TagExtension on Tag {
+  Tag copyWith({int id, String name}) {
+    return Tag(id: id ?? this.id, name: name ?? this.name);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -423,21 +439,24 @@ class Pet {
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
   Map<String, dynamic> toJson() => _$PetToJson(this);
+}
 
+extension $PetExtension on Pet {
   Pet copyWith(
-          {int id,
-          Category category,
-          String name,
-          List<String> photoUrls,
-          List<Tag> tags,
-          enums.PetStatus status}) =>
-      Pet(
-          id: id ?? this.id,
-          category: category ?? this.category,
-          name: name ?? this.name,
-          photoUrls: photoUrls ?? this.photoUrls,
-          tags: tags ?? this.tags,
-          status: status ?? this.status);
+      {int id,
+      Category category,
+      String name,
+      List<String> photoUrls,
+      List<Tag> tags,
+      enums.PetStatus status}) {
+    return Pet(
+        id: id ?? this.id,
+        category: category ?? this.category,
+        name: name ?? this.name,
+        photoUrls: photoUrls ?? this.photoUrls,
+        tags: tags ?? this.tags,
+        status: status ?? this.status);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -460,11 +479,15 @@ class ApiResponse {
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
   Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
+}
 
-  ApiResponse copyWith({int code, String type, String message}) => ApiResponse(
-      code: code ?? this.code,
-      type: type ?? this.type,
-      message: message ?? this.message);
+extension $ApiResponseExtension on ApiResponse {
+  ApiResponse copyWith({int code, String type, String message}) {
+    return ApiResponse(
+        code: code ?? this.code,
+        type: type ?? this.type,
+        message: message ?? this.message);
+  }
 }
 
 String petFindByStatusGetStatusToJson(

@@ -1,3 +1,7 @@
+# 1.5.1
+
+* Added 'export file_name.swagger.enums.dart' to main generated file
+
 # 1.5.0
 
 * Fixed issue with pre-defined parameters on V3 version

@@ -63,6 +63,9 @@ import 'package:chopper/chopper.dart' as chopper;''';
         ? "import '$swaggerFileName.enums.swagger.dart' as enums;"
         : '';
 
+    final enumsExport =
+        hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
+
     result.writeln("""
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/widgets.dart';""");
@@ -72,6 +75,10 @@ import 'package:flutter/widgets.dart';""");
     }
     if (enumsImport.isNotEmpty) {
       result.write(enumsImport);
+    }
+
+    if (enumsExport.isNotEmpty) {
+      result.write(enumsExport);
     }
 
     result.write('\n\n');
