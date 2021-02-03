@@ -22,13 +22,20 @@ ${_generateModelsMapping(dartCode)}};''';
       for (var i = 0; i < definitions.keys.length; i++) {
         final key = definitions.keys.elementAt(i).toString();
 
-        if (definitions[key]['enum'] != null) {
+        final definition = definitions[key];
+
+        if (definition['enum'] != null) {
           continue;
         }
 
-        if (definitions[key]['type'] == 'array' &&
-            definitions[key]['items'] != null &&
-            definitions[key]['items']['type'] == 'enum') {
+        if (SwaggerModelsGenerator.basicTypes
+            .contains(definition['type'].toString().toLowerCase())) {
+          continue;
+        }
+
+        if (definition['type'] == 'array' &&
+            definition['items'] != null &&
+            definition['items']['type'] == 'enum') {
           continue;
         }
 
