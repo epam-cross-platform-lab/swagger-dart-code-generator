@@ -1,3 +1,9 @@
+# 1.6.0
+
+* Added new build option use_inheritance to enable/disable inheritance support for v3
+* Fixed issue with basic types (String, int...) used as definitions//TODO
+* Add possibility to copy-paste fields from base classes when inheritance off//TODO
+
 # 1.5.1
 
 * Added 'export file_name.swagger.enums.dart' to main generated file

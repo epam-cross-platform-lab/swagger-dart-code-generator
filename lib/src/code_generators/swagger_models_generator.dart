@@ -625,7 +625,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       GeneratorOptions options) {
     final properties = getModelProperties(map);
 
-    var extendsString = getExtendsString(map);
+    var extendsString = options.useInheritance ? getExtendsString(map) : '';
 
     final generatedConstructorProperties =
         generateConstructorPropertiesContent(properties);

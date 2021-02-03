@@ -35,6 +35,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
         json['use_required_attribute_for_headers'] as bool ?? true,
     enumsCaseSensitive: json['enums_case_sensitive'] as bool ?? false,
     usePathForRequestNames: json['use_path_for_request_names'] as bool ?? false,
+    useInheritance: json['use_inheritance'] as bool ?? false,
     includeIfNull: json['include_if_null'] == null
         ? null
         : IncludeIfNull.fromJson((json['include_if_null'] as Map)?.map(
@@ -50,6 +51,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'ignore_headers': instance.ignoreHeaders,
       'enums_case_sensitive': instance.enumsCaseSensitive,
       'use_path_for_request_names': instance.usePathForRequestNames,
+      'use_inheritance': instance.useInheritance,
       'include_if_null': instance.includeIfNull,
       'input_folder': instance.inputFolder,
       'output_folder': instance.outputFolder,
