@@ -37,19 +37,26 @@ $allMethodsContent
   }
 
   String getFileContent(
-      SwaggerRoot swaggerRoot,
-      String className,
-      String fileName,
-      GeneratorOptions options,
-      bool hasModels,
-      List<String> allEnumNames,
-      List<String> dynamicResponses) {
+    SwaggerRoot swaggerRoot,
+    String className,
+    String fileName,
+    GeneratorOptions options,
+    bool hasModels,
+    List<String> allEnumNames,
+    List<String> dynamicResponses,
+    Map<String, String> basicTypesMap,
+  ) {
     final classContent =
         getRequestClassContent(swaggerRoot.host, className, fileName, options);
     final chopperClientContent = getChopperClientContent(
         className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
     final allMethodsContent = getAllMethodsContent(
-        swaggerRoot, options, allEnumNames, dynamicResponses);
+      swaggerRoot,
+      options,
+      allEnumNames,
+      dynamicResponses,
+      basicTypesMap,
+    );
     final result = generateFileContent(
         classContent, chopperClientContent, allMethodsContent);
 
@@ -84,8 +91,13 @@ $allMethodsContent
     return results;
   }
 
-  String getAllMethodsContent(SwaggerRoot swaggerRoot, GeneratorOptions options,
-      List<String> allEnumNames, List<String> dynamicResponses) {
+  String getAllMethodsContent(
+    SwaggerRoot swaggerRoot,
+    GeneratorOptions options,
+    List<String> allEnumNames,
+    List<String> dynamicResponses,
+    Map<String, String> basicTypesMap,
+  ) {
     final methods = StringBuffer();
 
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
@@ -152,7 +164,8 @@ $allMethodsContent
             swaggerPath.path,
             swaggerRequest.type,
             options.responseOverrideValueMap,
-            dynamicResponses);
+            dynamicResponses,
+            basicTypesMap);
 
         final generatedMethod = getMethodContent(
             summary: swaggerRequest.summary,
@@ -567,7 +580,8 @@ abstract class $className extends ChopperService''';
       String url,
       String methodName,
       List<ResponseOverrideValueMap> overriddenRequests,
-      List<String> dynamicResponses) {
+      List<String> dynamicResponses,
+      Map<String, String> basicTypesMap) {
     if (overriddenRequests
             ?.any((ResponseOverrideValueMap element) => element.url == url) ==
         true) {
@@ -615,7 +629,12 @@ abstract class $className extends ChopperService''';
     if (neededResponse.content?.isNotEmpty == true &&
         neededResponse.content != null) {
       if (neededResponse.content.first.ref != null) {
-        return neededResponse.content.first.ref.split('/').last;
+        final type = neededResponse.content.first.ref.split('/').last;
+
+        if (basicTypesMap.containsKey(type.toString())) {
+          return basicTypesMap[type];
+        }
+        return type;
       }
       if (neededResponse.content.first.responseType?.isNotEmpty == true) {
         return getParameterTypeName(

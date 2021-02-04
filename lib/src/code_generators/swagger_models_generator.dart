@@ -585,7 +585,7 @@ abstract class SwaggerModelsGenerator {
     return results.join('\n');
   }
 
-  Map<String, String> generateBasicTypesMapFromSchemas(
+  static Map<String, String> generateBasicTypesMapFromSchemas(
       Map<String, dynamic> schemas) {
     final result = <String, String>{};
     if (schemas == null) {
@@ -601,7 +601,7 @@ abstract class SwaggerModelsGenerator {
     return result;
   }
 
-  String _mapBasicTypeToDartType(String basicType) {
+  static String _mapBasicTypeToDartType(String basicType) {
     switch (basicType.toLowerCase()) {
       case 'string':
         return 'String';
