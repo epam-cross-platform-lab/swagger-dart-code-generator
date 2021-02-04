@@ -594,16 +594,22 @@ abstract class SwaggerModelsGenerator {
 
     schemas.forEach((key, value) {
       if (basicTypes.contains(value['type'].toString().toLowerCase()) &&
-          value['enum'] == null &&
-          value['format'] != 'date-time') {
-        result.addAll({key: _mapBasicTypeToDartType(value['type'].toString())});
+          value['enum'] == null) {
+        result.addAll({
+          key: _mapBasicTypeToDartType(
+              value['type'].toString(), value['format'].toString())
+        });
       }
     });
 
     return result;
   }
 
-  static String _mapBasicTypeToDartType(String basicType) {
+  static String _mapBasicTypeToDartType(String basicType, String format) {
+    if (basicType.toLowerCase() == 'string' &&
+        (format == 'date-time' || format == 'datetime')) {
+      return 'DateTime';
+    }
     switch (basicType.toLowerCase()) {
       case 'string':
         return 'String';

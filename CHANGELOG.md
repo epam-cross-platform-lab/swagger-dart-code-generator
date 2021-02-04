@@ -1,3 +1,7 @@
+# 1.6.2
+
+* Fixed issue with datetime in refs
+
 # 1.6.1
 
 * Fixed issue with enums in definitions and Date time
