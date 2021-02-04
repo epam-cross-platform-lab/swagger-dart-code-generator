@@ -1,3 +1,7 @@
+# 1.6.1
+
+* Fixed issue with enums in definitions and Date time
+
 # 1.6.0
 
 * Added new build option use_inheritance to enable/disable inheritance support for v3
