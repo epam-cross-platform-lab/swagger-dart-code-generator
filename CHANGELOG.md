@@ -1,3 +1,7 @@
+# 1.6.3
+
+* Fixed issue with allOf exception
+
 # 1.6.2
 
 * Fixed issue with datetime in refs
