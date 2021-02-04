@@ -70,7 +70,7 @@ targets:
 
 | Option |Default value | Is required | Description |
 | - | - | - | - |
-| `use_inheritance` | `false` | `false` | Enables and disables extends keyword. |
+| `use_inheritance` | `true` | `false` | Enables and disables extends keyword. |
 | `with_base_url` | `true` | `false` | If this option is false, generator will ignore base url in swagger file. |
 | `use_required_attribute_for_headers` | `true` | `false` | If this option is false, generator will not add @required attribute to headers. |
 | `with_converter` | `true` | `false` | If option is true, combination of all mappings will be generated. |
