@@ -342,8 +342,18 @@ $enumMap
       return generateEnumContentIfPossible(
           map['items'] as Map<String, dynamic>, className);
     }
+    Map<String, dynamic> properties;
 
-    final properties = map['properties'] as Map<String, dynamic>;
+    if (map.containsKey('allOf')) {
+      final allOf = map['allOf'] as List<dynamic>;
+      var propertiesContainer = allOf.firstWhere(
+              (e) => (e as Map<String, dynamic>).containsKey('properties'))
+          as Map<String, dynamic>;
+
+      properties = propertiesContainer['properties'] as Map<String, dynamic>;
+    } else {
+      properties = map['properties'] as Map<String, dynamic>;
+    }
 
     if (properties == null) {
       return '';

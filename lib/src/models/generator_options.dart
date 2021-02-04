@@ -18,6 +18,7 @@ class GeneratorOptions {
       this.enumsCaseSensitive = true,
       this.usePathForRequestNames = false,
       this.useRequiredAttributeForHeaders = true,
+      this.useInheritance = true,
       this.includeIfNull});
 
   /// Build options from a JSON map.
@@ -35,6 +36,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool ignoreHeaders;
+
+  @JsonKey(defaultValue: true)
+  final bool useInheritance;
 
   @JsonKey(defaultValue: false)
   final bool enumsCaseSensitive;

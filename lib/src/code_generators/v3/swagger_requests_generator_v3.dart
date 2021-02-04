@@ -8,6 +8,8 @@ import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
+import '../swagger_models_generator.dart';
+
 class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
   @override
   String generate(String code, String className, String fileName,
@@ -27,7 +29,7 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
     });
 
     final components = map['components'] as Map<String, dynamic>;
-    final schemes = components != null
+    final schemas = components != null
         ? components['schemas'] as Map<String, dynamic>
         : null;
 
@@ -41,8 +43,9 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
         className,
         fileName,
         options,
-        schemes != null && schemes.keys.isNotEmpty,
+        schemas != null && schemas.keys.isNotEmpty,
         allEnumNames,
-        dynamicResponses);
+        dynamicResponses,
+        SwaggerModelsGenerator.generateBasicTypesMapFromSchemas(schemas));
   }
 }
