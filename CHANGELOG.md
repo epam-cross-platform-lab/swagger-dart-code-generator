@@ -1,3 +1,7 @@
+# 1.6.4
+
+* Added support of default value per item for bool properties. For ex. "name": bool, "defalut": true => defaultValue: true
+
 # 1.6.3
 
 * Fixed issue with allOf exception
