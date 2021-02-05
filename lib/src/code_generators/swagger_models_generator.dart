@@ -457,7 +457,10 @@ abstract class SwaggerModelsGenerator {
 
     jsonKeyContent += unknownEnumValue;
 
-    if (defaultValues
+    if ((val['type'] == 'bool' || val['type'] == 'boolean') &&
+        val['default'] != null) {
+      jsonKeyContent += ', defaultValue: ${val['default']})\n';
+    } else if (defaultValues
         .any((DefaultValueMap element) => element.typeName == typeName)) {
       final defaultValue = defaultValues.firstWhere(
           (DefaultValueMap element) => element.typeName == typeName);
