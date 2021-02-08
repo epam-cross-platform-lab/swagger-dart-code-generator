@@ -1,3 +1,7 @@
+# 1.6.5+1
+
+* Hotfix of using meta
+
 # 1.6.5
 
 * Fix issue with requestBody parameter. It was not used, currently it adds 'body' parameter to requests
