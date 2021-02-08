@@ -135,7 +135,8 @@ $allMethodsContent
         }
 
         if (swaggerRequest.parameters
-            .every((parameter) => parameter.inParameter != 'body')) {
+                .every((parameter) => parameter.inParameter != 'body') &&
+            swaggerRequest.type.toLowerCase() == 'post') {
           swaggerRequest.parameters.add(SwaggerRequestParameter(
               inParameter: 'body', name: 'body', isRequired: true));
         }
