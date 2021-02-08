@@ -122,7 +122,9 @@ $allMethodsContent
           methodName = swaggerRequest.operationId;
         }
 
-        if (swaggerRequest.requestBody?.content != null) {
+        if (swaggerRequest.requestBody?.content != null &&
+            swaggerRequest.parameters
+                .every((parameter) => parameter.inParameter != 'body')) {
           final additionalParameter = swaggerRequest.requestBody?.content;
           swaggerRequest.parameters.add(SwaggerRequestParameter(
               inParameter: 'body',
@@ -455,6 +457,8 @@ $allMethodsContent
       }
     } else if (parameter.schema?.ref != null) {
       parameterType = parameter.schema.ref.split('/').last;
+    } else if (parameter.type?.toLowerCase() == 'object') {
+      parameterType = 'Object';
     } else {
       parameterType = defaultBodyParameter;
     }
