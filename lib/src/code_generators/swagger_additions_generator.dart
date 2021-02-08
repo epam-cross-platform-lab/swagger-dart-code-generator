@@ -68,7 +68,7 @@ import 'package:chopper/chopper.dart' as chopper;''';
 
     result.writeln("""
 import 'package:json_annotation/json_annotation.dart';
-import 'package:flutter/widgets.dart';""");
+import 'package:flutter/meta.dart';""");
 
     if (chopperImports.isNotEmpty) {
       result.write(chopperImports);
