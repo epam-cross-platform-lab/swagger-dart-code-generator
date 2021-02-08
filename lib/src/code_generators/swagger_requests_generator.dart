@@ -12,7 +12,7 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 abstract class SwaggerRequestsGenerator {
-  static const String defaultBodyParameter = 'String';
+  static const String defaultBodyParameter = 'Object';
   static const String successResponseCode = '200';
   static const String requestTypeOptions = 'options';
   List<String> successDescriptions = <String>[
@@ -132,6 +132,12 @@ $allMethodsContent
               isRequired: true,
               type: additionalParameter.type,
               ref: additionalParameter.ref ?? additionalParameter.items?.ref));
+        }
+
+        if (swaggerRequest.parameters
+            .every((parameter) => parameter.inParameter != 'body')) {
+          swaggerRequest.parameters.add(SwaggerRequestParameter(
+              inParameter: 'body', name: 'body', isRequired: true));
         }
 
         final allParametersContent = getAllParametersContent(
@@ -457,8 +463,6 @@ $allMethodsContent
       }
     } else if (parameter.schema?.ref != null) {
       parameterType = parameter.schema.ref.split('/').last;
-    } else if (parameter.type?.toLowerCase() == 'object') {
-      parameterType = 'Object';
     } else {
       parameterType = defaultBodyParameter;
     }
