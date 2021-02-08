@@ -1,3 +1,7 @@
+# 1.6.5+2
+
+* Hotfix for body generation
+
 # 1.6.5+1
 
 * Hotfix of using meta

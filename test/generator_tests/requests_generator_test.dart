@@ -388,7 +388,7 @@ void main() {
       final result = generator.getParameterContent(
           parameter: parameter, ignoreHeaders: false);
 
-      expect(result, contains('@Body() @required String testParameter'));
+      expect(result, contains('@Body() @required Object testParameter'));
     });
 
     test('Should generate header parameter if not ignore', () {
