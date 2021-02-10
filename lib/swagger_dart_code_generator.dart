@@ -92,7 +92,7 @@ class SwaggerDartCodeGenerator implements Builder {
     final customDecoder = codeGenerator.generateCustomJsonConverter(contents,
         getFileNameWithoutExtension(fileNameWithExtension), models.isNotEmpty);
 
-    final dateToJson = codeGenerator.generateDateToJson(contents, options);
+    final dateToJson = codeGenerator.generateDateToJson(contents);
 
     final copyAssetId = AssetId(buildStep.inputId.package,
         '${options.outputFolder}$fileNameWithoutExtension$outputFileExtension');

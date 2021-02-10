@@ -58,8 +58,8 @@ void main() {
   group('Test for generateDateToJson', () {
     final generator = SwaggerAdditionsGenerator();
     test('Should dateToJson with parameter', () {
-      const expectedResult = 'inal dateFormatter = DateFormat(\'d-M-yyyy\');';
-      final result = generator.generateDateToJson('d-M-yyyy');
+      const expectedResult = 'String _dateToJson(DateTime date)';
+      final result = generator.generateDateToJson();
 
       expect(result, contains(expectedResult));
     });

@@ -888,9 +888,13 @@
           "type": "integer",
           "format": "int32"
         },
-        "shipDate": {
+        "shipDateTime": {
           "type": "string",
           "format": "date-time"
+        },
+        "shipDate": {
+          "type": "string",
+          "format": "date"
         },
         "status": {
           "type": "string",

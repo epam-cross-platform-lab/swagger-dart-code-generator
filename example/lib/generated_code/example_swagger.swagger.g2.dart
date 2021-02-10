@@ -11,6 +11,9 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
     id: json['id'] as int ?? 36,
     petId: json['petId'] as int ?? 36,
     quantity: json['quantity'] as int ?? 36,
+    shipDateTime: json['shipDateTime'] == null
+        ? null
+        : DateTime.parse(json['shipDateTime'] as String),
     shipDate: json['shipDate'] == null
         ? null
         : DateTime.parse(json['shipDate'] as String),
@@ -31,7 +34,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
   writeNotNull('id', instance.id);
   writeNotNull('petId', instance.petId);
   writeNotNull('quantity', instance.quantity);
-  writeNotNull('shipDate', instance.shipDate?.toIso8601String());
+  writeNotNull('shipDateTime', instance.shipDateTime?.toIso8601String());
+  writeNotNull('shipDate', _dateToJson(instance.shipDate));
   writeNotNull('status', orderStatusToJson(instance.status));
   writeNotNull('complete', instance.complete);
   return val;
