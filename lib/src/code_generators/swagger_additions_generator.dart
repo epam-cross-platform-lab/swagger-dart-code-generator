@@ -101,7 +101,7 @@ String _dateToJson(DateTime date)
   final dateFormatter = DateFormat('$formatter');
   return dateFormatter.format(date);
 }
-    ''';
+''';
   }
 
   String generateCustomJsonConverter(String fileName, bool hasModels) {

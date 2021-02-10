@@ -54,4 +54,14 @@ void main() {
       expect(result, contains(expectedResult));
     });
   });
+
+  group('Test for generateDateToJson', () {
+    final generator = SwaggerAdditionsGenerator();
+    test('Should dateToJson with parameter', () {
+      const expectedResult = 'inal dateFormatter = DateFormat(\'d-M-yyyy\');';
+      final result = generator.generateDateToJson('d-M-yyyy');
+
+      expect(result, contains(expectedResult));
+    });
+  });
 }
