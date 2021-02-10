@@ -260,10 +260,12 @@ abstract class SwaggerModelsGenerator {
     final unknownEnumValue = generateUnknownEnumValue(
         allEnumNames, allEnumListNames, typeName.toString(), false);
 
+    final dateToJsonValue = generateToJsonForDate(propertyEntryMap);
+
     final includeIfNullString = generateIncludeIfNullString(options);
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyName'$includeIfNullString$unknownEnumValue)\n";
+        "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue$unknownEnumValue)\n";
     return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
@@ -283,6 +285,19 @@ abstract class SwaggerModelsGenerator {
         final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
         return ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson';
       }
+    }
+
+    return '';
+  }
+
+  String generateToJsonForDate(Map<String, dynamic> map) {
+    final type = map['type']?.toString()?.toLowerCase();
+    final format = map['format']?.toString()?.toLowerCase();
+
+    final isDate = type == 'string' && format == 'date';
+
+    if (isDate) {
+      return ', toJson: _dateToJson';
     }
 
     return '';
@@ -320,8 +335,10 @@ abstract class SwaggerModelsGenerator {
     final unknownEnumValue = generateUnknownEnumValue(
         allEnumNames, allEnumListNames, typeName, false);
 
+    final dateToJsonValue = generateToJsonForDate(propertyEntryMap);
+
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
 
     return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
@@ -455,7 +472,10 @@ abstract class SwaggerModelsGenerator {
     final unknownEnumValue = generateUnknownEnumValue(
         allEnumNames, allEnumListNames, typeName, false);
 
+    final dateToJsonValue = generateToJsonForDate(val);
+
     jsonKeyContent += unknownEnumValue;
+    jsonKeyContent += dateToJsonValue;
 
     if ((val['type'] == 'bool' || val['type'] == 'boolean') &&
         val['default'] != null) {

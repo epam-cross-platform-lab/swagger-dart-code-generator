@@ -36,6 +36,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     enumsCaseSensitive: json['enums_case_sensitive'] as bool ?? false,
     usePathForRequestNames: json['use_path_for_request_names'] as bool ?? false,
     useInheritance: json['use_inheritance'] as bool ?? true,
+    dateFormatter: json['date_formatter'] as String ?? 'd-M-yyyy',
     includeIfNull: json['include_if_null'] == null
         ? null
         : IncludeIfNull.fromJson((json['include_if_null'] as Map)?.map(
@@ -48,6 +49,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'with_base_url': instance.withBaseUrl,
       'with_converter': instance.withConverter,
+      'date_formatter': instance.dateFormatter,
       'ignore_headers': instance.ignoreHeaders,
       'enums_case_sensitive': instance.enumsCaseSensitive,
       'use_path_for_request_names': instance.usePathForRequestNames,

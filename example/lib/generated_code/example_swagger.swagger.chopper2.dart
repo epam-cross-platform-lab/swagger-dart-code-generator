@@ -58,9 +58,9 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<dynamic>> updatePetWithForm(
-      {int petId, String name, String status}) {
+      {int petId, String name, String status, Object body}) {
     final $url = '/pet/$petId';
-    final $body = <String, dynamic>{'name': name, 'status': status};
+    final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request,
         requestConverter: FormUrlEncodedConverter.requestFactory);
@@ -75,12 +75,9 @@ class _$ExampleSwagger extends ExampleSwagger {
 
   @override
   Future<Response<ApiResponse>> uploadFile(
-      {int petId, String additionalMetadata, List<int> file}) {
+      {int petId, String additionalMetadata, List<int> file, Object body}) {
     final $url = '/pet/$petId/uploadImage';
-    final $body = <String, dynamic>{
-      'additionalMetadata': additionalMetadata,
-      'file': file
-    };
+    final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<ApiResponse, ApiResponse>($request,
         requestConverter: FormUrlEncodedConverter.requestFactory);
@@ -124,7 +121,7 @@ class _$ExampleSwagger extends ExampleSwagger {
   }
 
   @override
-  Future<Response<dynamic>> createUsersWithArrayInput({String body}) {
+  Future<Response<dynamic>> createUsersWithArrayInput({Object body}) {
     final $url = '/user/createWithArray';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
@@ -132,7 +129,7 @@ class _$ExampleSwagger extends ExampleSwagger {
   }
 
   @override
-  Future<Response<dynamic>> createUsersWithListInput({String body}) {
+  Future<Response<dynamic>> createUsersWithListInput({Object body}) {
     final $url = '/user/createWithList';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);

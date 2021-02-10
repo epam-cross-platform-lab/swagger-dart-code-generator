@@ -15,7 +15,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['shipDate'] as String),
     status: orderStatusFromJson(json['status'] as String),
-    complete: json['complete'] as bool,
+    complete: json['complete'] as bool ?? false,
   );
 }
 
@@ -46,7 +46,7 @@ OrderWithDash _$OrderWithDashFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['shipDate'] as String),
     status: orderWithDashStatusFromJson(json['status'] as String),
-    complete: json['complete'] as bool,
+    complete: json['complete'] as bool ?? false,
   );
 }
 
