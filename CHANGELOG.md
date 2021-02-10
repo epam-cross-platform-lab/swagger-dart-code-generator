@@ -1,3 +1,7 @@
+# 1.6.6+2
+
+* Added null-check for _formatDate method
+
 # 1.6.6+1
 
 * Removed dependency to intl
