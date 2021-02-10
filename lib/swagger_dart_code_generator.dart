@@ -92,13 +92,15 @@ class SwaggerDartCodeGenerator implements Builder {
     final customDecoder = codeGenerator.generateCustomJsonConverter(contents,
         getFileNameWithoutExtension(fileNameWithExtension), models.isNotEmpty);
 
+    final dateToJson = codeGenerator.generateDateToJson(contents, options);
+
     final copyAssetId = AssetId(buildStep.inputId.package,
         '${options.outputFolder}$fileNameWithoutExtension$outputFileExtension');
 
     await buildStep.writeAsString(
         copyAssetId,
-        _generateFileContent(
-            imports, requests, converter, models, responses, customDecoder));
+        _generateFileContent(imports, requests, converter, models, responses,
+            customDecoder, dateToJson));
 
     if (enums.isNotEmpty) {
       ///Write enums
@@ -117,8 +119,14 @@ class SwaggerDartCodeGenerator implements Builder {
     }
   }
 
-  String _generateFileContent(String imports, String requests, String converter,
-      String models, String responses, String customDecoder) {
+  String _generateFileContent(
+      String imports,
+      String requests,
+      String converter,
+      String models,
+      String responses,
+      String customDecoder,
+      String dateToJson) {
     final result = """
 $imports
 
@@ -135,6 +143,8 @@ $models
 $responses
 
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
+
+$dateToJson
 """;
 
     return _tryFormatCode(result);

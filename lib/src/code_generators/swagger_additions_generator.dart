@@ -68,6 +68,7 @@ import 'package:chopper/chopper.dart' as chopper;''';
 
     result.writeln("""
 import 'package:json_annotation/json_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';""");
 
     if (chopperImports.isNotEmpty) {
@@ -91,6 +92,16 @@ import 'package:meta/meta.dart';""");
     }
 
     return result.toString();
+  }
+
+  String generateDateToJson(String formatter) {
+    return '''
+String _dateToJson(DateTime date)
+{
+  final dateFormatter = DateFormat('$formatter');
+  return dateFormatter.format(date);
+}
+    ''';
   }
 
   String generateCustomJsonConverter(String fileName, bool hasModels) {

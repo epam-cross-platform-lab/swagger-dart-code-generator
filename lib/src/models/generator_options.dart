@@ -19,6 +19,7 @@ class GeneratorOptions {
       this.usePathForRequestNames = false,
       this.useRequiredAttributeForHeaders = true,
       this.useInheritance = true,
+      this.dateFormatter,
       this.includeIfNull});
 
   /// Build options from a JSON map.
@@ -30,6 +31,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
+
+  @JsonKey(defaultValue: 'd-M-yyyy')
+  final String dateFormatter;
 
   @JsonKey(defaultValue: true)
   final bool useRequiredAttributeForHeaders;

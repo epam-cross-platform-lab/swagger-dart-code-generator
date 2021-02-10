@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'example_swagger.enums.swagger.dart' as enums;
@@ -74,13 +75,15 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param petId ID of pet that needs to be updated
   ///@param name Updated name of the pet
   ///@param status Updated status of the pet
+  ///@param body
 
   @Post(path: '/pet/{petId}')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
   Future<chopper.Response> updatePetWithForm(
       {@Path('petId') @required int petId,
       @Field('name') String name,
-      @Field('status') String status});
+      @Field('status') String status,
+      @Body() @required Object body});
 
   ///Deletes a pet
   ///@param petId Pet id to delete
@@ -92,13 +95,15 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param petId ID of pet to update
   ///@param additionalMetadata Additional data to pass to server
   ///@param file file to upload
+  ///@param body
 
   @Post(path: '/pet/{petId}/uploadImage')
   @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)
   Future<chopper.Response<ApiResponse>> uploadFile(
       {@Path('petId') @required int petId,
       @Field('additionalMetadata') String additionalMetadata,
-      @Field('file') List<int> file});
+      @Field('file') List<int> file,
+      @Body() @required Object body});
 
   ///Returns pet inventories by status
 
@@ -137,14 +142,14 @@ abstract class ExampleSwagger extends ChopperService {
 
   @Post(path: '/user/createWithArray')
   Future<chopper.Response> createUsersWithArrayInput(
-      {@Body() @required String body});
+      {@Body() @required Object body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
 
   @Post(path: '/user/createWithList')
   Future<chopper.Response> createUsersWithListInput(
-      {@Body() @required String body});
+      {@Body() @required Object body});
 
   ///Logs user into the system
   ///@param username The user name for login
@@ -222,7 +227,7 @@ class Order {
       toJson: orderStatusToJson,
       fromJson: orderStatusFromJson)
   final enums.OrderStatus status;
-  @JsonKey(name: 'complete', includeIfNull: false)
+  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
   final bool complete;
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
@@ -275,7 +280,7 @@ class OrderWithDash {
       toJson: orderWithDashStatusToJson,
       fromJson: orderWithDashStatusFromJson)
   final enums.OrderWithDashStatus status;
-  @JsonKey(name: 'complete', includeIfNull: false)
+  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
   final bool complete;
   static const fromJsonFactory = _$OrderWithDashFromJson;
   static const toJsonFactory = _$OrderWithDashToJson;
@@ -727,3 +732,8 @@ class JsonSerializableConverter extends chopper.JsonConverter {
 }
 
 final jsonDecoder = CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings);
+
+String _dateToJson(DateTime date) {
+  final dateFormatter = DateFormat('d-M-yyyy');
+  return dateFormatter.format(date);
+}

@@ -1,3 +1,8 @@
+# 1.6.6
+
+* Added generation of custom Date to json mapping.
+* Added build parameter with Date format date_formatter (String)
+
 # 1.6.5+2
 
 * Hotfix for body generation
