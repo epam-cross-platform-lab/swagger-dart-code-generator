@@ -1,3 +1,9 @@
+# 1.6.6+1
+
+* Removed dependency to intl
+* Removed support of template of date
+* Setted Date parsing to yyyy-MM-dd
+
 # 1.6.6
 
 * Added generation of custom Date to json mapping.

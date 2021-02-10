@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
@@ -206,6 +205,7 @@ class Order {
     this.id,
     this.petId,
     this.quantity,
+    this.shipDateTime,
     this.shipDate,
     this.status,
     this.complete,
@@ -219,7 +219,9 @@ class Order {
   final int petId;
   @JsonKey(name: 'quantity', includeIfNull: false, defaultValue: 36)
   final int quantity;
-  @JsonKey(name: 'shipDate', includeIfNull: false)
+  @JsonKey(name: 'shipDateTime', includeIfNull: false)
+  final DateTime shipDateTime;
+  @JsonKey(name: 'shipDate', includeIfNull: false, toJson: _dateToJson)
   final DateTime shipDate;
   @JsonKey(
       name: 'status',
@@ -239,6 +241,7 @@ extension $OrderExtension on Order {
       {int id,
       int petId,
       int quantity,
+      DateTime shipDateTime,
       DateTime shipDate,
       enums.OrderStatus status,
       bool complete}) {
@@ -246,6 +249,7 @@ extension $OrderExtension on Order {
         id: id ?? this.id,
         petId: petId ?? this.petId,
         quantity: quantity ?? this.quantity,
+        shipDateTime: shipDateTime ?? this.shipDateTime,
         shipDate: shipDate ?? this.shipDate,
         status: status ?? this.status,
         complete: complete ?? this.complete);
@@ -734,6 +738,9 @@ class JsonSerializableConverter extends chopper.JsonConverter {
 final jsonDecoder = CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings);
 
 String _dateToJson(DateTime date) {
-  final dateFormatter = DateFormat('d-M-yyyy');
-  return dateFormatter.format(date);
+  final year = date.year.toString();
+  final month = date.month < 10 ? '0${date.month}' : date.month.toString();
+  final day = date.day < 10 ? '0${date.day}' : date.day.toString();
+
+  return '$year-$month-$day';
 }

@@ -3,7 +3,7 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
 
 class SwaggerAdditionsGenerator {
-  static const String mappingVariableName = 'generatedMapping';
+  static const mappingVariableName = 'generatedMapping';
 
   String generateIndexes(Map<String, List<String>> buildExtensions) {
     final importsList = buildExtensions.keys.map((String key) {
@@ -68,7 +68,6 @@ import 'package:chopper/chopper.dart' as chopper;''';
 
     result.writeln("""
 import 'package:json_annotation/json_annotation.dart';
-import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';""");
 
     if (chopperImports.isNotEmpty) {
@@ -94,13 +93,15 @@ import 'package:meta/meta.dart';""");
     return result.toString();
   }
 
-  String generateDateToJson(String formatter) {
+  String generateDateToJson() {
     return '''
-String _dateToJson(DateTime date)
-{
-  final dateFormatter = DateFormat('$formatter');
-  return dateFormatter.format(date);
-}
+String _dateToJson(DateTime date) {
+  final year = date.year.toString();
+  final month = date.month < 10 ? '0\${date.month}' : date.month.toString();
+  final day = date.day < 10 ? '0\${date.day}' : date.day.toString();
+
+  return '\$year-\$month-\$day';
+  }
 ''';
   }
 
