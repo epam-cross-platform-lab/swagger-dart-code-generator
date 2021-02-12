@@ -353,7 +353,6 @@ abstract class SwaggerModelsGenerator {
       GeneratorOptions options,
       Map<String, String> basicTypesMap) {
     final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
-
     String typeName;
     if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName];
@@ -410,7 +409,8 @@ abstract class SwaggerModelsGenerator {
       bool useDefaultNullForLists,
       List<String> allEnumNames,
       List<String> allEnumListNames,
-      GeneratorOptions options) {
+      GeneratorOptions options,
+      Map<String, String> basicTypesMap) {
     final dynamic items = propertyEntryMap['items'];
 
     String typeName;
@@ -419,7 +419,13 @@ abstract class SwaggerModelsGenerator {
 
       if (typeName == null) {
         final ref = items['\$ref'] as String;
-        typeName = ref?.split('/')?.last?.pascalCase;
+        typeName = ref?.split('/')?.last;
+
+        if (basicTypesMap.containsKey(typeName)) {
+          typeName = basicTypesMap[typeName];
+        } else {
+          typeName = typeName?.pascalCase;
+        }
       }
 
       if (allEnumNames.contains('enums.$typeName')) {
@@ -502,7 +508,8 @@ abstract class SwaggerModelsGenerator {
       bool useDefaultNullForLists,
       List<String> allEnumsNames,
       List<String> allEnumListNames,
-      GeneratorOptions options) {
+      GeneratorOptions options,
+      Map<String, String> basicTypesMap) {
     switch (propertyEntryMap['type'] as String) {
       case 'array':
         return generateListPropertyContent(
@@ -514,6 +521,7 @@ abstract class SwaggerModelsGenerator {
           allEnumsNames,
           allEnumListNames,
           options,
+          basicTypesMap,
         );
         break;
       case 'enum':
@@ -578,7 +586,8 @@ abstract class SwaggerModelsGenerator {
             useDefaultNullForLists,
             allEnumNames,
             allEnumListNames,
-            options));
+            options,
+            basicTypesMap));
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(
             propertyEntryMap,

@@ -1,3 +1,7 @@
+# 1.6.7
+
+* Fixed issue with basic types in array elements
+
 # 1.6.6+2
 
 * Added null-check for _formatDate method

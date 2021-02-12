@@ -12,6 +12,7 @@ targets:
           use_required_attribute_for_headers: true
           ignore_headers: true
           use_default_null_for_lists: false
+          use_inheritance: false
           build_only_models: false
           use_path_for_request_names: false
           include_if_null:
