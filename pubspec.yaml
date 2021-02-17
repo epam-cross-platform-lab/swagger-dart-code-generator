@@ -11,24 +11,26 @@ description: Have you been turned into a problem with writing code for Http
   functionality you have been looking for.
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
-  build: ^1.5.1
-  path: ^1.7.0
-  markdown: ^3.0.0
-  recase: ^3.0.1
-  json_annotation: ^3.1.1
-  build_runner: ^1.10.6
-  meta: ^1.2.4
-  build_config: ^0.4.3
-  remove_from_coverage: ^1.0.7
-  universal_io: ^1.0.1
-  dart_style: ^1.3.10
+  build: ^1.6.3
+  path: ^1.8.0
+  markdown: ^4.0.0
+  recase: ^4.0.0-nullsafety.0
+  json_annotation: ^4.0.0
+  build_runner: ^1.11.1
+  meta: ^1.3.0
+  build_config: ^0.4.5
+  universal_io: ^2.0.0-nullsafety.2
+  dart_style: ^1.3.13
 
 dev_dependencies:
-  json_serializable: ^3.5.0
+  json_serializable: ^4.0.0
   flutter_test:
     sdk: flutter
-  pedantic: ^1.9.2
+  pedantic: ^1.10.0
   test: any
+
+dependency_overrides:
+  analyzer: ^1.0.0
