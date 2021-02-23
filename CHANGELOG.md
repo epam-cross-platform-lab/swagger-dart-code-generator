@@ -1,3 +1,7 @@
+# 1.6.8
+
+* Fixed issue with usage of KEY instead of NAME on defined parametets
+
 # 1.6.7
 
 * Fixed issue with basic types in array elements
