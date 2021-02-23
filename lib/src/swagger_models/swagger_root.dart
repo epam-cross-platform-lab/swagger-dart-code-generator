@@ -58,7 +58,8 @@ class SwaggerRoot {
 
       final result =
           SwaggerRequestParameter.fromJson(map[key] as Map<String, dynamic>);
-      result.name = key;
+
+      result.key = key;
 
       results.add(result);
     }
