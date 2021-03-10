@@ -378,7 +378,7 @@ void main() {
       expect(
           result,
           contains(
-              '@Body() @required enums.PathGetTestParameter testParameter'));
+              '@Body() @required enums.PathGetTestParameter? testParameter'));
     });
 
     test('Should generate body parameter if no ref and no schema', () {
@@ -442,7 +442,7 @@ void main() {
       expect(
           result,
           equals(
-              "@MyCustomType('testParameter') @required MyCustomType testParameter"));
+              "@MyCustomType('testParameter') @required MyCustomType? testParameter"));
     });
 
     test('Should ignore cookie parameters', () {
@@ -659,7 +659,7 @@ void main() {
           schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
       final result = generator.getBodyParameter(parameter, 'path', 'type', []);
 
-      expect(result, equals('@Body() @required MyObject myName'));
+      expect(result, equals('@Body() @required MyObject? myName'));
     });
   });
 

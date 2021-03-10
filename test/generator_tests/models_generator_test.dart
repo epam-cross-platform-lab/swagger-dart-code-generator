@@ -43,7 +43,7 @@ void main() {
       expect(
           result,
           contains(
-              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
+              'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
     });
 
     test('Should parse object name as a field Type', () {
@@ -249,7 +249,7 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyKey'";
       const expectedResult =
-          '\t$jsonKeyExpendedResult)\n\tfinal Pet $propertyName;';
+          '\t$jsonKeyExpendedResult)\n\tfinal Pet? $propertyName;';
 
       final result = generator.generatePropertyContentByRef(
         propertyEntryMap,
@@ -374,7 +374,7 @@ void main() {
       const className = 'Animals';
       const propertyKey = 'Dog';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Dog')\n";
-      const fieldExpectedResult = '\tfinal Pet dog';
+      const fieldExpectedResult = '\tfinal Pet? dog';
       final result = generator.generatePropertyContentBySchema(
         map,
         propertyName,
@@ -420,7 +420,7 @@ void main() {
       };
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -437,7 +437,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -452,7 +452,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -467,7 +467,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
-      const fieldExpectedResult = 'final Pet \$with';
+      const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
