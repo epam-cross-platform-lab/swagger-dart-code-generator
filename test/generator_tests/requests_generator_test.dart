@@ -43,7 +43,7 @@ void main() {
       expect(
           result,
           equals(
-              '@Query(\'number\') @required List<enums.PathGetNumber?>? number'));
+              '@Query(\'number\') @required List<enums.PathGetNumber>? number'));
     });
   });
 
@@ -172,7 +172,7 @@ void main() {
             ignoreHeaders: false,
           ));
 
-      expect(result, contains('List<String?>? testName'));
+      expect(result, contains('List<String>? testName'));
     });
 
     test(
