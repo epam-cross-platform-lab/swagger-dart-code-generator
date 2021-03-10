@@ -1,3 +1,7 @@
+# 2.0.0
+
+* Added support for null safety
+
 # 1.6.7
 
 * Fixed issue with basic types in array elements
