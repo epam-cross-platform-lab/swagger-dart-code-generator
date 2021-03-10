@@ -16,7 +16,8 @@ void main() {
       final result = generator.generate(
           model_with_parameters_v3, fileName, GeneratorOptions());
 
-      expect(result, contains('final enums.TokensResponseTokenType tokenType'));
+      expect(
+          result, contains('final enums.TokensResponseTokenType? tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
@@ -295,7 +296,7 @@ void main() {
       const className = 'animals';
       const jsonKeyExpectedResult =
           'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
-      const expectedResult = 'final AnimalsDog dog;';
+      const expectedResult = 'final AnimalsDog? dog;';
       final result = generator.generateEnumPropertyContent(
           key, className, [], [], GeneratorOptions());
 
@@ -485,7 +486,7 @@ void main() {
       const jsonKeyExpectedResult =
           "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
-      const propertyExpectedResult = 'final List<Object> dog';
+      const propertyExpectedResult = 'final List<Object?>? dog';
       final result = generator.generateListPropertyContent(
         propertyName,
         propertyKey,
@@ -545,7 +546,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<TestOriginalRef> dog;'));
+      expect(result, contains('final List<TestOriginalRef?>? dog;'));
     });
   });
 
@@ -591,7 +592,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<Object> dog;'));
+      expect(result, contains('final List<Object?>? dog;'));
     });
   });
 
@@ -636,7 +637,7 @@ void main() {
           [],
           GeneratorOptions());
 
-      expect(result, contains('final enums.ClassNameName name;'));
+      expect(result, contains('final enums.ClassNameName? name;'));
     });
   });
 

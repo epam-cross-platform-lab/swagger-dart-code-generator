@@ -28,7 +28,7 @@ void main() {
       final result = generator.getDefaultParameter(parameter, '/path', 'get');
 
       expect(result,
-          equals('@Query(\'number\') @required enums.PathGetNumber number'));
+          equals('@Query(\'number\') @required enums.PathGetNumber? number'));
     });
 
     test('Should use parameter -> items -> enumValues', () {
@@ -43,7 +43,7 @@ void main() {
       expect(
           result,
           equals(
-              '@Query(\'number\') @required List<enums.PathGetNumber> number'));
+              '@Query(\'number\') @required List<enums.PathGetNumber?>? number'));
     });
   });
 
@@ -132,7 +132,7 @@ void main() {
             ignoreHeaders: true,
           ));
 
-      expect(result, contains('@Body() @required String body'));
+      expect(result, contains('@Body() @required String? body'));
     });
 
     test('Should generate method name from path if such option is true', () {
@@ -172,7 +172,7 @@ void main() {
             ignoreHeaders: false,
           ));
 
-      expect(result, contains('List<String> testName'));
+      expect(result, contains('List<String?>? testName'));
     });
 
     test(
@@ -342,7 +342,7 @@ void main() {
           path: '/path',
           requestType: 'get');
 
-      expect(result, contains('@Body() @required TestItem testParameter'));
+      expect(result, contains('@Body() @required TestItem? testParameter'));
     });
 
     test('Should generate formData parameter by schema -> ref', () {
@@ -359,7 +359,7 @@ void main() {
           requestType: 'get');
 
       expect(result,
-          contains("@Field('testParameter') @required dynamic testParameter"));
+          contains("@Field('testParameter') @required dynamic? testParameter"));
     });
 
     test('Should generate body parameter by schema -> enum values', () {
@@ -388,7 +388,7 @@ void main() {
       final result = generator.getParameterContent(
           parameter: parameter, ignoreHeaders: false);
 
-      expect(result, contains('@Body() @required Object testParameter'));
+      expect(result, contains('@Body() @required Object? testParameter'));
     });
 
     test('Should generate header parameter if not ignore', () {
@@ -731,7 +731,7 @@ void main() {
       expect(
           result,
           equals(
-              'myParameter.map((element) {enums.\$PathGetMyParameterMap[element];}).toList()'));
+              'myParameter!.map((element) {enums.\$PathGetMyParameterMap[element];}).toList()'));
     });
   });
 }
