@@ -11,7 +11,7 @@ description: Have you been turned into a problem with writing code for Http
   functionality you have been looking for.
 
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   build: ^1.6.3

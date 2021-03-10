@@ -296,7 +296,7 @@ $allMethodsContent
     final mapName = getMapName(requestPath, requestType, parameterName, ref);
 
     if (enumListParametersNames.contains(parameterName)) {
-      return '$parameterName.map((element) {$mapName[element];}).toList()';
+      return '$parameterName!.map((element) {$mapName[element];}).toList()';
     }
 
     return '$mapName[$parameterName]';
@@ -373,8 +373,8 @@ $allMethodsContent
           .trim();
 
       allEnumNames.forEach((element) {
-        parametersPart = parametersPart.replaceFirst('$element ', 'String ');
-        parametersPart = parametersPart.replaceFirst('$element>', 'String>');
+        parametersPart = parametersPart.replaceFirst('$element? ', 'String? ');
+        parametersPart = parametersPart.replaceFirst('$element>?', 'String?>?');
       });
 
       parametersPart = parametersPart
@@ -470,7 +470,7 @@ $allMethodsContent
 
     parameterType = validateParameterType(parameterType);
 
-    return "@${parameter.inParameter.capitalize}() ${parameter.isRequired ? "@required" : ""} $parameterType ${validateParameterName(parameter.name)}";
+    return "@${parameter.inParameter.capitalize}() ${parameter.isRequired ? "@required" : ""} $parameterType? ${validateParameterName(parameter.name)}";
   }
 
   String getDefaultParameter(
@@ -488,7 +488,7 @@ $allMethodsContent
           parameter.type ?? parameter.schema?.type, parameter.items?.type);
     }
 
-    return "@${parameter.inParameter.capitalize}('${parameter.name}') ${parameter.isRequired ? "@required" : ""} $parameterType ${validateParameterName(parameter.name)}";
+    return "@${parameter.inParameter.capitalize}('${parameter.name}') ${parameter.isRequired ? "@required" : ""} $parameterType? ${validateParameterName(parameter.name)}";
   }
 
   String getParameterContent(
@@ -505,7 +505,7 @@ $allMethodsContent
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
-        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType' : getParameterTypeName(parameter.type)} ${validateParameterName(parameter.name)}";
+        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType' : getParameterTypeName(parameter.type)}? ${validateParameterName(parameter.name)}";
       case 'header':
         final needRequiredAttribute =
             parameter.isRequired && useRequiredAttribute;
@@ -531,7 +531,7 @@ $allMethodsContent
             : 'converter: chopper.JsonConverter(),';
 
     final generatedChopperClient = '''
-  static $fileName create([ChopperClient client]) {
+  static $fileName create([ChopperClient? client]) {
     if(client!=null){
       return _\$$fileName(client);
     }

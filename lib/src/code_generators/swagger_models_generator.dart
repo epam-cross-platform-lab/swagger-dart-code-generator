@@ -266,7 +266,7 @@ abstract class SwaggerModelsGenerator {
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue$unknownEnumValue)\n";
-    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateUnknownEnumValue(List<String> allEnumNames,
@@ -340,7 +340,7 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
 
-    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generatePropertyContentByRef(
@@ -376,7 +376,7 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateEnumPropertyContent(
@@ -398,7 +398,7 @@ abstract class SwaggerModelsGenerator {
 
     return '''
   @JsonKey($unknownEnumValue$includeIfNullString)
-  final ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
+  final ${className.capitalize + key.capitalize}? ${SwaggerModelsGenerator.generateFieldName(key)};''';
   }
 
   String generateListPropertyContent(
@@ -450,7 +450,7 @@ abstract class SwaggerModelsGenerator {
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '''  $jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    return '''  $jsonKeyContent  final List<$typeName?>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   String generateGeneralPropertyContent(
@@ -496,7 +496,7 @@ abstract class SwaggerModelsGenerator {
       jsonKeyContent += ')\n';
     }
 
-    return '''  $jsonKeyContent  final $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    return '''  $jsonKeyContent  final $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   String generatePropertyContentByType(
@@ -674,28 +674,32 @@ abstract class SwaggerModelsGenerator {
     final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
 
     return '''
-String ${neededName.camelCase}ToJson(enums.$neededName ${neededName.camelCase}) {
+String? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}) {
   return enums.\$${neededName}Map[${neededName.camelCase}];
 }
 
-enums.$neededName ${neededName.camelCase}FromJson(String ${neededName.camelCase}) {
+enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
   {
     return enums.$neededName.swaggerGeneratedUnknown;
   }
 
+  if (!enums.\$${neededName}Map.entries.contains(${neededName.camelCase})) {
+    return enums.$neededName.swaggerGeneratedUnknown;
+  }
+
   return enums.\$${neededName}Map.entries
-      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString, orElse: () => null)
-      ?.key ?? enums.$neededName.swaggerGeneratedUnknown;
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString)
+      .key;
 }
 
-List<String> ${neededName.camelCase}ListToJson(
-    List<enums.$neededName> ${neededName.camelCase}) {
+List<String?> ${neededName.camelCase}ListToJson(
+    List<enums.$neededName>? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
   {
-    return null;
+    return [];
   }
 
   return ${neededName.camelCase}
@@ -703,8 +707,8 @@ List<String> ${neededName.camelCase}ListToJson(
       .toList();
 }
 
-List<enums.$neededName> ${neededName.camelCase}ListFromJson(
-    List ${neededName.camelCase}) {
+List<enums.$neededName?> ${neededName.camelCase}ListFromJson(
+    List? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
   {

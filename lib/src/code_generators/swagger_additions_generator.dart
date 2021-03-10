@@ -95,7 +95,7 @@ import 'package:meta/meta.dart';""");
 
   String generateDateToJson() {
     return '''
-String _dateToJson(DateTime date) {
+String? _dateToJson(DateTime? date) {
   if(date == null)
   {
     return null;
