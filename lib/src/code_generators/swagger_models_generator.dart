@@ -371,6 +371,10 @@ abstract class SwaggerModelsGenerator {
     final unknownEnumValue = generateUnknownEnumValue(
         allEnumNames, allEnumListNames, typeName, false);
 
+    if (allEnumListNames.contains(typeName)) {
+      typeName = 'List<$typeName?>';
+    }
+
     final includeIfNullString = generateIncludeIfNullString(options);
 
     final jsonKeyContent =
@@ -694,8 +698,8 @@ enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase
       .key;
 }
 
-List<String?> ${neededName.camelCase}ListToJson(
-    List<enums.$neededName>? ${neededName.camelCase}) {
+List<String?>? ${neededName.camelCase}ListToJson(
+    List<enums.$neededName?>? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
   {
@@ -707,7 +711,7 @@ List<String?> ${neededName.camelCase}ListToJson(
       .toList();
 }
 
-List<enums.$neededName?> ${neededName.camelCase}ListFromJson(
+List<enums.$neededName?>? ${neededName.camelCase}ListFromJson(
     List? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)

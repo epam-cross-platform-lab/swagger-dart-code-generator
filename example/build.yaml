@@ -2,7 +2,8 @@ targets:
   $default:
     sources:
       - lib/**
-      - swagger_examples/**
+      - swaggers/**
+      - swaggers2/**
       - $package$
     builders:
       swagger_dart_code_generator:
@@ -18,7 +19,7 @@ targets:
           include_if_null:
             enabled: true
             value: false
-          input_folder: "lib/"
+          input_folder: "swaggers2/"
           output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:
