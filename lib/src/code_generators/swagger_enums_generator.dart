@@ -15,14 +15,16 @@ abstract class SwaggerEnumsGenerator {
   String generate(String swagger, String fileName);
 
   String generateFromMap(String dartCode, String fileName,
-      Map<String, dynamic> definitions, Map<String, dynamic> responses) {
+      Map<String, dynamic> definitions, Map<String, dynamic> responses, Map<String, dynamic> requestBodies) {
     final enumsFromRequests =
         generateEnumsContentFromRequests(dartCode, fileName);
 
     final enumsFromResponses = generateEnumsFromResponses(responses);
 
+    final enumsFromRequestBodies = generateEnumsFromRequestBodies(requestBodies);
+
     if (definitions == null) {
-      return '$enumsFromRequests$enumsFromResponses';
+      return '$enumsFromRequests$enumsFromResponses$enumsFromRequestBodies';
     }
 
     final enumsFromClasses = definitions.keys
@@ -37,13 +39,21 @@ abstract class SwaggerEnumsGenerator {
 
     if (enumsFromClasses.isEmpty &&
         enumsFromRequests.isEmpty &&
-        enumsFromResponses.isEmpty) {
+        enumsFromResponses.isEmpty &&
+        enumsFromRequestBodies.isEmpty) {
       return '';
     }
 
     return '''
 import 'package:json_annotation/json_annotation.dart';
-$enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
+$enumsFromClasses
+
+$enumsFromRequests
+
+$enumsFromResponses
+
+$enumsFromRequestBodies
+''';
   }
 
   String generateEnumsFromResponses(Map<String, dynamic> responses) {
@@ -71,6 +81,33 @@ $enumsFromClasses\n$enumsFromRequests\n$enumsFromResponses''';
         .join('\n');
 
     return enumsFromResponses;
+  }
+
+  String generateEnumsFromRequestBodies(Map<String, dynamic> requestBodies) {
+    if (requestBodies == null) {
+      return '';
+    }
+
+    final enumsFromRequestBodies = requestBodies.keys
+        .map((String className) {
+          final response = requestBodies[className];
+          final content = response['content'] as Map<String, dynamic>;
+          final firstContent = content?.entries?.first?.value;
+          final schema = firstContent == null ? null : firstContent['schema'];
+
+          if (schema == null) {
+            return '';
+          }
+
+          return generateEnumsFromClasses(
+              SwaggerModelsGenerator.getValidatedClassName(
+                  className.pascalCase),
+              schema as Map<String, dynamic>);
+        })
+        .where((element) => element.isNotEmpty)
+        .join('\n');
+
+    return enumsFromRequestBodies;
   }
 
   static SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(

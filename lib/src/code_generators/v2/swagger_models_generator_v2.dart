@@ -20,6 +20,12 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   }
 
   @override
+  String generateRequestBodies(
+      String dartCode, String fileName, GeneratorOptions options) {
+    return '';
+  }
+
+  @override
   List<String> getAllEnumNames(String swaggerFile) {
     final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
 

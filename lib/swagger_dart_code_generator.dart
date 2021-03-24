@@ -69,6 +69,9 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final responses = codeGenerator.generateResponses(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+    
+    final requestBodies = codeGenerator.generateRequestBodies(
+        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
     final enums = codeGenerator.generateEnums(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
@@ -99,7 +102,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
     await buildStep.writeAsString(
         copyAssetId,
-        _generateFileContent(imports, requests, converter, models, responses,
+        _generateFileContent(imports, requests, converter, models, responses,requestBodies,
             customDecoder, dateToJson));
 
     if (enums.isNotEmpty) {
@@ -125,6 +128,7 @@ class SwaggerDartCodeGenerator implements Builder {
       String converter,
       String models,
       String responses,
+      String requestBodies,
       String customDecoder,
       String dateToJson) {
     final result = """
@@ -141,6 +145,8 @@ ${options.withConverter ? converter : ''}
 $models
 
 $responses
+
+$requestBodies
 
 ${options.withBaseUrl && options.withConverter ? customDecoder : ''}
 

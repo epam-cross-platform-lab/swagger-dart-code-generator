@@ -20,6 +20,8 @@ abstract class SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options);
   String generateResponses(
       String dartCode, String fileName, GeneratorOptions options);
+      String generateRequestBodies(
+      String dartCode, String fileName, GeneratorOptions options);
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
   String getExtendsString(Map<String, dynamic> map);
   List<String> getAllEnumNames(String swaggerFile);
