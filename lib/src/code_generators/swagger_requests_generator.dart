@@ -138,7 +138,7 @@ $allMethodsContent
               inParameter: 'body',
               name: 'body',
               isRequired: true,
-              type: additionalParameter.type,
+              type: _getBodyParameterType(additionalParameter),
               ref: additionalParameter.ref ?? additionalParameter.items?.ref));
         }
 
@@ -228,6 +228,25 @@ $allMethodsContent
     });
 
     return methods.toString();
+  }
+
+  String _getBodyParameterType(RequestContent content) {
+    if(content == null)
+    {
+      return 'Object';
+    }
+
+    if (content.type?.toLowerCase() == 'array') {
+      if (content.items.ref == null) {
+        return 'Object';
+      }
+
+      final type = content.items.ref.split('/').last.capitalize;
+
+      return 'List<$type>';
+    }
+
+    return content.type;
   }
 
   String getParameterCommentsForMethod(

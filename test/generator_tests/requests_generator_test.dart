@@ -534,6 +534,7 @@ void main() {
                   responses: <SwaggerResponse>[])
             ])
           ]),
+          '',
           GeneratorOptions(),
           [],
           [],
@@ -557,6 +558,7 @@ void main() {
               ], responses: <SwaggerResponse>[])
             ])
           ]),
+          '',
           GeneratorOptions(),
           [],
           [],
@@ -580,6 +582,7 @@ void main() {
               ], responses: <SwaggerResponse>[])
             ])
           ]),
+          '',
           GeneratorOptions(),
           [],
           [],
@@ -603,6 +606,7 @@ void main() {
               ], responses: <SwaggerResponse>[])
             ])
           ]),
+          '',
           GeneratorOptions(),
           [],
           [],
