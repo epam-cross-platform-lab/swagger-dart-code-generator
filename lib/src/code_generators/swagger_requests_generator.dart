@@ -103,7 +103,7 @@ $allMethodsContent
   ) {
     final methods = StringBuffer();
 
-    final dynamic map = jsonDecode(dartCode);
+    final dynamic map = dartCode.isNotEmpty ? jsonDecode(dartCode) : {};
     final components = map['components'] as Map<String, dynamic>;
     final requestBodies =
         components == null ? null : components['requestBodies'];
