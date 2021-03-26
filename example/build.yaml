@@ -2,6 +2,7 @@ targets:
   $default:
     sources:
       - lib/**
+      - swaggers/**
       - swagger_examples/**
       - $package$
     builders:
@@ -14,11 +15,11 @@ targets:
           use_default_null_for_lists: false
           use_inheritance: false
           build_only_models: false
-          use_path_for_request_names: false
+          use_path_for_request_names: true
           include_if_null:
             enabled: true
             value: false
-          input_folder: "lib/"
+          input_folder: "swagger_examples/"
           output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:

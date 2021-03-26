@@ -38,6 +38,7 @@ $allMethodsContent
 
   String getFileContent(
     SwaggerRoot swaggerRoot,
+    String dartCode,
     String className,
     String fileName,
     GeneratorOptions options,
@@ -52,6 +53,7 @@ $allMethodsContent
         className, swaggerRoot.host, swaggerRoot.basePath, options, hasModels);
     final allMethodsContent = getAllMethodsContent(
       swaggerRoot,
+      dartCode,
       options,
       allEnumNames,
       dynamicResponses,
@@ -93,12 +95,18 @@ $allMethodsContent
 
   String getAllMethodsContent(
     SwaggerRoot swaggerRoot,
+    String dartCode,
     GeneratorOptions options,
     List<String> allEnumNames,
     List<String> dynamicResponses,
     Map<String, String> basicTypesMap,
   ) {
     final methods = StringBuffer();
+
+    final dynamic map = dartCode.isNotEmpty ? jsonDecode(dartCode) : {};
+    final components = map['components'] as Map<String, dynamic>;
+    final requestBodies =
+        components == null ? null : components['requestBodies'];
 
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
       swaggerPath.requests
@@ -130,8 +138,32 @@ $allMethodsContent
               inParameter: 'body',
               name: 'body',
               isRequired: true,
-              type: additionalParameter.type,
+              type: _getBodyParameterType(additionalParameter),
               ref: additionalParameter.ref ?? additionalParameter.items?.ref));
+        }
+
+        final requestBody = swaggerRequest.requestBody?.ref;
+        if (requestBody != null) {
+          var requestBodyType = requestBody.split('/').last;
+
+          final bodySchema =
+              requestBodies == null ? null : requestBodies[requestBodyType];
+
+          if (bodySchema != null) {
+            final content = bodySchema['content'] as Map;
+            final firstContent =
+                content == null ? null : content[content.keys.first];
+            final schema = firstContent['schema'] as Map;
+            if (schema.containsKey('\$ref')) {
+              requestBodyType = schema['\$ref'].split('/').last.toString();
+            }
+          }
+
+          swaggerRequest.parameters.add(SwaggerRequestParameter(
+              inParameter: 'body',
+              name: 'body',
+              isRequired: true,
+              type: requestBodyType.capitalize));
         }
 
         if (swaggerRequest.parameters
@@ -196,6 +228,25 @@ $allMethodsContent
     });
 
     return methods.toString();
+  }
+
+  String _getBodyParameterType(RequestContent content) {
+    if(content == null)
+    {
+      return 'Object';
+    }
+
+    if (content.type?.toLowerCase() == 'array') {
+      if (content.items.ref == null) {
+        return 'Object';
+      }
+
+      final type = content.items.ref.split('/').last.capitalize;
+
+      return 'List<$type>';
+    }
+
+    return content.type;
   }
 
   String getParameterCommentsForMethod(
@@ -445,7 +496,9 @@ $allMethodsContent
   String getBodyParameter(SwaggerRequestParameter parameter, String path,
       String requestType, List<String> allEnumNames) {
     String parameterType;
-    if (parameter.schema?.enumValues != null) {
+    if (parameter.type != null) {
+      parameterType = parameter.type;
+    } else if (parameter.schema?.enumValues != null) {
       parameterType =
           'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
     } else if (parameter.schema?.originalRef != null) {

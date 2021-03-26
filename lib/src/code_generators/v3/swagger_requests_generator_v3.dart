@@ -40,6 +40,7 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
 
     return getFileContent(
         swaggerRoot,
+        code,
         className,
         fileName,
         options,

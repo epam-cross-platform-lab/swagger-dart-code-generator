@@ -1,3 +1,7 @@
+# 1.7.0
+
+* Added support of requestBody field for POST requests
+
 # 1.6.8
 
 * Fixed issue with usage of KEY instead of NAME on defined parametets
