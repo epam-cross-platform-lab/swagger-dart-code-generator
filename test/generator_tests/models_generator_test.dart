@@ -213,7 +213,6 @@ void main() {
     test('Should generate includeIfNull if option is true', () {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
-      const jsonKeyExpendedResult = "@JsonKey(name: '$propertyName'";
       final result = generator.generatePropertyContentByDefault(
           propertyEntryMap,
           propertyName,
@@ -228,7 +227,6 @@ void main() {
     test('Should NOT generate includeIfNull if option is false', () {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
-      const jsonKeyExpendedResult = "@JsonKey(name: '$propertyName'";
       final result = generator.generatePropertyContentByDefault(
           propertyEntryMap,
           propertyName,

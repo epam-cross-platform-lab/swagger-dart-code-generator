@@ -120,7 +120,7 @@ void main() {
   group('getOriginalOrOverriddenRequestParameter', () {
     test('Should override parameter if needed', () {
       final incoming =
-          SwaggerRequestParameter(ref: "#definitions/TestParameter");
+          SwaggerRequestParameter(ref: '#definitions/TestParameter');
       final overriddenParameters = [
         SwaggerRequestParameter(
             name: 'TestParameter', type: 'Overridden parameter')
@@ -135,7 +135,7 @@ void main() {
 
     test('Should NOT override parameter if needed', () {
       final incoming = SwaggerRequestParameter(
-          ref: "#definitions/TestParameterWrong", name: 'Original parameter');
+          ref: '#definitions/TestParameterWrong', name: 'Original parameter');
       final overriddenParameters = [
         SwaggerRequestParameter(
             key: 'TestParameter', name: 'Overridden parameter')
