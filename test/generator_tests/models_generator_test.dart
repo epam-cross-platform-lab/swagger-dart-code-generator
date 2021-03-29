@@ -16,7 +16,8 @@ void main() {
       final result = generator.generate(
           model_with_parameters_v3, fileName, GeneratorOptions());
 
-      expect(result, contains('final enums.TokensResponseTokenType tokenType'));
+      expect(
+          result, contains('final enums.TokensResponseTokenType? tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
@@ -43,7 +44,7 @@ void main() {
       expect(
           result,
           contains(
-              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
+              'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
     });
 
     test('Should parse object name as a field Type', () {
@@ -247,7 +248,7 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyKey'";
       const expectedResult =
-          '\t$jsonKeyExpendedResult)\n\tfinal Pet $propertyName;';
+          '\t$jsonKeyExpendedResult)\n\tfinal Pet? $propertyName;';
 
       final result = generator.generatePropertyContentByRef(
         propertyEntryMap,
@@ -293,7 +294,7 @@ void main() {
       const className = 'animals';
       const jsonKeyExpectedResult =
           'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
-      const expectedResult = 'final AnimalsDog dog;';
+      const expectedResult = 'final AnimalsDog? dog;';
       final result = generator.generateEnumPropertyContent(
           key, className, [], [], GeneratorOptions());
 
@@ -372,7 +373,7 @@ void main() {
       const className = 'Animals';
       const propertyKey = 'Dog';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Dog')\n";
-      const fieldExpectedResult = '\tfinal Pet dog';
+      const fieldExpectedResult = '\tfinal Pet? dog';
       final result = generator.generatePropertyContentBySchema(
         map,
         propertyName,
@@ -418,7 +419,7 @@ void main() {
       };
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -435,7 +436,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -450,7 +451,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -465,7 +466,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
-      const fieldExpectedResult = 'final Pet \$with';
+      const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(map, null, className,
           <DefaultValueMap>[], false, [], [], GeneratorOptions());
 
@@ -483,7 +484,7 @@ void main() {
       const jsonKeyExpectedResult =
           "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
-      const propertyExpectedResult = 'final List<Object> dog';
+      const propertyExpectedResult = 'final List<Object?>? dog';
       final result = generator.generateListPropertyContent(
         propertyName,
         propertyKey,
@@ -543,7 +544,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<TestOriginalRef> dog;'));
+      expect(result, contains('final List<TestOriginalRef?>? dog;'));
     });
   });
 
@@ -589,7 +590,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<Object> dog;'));
+      expect(result, contains('final List<Object?>? dog;'));
     });
   });
 
@@ -634,7 +635,7 @@ void main() {
           [],
           GeneratorOptions());
 
-      expect(result, contains('final enums.ClassNameName name;'));
+      expect(result, contains('final enums.ClassNameName? name;'));
     });
   });
 

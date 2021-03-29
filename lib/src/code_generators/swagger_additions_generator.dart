@@ -95,7 +95,8 @@ import 'package:meta/meta.dart';""");
 
   String generateDateToJson() {
     return '''
-String _dateToJson(DateTime date) {
+// ignore: unused_element
+String? _dateToJson(DateTime? date) {
   if(date == null)
   {
     return null;
@@ -145,7 +146,7 @@ class CustomJsonDecoder {
       return throw "Could not find factory for type \$T. Is '\$T: \$T.fromJsonFactory' included in the CustomJsonDecoder instance creation in bootstrapper.dart?";
     }
 
-    return jsonFactory(values) as T;
+    return jsonFactory(values);
   }
 
   List<T> _decodeList<T>(Iterable values) =>

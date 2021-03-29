@@ -3,6 +3,7 @@ targets:
     sources:
       - lib/**
       - swaggers/**
+      - swaggers2/**
       - swagger_examples/**
       - $package$
     builders:

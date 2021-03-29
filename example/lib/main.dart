@@ -27,5 +27,5 @@ Future main() async {
   }
 
   print(
-      'Hello, my name is ${getResult.body.name}, I am ${getResult.body.category.name}');
+      'Hello, my name is ${getResult.body!.name}, I am ${getResult.body!.category!.name}');
 }

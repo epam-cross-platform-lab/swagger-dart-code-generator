@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.0
+
+* Added support for null safety
+
 # 1.7.0
 
 * Added support of requestBody field for POST requests
