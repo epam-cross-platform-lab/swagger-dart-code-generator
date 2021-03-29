@@ -61,6 +61,11 @@ class SwaggerCodeGenerator {
       _getSwaggerModelsGenerator(dartCode)
           .generateResponses(dartCode, fileName, options);
 
+  String generateRequestBodies(
+          String dartCode, String fileName, GeneratorOptions options) =>
+      _getSwaggerModelsGenerator(dartCode)
+          .generateRequestBodies(dartCode, fileName, options);
+
   String generateEnums(String dartCode, String fileName) =>
       _getSwaggerEnumsGenerator(dartCode).generate(dartCode, fileName);
 

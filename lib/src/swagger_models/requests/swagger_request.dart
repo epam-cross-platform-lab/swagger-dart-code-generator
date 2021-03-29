@@ -75,8 +75,9 @@ class SwaggerRequest {
 
 class RequestBody {
   RequestContent content;
+  String ref;
 
-  RequestBody({this.content});
+  RequestBody({this.content, this.ref});
 
   RequestBody.fromJson(Map<String, dynamic> json)
       : content = (json == null ||
@@ -84,7 +85,8 @@ class RequestBody {
                 json['content']['application/json'] == null)
             ? null
             : RequestContent.fromJson(
-                json['content']['application/json'] as Map<String, dynamic>);
+                json['content']['application/json'] as Map<String, dynamic>),
+        ref = json == null ? null : json['\$ref']?.toString();
 }
 
 class RequestContent {
