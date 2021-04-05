@@ -13,7 +13,7 @@ void main() {
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
-      final result = generator.generate(
+      final result = generator2.generate(
           model_with_parameters_v3, fileName, GeneratorOptions());
 
       expect(
@@ -350,7 +350,8 @@ void main() {
   group('generateConstructorPropertiesContent', () {
     test('Should return empty', () {
       const expectedResult = '';
-      final result = generator.generateConstructorPropertiesContent(null);
+      final result = generator.generateConstructorPropertiesContent(
+          null, GeneratorOptions(), [], []);
 
       expect(result, contains(expectedResult));
     });
@@ -358,7 +359,8 @@ void main() {
     test('Should return validate constructor property', () {
       final map = <String, dynamic>{'Animal': 'dog'};
       const expectedResult = 'this.animal';
-      final result = generator.generateConstructorPropertiesContent(map);
+      final result = generator.generateConstructorPropertiesContent(
+          map, GeneratorOptions(), [], []);
 
       expect(result, contains(expectedResult));
     });

@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.1
+
+* Removed nullable from fields with default values
+
 # 2.0.0-nullsafety.0
 
 * Added support for null safety
