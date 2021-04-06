@@ -350,15 +350,17 @@ void main() {
   group('generateConstructorPropertiesContent', () {
     test('Should return empty', () {
       const expectedResult = '';
-      final result = generator.generateConstructorPropertiesContent(null);
+      final result = generator.generateConstructorPropertiesContent(
+          null, GeneratorOptions(), [], []);
 
       expect(result, contains(expectedResult));
     });
 
     test('Should return validate constructor property', () {
-      final map = <String, dynamic>{'Animal': 'dog'};
+      final map = <String, dynamic>{'Animal': {'type' : 'dog'}};
       const expectedResult = 'this.animal';
-      final result = generator.generateConstructorPropertiesContent(map);
+      final result = generator.generateConstructorPropertiesContent(
+          map, GeneratorOptions(), [], []);
 
       expect(result, contains(expectedResult));
     });
@@ -484,7 +486,7 @@ void main() {
       const jsonKeyExpectedResult =
           "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
-      const propertyExpectedResult = 'final List<Object?>? dog';
+      const propertyExpectedResult = 'final List<Object> dog';
       final result = generator.generateListPropertyContent(
         propertyName,
         propertyKey,
@@ -544,7 +546,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<TestOriginalRef?>? dog;'));
+      expect(result, contains('final List<TestOriginalRef> dog;'));
     });
   });
 
@@ -590,7 +592,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<Object?>? dog;'));
+      expect(result, contains('final List<Object> dog;'));
     });
   });
 

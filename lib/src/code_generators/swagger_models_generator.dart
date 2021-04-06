@@ -20,7 +20,7 @@ abstract class SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options);
   String generateResponses(
       String dartCode, String fileName, GeneratorOptions options);
-      String generateRequestBodies(
+  String generateRequestBodies(
       String dartCode, String fileName, GeneratorOptions options);
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
   String getExtendsString(Map<String, dynamic> map);
@@ -374,7 +374,7 @@ abstract class SwaggerModelsGenerator {
         allEnumNames, allEnumListNames, typeName, false);
 
     if (allEnumListNames.contains(typeName)) {
-      typeName = 'List<$typeName?>';
+      typeName = 'List<$typeName>';
     }
 
     final includeIfNullString = generateIncludeIfNullString(options);
@@ -382,7 +382,14 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+        if(!typeName.startsWith('List<') || options.useDefaultNullForLists)
+        {
+return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+        }
+    
+
+
+    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateEnumPropertyContent(
@@ -456,7 +463,11 @@ abstract class SwaggerModelsGenerator {
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '''  $jsonKeyContent  final List<$typeName?>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    if (options.useDefaultNullForLists) {
+      return '''  $jsonKeyContent  final List<$typeName?>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    }
+
+    return '''  $jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   String generateGeneralPropertyContent(
@@ -489,20 +500,24 @@ abstract class SwaggerModelsGenerator {
     jsonKeyContent += unknownEnumValue;
     jsonKeyContent += dateToJsonValue;
 
+    var hasDefaultValue = false;
+
     if ((val['type'] == 'bool' || val['type'] == 'boolean') &&
         val['default'] != null) {
       jsonKeyContent += ', defaultValue: ${val['default']})\n';
+      hasDefaultValue = true;
     } else if (defaultValues
         .any((DefaultValueMap element) => element.typeName == typeName)) {
       final defaultValue = defaultValues.firstWhere(
           (DefaultValueMap element) => element.typeName == typeName);
       jsonKeyContent +=
           ', defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n';
+      hasDefaultValue = true;
     } else {
       jsonKeyContent += ')\n';
     }
 
-    return '''  $jsonKeyContent  final $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    return '''  $jsonKeyContent  final $typeName${hasDefaultValue ? '' : '?'} ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   String generatePropertyContentByType(
@@ -700,8 +715,8 @@ enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase
       .key;
 }
 
-List<String?>? ${neededName.camelCase}ListToJson(
-    List<enums.$neededName?>? ${neededName.camelCase}) {
+List<String> ${neededName.camelCase}ListToJson(
+    List<enums.$neededName>? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
   {
@@ -709,11 +724,11 @@ List<String?>? ${neededName.camelCase}ListToJson(
   }
 
   return ${neededName.camelCase}
-      .map((e) => enums.\$${neededName}Map[e])
+      .map((e) => enums.\$${neededName}Map[e]!)
       .toList();
 }
 
-List<enums.$neededName?>? ${neededName.camelCase}ListFromJson(
+List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     List? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
@@ -728,17 +743,29 @@ List<enums.$neededName?>? ${neededName.camelCase}ListFromJson(
     ''';
   }
 
-  String generateConstructorPropertiesContent(Map<String, dynamic> entityMap) {
+  String generateConstructorPropertiesContent(
+      Map<String, dynamic> entityMap, GeneratorOptions options, List<DefaultValueMap> defaultValues, List<String> allEnumListNames) {
     if (entityMap == null) {
       return '';
     }
 
-    final generatedConstructorParameters = entityMap.keys.map((String key) {
-      final fieldName = SwaggerModelsGenerator.generateFieldName(key);
-      return '\t\tthis.$fieldName,';
-    }).join('\n');
+    var results = '';
 
-    return '{\n${generatedConstructorParameters.toString()}\n\t}';
+    entityMap.forEach((key, value) {
+      final fieldName = SwaggerModelsGenerator.generateFieldName(key);
+
+      final hasDefaultValue = value['default'] != null || defaultValues.any((element) => element.typeName == _mapBasicTypeToDartType(value['type'].toString(), null));
+
+      final isList = value['type'] == 'array' || allEnumListNames.contains('enums.${key.pascalCase}');
+
+      if ((isList && !options.useDefaultNullForLists) || hasDefaultValue) {
+        results += '\t\trequired this.$fieldName,\n';
+      } else {
+        results += '\t\tthis.$fieldName,\n';
+      }
+    });
+
+    return '{\n$results\n\t}';
   }
 
   String generateModelClassString(
@@ -755,7 +782,7 @@ List<enums.$neededName?>? ${neededName.camelCase}ListFromJson(
     var extendsString = options.useInheritance ? getExtendsString(map) : '';
 
     final generatedConstructorProperties =
-        generateConstructorPropertiesContent(properties);
+        generateConstructorPropertiesContent(properties, options, defaultValues, allEnumListNames);
 
     final generatedProperties = generatePropertiesContent(
       properties,
@@ -795,7 +822,14 @@ $copyWithMethod
         .split(';')
         .where((element) => element.isNotEmpty)
         .map((e) => e.substring(e.indexOf('final ') + 6))
-        .toList();
+        .map((e) {
+      final items = e.split(' ');
+      if (!items.first.endsWith('?')) {
+        items[0] += '?';
+      }
+
+      return items[0] + ' ' + items[1];
+    }).toList();
 
     if (splittedProperties.isEmpty) {
       return '';
