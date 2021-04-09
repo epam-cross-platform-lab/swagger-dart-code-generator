@@ -14,10 +14,11 @@ void main() {
 
     test('Should parse object name as a field Type', () {
       final result = generator.generate(
-          model_with_parameters_v3, fileName, GeneratorOptions());
+                    model_with_parameters_v3, fileName, GeneratorOptions());
+
 
       expect(
-          result, contains('final enums.TokensResponseTokenType? tokenType'));
+          result, contains('final enums.TokensResponseTokenType tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
@@ -44,7 +45,7 @@ void main() {
       expect(
           result,
           contains(
-              'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
+              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
     });
 
     test('Should parse object name as a field Type', () {
@@ -294,7 +295,7 @@ void main() {
       const className = 'animals';
       const jsonKeyExpectedResult =
           'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
-      const expectedResult = 'final AnimalsDog? dog;';
+      const expectedResult = 'final AnimalsDog dog;';
       final result = generator.generateEnumPropertyContent(
           key, className, [], [], GeneratorOptions());
 
@@ -351,16 +352,25 @@ void main() {
     test('Should return empty', () {
       const expectedResult = '';
       final result = generator.generateConstructorPropertiesContent(
-          null, GeneratorOptions(), [], []);
+        '',
+        null,
+        GeneratorOptions(),
+        [],
+        [],
+        [],
+      );
 
       expect(result, contains(expectedResult));
     });
 
     test('Should return validate constructor property', () {
-      final map = <String, dynamic>{'Animal': {'type' : 'dog'}};
+      final map = <String, dynamic>{
+        'Animal': {'type': 'dog'}
+      };
       const expectedResult = 'this.animal';
       final result = generator.generateConstructorPropertiesContent(
-          map, GeneratorOptions(), [], []);
+        '',
+          map, GeneratorOptions(), [], [], []);
 
       expect(result, contains(expectedResult));
     });
@@ -637,7 +647,7 @@ void main() {
           [],
           GeneratorOptions());
 
-      expect(result, contains('final enums.ClassNameName? name;'));
+      expect(result, contains('final enums.ClassNameName name;'));
     });
   });
 
