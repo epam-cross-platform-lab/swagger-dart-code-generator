@@ -10,7 +10,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart
 
 abstract class SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
-  static const String defaultEnumValueName = '';
+  static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
   String generate(String swagger, String fileName);
 
@@ -221,7 +221,7 @@ $enumMap
     neededValues.addAll(enumValues);
 
     final unknownEnumPart =
-        ',\n\t$enumName.swaggerGeneratedUnknown: \'swaggerGeneratedUnknown\'';
+        ',\n\t$enumName.swaggerGeneratedUnknown: \'\'';
 
     final result = neededValues
             .map((String enumFieldName) =>
