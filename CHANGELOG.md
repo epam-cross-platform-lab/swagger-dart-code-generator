@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.2
+
+* Made generated enums not nullable
+
 # 2.0.0-nullsafety.1
 
 * Removed nullable from fields with default values
