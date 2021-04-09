@@ -558,13 +558,13 @@ $allMethodsContent
       case 'formData':
         final isEnum = parameter.schema?.enumValues != null;
 
-        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType' : getParameterTypeName(parameter.type)}? ${validateParameterName(parameter.name)}";
+        return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType?' : getParameterTypeName(parameter.type)}? ${validateParameterName(parameter.name)}";
       case 'header':
         final needRequiredAttribute =
             parameter.isRequired && useRequiredAttribute;
         return ignoreHeaders
             ? ''
-            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "@required" : ""} String ${validateParameterName(parameter.name)}";
+            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "@required" : ""} String? ${validateParameterName(parameter.name)}";
       case 'cookie':
         return '';
       default:
