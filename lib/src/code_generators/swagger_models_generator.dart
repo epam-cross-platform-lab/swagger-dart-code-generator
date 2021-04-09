@@ -773,11 +773,6 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       final isList = value['type'] == 'array' ||
           allEnumListNames.contains('enums.${key.pascalCase}');
 
-          if(key == 'source')
-          {
-            var tt = 0;
-          }
-
       final type = value['\$ref']?.toString()?.split('/')?.last?.pascalCase ?? key;
 
       final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
