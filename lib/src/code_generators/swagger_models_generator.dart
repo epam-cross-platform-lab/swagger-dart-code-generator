@@ -711,12 +711,9 @@ enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase
     return enums.$neededName.swaggerGeneratedUnknown;
   }
 
-  if (!enums.\$${neededName}Map.entries.contains(${neededName.camelCase})) {
-    return enums.$neededName.swaggerGeneratedUnknown;
-  }
-
   return enums.\$${neededName}Map.entries
-      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString)
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString,
+      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
       .key;
 }
 
