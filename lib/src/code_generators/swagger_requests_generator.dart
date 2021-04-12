@@ -13,9 +13,12 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 abstract class SwaggerRequestsGenerator {
   static const String defaultBodyParameter = 'Object';
-  static const String successResponseCode = '200';
   static const String requestTypeOptions = 'options';
-  List<String> successDescriptions = <String>[
+  static final List<String> successResponseCodes = [
+    '200',
+    '201',
+  ];
+  static final List<String> successDescriptions = [
     'Success',
     'OK',
     'default response'
@@ -231,8 +234,7 @@ $allMethodsContent
   }
 
   String _getBodyParameterType(RequestContent content) {
-    if(content == null)
-    {
+    if (content == null) {
       return 'Object';
     }
 
@@ -633,7 +635,7 @@ abstract class $className extends ChopperService''';
     return responses.firstWhere(
         (SwaggerResponse response) =>
             successDescriptions.contains(response.description) ||
-            response.code == successResponseCode,
+            successResponseCodes.contains(response.code),
         orElse: () => null);
   }
 
