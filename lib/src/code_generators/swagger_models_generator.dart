@@ -20,6 +20,7 @@ abstract class SwaggerModelsGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options);
   String generateResponses(
       String dartCode, String fileName, GeneratorOptions options);
+
   String generateRequestBodies(
       String dartCode, String fileName, GeneratorOptions options);
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
@@ -773,7 +774,8 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       final isList = value['type'] == 'array' ||
           allEnumListNames.contains('enums.${key.pascalCase}');
 
-      final type = value['\$ref']?.toString()?.split('/')?.last?.pascalCase ?? key;
+      final type =
+          value['\$ref']?.toString()?.split('/')?.last?.pascalCase ?? key;
 
       final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
           allEnumNames.contains('enums.${className + type.pascalCase}');

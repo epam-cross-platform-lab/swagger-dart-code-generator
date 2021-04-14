@@ -317,9 +317,19 @@ void main() {
       expect(result, equals(responses.first));
     });
 
-    test('Should return null if there is no success response', () {
+    test('Should return response if code is 201', () {
       final responses = <SwaggerResponse>[
         SwaggerResponse(code: '201', description: 'Cool'),
+        SwaggerResponse(code: '401', description: 'unauthorized')
+      ];
+      final result = generator.getSuccessedResponse(responses);
+
+      expect(result, equals(responses.first));
+    });
+
+    test('Should return null if there is no success response', () {
+      final responses = <SwaggerResponse>[
+        SwaggerResponse(code: '204', description: 'No content'),
         SwaggerResponse(code: '401', description: 'unauthorized')
       ];
       final result = generator.getSuccessedResponse(responses);
