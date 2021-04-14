@@ -12,7 +12,7 @@ targets:
           with_base_url: true
           with_converter: true
           use_required_attribute_for_headers: true
-          ignore_headers: true
+          ignore_headers: false
           use_default_null_for_lists: false
           use_inheritance: false
           build_only_models: false
@@ -20,7 +20,7 @@ targets:
           include_if_null:
             enabled: true
             value: false
-          input_folder: "swagger_examples/"
+          input_folder: "swaggers/"
           output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:

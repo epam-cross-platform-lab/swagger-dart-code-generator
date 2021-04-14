@@ -566,7 +566,7 @@ $allMethodsContent
             parameter.isRequired && useRequiredAttribute;
         return ignoreHeaders
             ? ''
-            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "@required" : ""} String ${validateParameterName(parameter.name)}";
+            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "required" : ""} String?${validateParameterName(parameter.name)}";
       case 'cookie':
         return '';
       default:
