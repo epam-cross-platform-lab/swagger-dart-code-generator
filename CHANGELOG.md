@@ -10,6 +10,10 @@
 
 * Added support for null safety
 
+# 1.7.1
+
+* Generate models for 201 HTTP Responses too
+
 # 1.7.0
 
 * Added support of requestBody field for POST requests
