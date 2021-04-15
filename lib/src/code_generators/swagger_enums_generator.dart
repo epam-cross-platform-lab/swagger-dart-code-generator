@@ -23,7 +23,7 @@ abstract class SwaggerEnumsGenerator {
 
     final enumsFromRequestBodies = generateEnumsFromRequestBodies(requestBodies);
 
-    if (definitions == null) {
+    if (definitions.isEmpty) {
       return '$enumsFromRequests$enumsFromResponses$enumsFromRequestBodies';
     }
 
@@ -57,15 +57,15 @@ $enumsFromRequestBodies
   }
 
   String generateEnumsFromResponses(Map<String, dynamic> responses) {
-    if (responses == null) {
+    if (responses.isEmpty) {
       return '';
     }
 
     final enumsFromResponses = responses.keys
         .map((String className) {
           final response = responses[className];
-          final content = response['content'] as Map<String, dynamic>;
-          final firstContent = content?.entries?.first?.value;
+          final content = response['content'] as Map<String, dynamic>?;
+          final firstContent = content != null && content.entries.isNotEmpty ? content.entries.first.value : null;
           final schema = firstContent == null ? null : firstContent['schema'];
 
           if (schema == null) {
@@ -84,15 +84,15 @@ $enumsFromRequestBodies
   }
 
   String generateEnumsFromRequestBodies(Map<String, dynamic> requestBodies) {
-    if (requestBodies == null) {
+    if (requestBodies.isEmpty) {
       return '';
     }
 
     final enumsFromRequestBodies = requestBodies.keys
         .map((String className) {
           final response = requestBodies[className];
-          final content = response['content'] as Map<String, dynamic>;
-          final firstContent = content?.entries?.first?.value;
+          final content = response['content'] as Map<String, dynamic>?;
+          final firstContent = content != null && content.entries.isNotEmpty ? content.entries.first.value : null;
           final schema = firstContent == null ? null : firstContent['schema'];
 
           if (schema == null) {
@@ -113,7 +113,7 @@ $enumsFromRequestBodies
   static SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(
       SwaggerRequestParameter swaggerRequestParameter,
       List<SwaggerRequestParameter> definedParameters) {
-    if (swaggerRequestParameter.ref == null || definedParameters == null) {
+    if (swaggerRequestParameter.ref.isEmpty|| definedParameters.isEmpty) {
       return swaggerRequestParameter;
     }
 
@@ -140,7 +140,7 @@ $enumsFromRequestBodies
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
                 getOriginalOrOverriddenRequestParameter(
-                    parameter, swaggerRoot.components?.parameters))
+                    parameter, swaggerRoot.components?.parameters ?? []))
             .toList();
       });
     });
@@ -151,7 +151,7 @@ $enumsFromRequestBodies
       for (var j = 0; j < swaggerPath.requests.length; j++) {
         final swaggerRequest = swaggerPath.requests[j];
 
-        if (swaggerRequest.parameters == null) {
+        if (swaggerRequest.parameters.isEmpty) {
           continue;
         }
 
@@ -233,7 +233,10 @@ $enumMap
   }
 
   String getValidatedEnumFieldName(String name) {
-    name ??= 'null';
+    if(name.isEmpty)
+    {
+      name = 'null';
+    }
 
     var result = name
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
@@ -264,7 +267,7 @@ $enumMap
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
                 getOriginalOrOverriddenRequestParameter(
-                    parameter, swaggerRoot.components?.parameters))
+                    parameter, swaggerRoot.components?.parameters ?? []))
             .toList();
       });
     });
@@ -275,7 +278,7 @@ $enumMap
       for (var j = 0; j < swaggerPath.requests.length; j++) {
         final swaggerRequest = swaggerPath.requests[j];
 
-        if (swaggerRequest.parameters == null) {
+        if (swaggerRequest.parameters.isEmpty) {
           continue;
         }
 
@@ -306,7 +309,7 @@ $enumMap
 
   String generateEnumsContentFromModelProperties(
       Map<String, dynamic> map, String className) {
-    if (map == null) {
+    if (map.isEmpty) {
       return '';
     }
 
@@ -363,7 +366,7 @@ $enumMap
   String generateEnumValuesContent(List<dynamic> values) {
     return values
         .map((dynamic e) =>
-            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getValidatedEnumFieldName(e?.toString())}")
+            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getValidatedEnumFieldName(e.toString())}")
         .join(',\n');
   }
 
@@ -396,7 +399,7 @@ $enumMap
       properties = map['properties'] as Map<String, dynamic>;
     }
 
-    if (properties == null) {
+    if (properties.isEmpty) {
       return '';
     }
 

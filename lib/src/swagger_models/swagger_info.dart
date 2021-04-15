@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_info.g.dart';
+part 'swagger_info.g2.dart';
 
 @JsonSerializable()
 class SwaggerInfo {

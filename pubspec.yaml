@@ -24,6 +24,7 @@ dependencies:
   build_config: ^0.4.5
   universal_io: ^2.0.0-nullsafety.2
   dart_style: ^2.0.0
+  collection: ^1.15.0
 
 dev_dependencies:
   json_serializable: ^4.0.0

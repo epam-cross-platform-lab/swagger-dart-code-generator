@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_tag.g.dart';
+part 'swagger_tag.g2.dart';
 
 @JsonSerializable()
 class SwaggerTag {

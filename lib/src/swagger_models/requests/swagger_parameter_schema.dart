@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_parameter_schema.g.dart';
+part 'swagger_parameter_schema.g2.dart';
 
 @JsonSerializable()
 class SwaggerParameterSchema {

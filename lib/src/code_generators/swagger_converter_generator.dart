@@ -18,7 +18,7 @@ ${_generateModelsMapping(dartCode)}};''';
 
     final definitions = getDefinitions(map);
 
-    if (definitions != null) {
+    if (definitions.isNotEmpty) {
       for (var i = 0; i < definitions.keys.length; i++) {
         final key = definitions.keys.elementAt(i).toString();
 
@@ -46,7 +46,7 @@ ${_generateModelsMapping(dartCode)}};''';
     }
 
     final responses = getResponses(map);
-    if (responses != null) {
+    if (responses.isNotEmpty) {
       responses.keys.forEach((key) {
         if (!result.contains(key)) {
           final response = responses[key] as Map<String, dynamic>;
@@ -55,16 +55,16 @@ ${_generateModelsMapping(dartCode)}};''';
               ? null
               : response['content'] as Map<String, dynamic>;
 
-          final firstContent = content == null
+          final firstContent = content == null || content.entries.isEmpty
               ? null
-              : content.entries?.first?.value as Map<String, dynamic>;
+              : content.entries.first.value as Map<String, dynamic>?;
 
           final schema = firstContent == null
               ? null
               : firstContent['schema'] as Map<String, dynamic>;
 
           if (schema != null &&
-              content.entries.length == 1 &&
+              content!.entries.length == 1 &&
               !schema.containsKey('\$ref')) {
             final validatedName = key.capitalize;
             result.add('\t$validatedName: $validatedName.fromJsonFactory,');
@@ -85,7 +85,7 @@ ${_generateModelsMapping(dartCode)}};''';
       return map['components']['schemas'] as Map<String, dynamic>;
     }
 
-    return null;
+    return {};
   }
 
   Map<String, dynamic> getResponses(dynamic map) {
@@ -93,6 +93,6 @@ ${_generateModelsMapping(dartCode)}};''';
       return map['components']['responses'] as Map<String, dynamic>;
     }
 
-    return null;
+    return {};
   }
 }
