@@ -1,12 +1,6 @@
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
-import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
@@ -18,9 +12,7 @@ void main() {
 
   group('Generate', () {
     test('Should generate enum from models', () {
-
-      var tt = SwaggerEnumsGeneratorV2();
-      final result = tt.generate(aaa, 'sdsd');
+      final result = generator.generate(model_with_parameters_v3, 'test_file');
       expect(result, contains('enum SomeEnumModel'));
     });
 
