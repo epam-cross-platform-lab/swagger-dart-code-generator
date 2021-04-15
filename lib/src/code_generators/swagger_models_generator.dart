@@ -343,10 +343,6 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
 
-    if (typeName.startsWith('enums.')) {
-      return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
-    }
-
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
@@ -387,12 +383,7 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    if ((!typeName.startsWith('List<') || options.useDefaultNullForLists) &&
-        !typeName.startsWith('enums.')) {
-      return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
-    }
-
-    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateEnumPropertyContent(
@@ -414,7 +405,7 @@ abstract class SwaggerModelsGenerator {
 
     return '''
   @JsonKey($unknownEnumValue$includeIfNullString)
-  final ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
+  final ${className.capitalize + key.capitalize}? ${SwaggerModelsGenerator.generateFieldName(key)};''';
   }
 
   String generateListPropertyContent(
@@ -466,11 +457,7 @@ abstract class SwaggerModelsGenerator {
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    if (options.useDefaultNullForLists && !typeName.startsWith('enums.')) {
-      return '''  $jsonKeyContent  final List<$typeName?>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
-    }
-
-    return '''  $jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    return '$jsonKeyContent  final List<$typeName?>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateGeneralPropertyContent(
@@ -503,27 +490,20 @@ abstract class SwaggerModelsGenerator {
     jsonKeyContent += unknownEnumValue;
     jsonKeyContent += dateToJsonValue;
 
-    var hasDefaultValue = false;
-
     if ((val['type'] == 'bool' || val['type'] == 'boolean') &&
         val['default'] != null) {
       jsonKeyContent += ', defaultValue: ${val['default']})\n';
-      hasDefaultValue = true;
     } else if (defaultValues
         .any((DefaultValueMap element) => element.typeName == typeName)) {
       final defaultValue = defaultValues.firstWhere(
           (DefaultValueMap element) => element.typeName == typeName);
       jsonKeyContent +=
           ', defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n';
-      hasDefaultValue = true;
     } else {
       jsonKeyContent += ')\n';
     }
 
-    final shouldBeNotNullable =
-        hasDefaultValue || typeName.startsWith('enums.');
-
-    return '''  $jsonKeyContent  final $typeName${shouldBeNotNullable ? '' : '?'} ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    return '''  $jsonKeyContent  final $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   String generatePropertyContentByType(

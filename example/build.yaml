@@ -26,6 +26,8 @@ targets:
           default_values_map:
             - type_name: int
               default_value: "36"
+            - type_name: String
+              default_value: ""
           response_override_value_map:
             - url: "/store/inventory"
               method: get
