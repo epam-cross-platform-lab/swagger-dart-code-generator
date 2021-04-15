@@ -107,7 +107,7 @@ $allMethodsContent
   ) {
     final methods = StringBuffer();
 
-    final dynamic map = jsonDecode(dartCode);
+    final dynamic map = dartCode.isNotEmpty ? jsonDecode(dartCode) : {};
     final components = map['components'] as Map<String, dynamic>?;
     final requestBodies =
         components == null ? null : components['requestBodies'];
@@ -575,7 +575,7 @@ $allMethodsContent
             parameter.isRequired && useRequiredAttribute;
         return ignoreHeaders
             ? ''
-            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "required" : ""} String?${validateParameterName(parameter.name)}";
+            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "required" : ""} String? ${validateParameterName(parameter.name)}";
       case 'cookie':
         return '';
       default:
@@ -673,11 +673,10 @@ abstract class $className extends ChopperService''';
     }
 
     if (neededResponse.schema?.type.isNotEmpty ?? false) {
+      final param = neededResponse.schema?.items?.originalRef.isNotEmpty == true ? neededResponse.schema?.items?.originalRef : neededResponse.schema?.items?.type.isNotEmpty == true ?neededResponse.schema?.items?.type :neededResponse.schema?.items?.ref.split('/').lastOrNull ?? '';
       return getParameterTypeName(
           neededResponse.schema?.type ?? '',
-          neededResponse.schema?.items?.originalRef ??
-              neededResponse.schema?.items?.type ??
-              neededResponse.schema?.items?.ref.split('/').lastOrNull ?? '');
+           param!);
     }
 
     if (neededResponse.schema?.ref.isNotEmpty ?? false) {

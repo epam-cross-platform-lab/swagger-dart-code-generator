@@ -154,7 +154,7 @@ abstract class SwaggerModelsGenerator {
       return parameter['\$ref'].toString().split('/').last.pascalCase;
     }
 
-    switch (parameter['type'] as String) {
+    switch (parameter['type'] as String?) {
       case 'integer':
       case 'int':
         return 'int';
@@ -173,7 +173,7 @@ abstract class SwaggerModelsGenerator {
       case 'object':
         return 'Object';
       case 'array':
-        final items = parameter['items'] as Map<String, dynamic>;
+        final items = parameter['items'] as Map<String, dynamic>? ?? {};
         return getParameterTypeName(className, parameterName, items);
       default:
         if (parameter['oneOf'] != null) {
