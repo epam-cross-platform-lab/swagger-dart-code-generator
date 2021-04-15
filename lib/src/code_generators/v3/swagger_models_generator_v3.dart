@@ -4,18 +4,19 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_g
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:collection/collection.dart';
 
 class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 
-    final components = map['components'] as Map<String, dynamic>;
+    final components = map['components'] as Map<String, dynamic>?;
     final schemas = components == null
         ? null
         : components['schemas'] as Map<String, dynamic>;
 
-    return generateBase(dartCode, fileName, options, schemas, true);
+    return generateBase(dartCode, fileName, options, schemas ?? {}, true);
   }
 
   @override
@@ -23,10 +24,10 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 
-    final components = map['components'] as Map<String, dynamic>;
+    final components = map['components'] as Map<String, dynamic>?;
     final responses = components == null
         ? null
-        : components['responses'] as Map<String, dynamic>;
+        : components['responses'] as Map<String, dynamic>?;
 
     if (responses == null) {
       return '';
@@ -34,7 +35,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     var result = <String, dynamic>{};
 
-    final allModelNames = components.containsKey('schemas')
+    final allModelNames = components!.containsKey('schemas')
         ? (components['schemas'] as Map<String, dynamic>)
             .keys
             .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
@@ -42,7 +43,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     responses.keys.forEach((key) {
       if (!allModelNames.contains(key)) {
-        final response = responses[key] as Map<String, dynamic>;
+        final response = responses[key] as Map<String, dynamic>?;
 
         final content = response == null
             ? null
@@ -50,7 +51,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
         final firstContent = content == null
             ? null
-            : content.entries?.first?.value as Map<String, dynamic>;
+            : content.entries.firstOrNull?.value as Map<String, dynamic>?;
 
         final schema = firstContent == null ? null : firstContent['schema'];
 
@@ -68,7 +69,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
 
-    final components = map['components'] as Map<String, dynamic>;
+    final components = map['components'] as Map<String, dynamic>?;
     final requestBodies = components == null
         ? null
         : components['requestBodies'] as Map<String, dynamic>;
@@ -79,7 +80,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     var result = <String, dynamic>{};
 
-    final allModelNames = components.containsKey('schemas')
+    final allModelNames = components!.containsKey('schemas')
         ? (components['schemas'] as Map<String, dynamic>)
             .keys
             .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
@@ -87,7 +88,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     requestBodies.keys.forEach((key) {
       if (!allModelNames.contains(key)) {
-        final response = requestBodies[key] as Map<String, dynamic>;
+        final response = requestBodies[key] as Map<String, dynamic>?;
 
         final content = response == null
             ? null
@@ -95,7 +96,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
         final firstContent = content == null
             ? null
-            : content.entries?.first?.value as Map<String, dynamic>;
+            : content.entries.firstOrNull?.value as Map<String, dynamic>?;
 
         final schema = firstContent == null ? null : firstContent['schema'];
 
@@ -114,19 +115,19 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     final swagger = jsonDecode(swaggerFile);
 
-    final components = swagger['components'] as Map<String, dynamic>;
+    final components = swagger['components'] as Map<String, dynamic>?;
 
     final schemas = components == null
         ? null
-        : components['schemas'] as Map<String, dynamic>;
+        : components['schemas'] as Map<String, dynamic>?;
 
     final responses = components == null
         ? null
-        : components['responses'] as Map<String, dynamic>;
+        : components['responses'] as Map<String, dynamic>?;
 
     final requestBodies = components == null
         ? null
-        : components['requestBodies'] as Map<String, dynamic>;
+        : components['requestBodies'] as Map<String, dynamic>?;
 
     if (schemas != null) {
       schemas.forEach((className, map) {
@@ -145,22 +146,21 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
           return;
         }
 
-        Map<String, dynamic> properties;
+        Map<String, dynamic>? properties;
 
         if (mapMap.containsKey('allOf')) {
           final allOf = mapMap['allOf'] as List<dynamic>;
-          var propertiesContainer = allOf.firstWhere(
-              (e) => (e as Map<String, dynamic>).containsKey('properties'),
-              orElse: () => null) as Map<String, dynamic>;
+          var propertiesContainer = allOf.firstWhereOrNull(
+              (e) => (e as Map<String, dynamic>).containsKey('properties')) as Map<String, dynamic>?;
 
           if (propertiesContainer != null) {
             properties =
-                propertiesContainer['properties'] as Map<String, dynamic>;
+                propertiesContainer['properties'] as Map<String, dynamic>?;
           } else {
-            properties = map['properties'] as Map<String, dynamic>;
+            properties = map['properties'] as Map<String, dynamic>?;
           }
         } else {
-          properties = map['properties'] as Map<String, dynamic>;
+          properties = map['properties'] as Map<String, dynamic>?;
         }
 
         if (properties == null) {
@@ -185,7 +185,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       responses.forEach((className, map) {
         final response = responses[className];
         final content = response['content'] as Map<String, dynamic>;
-        final firstContent = content?.entries?.first?.value;
+        final firstContent = content.entries.firstOrNull?.value;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
@@ -217,7 +217,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       requestBodies.forEach((className, map) {
         final response = requestBodies[className];
         final content = response['content'] as Map<String, dynamic>;
-        final firstContent = content?.entries?.first?.value;
+        final firstContent = content.entries.firstOrNull?.value;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
@@ -258,7 +258,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     final swagger = jsonDecode(swaggerFile);
 
-    final components = swagger['components'] as Map<String, dynamic>;
+    final components = swagger['components'] as Map<String, dynamic>?;
 
     final schemas = components == null
         ? null
@@ -299,7 +299,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     );
 
     if (newModelMap == null) {
-      return null;
+      return {};
     }
 
     final currentProperties = newModelMap['properties'] as Map<String, dynamic>;
