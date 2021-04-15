@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'item_schema.dart';
 
-part 'response_schema.g.dart';
+part 'response_schema.g2.dart';
 
 @JsonSerializable()
 class ResponseSchema {
