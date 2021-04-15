@@ -8,8 +8,8 @@ part of 'swagger_tag.dart';
 
 SwaggerTag _$SwaggerTagFromJson(Map<String, dynamic> json) {
   return SwaggerTag(
-    name: json['name'] as String,
-    description: json['description'] as String,
+    name: json['name'] as String? ?? '',
+    description: json['description'] as String? ?? '',
   );
 }
 

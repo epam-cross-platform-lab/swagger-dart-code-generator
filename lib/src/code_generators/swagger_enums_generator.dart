@@ -7,6 +7,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
+import 'package:collection/collection.dart';
 
 abstract class SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
@@ -170,9 +171,9 @@ $enumsFromRequestBodies
           }
 
           final enumValues = swaggerRequestParameter.schema?.enumValues ??
-              swaggerRequestParameter.items?.enumValues;
+              swaggerRequestParameter.items?.enumValues ?? [];
 
-          if (enumValues != null) {
+          if (enumValues.isNotEmpty) {
             final enumContent = generateEnumContent(name, enumValues);
 
             result.writeln(enumContent);
@@ -295,9 +296,9 @@ $enumMap
           }
 
           final enumValues = swaggerRequestParameter.schema?.enumValues ??
-              swaggerRequestParameter.items?.enumValues;
+              swaggerRequestParameter.items?.enumValues ?? [];
 
-          if (enumValues != null) {
+          if (enumValues.isNotEmpty) {
             enumNames.add(name);
           }
         }
@@ -386,17 +387,17 @@ $enumMap
 
     if (map.containsKey('allOf')) {
       final allOf = map['allOf'] as List<dynamic>;
-      var propertiesContainer = allOf.firstWhere(
+      var propertiesContainer = allOf.firstWhereOrNull(
           (e) => (e as Map<String, dynamic>).containsKey('properties'),
-          orElse: () => null) as Map<String, dynamic>;
+         ) as Map<String, dynamic>? ?? {};
 
-      if (propertiesContainer != null) {
-        properties = propertiesContainer['properties'] as Map<String, dynamic>;
+      if (propertiesContainer.isNotEmpty) {
+        properties = propertiesContainer['properties'] as Map<String, dynamic>? ?? {};
       } else {
-        properties = map['properties'] as Map<String, dynamic>;
+        properties = map['properties'] as Map<String, dynamic>? ?? {};
       }
     } else {
-      properties = map['properties'] as Map<String, dynamic>;
+      properties = map['properties'] as Map<String, dynamic>? ?? {};
     }
 
     if (properties.isEmpty) {

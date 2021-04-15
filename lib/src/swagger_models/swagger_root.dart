@@ -21,8 +21,8 @@ class SwaggerRoot {
             ? SwaggerInfo.fromJson(json['info'] as Map<String, dynamic>)
             : null,
         schemes = [],
-        host = json['host'] as String,
-        basePath = json['basePath'] as String,
+        host = json['host'] as String? ?? '',
+        basePath = json['basePath'] as String? ?? '',
         tags = json.containsKey('tags')
             ? mapTags(json['tags'] as List<dynamic>)
             : <SwaggerTag>[],

@@ -8,9 +8,9 @@ part of 'item_schema.dart';
 
 ItemSchema _$ItemSchemaFromJson(Map<String, dynamic> json) {
   return ItemSchema(
-    originalRef: json['originalRef'] as String,
-    ref: json[r'$ref'] as String,
-    type: json['type'] as String,
+    originalRef: json['originalRef'] as String? ?? '',
+    ref: json[r'$ref'] as String? ?? '',
+    type: json['type'] as String? ?? '',
   );
 }
 

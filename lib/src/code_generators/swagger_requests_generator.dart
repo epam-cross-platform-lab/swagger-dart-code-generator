@@ -87,7 +87,7 @@ $allMethodsContent
       final response = responses[key] as Map<String, dynamic>?;
 
       final content =
-          response == null ? null : response['content'] as Map<String, dynamic>;
+          response == null ? null : response['content'] as Map<String, dynamic>?;
 
       if (content != null && content.entries.length > 1) {
         results.add(key.capitalize);
@@ -149,13 +149,13 @@ $allMethodsContent
         }
 
         final requestBody = swaggerRequest.requestBody?.ref;
-        if (requestBody != null) {
-          var requestBodyType = requestBody.split('/').last;
+        if (requestBody?.isNotEmpty == true) {
+          var requestBodyType = requestBody!.split('/').last;
 
           final bodySchema =
               requestBodies == null ? null : requestBodies[requestBodyType];
 
-          if (bodySchema != null) {
+          if (bodySchema?.isNotEmpty == true) {
             final content = bodySchema['content'] as Map?;
             final firstContent =
                 content == null ? null : content[content.keys.first];
@@ -188,19 +188,21 @@ $allMethodsContent
           useRequiredAttribute: options.useRequiredAttributeForHeaders,
         );
 
+        
+
         final hasEnums = swaggerRequest.parameters.any((parameter) =>
-            parameter.items?.enumValues != null ||
-            parameter.item?.enumValues != null ||
-            parameter.schema?.enumValues != null ||
+            parameter.items?.enumValues.isNotEmpty == true ||
+            parameter.item?.enumValues.isNotEmpty == true ||
+            parameter.schema?.enumValues.isNotEmpty == true ||
             allEnumNames.contains(
                 'enums.${parameter.ref.isEmpty ? "" : parameter.ref.split("/").last.pascalCase}'));
 
         final enumInBodyName = swaggerRequest.parameters.firstWhereOrNull(
           (parameter) =>
               parameter.inParameter == 'body' &&
-              (parameter.items?.enumValues != null ||
-                  parameter.item?.enumValues != null ||
-                  parameter.schema?.enumValues != null),
+              (parameter.items?.enumValues.isNotEmpty == true ||
+                  parameter.item?.enumValues.isNotEmpty == true ||
+                  parameter.schema?.enumValues.isNotEmpty == true),
         );
 
         final parameterCommentsForMethod =
@@ -315,9 +317,9 @@ $allMethodsContent
         .toList();
 
     final enumParametersNames = parameters
-        .where((parameter) => (parameter.items?.enumValues != null ||
-            parameter.item?.enumValues != null ||
-            parameter.schema?.enumValues != null ||
+        .where((parameter) => (parameter.items?.enumValues.isNotEmpty == true ||
+            parameter.item?.enumValues.isNotEmpty == true ||
+            parameter.schema?.enumValues.isNotEmpty == true ||
             allEnumNames.contains(
                 'enums.${parameter.ref.isNotEmpty ? parameter.ref.split("/").last.pascalCase : ""}')))
         .map((e) => e.name)
@@ -343,9 +345,9 @@ $allMethodsContent
     final enumListParametersNames = parameters
         .where((parameter) =>
             parameter.type == 'array' &&
-            (parameter.items?.enumValues != null ||
-                parameter.item?.enumValues != null ||
-                parameter.schema?.enumValues != null))
+            (parameter.items?.enumValues.isNotEmpty == true ||
+                parameter.item?.enumValues.isNotEmpty == true ||
+                parameter.schema?.enumValues.isNotEmpty == true))
         .map((e) => e.name)
         .toList();
 
@@ -504,10 +506,10 @@ $allMethodsContent
     String parameterType;
     if (parameter.type.isNotEmpty) {
       parameterType = parameter.type;
-    } else if (parameter.schema?.enumValues != null) {
+    } else if (parameter.schema?.enumValues.isNotEmpty ?? false) {
       parameterType =
           'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
-    } else if (parameter.schema?.originalRef != null) {
+    } else if (parameter.schema?.originalRef.isNotEmpty ?? false) {
       parameterType = SwaggerModelsGenerator.getValidatedClassName(
           parameter.schema!.originalRef.toString());
     } else if (parameter.ref.isNotEmpty) {
@@ -521,7 +523,7 @@ $allMethodsContent
       if (parameter.type == 'array') {
         parameterType = 'List<$parameterType>';
       }
-    } else if (parameter.schema?.ref != null) {
+    } else if (parameter.schema?.ref.isNotEmpty ?? false) {
       parameterType = parameter.schema!.ref.split('/').last;
     } else {
       parameterType = defaultBodyParameter;
@@ -535,10 +537,10 @@ $allMethodsContent
   String getDefaultParameter(
       SwaggerRequestParameter parameter, String path, String requestType) {
     String parameterType;
-    if (parameter.schema?.enumValues != null) {
+    if (parameter.schema?.enumValues.isNotEmpty ?? false) {
       parameterType =
           'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
-    } else if (parameter.items?.enumValues != null) {
+    } else if (parameter.items?.enumValues.isNotEmpty ?? false) {
       final typeName =
           'enums.${SwaggerModelsGenerator.generateRequestEnumName(path, requestType, parameter.name)}';
       parameterType = 'List<$typeName>';
@@ -565,7 +567,7 @@ $allMethodsContent
       case 'body':
         return getBodyParameter(parameter, path, requestType, allEnumNames);
       case 'formData':
-        final isEnum = parameter.schema?.enumValues != null;
+        final isEnum = parameter.schema?.enumValues.isNotEmpty ?? false;
 
         return "@Field('${parameter.name}') ${parameter.isRequired ? "@required" : ""} ${isEnum ? 'enums.$parameterType?' : getParameterTypeName(parameter.type)}? ${validateParameterName(parameter.name)}";
       case 'header':
@@ -670,7 +672,7 @@ abstract class $className extends ChopperService''';
       return '';
     }
 
-    if (neededResponse.schema?.type != null) {
+    if (neededResponse.schema?.type.isNotEmpty ?? false) {
       return getParameterTypeName(
           neededResponse.schema?.type ?? '',
           neededResponse.schema?.items?.originalRef ??
@@ -678,7 +680,7 @@ abstract class $className extends ChopperService''';
               neededResponse.schema?.items?.ref.split('/').lastOrNull ?? '');
     }
 
-    if (neededResponse.schema?.ref != null) {
+    if (neededResponse.schema?.ref.isNotEmpty ?? false) {
       return neededResponse.schema?.ref.split('/').lastOrNull ?? '';
     }
 
@@ -693,7 +695,7 @@ abstract class $className extends ChopperService''';
       }
     }
 
-    if (neededResponse.schema?.originalRef != null) {
+    if (neededResponse.schema?.originalRef.isNotEmpty ?? false) {
       return neededResponse.schema?.originalRef ?? '';
     }
 
@@ -720,8 +722,12 @@ abstract class $className extends ChopperService''';
 
   String getMapName(
       String path, String requestType, String parameterName, String ref) {
-    final enumName = ref.split('/').lastOrNull?.pascalCase ??
-        SwaggerModelsGenerator.generateRequestEnumName(
+    if(ref.isNotEmpty)
+    {
+      return 'enums.\$${ref.split('/').lastOrNull?.pascalCase}Map';
+    }
+
+    final enumName = SwaggerModelsGenerator.generateRequestEnumName(
             path, requestType, parameterName);
 
     return 'enums.\$${enumName}Map';
