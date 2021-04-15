@@ -37,7 +37,7 @@ class SwaggerRequestsGeneratorV2 extends SwaggerRequestsGenerator {
         className,
         fileName,
         options,
-        definitions != null && definitions.keys.isNotEmpty,
+        definitions.isNotEmpty && definitions.keys.isNotEmpty,
         allEnumNames,
         [],
         SwaggerModelsGenerator.generateBasicTypesMapFromSchemas(definitions));

@@ -8,6 +8,6 @@ class SwaggerEnumsGeneratorV2 extends SwaggerEnumsGenerator {
 
     final definitions = map['definitions'] as Map<String, dynamic>;
 
-    return generateFromMap(dartCode, fileName, definitions, null, null);
+    return generateFromMap(dartCode, fileName, definitions, {}, {});
   }
 }
