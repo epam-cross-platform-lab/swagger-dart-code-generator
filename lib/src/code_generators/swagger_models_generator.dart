@@ -434,7 +434,7 @@ abstract class SwaggerModelsGenerator {
 
     var typeName = '';
     if (items != null) {
-      typeName = getValidatedClassName(items['originalRef'] as String? ?? '');
+      typeName = getValidatedClassName(items['originalRef'] as String);
 
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
@@ -442,7 +442,7 @@ abstract class SwaggerModelsGenerator {
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
-        } else if(typeName != 'dynamic') {
+        } else {
           typeName = typeName.pascalCase;
         }
       }
@@ -454,7 +454,7 @@ abstract class SwaggerModelsGenerator {
 
     if (typeName.isEmpty) {
       typeName = getParameterTypeName(
-          className, propertyName, items as Map<String, dynamic>? ?? {});
+          className, propertyName, items as Map<String, dynamic>);
     }
 
     final unknownEnumValue = generateUnknownEnumValue(

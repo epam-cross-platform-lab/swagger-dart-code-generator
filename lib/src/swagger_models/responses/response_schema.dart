@@ -11,16 +11,16 @@ class ResponseSchema {
   factory ResponseSchema.fromJson(Map<String, dynamic> json) =>
       _$ResponseSchemaFromJson(json);
 
-  @JsonKey(name: 'type', defaultValue: '')
+  @JsonKey(name: 'type')
   String type;
 
-  @JsonKey(name: 'originalRef', defaultValue: '')
+  @JsonKey(name: 'originalRef')
   String originalRef;
 
-  @JsonKey(name: '\$ref', defaultValue: '')
+  @JsonKey(name: '\$ref')
   String ref;
 
-  @JsonKey(name: 'enum', defaultValue: [])
+  @JsonKey(name: 'enum')
   List<String> enumValue;
 
   @JsonKey(name: 'items')

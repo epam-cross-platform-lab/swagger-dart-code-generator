@@ -14,7 +14,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final components = map['components'] as Map<String, dynamic>?;
     final schemas = components == null
         ? null
-        : components['schemas'] as Map<String, dynamic>?;
+        : components['schemas'] as Map<String, dynamic>;
 
     return generateBase(dartCode, fileName, options, schemas ?? {}, true);
   }
@@ -184,8 +184,8 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     if (responses != null) {
       responses.forEach((className, map) {
         final response = responses[className];
-        final content = response['content'] as Map<String, dynamic>?;
-        final firstContent = content?.entries.firstOrNull?.value;
+        final content = response['content'] as Map<String, dynamic>;
+        final firstContent = content.entries.firstOrNull?.value;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
@@ -194,7 +194,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         }
         final properties = schema == null
             ? null
-            : schema['properties'] as Map<String, dynamic>?;
+            : schema['properties'] as Map<String, dynamic>;
 
         if (properties == null) {
           return;
@@ -262,7 +262,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     final schemas = components == null
         ? null
-        : components['schemas'] as Map<String, dynamic>?;
+        : components['schemas'] as Map<String, dynamic>;
 
     if (schemas != null) {
       schemas.forEach((className, map) {
@@ -288,7 +288,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
     if (!modelMap.containsKey('allOf')) {
-      return modelMap['properties'] as Map<String, dynamic>? ?? {};
+      return modelMap['properties'] as Map<String, dynamic>;
     }
 
     final allOf = modelMap['allOf'] as List<dynamic>;

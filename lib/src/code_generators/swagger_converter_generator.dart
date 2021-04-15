@@ -49,7 +49,7 @@ ${_generateModelsMapping(dartCode)}};''';
     if (responses.isNotEmpty) {
       responses.keys.forEach((key) {
         if (!result.contains(key)) {
-          final response = responses[key] as Map<String, dynamic>?;
+          final response = responses[key] as Map<String, dynamic>;
 
           final content = response == null
               ? null
@@ -78,11 +78,11 @@ ${_generateModelsMapping(dartCode)}};''';
 
   Map<String, dynamic> getDefinitions(dynamic map) {
     if (map['definitions'] != null) {
-      return map['definitions'] as Map<String, dynamic>? ?? {};
+      return map['definitions'] as Map<String, dynamic>;
     }
 
     if (map['components'] != null) {
-      return map['components']['schemas'] as Map<String, dynamic>? ?? {};
+      return map['components']['schemas'] as Map<String, dynamic>;
     }
 
     return {};
@@ -90,7 +90,7 @@ ${_generateModelsMapping(dartCode)}};''';
 
   Map<String, dynamic> getResponses(dynamic map) {
     if (map['components'] != null) {
-      return map['components']['responses'] as Map<String, dynamic>? ?? {};
+      return map['components']['responses'] as Map<String, dynamic>;
     }
 
     return {};

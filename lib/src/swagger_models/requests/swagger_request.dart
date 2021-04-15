@@ -16,22 +16,22 @@ class SwaggerRequest {
       this.requestBody,});
 
   SwaggerRequest.fromJson(Map<String, dynamic> json)
-      : summary = json['summary'] as String ? ?? '',
+      : summary = json['summary'] as String,
       type = '',
-        description = json['description'] as String? ?? '',
-        operationId = json['operationId'] as String? ?? '',
+        description = json['description'] as String,
+        operationId = json['operationId'] as String,
         consumes = (json['consumes'] as List<dynamic>?)
                 ?.map((dynamic e) => e.toString())
                 .toList() ??
             <String>[],
         requestBody =
-            RequestBody.fromJson(json['requestBody'] as Map<String, dynamic>?),
+            RequestBody.fromJson(json['requestBody'] as Map<String, dynamic>),
         produces = (json['produces'] as List<dynamic>?)
                 ?.map((dynamic e) => e.toString())
                 .toList() ??
             <String>[],
-        responses = mapResponses(json['responses'] as Map<String, dynamic>?),
-        parameters = mapParameters(json['parameters'] as List<dynamic>?);
+        responses = mapResponses(json['responses'] as Map<String, dynamic>),
+        parameters = mapParameters(json['parameters'] as List<dynamic>);
 
   String type;
   String summary;
@@ -94,13 +94,13 @@ class RequestContent {
 
   RequestContent.fromJson(Map<dynamic, dynamic> json)
       : responseType =
-            json['schema'] != null ? json['schema']['type'] as String? ?? '' : '',
+            json['schema'] != null ? json['schema']['type'] as String : '',
         items = json['schema'] != null && json['schema']['items'] != null
             ? ItemSchema.fromJson(
                 json['schema']['items'] as Map<String, dynamic>)
             : null,
-        ref = json['schema'] != null ? json['schema']['\$ref'] as String? ?? '' : '',
-        type = json['schema'] != null ? json['schema']['type'] as String? ?? '' : '';
+        ref = json['schema'] != null ? json['schema']['\$ref'] as String : '',
+        type = json['schema'] != null ? json['schema']['type'] as String : '';
 
   final String responseType;
   final String type;

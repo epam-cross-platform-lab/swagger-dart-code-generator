@@ -30,7 +30,7 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
 
     final components = map['components'] as Map<String, dynamic>?;
     final schemas = components != null
-        ? components['schemas'] as Map<String, dynamic>?
+        ? components['schemas'] as Map<String, dynamic>
         : null;
 
     final allEnumNames = SwaggerModelsGeneratorV3().getAllEnumNames(code);

@@ -9,10 +9,10 @@ part of 'swagger_parameter_schema.dart';
 SwaggerParameterSchema _$SwaggerParameterSchemaFromJson(
     Map<String, dynamic> json) {
   return SwaggerParameterSchema(
-    type: json['type'] as String? ?? '',
-    enumValues: SwaggerParameterSchema.enumsFromJson(json['enum'] as List?),
-    originalRef: json['originalRef'] as String? ?? '',
-    ref: json[r'$ref'] as String? ?? '',
+    type: json['type'] as String,
+    enumValues: SwaggerParameterSchema.enumsFromJson(json['enum'] as List),
+    originalRef: json['originalRef'] as String,
+    ref: json[r'$ref'] as String,
   );
 }
 

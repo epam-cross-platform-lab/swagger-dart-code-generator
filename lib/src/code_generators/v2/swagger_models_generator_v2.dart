@@ -31,7 +31,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
     final swagger = jsonDecode(swaggerFile);
 
-    final definitions = swagger['definitions'] as Map<String, dynamic>? ?? {};
+    final definitions = swagger['definitions'] as Map<String, dynamic>;
 
     if (definitions.isNotEmpty) {
       definitions.forEach((className, map) {
@@ -108,7 +108,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
   @override
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
-    return modelMap['properties'] as Map<String, dynamic>? ?? {};
+    return modelMap['properties'] as Map<String, dynamic>;
   }
 
   @override

@@ -9,13 +9,13 @@ class ItemSchema {
   factory ItemSchema.fromJson(Map<String, dynamic> json) =>
       _$ItemSchemaFromJson(json);
 
-  @JsonKey(name: 'originalRef', defaultValue: '')
+  @JsonKey(name: 'originalRef')
   final String originalRef;
 
-  @JsonKey(name: '\$ref', defaultValue: '')
+  @JsonKey(name: '\$ref')
   final String ref;
 
-  @JsonKey(name: 'type', defaultValue: '')
+  @JsonKey(name: 'type')
   final String type;
 
   Map<String, dynamic> toJson() => _$ItemSchemaToJson(this);

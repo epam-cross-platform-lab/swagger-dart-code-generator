@@ -9,10 +9,10 @@ class SwaggerRequestItems {
   factory SwaggerRequestItems.fromJson(Map<String, dynamic> json) =>
       _$SwaggerRequestItemsFromJson(json);
 
-  @JsonKey(name: 'type', defaultValue: '')
+  @JsonKey(name: 'type')
   String type;
 
-  @JsonKey(name: 'enum', defaultValue: [])
+  @JsonKey(name: 'enum')
   List<String> enumValues;
 
   Map<String, dynamic> toJson() => _$SwaggerRequestItemsToJson(this);
