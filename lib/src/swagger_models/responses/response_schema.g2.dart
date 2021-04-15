@@ -8,13 +8,15 @@ part of 'response_schema.dart';
 
 ResponseSchema _$ResponseSchemaFromJson(Map<String, dynamic> json) {
   return ResponseSchema(
-    type: json['type'] as String,
-    originalRef: json['originalRef'] as String,
-    enumValue: (json['enum'] as List<dynamic>).map((e) => e as String).toList(),
+    type: json['type'] as String? ?? '',
+    originalRef: json['originalRef'] as String? ?? '',
+    enumValue:
+        (json['enum'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+            [],
     items: json['items'] == null
         ? null
         : ItemSchema.fromJson(json['items'] as Map<String, dynamic>),
-    ref: json[r'$ref'] as String,
+    ref: json[r'$ref'] as String? ?? '',
   );
 }
 

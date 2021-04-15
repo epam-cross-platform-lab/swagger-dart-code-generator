@@ -27,7 +27,7 @@ class SwaggerRequestsGeneratorV2 extends SwaggerRequestsGenerator {
       });
     });
 
-    final definitions = map['definitions'] as Map<String, dynamic>;
+    final definitions = map['definitions'] as Map<String, dynamic>? ?? {};
 
     final allEnumNames = SwaggerModelsGeneratorV2().getAllEnumNames(code);
 

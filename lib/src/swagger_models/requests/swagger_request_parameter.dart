@@ -23,28 +23,28 @@ class SwaggerRequestParameter {
   factory SwaggerRequestParameter.fromJson(Map<String, dynamic> json) =>
       _$SwaggerRequestParameterFromJson(json);
 
-  @JsonKey(name: 'in')
+  @JsonKey(name: 'in', defaultValue: '')
   String inParameter;
 
-  @JsonKey(name: 'name')
+  @JsonKey(name: 'name', defaultValue: '')
   String name;
 
-  @JsonKey(name: 'description')
+  @JsonKey(name: 'description', defaultValue: '')
   String description;
 
   @JsonKey(name: 'required', defaultValue: false)
   bool isRequired;
 
-  @JsonKey(name: '\$ref')
+  @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
 
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', defaultValue: '')
   String type;
 
   @JsonKey(name: 'item')
   ParameterItem? item;
 
-  @JsonKey(name: 'collectionFormat')
+  @JsonKey(name: 'collectionFormat', defaultValue: '')
   String collectionFormat;
 
   @JsonKey(name: 'schema')
@@ -53,7 +53,7 @@ class SwaggerRequestParameter {
   @JsonKey(name: 'items')
   SwaggerRequestItems? items;
 
-  @JsonKey(ignore: true)
+  @JsonKey(ignore: true, defaultValue: '')
   String key;
 
   Map<String, dynamic> toJson() => _$SwaggerRequestParameterToJson(this);

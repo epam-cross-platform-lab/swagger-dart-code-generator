@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_info.g2.dart';
+part 'swagger_info.g.dart';
 
 @JsonSerializable()
 class SwaggerInfo {
@@ -10,16 +10,16 @@ class SwaggerInfo {
   factory SwaggerInfo.fromJson(Map<String, dynamic> json) =>
       _$SwaggerInfoFromJson(json);
 
-  @JsonKey(name: 'description')
+  @JsonKey(name: 'description', defaultValue: '')
   String description;
 
-  @JsonKey(name: 'version')
+  @JsonKey(name: 'version', defaultValue: '')
   String version;
 
-  @JsonKey(name: 'title')
+  @JsonKey(name: 'title', defaultValue: '')
   String title;
 
-  @JsonKey(name: 'termsOfService')
+  @JsonKey(name: 'termsOfService', defaultValue: '')
   String termsOfService;
 
   Map<String, dynamic> toJson() => _$SwaggerInfoToJson(this);
