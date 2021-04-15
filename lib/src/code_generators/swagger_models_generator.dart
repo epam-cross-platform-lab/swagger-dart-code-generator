@@ -457,7 +457,7 @@ abstract class SwaggerModelsGenerator {
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '$jsonKeyContent  final List<$typeName?>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$jsonKeyContent  final List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateGeneralPropertyContent(
@@ -699,7 +699,7 @@ enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase
 }
 
 List<String> ${neededName.camelCase}ListToJson(
-    List<enums.$neededName?>? ${neededName.camelCase}) {
+    List<enums.$neededName>? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
   {
