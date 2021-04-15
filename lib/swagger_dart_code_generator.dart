@@ -33,8 +33,8 @@ Map<String, List<String>> generateExtensions(GeneratorOptions options) {
   });
 
   ///Register additional outputs in first input
-  result[filesList.first.path].add('${options.outputFolder}$indexFileName');
-  result[filesList.first.path].add('${options.outputFolder}$mappingFileName');
+  result[filesList.first.path]!.add('${options.outputFolder}$indexFileName');
+  result[filesList.first.path]!.add('${options.outputFolder}$mappingFileName');
 
   return result;
 }
@@ -48,9 +48,9 @@ class SwaggerDartCodeGenerator implements Builder {
   Map<String, List<String>> get buildExtensions =>
       _buildExtensionsCopy ??= generateExtensions(options);
 
-  Map<String, List<String>> _buildExtensionsCopy;
+  Map<String, List<String>>? _buildExtensionsCopy;
 
-  GeneratorOptions options;
+  late GeneratorOptions options;
 
   final DartFormatter _formatter = DartFormatter();
 
