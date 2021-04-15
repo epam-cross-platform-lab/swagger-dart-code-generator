@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_request_items.g2.dart';
+part 'swagger_request_items.g.dart';
 
 @JsonSerializable()
 class SwaggerRequestItems {
-  SwaggerRequestItems({this.type, this.enumValues});
+  SwaggerRequestItems({this.type = '', this.enumValues = const []});
 
   factory SwaggerRequestItems.fromJson(Map<String, dynamic> json) =>
       _$SwaggerRequestItemsFromJson(json);

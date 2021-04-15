@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'item_schema.g2.dart';
+part 'item_schema.g.dart';
 
 @JsonSerializable()
 class ItemSchema {
-  ItemSchema({this.originalRef, this.ref, this.type});
+  ItemSchema({this.originalRef = '', this.ref = '', this.type = ''});
 
   factory ItemSchema.fromJson(Map<String, dynamic> json) =>
       _$ItemSchemaFromJson(json);

@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'item_schema.dart';
 
-part 'response_schema.g2.dart';
+part 'response_schema.g.dart';
 
 @JsonSerializable()
 class ResponseSchema {
   ResponseSchema(
-      {this.type, this.originalRef, this.enumValue, this.items, this.ref});
+      {this.type = '', this.originalRef = '', this.enumValue = const [], this.items, this.ref = ''});
 
   factory ResponseSchema.fromJson(Map<String, dynamic> json) =>
       _$ResponseSchemaFromJson(json);
@@ -24,7 +24,7 @@ class ResponseSchema {
   List<String> enumValue;
 
   @JsonKey(name: 'items')
-  ItemSchema items;
+  ItemSchema? items;
 
   Map<String, dynamic> toJson() => _$ResponseSchemaToJson(this);
 }

@@ -1,11 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_parameter_schema.g2.dart';
+part 'swagger_parameter_schema.g.dart';
 
 @JsonSerializable()
 class SwaggerParameterSchema {
   SwaggerParameterSchema(
-      {this.type, this.enumValues, this.originalRef, this.ref});
+      {this.type = '', this.enumValues = const [], this.originalRef = '', this.ref = ''});
 
   factory SwaggerParameterSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerParameterSchemaFromJson(json);
@@ -25,5 +25,5 @@ class SwaggerParameterSchema {
   Map<String, dynamic> toJson() => _$SwaggerParameterSchemaToJson(this);
 
   static List<String> enumsFromJson(List list) =>
-      list?.map((e) => e.toString())?.toList();
+      list.map((e) => e.toString()).toList();
 }
