@@ -402,7 +402,7 @@ abstract class SwaggerModelsGenerator {
     allEnumNames.add(enumName);
 
     final unknownEnumValue = generateUnknownEnumValue(
-        allEnumNames, allEnumListNames, enumName, false);
+        allEnumNames, allEnumListNames, enumName, false).substring(2);
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -818,7 +818,7 @@ class $validatedClassName $extendsString{
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
-\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this)..removeWhere((key, value) => value is String && value.isEmpty);
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 }
 $copyWithMethod
 ''';
