@@ -35,7 +35,7 @@ class SwaggerCodeGenerator {
   int _getApiVersion(String dartCode) {
     final dynamic map = jsonDecode(dartCode);
 
-    final openApi = map['openapi'] as String;
+    final openApi = map['openapi'] as String?;
     return openApi != null ? 3 : 2;
   }
 

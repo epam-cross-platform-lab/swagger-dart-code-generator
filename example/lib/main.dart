@@ -7,6 +7,7 @@ Future main() async {
 
   final pet = Pet(
       name: 'Boris',
+      tags: [],
       id: 11,
       photoUrls: [
         'https://i.pinimg.com/originals/de/71/bb/de71bb8a57ff473cc58ebc6af58c4858.jpg'
@@ -14,13 +15,13 @@ Future main() async {
       category: Category(id: 1, name: 'Mops'),
       status: PetStatus.available);
 
-  final postResult = await client.addPet(body: pet);
+  final postResult = await client.petPost(body: pet);
 
   if (postResult.statusCode != 200) {
     ///Some network error
   }
 
-  final getResult = await client.getPetById(petId: 11);
+  final getResult = await client.petPetIdGet(petId: 11);
 
   if (getResult.statusCode != 200) {
     //Some network error

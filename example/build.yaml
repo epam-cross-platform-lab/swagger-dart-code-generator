@@ -20,7 +20,7 @@ targets:
           include_if_null:
             enabled: true
             value: false
-          input_folder: "swaggers/"
+          input_folder: "lib/"
           output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:
