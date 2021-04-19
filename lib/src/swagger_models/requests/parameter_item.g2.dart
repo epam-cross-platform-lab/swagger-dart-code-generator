@@ -9,7 +9,8 @@ part of 'parameter_item.dart';
 ParameterItem _$ParameterItemFromJson(Map<String, dynamic> json) {
   return ParameterItem(
     type: json['type'] as String,
-    enumValues: (json['enum'] as List<String>)?.map((String e) => e)?.toList(),
+    enumValues:
+        (json['enum'] as List<dynamic>).map((e) => e as String).toList(),
     defaultValue: json['default'] as String,
   );
 }

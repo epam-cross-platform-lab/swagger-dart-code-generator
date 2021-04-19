@@ -35,7 +35,7 @@ class SwaggerCodeGenerator {
   int _getApiVersion(String dartCode) {
     final dynamic map = jsonDecode(dartCode);
 
-    final openApi = map['openapi'] as String;
+    final openApi = map['openapi'] as String?;
     return openApi != null ? 3 : 2;
   }
 
@@ -94,11 +94,11 @@ class SwaggerCodeGenerator {
       SwaggerConverterGenerator();
 
   SwaggerEnumsGenerator _getSwaggerEnumsGenerator(String dartCode) =>
-      _enumsMap[_getApiVersion(dartCode)];
+      _enumsMap[_getApiVersion(dartCode)]!;
 
   SwaggerModelsGenerator _getSwaggerModelsGenerator(String dartCode) =>
-      _modelsMap[_getApiVersion(dartCode)];
+      _modelsMap[_getApiVersion(dartCode)]!;
 
   SwaggerRequestsGenerator _getSwaggerRequestsGenerator(String dartCode) =>
-      _requestsMap[_getApiVersion(dartCode)];
+      _requestsMap[_getApiVersion(dartCode)]!;
 }

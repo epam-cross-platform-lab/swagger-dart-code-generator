@@ -58,8 +58,8 @@ void main() {
     test('Should get parameter summary', () {
       const name = 'orderId';
       const description = 'Id of the order';
-      final result = generator.createSummaryParameters(
-          name, description, 'query', GeneratorOptions());
+      final result = generator.createSummaryParameters(name, description,
+          'query', GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains('///@param orderId Id of the order'));
     });
@@ -88,8 +88,8 @@ void main() {
       const name = 'OrderService';
       const host = 'some.host';
       const path = '/path';
-      final result = generator.getChopperClientContent(
-          name, host, path, GeneratorOptions(), true);
+      final result = generator.getChopperClientContent(name, host, path,
+          GeneratorOptions(inputFolder: '', outputFolder: ''), true);
 
       expect(result, contains('static OrderService create'));
       expect(result, contains('services: [_\$OrderService()],'));
@@ -104,6 +104,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: true,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       final isContainHeader = result.contains('@Header');
@@ -118,6 +120,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: true,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('Response<Object>'));
@@ -130,6 +134,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: true,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('@Body() @required String? body'));
@@ -142,6 +148,8 @@ void main() {
           fileName,
           GeneratorOptions(
             usePathForRequestNames: true,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('modelItemsGet'));
@@ -154,6 +162,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: false,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       final isContainHeader = result.contains('@Header');
@@ -170,6 +180,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: false,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('List<String>? testName'));
@@ -184,6 +196,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: false,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('Future<chopper.Response<List<ItemSummary>>>'));
@@ -200,6 +214,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: false,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('Future<chopper.Response<List<String>>>'));
@@ -212,6 +228,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: false,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('Future<chopper.Response<MyObject>>'));
@@ -226,6 +244,8 @@ void main() {
           fileName,
           GeneratorOptions(
             ignoreHeaders: false,
+            inputFolder: '',
+            outputFolder: '',
           ));
 
       expect(result, contains('Future<chopper.Response<List<TestItem>>>'));
@@ -240,6 +260,8 @@ void main() {
           fileName,
           GeneratorOptions(
               ignoreHeaders: false,
+              inputFolder: '',
+              outputFolder: '',
               responseOverrideValueMap: <ResponseOverrideValueMap>[
                 ResponseOverrideValueMap(
                     method: 'get',
@@ -252,8 +274,12 @@ void main() {
     });
 
     test('Should generate return type by originalRef', () {
-      final result = generator.generate(request_with_original_ref_return_type,
-          className, fileName, GeneratorOptions(ignoreHeaders: false));
+      final result = generator.generate(
+          request_with_original_ref_return_type,
+          className,
+          fileName,
+          GeneratorOptions(
+              ignoreHeaders: false, inputFolder: '', outputFolder: ''));
 
       expect(result, contains('Future<chopper.Response<TestItem>>'));
     });
@@ -265,15 +291,20 @@ void main() {
           request_with_content_first_response_type,
           className,
           fileName,
-          GeneratorOptions(ignoreHeaders: false));
+          GeneratorOptions(
+              ignoreHeaders: false, inputFolder: '', outputFolder: ''));
 
       expect(result, contains('Future<chopper.Response<String>>'));
     });
 
     test('Should generate return type by content -> first -> responseType ref',
         () {
-      final result = generator.generate(request_with_content_first_response_ref,
-          className, fileName, GeneratorOptions(ignoreHeaders: false));
+      final result = generator.generate(
+          request_with_content_first_response_ref,
+          className,
+          fileName,
+          GeneratorOptions(
+              ignoreHeaders: false, inputFolder: '', outputFolder: ''));
 
       expect(result,
           contains('Future<chopper.Response<TestType>> getModelItems();'));
@@ -317,9 +348,19 @@ void main() {
       expect(result, equals(responses.first));
     });
 
-    test('Should return null if there is no success response', () {
+    test('Should return response if code is 201', () {
       final responses = <SwaggerResponse>[
         SwaggerResponse(code: '201', description: 'Cool'),
+        SwaggerResponse(code: '401', description: 'unauthorized')
+      ];
+      final result = generator.getSuccessedResponse(responses);
+
+      expect(result, equals(responses.first));
+    });
+
+    test('Should return null if there is no success response', () {
+      final responses = <SwaggerResponse>[
+        SwaggerResponse(code: '204', description: 'No content'),
         SwaggerResponse(code: '401', description: 'unauthorized')
       ];
       final result = generator.getSuccessedResponse(responses);
@@ -337,10 +378,13 @@ void main() {
           schema: SwaggerParameterSchema(originalRef: 'TestItem'));
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          path: '/path',
-          requestType: 'get');
+        parameter: parameter,
+        ignoreHeaders: false,
+        path: '/path',
+        requestType: 'get',
+        useRequiredAttribute: false,
+        allEnumNames: [],
+      );
 
       expect(result, contains('@Body() @required TestItem? testParameter'));
     });
@@ -353,10 +397,13 @@ void main() {
           schema: SwaggerParameterSchema(originalRef: 'TestItem'));
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          path: '/path',
-          requestType: 'get');
+        parameter: parameter,
+        ignoreHeaders: false,
+        path: '/path',
+        requestType: 'get',
+        useRequiredAttribute: false,
+        allEnumNames: [],
+      );
 
       expect(result,
           contains("@Field('testParameter') @required dynamic? testParameter"));
@@ -370,10 +417,13 @@ void main() {
           schema: SwaggerParameterSchema(enumValues: <String>['one', 'two']));
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          path: '/path',
-          requestType: 'get');
+        parameter: parameter,
+        ignoreHeaders: false,
+        path: '/path',
+        requestType: 'get',
+        useRequiredAttribute: false,
+        allEnumNames: [],
+      );
 
       expect(
           result,
@@ -386,7 +436,13 @@ void main() {
           inParameter: 'body', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+        parameter: parameter,
+        ignoreHeaders: false,
+        useRequiredAttribute: false,
+        allEnumNames: [],
+        path: '',
+        requestType: '',
+      );
 
       expect(result, contains('@Body() @required Object? testParameter'));
     });
@@ -396,12 +452,16 @@ void main() {
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          useRequiredAttribute: true);
+        parameter: parameter,
+        ignoreHeaders: false,
+        useRequiredAttribute: true,
+        requestType: '',
+        path: '',
+        allEnumNames: [],
+      );
 
       expect(result,
-          contains("@Header('testParameter') @required String testParameter"));
+          contains("@Header('testParameter') required String? testParameter"));
     });
 
     test('Should generate header parameter if ignore headers == true', () {
@@ -409,9 +469,13 @@ void main() {
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: true,
-          useRequiredAttribute: true);
+        parameter: parameter,
+        ignoreHeaders: true,
+        useRequiredAttribute: true,
+        allEnumNames: [],
+        path: '',
+        requestType: '',
+      );
 
       expect(result, equals(''));
     });
@@ -421,12 +485,16 @@ void main() {
           inParameter: 'header', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter,
-          ignoreHeaders: false,
-          useRequiredAttribute: false);
+        parameter: parameter,
+        ignoreHeaders: false,
+        useRequiredAttribute: false,
+        allEnumNames: [],
+        path: '',
+        requestType: '',
+      );
 
       expect(
-          result, equals('@Header(\'testParameter\')  String testParameter'));
+          result, equals('@Header(\'testParameter\')  String? testParameter'));
     });
 
     test('Should generate custom parameter types -> schema', () {
@@ -437,7 +505,13 @@ void main() {
           schema: SwaggerParameterSchema(type: 'MyCustomType'));
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: true);
+        parameter: parameter,
+        ignoreHeaders: true,
+        allEnumNames: [],
+        path: '',
+        useRequiredAttribute: false,
+        requestType: '',
+      );
 
       expect(
           result,
@@ -450,7 +524,13 @@ void main() {
           inParameter: 'cookie', name: 'testParameter', isRequired: true);
 
       final result = generator.getParameterContent(
-          parameter: parameter, ignoreHeaders: false);
+        parameter: parameter,
+        ignoreHeaders: false,
+        allEnumNames: [],
+        path: '',
+        requestType: '',
+        useRequiredAttribute: false,
+      );
 
       expect(result, contains(''));
     });
@@ -488,7 +568,7 @@ void main() {
     });
 
     test('Should convert null to dynamic', () {
-      final result = generator.getParameterTypeName(null);
+      final result = generator.getParameterTypeName('');
 
       expect(result, 'dynamic');
     });
@@ -496,8 +576,14 @@ void main() {
 
   group('Tests for createSummaryParameters', () {
     test('Should generate description for parameter', () {
-      final result = generator.createSummaryParameters('testParameterName',
-          'testParameterDescription', 'query', GeneratorOptions());
+      final result = generator.createSummaryParameters(
+          'testParameterName',
+          'testParameterDescription',
+          'query',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
       expect(result,
           equals('	///@param testParameterName testParameterDescription'));
     });
@@ -507,7 +593,10 @@ void main() {
           'testParameterName',
           'test\tParameter\nDescription\rSplitted',
           'query',
-          GeneratorOptions());
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
       expect(
           result,
           equals(
@@ -529,13 +618,13 @@ void main() {
             SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
               SwaggerRequest(
                   type: 'get',
-                  operationId: null,
+                  operationId: '',
                   parameters: <SwaggerRequestParameter>[],
                   responses: <SwaggerResponse>[])
             ])
           ]),
           '',
-          GeneratorOptions(),
+          GeneratorOptions(inputFolder: '', outputFolder: ''),
           [],
           [],
           {});
@@ -549,7 +638,7 @@ void main() {
       final result = generator.getAllMethodsContent(
           SwaggerRoot(paths: <SwaggerPath>[
             SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
-              SwaggerRequest(type: 'get', operationId: null, parameters: [
+              SwaggerRequest(type: 'get', operationId: '', parameters: [
                 SwaggerRequestParameter(
                     name: 'parameterName',
                     inParameter: 'body',
@@ -559,7 +648,7 @@ void main() {
             ])
           ]),
           '',
-          GeneratorOptions(),
+          GeneratorOptions(inputFolder: '', outputFolder: ''),
           [],
           [],
           {});
@@ -573,7 +662,7 @@ void main() {
       final result = generator.getAllMethodsContent(
           SwaggerRoot(paths: <SwaggerPath>[
             SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
-              SwaggerRequest(type: 'get', operationId: null, parameters: [
+              SwaggerRequest(type: 'get', operationId: '', parameters: [
                 SwaggerRequestParameter(
                     name: 'parameterName',
                     inParameter: 'body',
@@ -583,7 +672,7 @@ void main() {
             ])
           ]),
           '',
-          GeneratorOptions(),
+          GeneratorOptions(inputFolder: '', outputFolder: ''),
           [],
           [],
           {});
@@ -597,7 +686,7 @@ void main() {
       final result = generator.getAllMethodsContent(
           SwaggerRoot(paths: <SwaggerPath>[
             SwaggerPath(path: '/test/path', requests: <SwaggerRequest>[
-              SwaggerRequest(type: 'get', operationId: null, parameters: [
+              SwaggerRequest(type: 'get', operationId: '', parameters: [
                 SwaggerRequestParameter(
                     name: 'parameterName',
                     inParameter: 'body',
@@ -607,7 +696,7 @@ void main() {
             ])
           ]),
           '',
-          GeneratorOptions(),
+          GeneratorOptions(inputFolder: '', outputFolder: ''),
           [],
           [],
           {});
@@ -618,15 +707,20 @@ void main() {
   group('Tests for getMethodContent', () {
     test('Should', () {
       final result = generator.getMethodContent(
-          hasFormData: true,
-          methodName: 'methodName',
-          parametersComments: 'parameters',
-          requestPath: 'path',
-          parametersContent: 'requiredParameters',
-          returnType: 'returnType',
-          hasEnums: false,
-          summary: 'summary',
-          typeRequest: 'typeRequests');
+        hasFormData: true,
+        methodName: 'methodName',
+        parametersComments: 'parameters',
+        requestPath: 'path',
+        parametersContent: 'requiredParameters',
+        returnType: 'returnType',
+        hasEnums: false,
+        summary: 'summary',
+        typeRequest: 'typeRequests',
+        ignoreHeaders: false,
+        enumInBodyName: '',
+        allEnumNames: [],
+        parameters: [],
+      );
 
       expect(result, contains('@FactoryConverter'));
     });

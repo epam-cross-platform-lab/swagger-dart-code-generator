@@ -15,7 +15,7 @@ const $OrderStatusMap = {
   OrderStatus.placed: 'placed',
   OrderStatus.approved: 'approved',
   OrderStatus.delivered: 'delivered',
-  OrderStatus.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
+  OrderStatus.swaggerGeneratedUnknown: ''
 };
 
 enum OrderWithDashStatus {
@@ -33,7 +33,7 @@ const $OrderWithDashStatusMap = {
   OrderWithDashStatus.placed: 'placed',
   OrderWithDashStatus.approved: 'approved',
   OrderWithDashStatus.delivered: 'delivered',
-  OrderWithDashStatus.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
+  OrderWithDashStatus.swaggerGeneratedUnknown: ''
 };
 
 enum PetStatus {
@@ -51,7 +51,7 @@ const $PetStatusMap = {
   PetStatus.available: 'available',
   PetStatus.pending: 'pending',
   PetStatus.sold: 'sold',
-  PetStatus.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
+  PetStatus.swaggerGeneratedUnknown: ''
 };
 
 enum PetFindByStatusGetStatus {
@@ -69,7 +69,7 @@ const $PetFindByStatusGetStatusMap = {
   PetFindByStatusGetStatus.available: 'available',
   PetFindByStatusGetStatus.pending: 'pending',
   PetFindByStatusGetStatus.sold: 'sold',
-  PetFindByStatusGetStatus.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
+  PetFindByStatusGetStatus.swaggerGeneratedUnknown: ''
 };
 
 enum PetFindByStatusGetColor {
@@ -87,5 +87,5 @@ const $PetFindByStatusGetColorMap = {
   PetFindByStatusGetColor.red: 'red',
   PetFindByStatusGetColor.green: 'green',
   PetFindByStatusGetColor.yellow: 'yellow',
-  PetFindByStatusGetColor.swaggerGeneratedUnknown: 'swaggerGeneratedUnknown'
+  PetFindByStatusGetColor.swaggerGeneratedUnknown: ''
 };

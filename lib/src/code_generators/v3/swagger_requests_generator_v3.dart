@@ -23,14 +23,14 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
                 SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
-                    parameter, swaggerRoot.components?.parameters))
+                    parameter, swaggerRoot.components?.parameters ?? []))
             .toList();
       });
     });
 
-    final components = map['components'] as Map<String, dynamic>;
+    final components = map['components'] as Map<String, dynamic>?;
     final schemas = components != null
-        ? components['schemas'] as Map<String, dynamic>
+        ? components['schemas'] as Map<String, dynamic>?
         : null;
 
     final allEnumNames = SwaggerModelsGeneratorV3().getAllEnumNames(code);
@@ -47,6 +47,6 @@ class SwaggerRequestsGeneratorV3 extends SwaggerRequestsGenerator {
         schemas != null && schemas.keys.isNotEmpty,
         allEnumNames,
         dynamicResponses,
-        SwaggerModelsGenerator.generateBasicTypesMapFromSchemas(schemas));
+        SwaggerModelsGenerator.generateBasicTypesMapFromSchemas(schemas ?? {}));
   }
 }

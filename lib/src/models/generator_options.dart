@@ -13,8 +13,8 @@ class GeneratorOptions {
       this.buildOnlyModels = false,
       this.defaultValuesMap = const <DefaultValueMap>[],
       this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
-      this.inputFolder,
-      this.outputFolder,
+      required this.inputFolder,
+      required this.outputFolder,
       this.enumsCaseSensitive = true,
       this.usePathForRequestNames = false,
       this.useRequiredAttributeForHeaders = true,
@@ -47,7 +47,7 @@ class GeneratorOptions {
   final bool usePathForRequestNames;
 
   @JsonKey(defaultValue: null)
-  final IncludeIfNull includeIfNull;
+  final IncludeIfNull? includeIfNull;
 
   @JsonKey(defaultValue: '')
   final String inputFolder;
@@ -73,7 +73,7 @@ class GeneratorOptions {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class DefaultValueMap {
-  DefaultValueMap({this.typeName, this.defaultValue});
+  DefaultValueMap({required this.typeName, required this.defaultValue});
 
   /// Build a default value map from a JSON map.
   factory DefaultValueMap.fromJson(Map<String, dynamic> json) =>
@@ -91,7 +91,7 @@ class DefaultValueMap {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class IncludeIfNull {
-  IncludeIfNull({this.enabled, this.value});
+  IncludeIfNull({required this.enabled, required this.value});
 
   @JsonKey(defaultValue: false)
   final bool enabled;
@@ -107,7 +107,7 @@ class IncludeIfNull {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ResponseOverrideValueMap {
-  ResponseOverrideValueMap({this.url, this.method, this.overriddenValue});
+  ResponseOverrideValueMap({required this.url, required this.method, required this.overriddenValue});
 
   /// Build a default value map from a JSON map.
   factory ResponseOverrideValueMap.fromJson(Map<String, dynamic> json) =>
