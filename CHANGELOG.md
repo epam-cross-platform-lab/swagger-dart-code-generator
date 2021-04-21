@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.2+1
+
+* Improve documentation
+
 # 2.0.0-nullsafety.2
 
 * Made generated enums not nullable
