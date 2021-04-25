@@ -13,6 +13,7 @@ ResponseSchema _$ResponseSchemaFromJson(Map<String, dynamic> json) {
     enumValue:
         (json['enum'] as List<dynamic>?)?.map((e) => e as String).toList() ??
             [],
+    properties: json['properties'] as Map<String, dynamic>? ?? {},
     items: json['items'] == null
         ? null
         : ItemSchema.fromJson(json['items'] as Map<String, dynamic>),
@@ -27,4 +28,5 @@ Map<String, dynamic> _$ResponseSchemaToJson(ResponseSchema instance) =>
       r'$ref': instance.ref,
       'enum': instance.enumValue,
       'items': instance.items,
+      'properties': instance.properties,
     };
