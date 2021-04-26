@@ -648,7 +648,10 @@ abstract class $className extends ChopperService''';
   }
 
   String getResponseModelName(String url, String methodName) {
-    return '$url$methodName\$Response';
+    final urlString = url.split('/').map((e) => e.pascalCase).join();
+    final methodNamePart = methodName.pascalCase;
+
+    return '$urlString$methodNamePart\$Response';
   }
 
   String getReturnTypeName(

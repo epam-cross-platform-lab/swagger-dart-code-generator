@@ -16,13 +16,17 @@ ${_generateModelsMapping(dartCode)}};''';
     final result = <String>[];
     final dynamic map = jsonDecode(dartCode);
 
-    final definitions = getDefinitions(map);
+    final classes = getDefinitions(map);
 
-    if (definitions.isNotEmpty) {
-      for (var i = 0; i < definitions.keys.length; i++) {
-        final key = definitions.keys.elementAt(i).toString();
+    final classesFromResponses = SwaggerModelsGenerator.getClassesFromResponses(dartCode);
 
-        final definition = definitions[key];
+    classes.addAll(classesFromResponses);
+
+    if (classes.isNotEmpty) {
+      for (var i = 0; i < classes.keys.length; i++) {
+        final key = classes.keys.elementAt(i).toString();
+
+        final definition = classes[key];
 
         if (definition['enum'] != null) {
           continue;

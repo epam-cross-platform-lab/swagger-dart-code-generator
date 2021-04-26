@@ -69,7 +69,7 @@ abstract class SwaggerModelsGenerator {
     );
   }
 
-  Map<String, dynamic> getClassesFromResponses(String dartCode) {
+  static Map<String, dynamic> getClassesFromResponses(String dartCode) {
     final swagger = jsonDecode(dartCode);
 
     final results = <String, dynamic>{};
