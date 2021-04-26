@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.3+1
+
+* Updated dependencies
+
 # 2.0.0-nullsafety.3
 
 * Implemented generation of models from responses injected
