@@ -1,8 +1,6 @@
 extension CapitalizeExtension on String {
   String get capitalize {
-    return isEmpty
-        ? this
-        : (this[0].toUpperCase() + substring(1));
+    return isEmpty ? this : (this[0].toUpperCase() + substring(1));
   }
 
   String get lower {

@@ -3,7 +3,8 @@ import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_
 import 'requests/swagger_request.dart';
 
 class SwaggerPath {
-  SwaggerPath({this.path = '', this.requests = const [], this.parameters = const []});
+  SwaggerPath(
+      {this.path = '', this.requests = const [], this.parameters = const []});
 
   String path;
   List<SwaggerRequest> requests;

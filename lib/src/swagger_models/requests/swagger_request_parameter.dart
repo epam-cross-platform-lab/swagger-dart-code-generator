@@ -8,7 +8,7 @@ part 'swagger_request_parameter.g2.dart';
 @JsonSerializable()
 class SwaggerRequestParameter {
   SwaggerRequestParameter(
-      {this.inParameter ='',
+      {this.inParameter = '',
       this.name = '',
       this.description = '',
       this.isRequired = false,

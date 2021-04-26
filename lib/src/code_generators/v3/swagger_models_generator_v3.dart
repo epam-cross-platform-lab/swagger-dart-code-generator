@@ -151,7 +151,8 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         if (mapMap.containsKey('allOf')) {
           final allOf = mapMap['allOf'] as List<dynamic>;
           var propertiesContainer = allOf.firstWhereOrNull(
-              (e) => (e as Map<String, dynamic>).containsKey('properties')) as Map<String, dynamic>?;
+                  (e) => (e as Map<String, dynamic>).containsKey('properties'))
+              as Map<String, dynamic>?;
 
           if (propertiesContainer != null) {
             properties =
