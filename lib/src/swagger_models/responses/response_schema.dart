@@ -6,7 +6,12 @@ part 'response_schema.g2.dart';
 @JsonSerializable()
 class ResponseSchema {
   ResponseSchema(
-      {this.type = '', this.originalRef = '', this.enumValue = const [], this.items, this.ref = ''});
+      {this.type = '',
+      this.originalRef = '',
+      this.enumValue = const [],
+      this.properties = const {},
+      this.items,
+      this.ref = ''});
 
   factory ResponseSchema.fromJson(Map<String, dynamic> json) =>
       _$ResponseSchemaFromJson(json);
@@ -25,6 +30,9 @@ class ResponseSchema {
 
   @JsonKey(name: 'items')
   ItemSchema? items;
+
+  @JsonKey(name: 'properties', defaultValue: {})
+  Map<String, dynamic> properties;
 
   Map<String, dynamic> toJson() => _$ResponseSchemaToJson(this);
 }

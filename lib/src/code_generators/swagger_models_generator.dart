@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
@@ -67,6 +69,40 @@ abstract class SwaggerModelsGenerator {
     );
   }
 
+  static Map<String, dynamic> getClassesFromResponses(String dartCode) {
+    final swagger = jsonDecode(dartCode);
+
+    final results = <String, dynamic>{};
+
+    final paths = swagger['paths'] as Map<String, dynamic>?;
+    if (paths == null) {
+      return results;
+    }
+
+    paths.forEach((path, pathValue) {
+      final requests = pathValue as Map<String, dynamic>;
+
+      requests.removeWhere((key, value) => key == 'parameters');
+
+      requests.forEach((request, requestValue) {
+        final responses = requestValue['responses'] as Map<String, dynamic>;
+
+        final neededResponse = responses['200'];
+
+        if (neededResponse != null &&
+            neededResponse['schema'] != null &&
+            neededResponse['schema']['type'] == 'object' &&
+            neededResponse['schema']['properties'] != null) {
+          final pathText = path.split('/').map((e) => e.pascalCase).join();
+          final requestText = request.pascalCase;
+          results['$pathText$requestText\$Response'] = neededResponse['schema'];
+        }
+      });
+    });
+
+    return results;
+  }
+
   String generateBase(
       String dartCode,
       String fileName,
@@ -81,6 +117,10 @@ abstract class SwaggerModelsGenerator {
             allEnumsNames, options.enumsCaseSensitive)
         : '';
 
+    final classesFromResponses = getClassesFromResponses(dartCode);
+
+    classes.addAll(classesFromResponses);
+
     if (classes.isEmpty) {
       return '';
     }
@@ -89,6 +129,7 @@ abstract class SwaggerModelsGenerator {
       if (classes['enum'] != null) {
         return '';
       }
+
       return generateModelClassContent(
         className.pascalCase,
         classes[className] as Map<String, dynamic>,
@@ -402,7 +443,8 @@ abstract class SwaggerModelsGenerator {
     allEnumNames.add(enumName);
 
     final unknownEnumValue = generateUnknownEnumValue(
-        allEnumNames, allEnumListNames, enumName, false).substring(2);
+            allEnumNames, allEnumListNames, enumName, false)
+        .substring(2);
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
@@ -433,7 +475,7 @@ abstract class SwaggerModelsGenerator {
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
-        } else if(typeName != 'dynamic') {
+        } else if (typeName != 'dynamic') {
           typeName = typeName.pascalCase;
         }
       }
@@ -754,8 +796,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       final isList = value['type'] == 'array' ||
           allEnumListNames.contains('enums.${key.pascalCase}');
 
-      final type =
-          value['\$ref']?.toString().split('/').last.pascalCase ?? key;
+      final type = value['\$ref']?.toString().split('/').last.pascalCase ?? key;
 
       final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
           allEnumNames.contains('enums.${className + type.pascalCase}');

@@ -4,7 +4,6 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
-import '../requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerModelsGeneratorV3();
@@ -756,6 +755,20 @@ void main() {
           generator.getAllEnumNames(schemas_with_enums_in_properties);
 
       expect(result, contains('enums.SpaEnumResponseFailedValued'));
+    });
+  });
+
+  group('Tests for models from responses', () {
+    test('Should generate correct model from response', () {
+      final result = generator.generate(
+          request_with_return_type_injected,
+          'my_service',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
+
+          expect(result, contains('class ModelItemsGet\$Response'));
     });
   });
 }

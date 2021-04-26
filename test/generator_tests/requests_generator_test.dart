@@ -10,7 +10,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:test/test.dart';
 
-import '../requests_generator_definitions.dart';
+import '../code_examples.dart';
 
 void main() {
   final generator = SwaggerRequestsGeneratorV3();
@@ -152,7 +152,7 @@ void main() {
             outputFolder: '',
           ));
 
-      expect(result, contains('modelItemsGet'));
+      expect(result, contains('v2OrderSummariesGet'));
     });
 
     test('Should NOT ignore headers if option is true', () {
@@ -184,7 +184,7 @@ void main() {
             outputFolder: '',
           ));
 
-      expect(result, contains('List<String>? testName'));
+      expect(result, contains('List<String>? applications'));
     });
 
     test(
@@ -830,6 +830,21 @@ void main() {
           result,
           equals(
               'myParameter!.map((element) {enums.\$PathGetMyParameterMap[element];}).toList()'));
+    });
+  });
+
+  group('Tests for models from responses', () {
+    test('Should generate correct response type name', () {
+      final result = generator.generate(
+          request_with_return_type_injected,
+          'MyService',
+          'my_service',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
+
+          expect(result, contains('Future<chopper.Response<ModelItemsGet\$Response>>'));
     });
   });
 }
