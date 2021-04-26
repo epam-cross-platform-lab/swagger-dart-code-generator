@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.3+2
+
+* Updated documentation
+
 # 2.0.0-nullsafety.3+1
 
 * Updated dependencies

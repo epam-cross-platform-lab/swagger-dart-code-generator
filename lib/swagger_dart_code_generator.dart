@@ -5,20 +5,21 @@ import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
 
+///Returns instance of SwaggerDartCodeGenerator
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
     SwaggerDartCodeGenerator(options);
 
-const String inputFileExtension = '.swagger';
-const String outputFileExtension = '.swagger.dart';
-const String outputEnumsFileExtension = '.enums.swagger.dart';
-const String outputResponsesFileExtension = '.responses.swagger.dart';
-const String indexFileName = 'client_index.dart';
-const String mappingFileName = 'client_mapping.dart';
+const String _inputFileExtension = '.swagger';
+const String _outputFileExtension = '.swagger.dart';
+const String _outputEnumsFileExtension = '.enums.swagger.dart';
+const String _outputResponsesFileExtension = '.responses.swagger.dart';
+const String _indexFileName = 'client_index.dart';
+const String _mappingFileName = 'client_mapping.dart';
 
-Map<String, List<String>> generateExtensions(GeneratorOptions options) {
+Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final filesList = Directory(options.inputFolder)
       .listSync()
-      .where((FileSystemEntity file) => file.path.endsWith(inputFileExtension));
+      .where((FileSystemEntity file) => file.path.endsWith(_inputFileExtension));
 
   final result = <String, List<String>>{};
 
@@ -26,19 +27,20 @@ Map<String, List<String>> generateExtensions(GeneratorOptions options) {
     final name =
         element.path.split('/').last.split('.').first.replaceAll('-', '_');
     result[element.path] = <String>[
-      '${options.outputFolder}$name$outputFileExtension',
-      '${options.outputFolder}$name$outputEnumsFileExtension',
-      '${options.outputFolder}$name$outputResponsesFileExtension',
+      '${options.outputFolder}$name$_outputFileExtension',
+      '${options.outputFolder}$name$_outputEnumsFileExtension',
+      '${options.outputFolder}$name$_outputResponsesFileExtension',
     ];
   });
 
   ///Register additional outputs in first input
-  result[filesList.first.path]!.add('${options.outputFolder}$indexFileName');
-  result[filesList.first.path]!.add('${options.outputFolder}$mappingFileName');
+  result[filesList.first.path]!.add('${options.outputFolder}$_indexFileName');
+  result[filesList.first.path]!.add('${options.outputFolder}$_mappingFileName');
 
   return result;
 }
 
+///Root library entry
 class SwaggerDartCodeGenerator implements Builder {
   SwaggerDartCodeGenerator(BuilderOptions builderOptions) {
     options = GeneratorOptions.fromJson(builderOptions.config);
@@ -46,7 +48,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
   @override
   Map<String, List<String>> get buildExtensions =>
-      _buildExtensionsCopy ??= generateExtensions(options);
+      _buildExtensionsCopy ??= _generateExtensions(options);
 
   Map<String, List<String>>? _buildExtensionsCopy;
 
@@ -98,7 +100,7 @@ class SwaggerDartCodeGenerator implements Builder {
     final dateToJson = codeGenerator.generateDateToJson(contents);
 
     final copyAssetId = AssetId(buildStep.inputId.package,
-        '${options.outputFolder}$fileNameWithoutExtension$outputFileExtension');
+        '${options.outputFolder}$fileNameWithoutExtension$_outputFileExtension');
 
     await buildStep.writeAsString(
         copyAssetId,
@@ -110,7 +112,7 @@ class SwaggerDartCodeGenerator implements Builder {
       final formatterEnums = _tryFormatCode(enums);
 
       final enumsAssetId = AssetId(buildStep.inputId.package,
-          '${options.outputFolder}$fileNameWithoutExtension$outputEnumsFileExtension');
+          '${options.outputFolder}$fileNameWithoutExtension$_outputEnumsFileExtension');
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
     }
@@ -173,7 +175,7 @@ $dateToJson
     final codeGenerator = SwaggerCodeGenerator();
 
     final indexAssetId =
-        AssetId(inputId.package, '${options.outputFolder}$indexFileName');
+        AssetId(inputId.package, '${options.outputFolder}$_indexFileName');
 
     final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
 
@@ -181,7 +183,7 @@ $dateToJson
 
     if (options.withConverter) {
       final mappingAssetId =
-          AssetId(inputId.package, '${options.outputFolder}$mappingFileName');
+          AssetId(inputId.package, '${options.outputFolder}$_mappingFileName');
 
       final mapping = codeGenerator.generateConverterMappings(
           swaggerCode, buildExtensions, hasModels);
