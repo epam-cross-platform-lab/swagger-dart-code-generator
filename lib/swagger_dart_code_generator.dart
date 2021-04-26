@@ -17,9 +17,8 @@ const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
-  final filesList = Directory(options.inputFolder)
-      .listSync()
-      .where((FileSystemEntity file) => file.path.endsWith(_inputFileExtension));
+  final filesList = Directory(options.inputFolder).listSync().where(
+      (FileSystemEntity file) => file.path.endsWith(_inputFileExtension));
 
   final result = <String, List<String>>{};
 

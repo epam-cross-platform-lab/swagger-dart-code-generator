@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.3+3
+
+* Fixed analyser issues
+
 # 2.0.0-nullsafety.3+2
 
 * Updated documentation
