@@ -4,20 +4,21 @@ import '../responses/swagger_response.dart';
 import 'swagger_request_parameter.dart';
 
 class SwaggerRequest {
-  SwaggerRequest(
-      {this.type = '',
-      this.summary = '',
-      this.description = '',
-      this.operationId = '',
-      this.consumes = const [],
-      this.responses = const [],
-      this.parameters = const [],
-      this.produces = const [],
-      this.requestBody,});
+  SwaggerRequest({
+    this.type = '',
+    this.summary = '',
+    this.description = '',
+    this.operationId = '',
+    this.consumes = const [],
+    this.responses = const [],
+    this.parameters = const [],
+    this.produces = const [],
+    this.requestBody,
+  });
 
   SwaggerRequest.fromJson(Map<String, dynamic> json)
-      : summary = json['summary'] as String ? ?? '',
-      type = '',
+      : summary = json['summary'] as String? ?? '',
+        type = '',
         description = json['description'] as String? ?? '',
         operationId = json['operationId'] as String? ?? '',
         consumes = (json['consumes'] as List<dynamic>?)
@@ -90,17 +91,23 @@ class RequestBody {
 }
 
 class RequestContent {
-  RequestContent({this.items, this.ref = '', this.responseType = '', this.type = ''});
+  RequestContent(
+      {this.items, this.ref = '', this.responseType = '', this.type = ''});
 
   RequestContent.fromJson(Map<dynamic, dynamic> json)
-      : responseType =
-            json['schema'] != null ? json['schema']['type'] as String? ?? '' : '',
+      : responseType = json['schema'] != null
+            ? json['schema']['type'] as String? ?? ''
+            : '',
         items = json['schema'] != null && json['schema']['items'] != null
             ? ItemSchema.fromJson(
                 json['schema']['items'] as Map<String, dynamic>)
             : null,
-        ref = json['schema'] != null ? json['schema']['\$ref'] as String? ?? '' : '',
-        type = json['schema'] != null ? json['schema']['type'] as String? ?? '' : '';
+        ref = json['schema'] != null
+            ? json['schema']['\$ref'] as String? ?? ''
+            : '',
+        type = json['schema'] != null
+            ? json['schema']['type'] as String? ?? ''
+            : '';
 
   final String responseType;
   final String type;

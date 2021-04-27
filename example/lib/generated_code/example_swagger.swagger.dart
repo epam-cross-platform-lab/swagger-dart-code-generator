@@ -5,8 +5,8 @@ import 'package:chopper/chopper.dart' as chopper;
 import 'example_swagger.enums.swagger.dart' as enums;
 export 'example_swagger.enums.swagger.dart';
 
-part 'example_swagger.swagger.chopper.dart';
-part 'example_swagger.swagger.g.dart';
+part 'example_swagger.swagger.chopper2.dart';
+part 'example_swagger.swagger.g2.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
@@ -30,7 +30,8 @@ abstract class ExampleSwagger extends ChopperService {
   ///@param body Pet object that needs to be added to the store
 
   @Post(path: '/pet')
-  Future<chopper.Response> petPost({@Body() @required Pet? body});
+  Future<chopper.Response<PetPost$Response>> petPost(
+      {@Body() @required Pet? body});
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
@@ -200,6 +201,7 @@ final Map<Type, Object Function(Map<String, dynamic>)>
   Tag: Tag.fromJsonFactory,
   Pet: Pet.fromJsonFactory,
   ApiResponse: ApiResponse.fromJsonFactory,
+  PetPost$Response: PetPost$Response.fromJsonFactory,
 };
 
 @JsonSerializable(explicitToJson: true)
@@ -499,6 +501,31 @@ extension $ApiResponseExtension on ApiResponse {
         code: code ?? this.code,
         type: type ?? this.type,
         message: message ?? this.message);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PetPost$Response {
+  PetPost$Response({
+    required this.id,
+    required this.petId,
+  });
+
+  factory PetPost$Response.fromJson(Map<String, dynamic> json) =>
+      _$PetPost$ResponseFromJson(json);
+
+  @JsonKey(name: 'id', includeIfNull: false, defaultValue: 36)
+  final int? id;
+  @JsonKey(name: 'petId', includeIfNull: false, defaultValue: 36)
+  final int? petId;
+  static const fromJsonFactory = _$PetPost$ResponseFromJson;
+  static const toJsonFactory = _$PetPost$ResponseToJson;
+  Map<String, dynamic> toJson() => _$PetPost$ResponseToJson(this);
+}
+
+extension $PetPost$ResponseExtension on PetPost$Response {
+  PetPost$Response copyWith({int? id, int? petId}) {
+    return PetPost$Response(id: id ?? this.id, petId: petId ?? this.petId);
   }
 }
 

@@ -5,7 +5,10 @@ part 'swagger_parameter_schema.g2.dart';
 @JsonSerializable()
 class SwaggerParameterSchema {
   SwaggerParameterSchema(
-      {this.type = '', this.enumValues = const [], this.originalRef = '', this.ref = ''});
+      {this.type = '',
+      this.enumValues = const [],
+      this.originalRef = '',
+      this.ref = ''});
 
   factory SwaggerParameterSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerParameterSchemaFromJson(json);

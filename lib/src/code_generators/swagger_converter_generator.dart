@@ -18,7 +18,8 @@ ${_generateModelsMapping(dartCode)}};''';
 
     final classes = getDefinitions(map);
 
-    final classesFromResponses = SwaggerModelsGenerator.getClassesFromResponses(dartCode);
+    final classesFromResponses =
+        SwaggerModelsGenerator.getClassesFromResponses(dartCode);
 
     classes.addAll(classesFromResponses);
 
