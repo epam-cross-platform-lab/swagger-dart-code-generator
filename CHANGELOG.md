@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.5
+
+* Fixed generation of Lists of Strings for models
+
 # 2.0.0-nullsafety.4
 
 * Fixed issues with null-safety
