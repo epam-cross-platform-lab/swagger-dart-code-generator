@@ -16,13 +16,18 @@ ${_generateModelsMapping(dartCode)}};''';
     final result = <String>[];
     final dynamic map = jsonDecode(dartCode);
 
-    final definitions = getDefinitions(map);
+    final classes = getDefinitions(map);
 
-    if (definitions != null) {
-      for (var i = 0; i < definitions.keys.length; i++) {
-        final key = definitions.keys.elementAt(i).toString();
+    final classesFromResponses =
+        SwaggerModelsGenerator.getClassesFromResponses(dartCode);
 
-        final definition = definitions[key];
+    classes.addAll(classesFromResponses);
+
+    if (classes.isNotEmpty) {
+      for (var i = 0; i < classes.keys.length; i++) {
+        final key = classes.keys.elementAt(i).toString();
+
+        final definition = classes[key];
 
         if (definition['enum'] != null) {
           continue;
@@ -46,25 +51,25 @@ ${_generateModelsMapping(dartCode)}};''';
     }
 
     final responses = getResponses(map);
-    if (responses != null) {
+    if (responses.isNotEmpty) {
       responses.keys.forEach((key) {
         if (!result.contains(key)) {
-          final response = responses[key] as Map<String, dynamic>;
+          final response = responses[key] as Map<String, dynamic>?;
 
           final content = response == null
               ? null
               : response['content'] as Map<String, dynamic>;
 
-          final firstContent = content == null
+          final firstContent = content == null || content.entries.isEmpty
               ? null
-              : content.entries?.first?.value as Map<String, dynamic>;
+              : content.entries.first.value as Map<String, dynamic>?;
 
           final schema = firstContent == null
               ? null
               : firstContent['schema'] as Map<String, dynamic>;
 
           if (schema != null &&
-              content.entries.length == 1 &&
+              content!.entries.length == 1 &&
               !schema.containsKey('\$ref')) {
             final validatedName = key.capitalize;
             result.add('\t$validatedName: $validatedName.fromJsonFactory,');
@@ -78,21 +83,21 @@ ${_generateModelsMapping(dartCode)}};''';
 
   Map<String, dynamic> getDefinitions(dynamic map) {
     if (map['definitions'] != null) {
-      return map['definitions'] as Map<String, dynamic>;
+      return map['definitions'] as Map<String, dynamic>? ?? {};
     }
 
     if (map['components'] != null) {
-      return map['components']['schemas'] as Map<String, dynamic>;
+      return map['components']['schemas'] as Map<String, dynamic>? ?? {};
     }
 
-    return null;
+    return {};
   }
 
   Map<String, dynamic> getResponses(dynamic map) {
     if (map['components'] != null) {
-      return map['components']['responses'] as Map<String, dynamic>;
+      return map['components']['responses'] as Map<String, dynamic>? ?? {};
     }
 
-    return null;
+    return {};
   }
 }

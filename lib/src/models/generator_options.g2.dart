@@ -8,39 +8,35 @@ part of 'generator_options.dart';
 
 GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
   return GeneratorOptions(
-    withBaseUrl: json['with_base_url'] as bool ?? true,
-    withConverter: json['with_converter'] as bool ?? true,
-    ignoreHeaders: json['ignore_headers'] as bool ?? false,
-    useDefaultNullForLists: json['use_default_null_for_lists'] as bool ?? false,
-    buildOnlyModels: json['build_only_models'] as bool ?? false,
-    defaultValuesMap: (json['default_values_map'] as List)
-            ?.map((e) => e == null
-                ? null
-                : DefaultValueMap.fromJson((e as Map)?.map(
-                    (k, e) => MapEntry(k as String, e),
-                  )))
-            ?.toList() ??
+    withBaseUrl: json['with_base_url'] as bool? ?? true,
+    withConverter: json['with_converter'] as bool? ?? true,
+    ignoreHeaders: json['ignore_headers'] as bool? ?? false,
+    useDefaultNullForLists:
+        json['use_default_null_for_lists'] as bool? ?? false,
+    buildOnlyModels: json['build_only_models'] as bool? ?? false,
+    defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
+            ?.map((e) =>
+                DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList() ??
         [],
-    responseOverrideValueMap: (json['response_override_value_map'] as List)
-            ?.map((e) => e == null
-                ? null
-                : ResponseOverrideValueMap.fromJson((e as Map)?.map(
-                    (k, e) => MapEntry(k as String, e),
-                  )))
-            ?.toList() ??
-        [],
-    inputFolder: json['input_folder'] as String ?? '',
-    outputFolder: json['output_folder'] as String ?? '',
+    responseOverrideValueMap:
+        (json['response_override_value_map'] as List<dynamic>?)
+                ?.map((e) => ResponseOverrideValueMap.fromJson(
+                    Map<String, dynamic>.from(e as Map)))
+                .toList() ??
+            [],
+    inputFolder: json['input_folder'] as String? ?? '',
+    outputFolder: json['output_folder'] as String? ?? '',
+    enumsCaseSensitive: json['enums_case_sensitive'] as bool? ?? false,
+    usePathForRequestNames:
+        json['use_path_for_request_names'] as bool? ?? false,
     useRequiredAttributeForHeaders:
-        json['use_required_attribute_for_headers'] as bool ?? true,
-    enumsCaseSensitive: json['enums_case_sensitive'] as bool ?? false,
-    usePathForRequestNames: json['use_path_for_request_names'] as bool ?? false,
-    useInheritance: json['use_inheritance'] as bool ?? true,
+        json['use_required_attribute_for_headers'] as bool? ?? true,
+    useInheritance: json['use_inheritance'] as bool? ?? true,
     includeIfNull: json['include_if_null'] == null
         ? null
-        : IncludeIfNull.fromJson((json['include_if_null'] as Map)?.map(
-            (k, e) => MapEntry(k as String, e),
-          )),
+        : IncludeIfNull.fromJson(
+            Map<String, dynamic>.from(json['include_if_null'] as Map)),
   );
 }
 
@@ -48,10 +44,12 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'with_base_url': instance.withBaseUrl,
       'with_converter': instance.withConverter,
+      'use_required_attribute_for_headers':
+          instance.useRequiredAttributeForHeaders,
       'ignore_headers': instance.ignoreHeaders,
+      'use_inheritance': instance.useInheritance,
       'enums_case_sensitive': instance.enumsCaseSensitive,
       'use_path_for_request_names': instance.usePathForRequestNames,
-      'use_inheritance': instance.useInheritance,
       'include_if_null': instance.includeIfNull,
       'input_folder': instance.inputFolder,
       'output_folder': instance.outputFolder,
@@ -63,8 +61,8 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
 
 DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) {
   return DefaultValueMap(
-    typeName: json['type_name'] as String ?? '',
-    defaultValue: json['default_value'] as String ?? '',
+    typeName: json['type_name'] as String? ?? '',
+    defaultValue: json['default_value'] as String? ?? '',
   );
 }
 
@@ -76,8 +74,8 @@ Map<String, dynamic> _$DefaultValueMapToJson(DefaultValueMap instance) =>
 
 IncludeIfNull _$IncludeIfNullFromJson(Map<String, dynamic> json) {
   return IncludeIfNull(
-    enabled: json['enabled'] as bool ?? false,
-    value: json['value'] as bool ?? false,
+    enabled: json['enabled'] as bool? ?? false,
+    value: json['value'] as bool? ?? false,
   );
 }
 
@@ -90,9 +88,9 @@ Map<String, dynamic> _$IncludeIfNullToJson(IncludeIfNull instance) =>
 ResponseOverrideValueMap _$ResponseOverrideValueMapFromJson(
     Map<String, dynamic> json) {
   return ResponseOverrideValueMap(
-    url: json['url'] as String ?? '',
-    method: json['method'] as String ?? '',
-    overriddenValue: json['overridden_value'] as String ?? '',
+    url: json['url'] as String? ?? '',
+    method: json['method'] as String? ?? '',
+    overriddenValue: json['overridden_value'] as String? ?? '',
   );
 }
 

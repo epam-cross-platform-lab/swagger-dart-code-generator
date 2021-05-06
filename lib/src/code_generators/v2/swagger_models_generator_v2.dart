@@ -9,8 +9,8 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   @override
   String generate(String dartCode, String fileName, GeneratorOptions options) {
     final dynamic map = jsonDecode(dartCode);
-    final definitions = map['definitions'] as Map<String, dynamic>;
-    return generateBase(dartCode, fileName, options, definitions, true);
+    final definitions = map['definitions'] as Map<String, dynamic>?;
+    return generateBase(dartCode, fileName, options, definitions ?? {}, true);
   }
 
   @override
@@ -31,9 +31,9 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
     final swagger = jsonDecode(swaggerFile);
 
-    final definitions = swagger['definitions'] as Map<String, dynamic>;
+    final definitions = swagger['definitions'] as Map<String, dynamic>? ?? {};
 
-    if (definitions != null) {
+    if (definitions.isNotEmpty) {
       definitions.forEach((className, map) {
         final mapMap = map as Map<String, dynamic>;
         if (mapMap.containsKey('enum')) {
@@ -50,7 +50,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
           return;
         }
 
-        final properties = map['properties'] as Map<String, dynamic>;
+        final properties = map['properties'] as Map<String, dynamic>?;
 
         if (properties == null) {
           return;
@@ -83,7 +83,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
     final swagger = jsonDecode(swaggerFile);
 
-    final definitions = swagger['definitions'] as Map<String, dynamic>;
+    final definitions = swagger['definitions'] as Map<String, dynamic>?;
 
     if (definitions != null) {
       definitions.forEach((className, map) {
@@ -108,7 +108,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
   @override
   Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
-    return modelMap['properties'] as Map<String, dynamic>;
+    return modelMap['properties'] as Map<String, dynamic>? ?? {};
   }
 
   @override

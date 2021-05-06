@@ -7,21 +7,22 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_tag.dart'
 
 class SwaggerRoot {
   SwaggerRoot(
-      {this.basePath,
+      {this.basePath = '',
       this.components,
       this.info,
-      this.host,
-      this.paths,
-      this.tags,
-      this.schemes,
-      this.parameters});
+      this.host = '',
+      this.paths = const [],
+      this.tags = const [],
+      this.schemes = const [],
+      this.parameters = const []});
 
   SwaggerRoot.fromJson(Map<String, dynamic> json)
       : info = json.containsKey('info')
             ? SwaggerInfo.fromJson(json['info'] as Map<String, dynamic>)
             : null,
-        host = json['host'] as String,
-        basePath = json['basePath'] as String,
+        schemes = [],
+        host = json['host'] as String? ?? '',
+        basePath = json['basePath'] as String? ?? '',
         tags = json.containsKey('tags')
             ? mapTags(json['tags'] as List<dynamic>)
             : <SwaggerTag>[],
@@ -36,14 +37,14 @@ class SwaggerRoot {
                 json['components'] as Map<String, dynamic>)
             : null;
 
-  SwaggerInfo info;
+  SwaggerInfo? info;
   String host;
   String basePath;
   List<SwaggerTag> tags;
   List<String> schemes;
   List<SwaggerPath> paths;
   List<SwaggerRequestParameter> parameters;
-  SwaggerComponents components;
+  SwaggerComponents? components;
 
   static List<SwaggerTag> mapTags(List<dynamic> map) {
     return map

@@ -2,22 +2,24 @@ import 'package:swagger_dart_code_generator/src/swagger_models/responses/item_sc
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/response_schema.dart';
 
 class SwaggerResponse {
-  SwaggerResponse(
-      {this.code,
-      this.description,
-      this.type,
-      this.schema,
-      this.enumValue,
-      this.content,
-      this.ref});
+  SwaggerResponse({
+    this.code = '',
+    this.description = '',
+    this.type = '',
+    this.schema,
+    this.enumValue = const [],
+    this.content = const [],
+    this.ref = '',
+  });
 
   SwaggerResponse.fromJson(Map<String, dynamic> json)
-      : code = json['code'] as String,
-        ref = json['\$ref'] as String,
-        description = json['description'] as String,
-        type = json['type'] as String,
+      : code = json['code'] as String? ?? '',
+        ref = json['\$ref'] as String? ?? '',
+        description = json['description'] as String? ?? '',
+        type = json['type'] as String? ?? '',
+        enumValue = [],
         content = json['content'] == null
-            ? null
+            ? []
             : (json['content'] as Map<String, dynamic>)
                 .entries
                 .map((MapEntry<dynamic, dynamic> entry) => Content.fromJson(
@@ -31,25 +33,33 @@ class SwaggerResponse {
   String ref;
   String description;
   String type;
-  ResponseSchema schema;
+  ResponseSchema? schema;
   List<String> enumValue;
   List<Content> content;
 }
 
 class Content {
-  Content({this.items, this.ref, this.responseType, this.type});
+  Content({
+    this.items,
+    this.ref = '',
+    this.responseType = '',
+    this.type = '',
+  });
 
   Content.fromJson(this.type, Map<dynamic, dynamic> json)
-      : responseType =
-            json['schema'] != null ? json['schema']['type'] as String : '',
+      : responseType = json['schema'] != null
+            ? json['schema']['type'] as String? ?? ''
+            : '',
         items = json['schema'] != null && json['schema']['items'] != null
             ? ItemSchema.fromJson(
                 json['schema']['items'] as Map<String, dynamic>)
             : null,
-        ref = json['schema'] != null ? json['schema']['\$ref'] as String : null;
+        ref = json['schema'] != null
+            ? json['schema']['\$ref'] as String? ?? ''
+            : '';
 
   final String responseType;
   final String type;
-  final ItemSchema items;
+  final ItemSchema? items;
   final String ref;
 }

@@ -17,165 +17,166 @@ class _$ExampleSwagger extends ExampleSwagger {
   final definitionType = ExampleSwagger;
 
   @override
-  Future<Response<dynamic>> addPet({Pet? body}) {
+  Future<Response<PetPost$Response>> petPost({Pet? body}) {
     final $url = '/pet';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<PetPost$Response, PetPost$Response>($request);
   }
 
   @override
-  Future<Response<dynamic>> updatePet({Pet? body}) {
+  Future<Response<dynamic>> petPut({Pet? body}) {
     final $url = '/pet';
     final $body = body;
-    final $request = Request('PUT', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('PUT', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<List<Pet>>> _findPetsByStatus(
+  Future<Response<List<Pet>>> _petFindByStatusGet(
       {String? status, List<String?>? color}) {
     final $url = '/pet/findByStatus';
     final $params = <String, dynamic>{'status': status, 'color': color};
-    final $request =
-        Request('GET', $url, client!.baseUrl!, parameters: $params);
-    return client!.send<List<Pet>, Pet>($request);
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<List<Pet>, Pet>($request);
   }
 
   @override
-  Future<Response<List<Pet>>> findPetsByTags({List<String>? tags}) {
+  Future<Response<List<Pet>>> petFindByTagsGet({List<String>? tags}) {
     final $url = '/pet/findByTags';
     final $params = <String, dynamic>{'tags': tags};
-    final $request =
-        Request('GET', $url, client!.baseUrl!, parameters: $params);
-    return client!.send<List<Pet>, Pet>($request);
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<List<Pet>, Pet>($request);
   }
 
   @override
-  Future<Response<Pet>> getPetById({int? petId}) {
+  Future<Response<Pet>> petPetIdGet({int? petId}) {
     final $url = '/pet/$petId';
-    final $request = Request('GET', $url, client!.baseUrl!);
-    return client!.send<Pet, Pet>($request);
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<Pet, Pet>($request);
   }
 
   @override
-  Future<Response<dynamic>> updatePetWithForm(
+  Future<Response<dynamic>> petPetIdPost(
       {int? petId, String? name, String? status, Object? body}) {
     final $url = '/pet/$petId';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request,
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request,
         requestConverter: FormUrlEncodedConverter.requestFactory);
   }
 
   @override
-  Future<Response<dynamic>> deletePet({int? petId}) {
+  Future<Response<dynamic>> petPetIdDelete({String? api_key, int? petId}) {
     final $url = '/pet/$petId';
-    final $request = Request('DELETE', $url, client!.baseUrl!);
-    return client!.send<dynamic, dynamic>($request);
+    final $headers = {
+      if (api_key != null) 'api_key': api_key,
+    };
+
+    final $request = Request('DELETE', $url, client.baseUrl, headers: $headers);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<ApiResponse>> uploadFile(
+  Future<Response<ApiResponse>> petPetIdUploadImagePost(
       {int? petId, String? additionalMetadata, List<int>? file, Object? body}) {
     final $url = '/pet/$petId/uploadImage';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<ApiResponse, ApiResponse>($request,
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<ApiResponse, ApiResponse>($request,
         requestConverter: FormUrlEncodedConverter.requestFactory);
   }
 
   @override
-  Future<Response<List<dynamic>>> getInventory() {
+  Future<Response<List<dynamic>>> storeInventoryGet() {
     final $url = '/store/inventory';
-    final $request = Request('GET', $url, client!.baseUrl!);
-    return client!.send<List<dynamic>, List<dynamic>>($request);
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<dynamic>, List<dynamic>>($request);
   }
 
   @override
-  Future<Response<OrderWithDash>> placeOrder({Order? body}) {
+  Future<Response<OrderWithDash>> storeOrderPost({Order? body}) {
     final $url = '/store/order';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<OrderWithDash, OrderWithDash>($request);
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<OrderWithDash, OrderWithDash>($request);
   }
 
   @override
-  Future<Response<Order>> getOrderById({int? orderId}) {
+  Future<Response<Order>> storeOrderOrderIdGet({int? orderId}) {
     final $url = '/store/order/$orderId';
-    final $request = Request('GET', $url, client!.baseUrl!);
-    return client!.send<Order, Order>($request);
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<Order, Order>($request);
   }
 
   @override
-  Future<Response<dynamic>> deleteOrder({int? orderId}) {
+  Future<Response<dynamic>> storeOrderOrderIdDelete({int? orderId}) {
     final $url = '/store/order/$orderId';
-    final $request = Request('DELETE', $url, client!.baseUrl!);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> createUser({User? body}) {
+  Future<Response<dynamic>> userPost({User? body}) {
     final $url = '/user';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> createUsersWithArrayInput({Object? body}) {
+  Future<Response<dynamic>> userCreateWithArrayPost({Object? body}) {
     final $url = '/user/createWithArray';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> createUsersWithListInput({Object? body}) {
+  Future<Response<dynamic>> userCreateWithListPost({Object? body}) {
     final $url = '/user/createWithList';
     final $body = body;
-    final $request = Request('POST', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<String>> loginUser({String? username, String? password}) {
+  Future<Response<String>> userLoginGet({String? username, String? password}) {
     final $url = '/user/login';
     final $params = <String, dynamic>{
       'username': username,
       'password': password
     };
-    final $request =
-        Request('GET', $url, client!.baseUrl!, parameters: $params);
-    return client!.send<String, String>($request);
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<String, String>($request);
   }
 
   @override
-  Future<Response<dynamic>> logoutUser() {
+  Future<Response<dynamic>> userLogoutGet() {
     final $url = '/user/logout';
-    final $request = Request('GET', $url, client!.baseUrl!);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<User>> getUserByName({String? username}) {
+  Future<Response<User>> userUsernameGet({String? username}) {
     final $url = '/user/$username';
-    final $request = Request('GET', $url, client!.baseUrl!);
-    return client!.send<User, User>($request);
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<User, User>($request);
   }
 
   @override
-  Future<Response<dynamic>> updateUser({String? username, User? body}) {
+  Future<Response<dynamic>> userUsernamePut({String? username, User? body}) {
     final $url = '/user/$username';
     final $body = body;
-    final $request = Request('PUT', $url, client!.baseUrl!, body: $body);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('PUT', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> deleteUser({String? username}) {
+  Future<Response<dynamic>> userUsernameDelete({String? username}) {
     final $url = '/user/$username';
-    final $request = Request('DELETE', $url, client!.baseUrl!);
-    return client!.send<dynamic, dynamic>($request);
+    final $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
   }
 }

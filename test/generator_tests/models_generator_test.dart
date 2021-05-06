@@ -4,7 +4,6 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
-import '../requests_generator_definitions.dart';
 
 void main() {
   final generator = SwaggerModelsGeneratorV3();
@@ -13,17 +12,18 @@ void main() {
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
-      final result = generator.generate(
-                    model_with_parameters_v3, fileName, GeneratorOptions());
+      final result = generator.generate(model_with_parameters_v3, fileName,
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-
-      expect(
-          result, contains('final enums.TokensResponseTokenType tokenType'));
+      expect(result, contains('final enums.TokensResponseTokenType? tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
-      final result = generator.generate(model_with_parameters_v3, fileName,
-          GeneratorOptions(enumsCaseSensitive: false));
+      final result = generator.generate(
+          model_with_parameters_v3,
+          fileName,
+          GeneratorOptions(
+              enumsCaseSensitive: false, inputFolder: '', outputFolder: ''));
 
       expect(
           result,
@@ -32,31 +32,37 @@ void main() {
     });
 
     test('Should NOT generate .toLower() when caseSensitive: false', () {
-      final result = generator.generate(model_with_parameters_v3, fileName,
-          GeneratorOptions(enumsCaseSensitive: true));
+      final result = generator.generate(
+          model_with_parameters_v3,
+          fileName,
+          GeneratorOptions(
+              enumsCaseSensitive: true, inputFolder: '', outputFolder: ''));
 
       expect(result, contains('element.value == someEnumModel'));
     });
 
     test('Should parse object name as a field Type', () {
-      final result = generator2.generate(
-          model_with_parameters_v2, fileName, GeneratorOptions());
+      final result = generator2.generate(model_with_parameters_v2, fileName,
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(
           result,
           contains(
-              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
+              'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
     });
 
     test('Should parse object name as a field Type', () {
       const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
-      final generatorOptions =
-          GeneratorOptions(defaultValuesMap: <DefaultValueMap>[
-        DefaultValueMap(
-          typeName: 'int',
-          defaultValue: '19',
-        )
-      ]);
+      final generatorOptions = GeneratorOptions(
+        defaultValuesMap: <DefaultValueMap>[
+          DefaultValueMap(
+            typeName: 'int',
+            defaultValue: '19',
+          )
+        ],
+        inputFolder: '',
+        outputFolder: '',
+      );
       final result = generator.generate(
           model_with_parameters_v3, fileName, generatorOptions);
 
@@ -125,7 +131,7 @@ void main() {
       const parameterName = 'orderId';
       const expectedResult = 'Object';
       final result =
-          generator.getParameterTypeName(className, parameterName, null);
+          generator.getParameterTypeName(className, parameterName, {});
 
       expect(result, contains(expectedResult));
     });
@@ -147,7 +153,7 @@ void main() {
       const refNameParameter = 'animals_Object';
       const expectedResult = 'AnimalsObject';
       final result = generator.getParameterTypeName(
-          className, parameterName, null, refNameParameter);
+          className, parameterName, {}, refNameParameter);
 
       expect(result, contains(expectedResult));
     });
@@ -207,7 +213,11 @@ void main() {
       const propertyName = 'shipDate';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyName'";
       final result = generator.generatePropertyContentByDefault(
-          propertyEntryMap, propertyName, [], [], GeneratorOptions());
+          propertyEntryMap,
+          propertyName,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(jsonKeyExpendedResult));
     });
@@ -221,7 +231,9 @@ void main() {
           [],
           [],
           GeneratorOptions(
-              includeIfNull: IncludeIfNull(enabled: true, value: false)));
+              includeIfNull: IncludeIfNull(enabled: true, value: false),
+              inputFolder: '',
+              outputFolder: ''));
 
       expect(result, contains(', includeIfNull: false'));
     });
@@ -235,7 +247,9 @@ void main() {
           [],
           [],
           GeneratorOptions(
-              includeIfNull: IncludeIfNull(enabled: false, value: false)));
+              includeIfNull: IncludeIfNull(enabled: false, value: false),
+              inputFolder: '',
+              outputFolder: ''));
 
       expect(result.contains(', includeIfNull: false'), equals(false));
     });
@@ -258,7 +272,7 @@ void main() {
         className,
         [],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -279,7 +293,7 @@ void main() {
         className,
         ['enums.Pet'],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -290,14 +304,13 @@ void main() {
   group('generateEnumPropertyContent', () {
     test('Should return enum property with JsonKey with fromJson and toJson',
         () {
-      // ignore: prefer_const_declarations
-      final key = 'dog';
+      const key = 'dog';
       const className = 'animals';
       const jsonKeyExpectedResult =
           'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
-      const expectedResult = 'final AnimalsDog dog;';
-      final result = generator.generateEnumPropertyContent(
-          key, className, [], [], GeneratorOptions());
+      const expectedResult = 'final AnimalsDog? dog;';
+      final result = generator.generateEnumPropertyContent(key, className, [],
+          [], GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(expectedResult));
@@ -315,12 +328,12 @@ void main() {
       final result = generator.generateModelClassContent(
           className,
           map,
-          null,
+          {},
           <DefaultValueMap>[],
           useDefaultNullForLists,
           [],
           [],
-          GeneratorOptions());
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -336,12 +349,12 @@ void main() {
       final result = generator2.generateModelClassContent(
           className,
           map,
-          null,
+          {},
           <DefaultValueMap>[],
           useDefaultNullForLists,
           [],
           [],
-          GeneratorOptions());
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -353,8 +366,8 @@ void main() {
       const expectedResult = '';
       final result = generator.generateConstructorPropertiesContent(
         '',
-        null,
-        GeneratorOptions(),
+        {},
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         [],
         [],
         [],
@@ -370,7 +383,12 @@ void main() {
       const expectedResult = 'this.animal';
       final result = generator.generateConstructorPropertiesContent(
         '',
-          map, GeneratorOptions(), [], [], []);
+        map,
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
+        [],
+        [],
+        [],
+      );
 
       expect(result, contains(expectedResult));
     });
@@ -393,7 +411,7 @@ void main() {
         className,
         [],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -416,7 +434,7 @@ void main() {
         className,
         ['enums.Pet'],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -432,8 +450,15 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
-      final result = generator.generatePropertiesContent(map, null, className,
-          <DefaultValueMap>[], false, [], [], GeneratorOptions());
+      final result = generator.generatePropertiesContent(
+          map,
+          {},
+          className,
+          <DefaultValueMap>[],
+          false,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -449,8 +474,15 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
-      final result = generator.generatePropertiesContent(map, null, className,
-          <DefaultValueMap>[], false, [], [], GeneratorOptions());
+      final result = generator.generatePropertiesContent(
+          map,
+          {},
+          className,
+          <DefaultValueMap>[],
+          false,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -464,8 +496,15 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
-      final result = generator.generatePropertiesContent(map, null, className,
-          <DefaultValueMap>[], false, [], [], GeneratorOptions());
+      final result = generator.generatePropertiesContent(
+          map,
+          {},
+          className,
+          <DefaultValueMap>[],
+          false,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -479,8 +518,15 @@ void main() {
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
       const fieldExpectedResult = 'final Pet? \$with';
-      final result = generator.generatePropertiesContent(map, null, className,
-          <DefaultValueMap>[], false, [], [], GeneratorOptions());
+      final result = generator.generatePropertiesContent(
+          map,
+          {},
+          className,
+          <DefaultValueMap>[],
+          false,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -496,7 +542,7 @@ void main() {
       const jsonKeyExpectedResult =
           "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
-      const propertyExpectedResult = 'final List<Object> dog';
+      const propertyExpectedResult = 'final List<Object>? dog';
       final result = generator.generateListPropertyContent(
         propertyName,
         propertyKey,
@@ -505,7 +551,7 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -528,7 +574,7 @@ void main() {
         false,
         ['Dog'],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -552,11 +598,11 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
-      expect(result, contains('final List<TestOriginalRef> dog;'));
+      expect(result, contains('final List<TestOriginalRef>? dog;'));
     });
   });
 
@@ -575,7 +621,7 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -598,26 +644,26 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(),
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
-      expect(result, contains('final List<Object> dog;'));
+      expect(result, contains('final List<Object>? dog;'));
     });
   });
 
   group('getModelInheritedProperties', () {
     test('Should generate 2 levels of inheritance', () {
-      final result = generator.generate(
-          model_with_inheritance, 'MyClass', GeneratorOptions());
+      final result = generator.generate(model_with_inheritance, 'MyClass',
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(
           result, contains('class ExtendedErrorModel extends BasicErrorModel'));
     });
 
     test('Should generate 3 levels of inheritance', () {
-      final result = generator.generate(
-          model_with_inheritance_3_levels, 'MyClass', GeneratorOptions());
+      final result = generator.generate(model_with_inheritance_3_levels,
+          'MyClass', GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result,
           contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
@@ -645,23 +691,27 @@ void main() {
           {'\$ref': 'ClassNameName'},
           ['enums.ClassNameName'],
           [],
-          GeneratorOptions());
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-      expect(result, contains('final enums.ClassNameName name;'));
+      expect(result, contains('final enums.ClassNameName? name;'));
     });
   });
 
   group('Tests for generateResponses', () {
     test('Should generate empty string for V2', () {
       final result = generator2.generateResponses(
-          schemas_responses_with_response, 'fileName', GeneratorOptions());
+          schemas_responses_with_response,
+          'fileName',
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, equals(''));
     });
 
     test('Should generate class from responses V3', () {
       final result = generator.generateResponses(
-          schemas_responses_with_response, 'fileName', GeneratorOptions());
+          schemas_responses_with_response,
+          'fileName',
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains('class SpaResponse'));
     });
@@ -670,7 +720,10 @@ void main() {
       final result = generator.generateResponses(
           schemas_responses_with_response_and_schemas,
           'fileName',
-          GeneratorOptions());
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
 
       expect(result, contains('class SpaResponse'));
     });
@@ -702,6 +755,20 @@ void main() {
           generator.getAllEnumNames(schemas_with_enums_in_properties);
 
       expect(result, contains('enums.SpaEnumResponseFailedValued'));
+    });
+  });
+
+  group('Tests for models from responses', () {
+    test('Should generate correct model from response', () {
+      final result = generator.generate(
+          request_with_return_type_injected,
+          'my_service',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
+
+          expect(result, contains('class ModelItemsGet\$Response'));
     });
   });
 }

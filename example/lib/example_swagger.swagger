@@ -72,6 +72,21 @@
         "responses": {
           "405": {
             "description": "Invalid input"
+          },
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "petId": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
           }
         },
         "security": [
