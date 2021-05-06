@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.6
+
+* Made ALL models parameter not required
+
 # 2.0.0-nullsafety.5
 
 * Fixed generation of Lists of Strings for models
