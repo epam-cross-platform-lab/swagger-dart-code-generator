@@ -788,26 +788,30 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     entityMap.forEach((key, value) {
       final fieldName = SwaggerModelsGenerator.generateFieldName(key);
 
-      final hasDefaultValue = value['default'] != null ||
-          defaultValues.any((element) =>
-              element.typeName ==
-              _mapBasicTypeToDartType(value['type'].toString(), ''));
 
-      final isList = value['type'] == 'array' ||
-          allEnumListNames.contains('enums.${key.pascalCase}');
+      //Recheck it
+      // final hasDefaultValue = value['default'] != null ||
+      //     defaultValues.any((element) =>
+      //         element.typeName ==
+      //         _mapBasicTypeToDartType(value['type'].toString(), ''));
 
-      final type = value['\$ref']?.toString().split('/').last.pascalCase ?? key;
+      // final isList = value['type'] == 'array' ||
+      //     allEnumListNames.contains('enums.${key.pascalCase}');
 
-      final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
-          allEnumNames.contains('enums.${className + type.pascalCase}');
+      // final type = value['\$ref']?.toString().split('/').last.pascalCase ?? key;
 
-      if ((isList && !options.useDefaultNullForLists) ||
-          hasDefaultValue ||
-          isEnum) {
-        results += '\t\trequired this.$fieldName,\n';
-      } else {
-        results += '\t\tthis.$fieldName,\n';
-      }
+      // final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
+      //     allEnumNames.contains('enums.${className + type.pascalCase}');
+
+      // if ((isList && !options.useDefaultNullForLists) ||
+      //     hasDefaultValue ||
+      //     isEnum) {
+      //   results += '\t\trequired this.$fieldName,\n';
+      // } else {
+      //   results += '\t\tthis.$fieldName,\n';
+      // }
+
+      results += '\t\tthis.$fieldName,\n';
     });
 
     return '{\n$results\n\t}';
