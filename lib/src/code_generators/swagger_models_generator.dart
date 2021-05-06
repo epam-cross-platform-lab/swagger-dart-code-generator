@@ -471,7 +471,7 @@ abstract class SwaggerModelsGenerator {
 
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
-        typeName = ref?.split('/').last ?? 'dynamic';
+        typeName = ref?.split('/').last ?? '';
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
