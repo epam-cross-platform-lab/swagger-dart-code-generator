@@ -28,6 +28,11 @@ targets:
               default_value: "36"
             - type_name: String
               default_value: ""
+          default_header_values_map:
+            - header_name: "X-Rate-Limit"
+              default_value: "12121212"
+            - header_name: "api_key"
+              default_value: "some_api_key"
           response_override_value_map:
             - url: "/store/inventory"
               method: get

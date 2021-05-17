@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'generator_options.g2.dart';
+part 'generator_options.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, anyMap: true)
 class GeneratorOptions {
@@ -12,6 +12,7 @@ class GeneratorOptions {
       this.useDefaultNullForLists = false,
       this.buildOnlyModels = false,
       this.defaultValuesMap = const <DefaultValueMap>[],
+      this.defaultHeaderValuesMap = const <DefaultHeaderValueMap>[],
       this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
       required this.inputFolder,
       required this.outputFolder,
@@ -63,6 +64,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: <DefaultValueMap>[])
   final List<DefaultValueMap> defaultValuesMap;
+
+  @JsonKey(defaultValue: <DefaultHeaderValueMap>[])
+  final List<DefaultHeaderValueMap> defaultHeaderValuesMap;
 
   @JsonKey(defaultValue: <ResponseOverrideValueMap>[])
   final List<ResponseOverrideValueMap> responseOverrideValueMap;
@@ -125,4 +129,20 @@ class ResponseOverrideValueMap {
 
   /// Convert this default value map instance to JSON.
   Map<String, dynamic> toJson() => _$ResponseOverrideValueMapToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class DefaultHeaderValueMap {
+  DefaultHeaderValueMap({required this.headerName, required this.defaultValue});
+
+  @JsonKey(defaultValue: '')
+  final String headerName;
+
+  @JsonKey(defaultValue: '')
+  final String defaultValue;
+
+  Map<String, dynamic> toJson() => _$DefaultHeaderValueMapToJson(this);
+
+  factory DefaultHeaderValueMap.fromJson(Map<String, dynamic> json) =>
+      _$DefaultHeaderValueMapFromJson(json);
 }

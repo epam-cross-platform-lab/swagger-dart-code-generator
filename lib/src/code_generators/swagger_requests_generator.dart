@@ -187,6 +187,7 @@ $allMethodsContent
           allEnumNames: allEnumNames,
           requestType: swaggerRequest.type,
           useRequiredAttribute: options.useRequiredAttributeForHeaders,
+          options: options,
         );
 
         final hasEnums = swaggerRequest.parameters.any((parameter) =>
@@ -554,13 +555,15 @@ $allMethodsContent
     return "@${parameter.inParameter.capitalize}('${parameter.name}') ${parameter.isRequired ? "@required" : ""} $parameterType? ${validateParameterName(parameter.name)}";
   }
 
-  String getParameterContent(
-      {required SwaggerRequestParameter parameter,
-      required bool ignoreHeaders,
-      required String requestType,
-      required String path,
-      required List<String> allEnumNames,
-      required bool useRequiredAttribute}) {
+  String getParameterContent({
+    required SwaggerRequestParameter parameter,
+    required bool ignoreHeaders,
+    required String requestType,
+    required String path,
+    required List<String> allEnumNames,
+    required bool useRequiredAttribute,
+    required GeneratorOptions options,
+  }) {
     final parameterType = validateParameterType(parameter.name);
     switch (parameter.inParameter) {
       case 'body':
@@ -572,9 +575,15 @@ $allMethodsContent
       case 'header':
         final needRequiredAttribute =
             parameter.isRequired && useRequiredAttribute;
+
+        final defaultValue = options.defaultHeaderValuesMap.firstWhereOrNull(
+            (element) => element.headerName == parameter.name);
+        final defaultValuePart =
+            defaultValue == null ? '' : ' = \'${defaultValue.defaultValue}\'';
+
         return ignoreHeaders
             ? ''
-            : "@${parameter.inParameter.capitalize}('${parameter.name}') ${needRequiredAttribute ? "required" : ""} String? ${validateParameterName(parameter.name)}";
+            : "@Header('${parameter.name}') ${needRequiredAttribute ? "required" : ""} String? ${validateParameterName(parameter.name)}$defaultValuePart";
       case 'cookie':
         return '';
       default:
@@ -619,13 +628,15 @@ abstract class $className extends ChopperService''';
     return classWithoutChopper;
   }
 
-  String getAllParametersContent(
-      {required List<SwaggerRequestParameter> listParameters,
-      required bool ignoreHeaders,
-      required String path,
-      required String requestType,
-      required List<String> allEnumNames,
-      required bool useRequiredAttribute}) {
+  String getAllParametersContent({
+    required List<SwaggerRequestParameter> listParameters,
+    required bool ignoreHeaders,
+    required String path,
+    required String requestType,
+    required List<String> allEnumNames,
+    required bool useRequiredAttribute,
+    required GeneratorOptions options,
+  }) {
     return listParameters
         .map((SwaggerRequestParameter parameter) => getParameterContent(
               parameter: parameter,
@@ -634,6 +645,7 @@ abstract class $className extends ChopperService''';
               allEnumNames: allEnumNames,
               requestType: requestType,
               useRequiredAttribute: useRequiredAttribute,
+              options: options,
             ))
         .where((String element) => element.isNotEmpty)
         .join(', ');

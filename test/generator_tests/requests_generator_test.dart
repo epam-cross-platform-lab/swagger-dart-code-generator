@@ -384,6 +384,7 @@ void main() {
         requestType: 'get',
         useRequiredAttribute: false,
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, contains('@Body() @required TestItem? testParameter'));
@@ -403,6 +404,7 @@ void main() {
         requestType: 'get',
         useRequiredAttribute: false,
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result,
@@ -423,6 +425,7 @@ void main() {
         requestType: 'get',
         useRequiredAttribute: false,
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(
@@ -442,6 +445,7 @@ void main() {
         allEnumNames: [],
         path: '',
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, contains('@Body() @required Object? testParameter'));
@@ -458,6 +462,7 @@ void main() {
         requestType: '',
         path: '',
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result,
@@ -475,6 +480,7 @@ void main() {
         allEnumNames: [],
         path: '',
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, equals(''));
@@ -491,6 +497,7 @@ void main() {
         allEnumNames: [],
         path: '',
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(
@@ -511,6 +518,7 @@ void main() {
         path: '',
         useRequiredAttribute: false,
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(
@@ -530,6 +538,7 @@ void main() {
         path: '',
         requestType: '',
         useRequiredAttribute: false,
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, contains(''));
