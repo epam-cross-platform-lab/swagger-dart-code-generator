@@ -1,6 +1,6 @@
 name: swagger_dart_code_generator
 
-version: 2.0.0-nullsafety.6
+version: 2.0.0-nullsafety.7
 
 homepage: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 repository: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
@@ -23,7 +23,7 @@ dependencies:
   universal_io: ^2.0.4
   collection: ^1.15.0
   dart_style: ^2.0.0
-  build_runner: 1.12.2
+  # build_runner: 1.12.2
 
 dev_dependencies:
   json_serializable: ^4.1.1

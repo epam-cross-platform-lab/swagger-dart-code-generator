@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.7
+
+* Added build option to set default values for headers
+
 # 2.0.0-nullsafety.6
 
 * Made ALL models parameter not required
