@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.7+1
+
+* Made header default values not sensative
+
 # 2.0.0-nullsafety.7
 
 * Added build option to set default values for headers

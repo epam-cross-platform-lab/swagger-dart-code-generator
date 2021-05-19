@@ -577,7 +577,8 @@ $allMethodsContent
             parameter.isRequired && useRequiredAttribute;
 
         final defaultValue = options.defaultHeaderValuesMap.firstWhereOrNull(
-            (element) => element.headerName == parameter.name);
+            (element) => element.headerName.toLowerCase() == parameter.name.toLowerCase());
+
         final defaultValuePart =
             defaultValue == null ? '' : ' = \'${defaultValue.defaultValue}\'';
 
