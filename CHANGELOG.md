@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.7+2
+
+* Fixed critical error
+
 # 2.0.0-nullsafety.7+1
 
 * Made header default values not sensative
