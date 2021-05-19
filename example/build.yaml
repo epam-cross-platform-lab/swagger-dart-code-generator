@@ -20,7 +20,7 @@ targets:
           include_if_null:
             enabled: true
             value: false
-          input_folder: "swaggers/"
+          input_folder: "lib/"
           output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:
@@ -31,7 +31,7 @@ targets:
           default_header_values_map:
             - header_name: "X-Rate-Limit"
               default_value: "12121212"
-            - header_name: "api_key"
+            - header_name: "Api_key"
               default_value: "some_api_key"
           response_override_value_map:
             - url: "/store/inventory"
