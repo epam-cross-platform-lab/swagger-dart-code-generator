@@ -350,6 +350,8 @@ $allMethodsContent
                 parameter.schema?.enumValues.isNotEmpty == true))
         .map((e) => e.name)
         .toList();
+    
+    parameterName = validateParameterName(parameterName);
 
     final mapName = getMapName(requestPath, requestType, parameterName, ref);
 

@@ -1,3 +1,7 @@
+# 2.0.0-nullsafety.8
+
+* Fixed Issues #167 and #168
+
 # 2.0.0-nullsafety.7+2
 
 * Fixed critical error
