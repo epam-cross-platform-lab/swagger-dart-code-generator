@@ -863,7 +863,7 @@ class $validatedClassName $extendsString{
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
-\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this)..removeWhere((key, value) => value is String && value.isEmpty);
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 }
 $copyWithMethod
 ''';
