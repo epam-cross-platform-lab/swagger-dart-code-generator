@@ -165,7 +165,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     final result = className.pascalCase
-        .split('-')
+        .split(RegExp('-|}|{'))
         .map((String str) => str.capitalize)
         .join();
 
@@ -360,7 +360,7 @@ abstract class SwaggerModelsGenerator {
       GeneratorOptions options,
       Map<String, String> basicTypesMap) {
     final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
-    final parameterName = propertySchema['\$ref'].toString().split('/').last;
+    var parameterName = propertySchema['\$ref'].toString().split('/').last;
 
     String typeName;
     if (basicTypesMap.containsKey(parameterName)) {
@@ -377,6 +377,8 @@ abstract class SwaggerModelsGenerator {
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
+    } else {
+      typeName += options.modelPostfix;
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
@@ -405,8 +407,7 @@ abstract class SwaggerModelsGenerator {
       typeName = basicTypesMap[parameterName]!;
     } else {
       typeName = getValidatedClassName(getParameterTypeName(
-              className, propertyName, propertyEntryMap, parameterName))
-          ;
+          className, propertyName, propertyEntryMap, parameterName));
     }
 
     final allEnumsNamesWithoutPrefix =
@@ -414,7 +415,8 @@ abstract class SwaggerModelsGenerator {
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
-    }else{
+    } else if (!basicTypesMap.containsKey(parameterName) &&
+        !allEnumListNames.contains(typeName)) {
       typeName += options.modelPostfix;
     }
 
@@ -475,7 +477,12 @@ abstract class SwaggerModelsGenerator {
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
         if (ref?.isNotEmpty == true) {
-          typeName = ref!.split('/').last + options.modelPostfix;
+          typeName = ref!.split('/').last;
+
+          if (!allEnumListNames.contains(typeName) &&
+              !allEnumNames.contains('enums.' + typeName)) {
+            typeName += options.modelPostfix;
+          }
         }
 
         if (basicTypesMap.containsKey(typeName)) {
@@ -525,7 +532,14 @@ abstract class SwaggerModelsGenerator {
 
     var jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString";
 
-    var typeName = getParameterTypeName(className, propertyName, val);
+    var typeName = '';
+
+    if (val['\$ref'] != null) {
+      typeName = val['\$ref'].toString().split('/').last.pascalCase +
+          options.modelPostfix;
+    } else {
+      typeName = getParameterTypeName(className, propertyName, val);
+    }
 
     final allEnumsNamesWithoutPrefix =
         allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();

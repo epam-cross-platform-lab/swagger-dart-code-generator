@@ -526,10 +526,11 @@ $allMethodsContent
     } else if (parameter.ref.isNotEmpty) {
       parameterType = parameter.ref.split('/').last;
       parameterType = parameterType.split('_').map((e) => e.capitalize).join();
-      parameterType += options.modelPostfix;
 
       if (allEnumNames.contains('enums.$parameterType')) {
         parameterType = 'enums.$parameterType';
+      } else {
+        parameterType += options.modelPostfix;
       }
 
       if (parameter.type == 'array') {
@@ -684,8 +685,9 @@ abstract class $className extends ChopperService''';
   String getResponseModelName(String url, String methodName) {
     final urlString = url.split('/').map((e) => e.pascalCase).join();
     final methodNamePart = methodName.pascalCase;
+    final responseType = SwaggerModelsGenerator.getValidatedClassName('$urlString$methodNamePart\$Response');
 
-    return '$urlString$methodNamePart\$Response';
+    return responseType;
   }
 
   String getReturnTypeName(
@@ -755,8 +757,11 @@ abstract class $className extends ChopperService''';
     if (neededResponse.content.isNotEmpty == true &&
         neededResponse.content.isNotEmpty) {
       if (neededResponse.content.first.ref.isNotEmpty) {
-        final type = neededResponse.content.first.ref.split('/').last +
-            options.modelPostfix;
+        var type = neededResponse.content.first.ref.split('/').last;
+
+        if (!basicTypesMap.containsKey(type)) {
+          type += options.modelPostfix;
+        }
 
         if (basicTypesMap.containsKey(type.toString())) {
           return basicTypesMap[type] ?? '';
