@@ -726,7 +726,7 @@ abstract class $className extends ChopperService''';
           ? neededResponse.schema?.items?.originalRef
           : neededResponse.schema?.items?.type ?? '';
 
-      if (param!.isNotEmpty &&
+      if (param!.isEmpty &&
           neededResponse.schema?.items?.ref.split('/').lastOrNull != null) {
         param = neededResponse.schema!.items!.ref.split('/').last +
             options.modelPostfix;
