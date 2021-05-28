@@ -405,7 +405,8 @@ abstract class SwaggerModelsGenerator {
       typeName = basicTypesMap[parameterName]!;
     } else {
       typeName = getValidatedClassName(getParameterTypeName(
-          className, propertyName, propertyEntryMap, parameterName));
+              className, propertyName, propertyEntryMap, parameterName))
+          ;
     }
 
     final allEnumsNamesWithoutPrefix =
@@ -413,6 +414,8 @@ abstract class SwaggerModelsGenerator {
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
+    }else{
+      typeName += options.modelPostfix;
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
@@ -471,7 +474,9 @@ abstract class SwaggerModelsGenerator {
 
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
-        typeName = ref?.split('/').last ?? '';
+        if (ref?.isNotEmpty == true) {
+          typeName = ref!.split('/').last + options.modelPostfix;
+        }
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
@@ -788,7 +793,6 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     entityMap.forEach((key, value) {
       final fieldName = SwaggerModelsGenerator.generateFieldName(key);
 
-
       //Recheck it
       // final hasDefaultValue = value['default'] != null ||
       //     defaultValues.any((element) =>
@@ -850,7 +854,8 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       options,
     );
 
-    final validatedClassName = getValidatedClassName(className);
+    final validatedClassName =
+        '${getValidatedClassName(className)}${options.modelPostfix}';
 
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);

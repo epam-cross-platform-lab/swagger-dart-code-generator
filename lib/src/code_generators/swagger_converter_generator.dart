@@ -3,16 +3,17 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_g
 import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:recase/recase.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class SwaggerConverterGenerator {
-  String generate(String dartCode, String fileName) {
+  String generate(String dartCode, String fileName, GeneratorOptions options) {
     return '''
 final Map<Type, Object Function(Map<String, dynamic>)> ${fileName.pascalCase}$converterClassEnding = 
 {
-${_generateModelsMapping(dartCode)}};''';
+${_generateModelsMapping(dartCode, options)}};''';
   }
 
-  String _generateModelsMapping(String dartCode) {
+  String _generateModelsMapping(String dartCode, GeneratorOptions options) {
     final result = <String>[];
     final dynamic map = jsonDecode(dartCode);
 
@@ -44,7 +45,9 @@ ${_generateModelsMapping(dartCode)}};''';
           continue;
         }
 
-        final validatedName = SwaggerModelsGenerator.getValidatedClassName(key);
+        final validatedName =
+            SwaggerModelsGenerator.getValidatedClassName(key) +
+                options.modelPostfix;
 
         result.add('\t$validatedName: $validatedName.fromJsonFactory,');
       }
