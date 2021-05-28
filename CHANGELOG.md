@@ -1,4 +1,9 @@
-# 2.0.0-nullsafety.8
+# 2.0.1
+
+* Updated dependencies
+* Added possibility to made postfix for models
+
+# 2.0.0-nullsafety.9
 
 * Removed ..RemoveWhere spike on generated models
 
