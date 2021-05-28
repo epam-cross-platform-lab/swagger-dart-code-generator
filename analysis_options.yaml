@@ -7,8 +7,7 @@ analyzer:
     implicit-casts: false
   exclude:
     - example/**/*.dart
-
-
+    - lib/**/*.g2.dart
 linter:
   rules:
     - type_annotate_public_apis
