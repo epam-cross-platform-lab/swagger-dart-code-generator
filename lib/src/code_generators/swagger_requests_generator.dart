@@ -143,7 +143,7 @@ $allMethodsContent
               inParameter: 'body',
               name: 'body',
               isRequired: true,
-              type: _getBodyParameterType(additionalParameter, options),
+              type: _getBodyParameterType(additionalParameter),
               ref: additionalParameter?.ref ??
                   additionalParameter?.items?.ref ??
                   ''));
@@ -209,14 +209,12 @@ $allMethodsContent
             getParameterCommentsForMethod(swaggerRequest.parameters, options);
 
         final returnTypeName = getReturnTypeName(
-          swaggerRequest.responses,
-          swaggerPath.path,
-          swaggerRequest.type,
-          options.responseOverrideValueMap,
-          dynamicResponses,
-          basicTypesMap,
-          options,
-        );
+            swaggerRequest.responses,
+            swaggerPath.path,
+            swaggerRequest.type,
+            options.responseOverrideValueMap,
+            dynamicResponses,
+            basicTypesMap);
 
         final generatedMethod = getMethodContent(
             summary: swaggerRequest.summary,
@@ -240,8 +238,7 @@ $allMethodsContent
     return methods.toString();
   }
 
-  String _getBodyParameterType(
-      RequestContent? content, GeneratorOptions options) {
+  String _getBodyParameterType(RequestContent? content) {
     if (content == null) {
       return 'Object';
     }
@@ -251,8 +248,7 @@ $allMethodsContent
         return 'Object';
       }
 
-      final type =
-          content.items!.ref.split('/').last.capitalize + options.modelPostfix;
+      final type = content.items!.ref.split('/').last.capitalize;
 
       return 'List<$type>';
     }
@@ -354,7 +350,7 @@ $allMethodsContent
                 parameter.schema?.enumValues.isNotEmpty == true))
         .map((e) => e.name)
         .toList();
-
+    
     parameterName = validateParameterName(parameterName);
 
     final mapName = getMapName(requestPath, requestType, parameterName, ref);
@@ -507,13 +503,8 @@ $allMethodsContent
     }
   }
 
-  String getBodyParameter(
-    SwaggerRequestParameter parameter,
-    String path,
-    String requestType,
-    List<String> allEnumNames,
-    GeneratorOptions options,
-  ) {
+  String getBodyParameter(SwaggerRequestParameter parameter, String path,
+      String requestType, List<String> allEnumNames) {
     String parameterType;
     if (parameter.type.isNotEmpty) {
       parameterType = parameter.type;
@@ -526,7 +517,6 @@ $allMethodsContent
     } else if (parameter.ref.isNotEmpty) {
       parameterType = parameter.ref.split('/').last;
       parameterType = parameterType.split('_').map((e) => e.capitalize).join();
-      parameterType += options.modelPostfix;
 
       if (allEnumNames.contains('enums.$parameterType')) {
         parameterType = 'enums.$parameterType';
@@ -536,8 +526,7 @@ $allMethodsContent
         parameterType = 'List<$parameterType>';
       }
     } else if (parameter.schema?.ref.isNotEmpty ?? false) {
-      parameterType =
-          parameter.schema!.ref.split('/').last + options.modelPostfix;
+      parameterType = parameter.schema!.ref.split('/').last;
     } else {
       parameterType = defaultBodyParameter;
     }
@@ -580,13 +569,7 @@ $allMethodsContent
     final parameterType = validateParameterType(parameter.name);
     switch (parameter.inParameter) {
       case 'body':
-        return getBodyParameter(
-          parameter,
-          path,
-          requestType,
-          allEnumNames,
-          options,
-        );
+        return getBodyParameter(parameter, path, requestType, allEnumNames);
       case 'formData':
         final isEnum = parameter.schema?.enumValues.isNotEmpty ?? false;
 
@@ -596,9 +579,7 @@ $allMethodsContent
             parameter.isRequired && useRequiredAttribute;
 
         final defaultValue = options.defaultHeaderValuesMap.firstWhereOrNull(
-            (element) =>
-                element.headerName.toLowerCase() ==
-                parameter.name.toLowerCase());
+            (element) => element.headerName.toLowerCase() == parameter.name.toLowerCase());
 
         final defaultValuePart =
             defaultValue == null ? '' : ' = \'${defaultValue.defaultValue}\'';
@@ -689,14 +670,12 @@ abstract class $className extends ChopperService''';
   }
 
   String getReturnTypeName(
-    List<SwaggerResponse> responses,
-    String url,
-    String methodName,
-    List<ResponseOverrideValueMap> overriddenRequests,
-    List<String> dynamicResponses,
-    Map<String, String> basicTypesMap,
-    GeneratorOptions options,
-  ) {
+      List<SwaggerResponse> responses,
+      String url,
+      String methodName,
+      List<ResponseOverrideValueMap> overriddenRequests,
+      List<String> dynamicResponses,
+      Map<String, String> basicTypesMap) {
     if (overriddenRequests
             .any((ResponseOverrideValueMap element) => element.url == url) ==
         true) {
@@ -720,21 +699,16 @@ abstract class $className extends ChopperService''';
     }
 
     if (neededResponse.schema?.type.isNotEmpty ?? false) {
-      var param = neededResponse.schema?.items?.originalRef.isNotEmpty == true
+      final param = neededResponse.schema?.items?.originalRef.isNotEmpty == true
           ? neededResponse.schema?.items?.originalRef
-          : neededResponse.schema?.items?.type ?? '';
-
-      if (param!.isNotEmpty &&
-          neededResponse.schema?.items?.ref.split('/').lastOrNull != null) {
-        param = neededResponse.schema!.items!.ref.split('/').last +
-            options.modelPostfix;
-      }
-
-      return getParameterTypeName(neededResponse.schema?.type ?? '', param);
+          : neededResponse.schema?.items?.type.isNotEmpty == true
+              ? neededResponse.schema?.items?.type
+              : neededResponse.schema?.items?.ref.split('/').lastOrNull ?? '';
+      return getParameterTypeName(neededResponse.schema?.type ?? '', param!);
     }
 
     if (neededResponse.schema?.ref.isNotEmpty ?? false) {
-      return neededResponse.schema!.ref.split('/').last + options.modelPostfix;
+      return neededResponse.schema?.ref.split('/').lastOrNull ?? '';
     }
 
     if (neededResponse.ref.isNotEmpty) {
@@ -744,7 +718,7 @@ abstract class $className extends ChopperService''';
           dynamicResponses.contains(ref)) {
         return 'object';
       } else {
-        return ref + options.modelPostfix;
+        return ref;
       }
     }
 
@@ -755,8 +729,7 @@ abstract class $className extends ChopperService''';
     if (neededResponse.content.isNotEmpty == true &&
         neededResponse.content.isNotEmpty) {
       if (neededResponse.content.first.ref.isNotEmpty) {
-        final type = neededResponse.content.first.ref.split('/').last +
-            options.modelPostfix;
+        final type = neededResponse.content.first.ref.split('/').last;
 
         if (basicTypesMap.containsKey(type.toString())) {
           return basicTypesMap[type] ?? '';
@@ -764,15 +737,13 @@ abstract class $className extends ChopperService''';
         return type;
       }
       if (neededResponse.content.first.responseType.isNotEmpty) {
-        final ref = neededResponse.content.firstOrNull?.items?.ref
-            .split('/')
-            .lastOrNull;
-        if (ref?.isNotEmpty == true) {
-          return getParameterTypeName(neededResponse.content.first.responseType,
-              ref! + options.modelPostfix);
-        }
-        return getParameterTypeName(neededResponse.content.first.responseType,
-            neededResponse.schema?.items?.originalRef ?? '');
+        return getParameterTypeName(
+            neededResponse.content.first.responseType,
+            neededResponse.schema?.items?.originalRef ??
+                neededResponse.content.firstOrNull?.items?.ref
+                    .split('/')
+                    .lastOrNull ??
+                '');
       }
     }
 

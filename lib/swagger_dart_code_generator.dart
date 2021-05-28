@@ -85,7 +85,7 @@ class SwaggerDartCodeGenerator implements Builder {
         enums.isNotEmpty);
 
     final converter = codeGenerator.generateConverter(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+        contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final requests = codeGenerator.generateRequests(
         contents,

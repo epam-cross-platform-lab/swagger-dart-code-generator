@@ -5,24 +5,22 @@ part 'generator_options.g2.dart';
 @JsonSerializable(fieldRename: FieldRename.snake, anyMap: true)
 class GeneratorOptions {
   /// Instantiate generator options.
-  GeneratorOptions({
-    this.withBaseUrl = true,
-    this.withConverter = true,
-    this.ignoreHeaders = false,
-    this.useDefaultNullForLists = false,
-    this.buildOnlyModels = false,
-    this.defaultValuesMap = const <DefaultValueMap>[],
-    this.defaultHeaderValuesMap = const <DefaultHeaderValueMap>[],
-    this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
-    required this.inputFolder,
-    required this.outputFolder,
-    this.enumsCaseSensitive = true,
-    this.usePathForRequestNames = false,
-    this.useRequiredAttributeForHeaders = true,
-    this.useInheritance = true,
-    this.includeIfNull,
-    this.modelPostfix = '',
-  });
+  GeneratorOptions(
+      {this.withBaseUrl = true,
+      this.withConverter = true,
+      this.ignoreHeaders = false,
+      this.useDefaultNullForLists = false,
+      this.buildOnlyModels = false,
+      this.defaultValuesMap = const <DefaultValueMap>[],
+      this.defaultHeaderValuesMap = const <DefaultHeaderValueMap>[],
+      this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
+      required this.inputFolder,
+      required this.outputFolder,
+      this.enumsCaseSensitive = true,
+      this.usePathForRequestNames = false,
+      this.useRequiredAttributeForHeaders = true,
+      this.useInheritance = true,
+      this.includeIfNull});
 
   /// Build options from a JSON map.
   factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
@@ -63,9 +61,6 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool buildOnlyModels;
-
-  @JsonKey(defaultValue: '')
-  final String modelPostfix;
 
   @JsonKey(defaultValue: <DefaultValueMap>[])
   final List<DefaultValueMap> defaultValuesMap;
