@@ -1,116 +1,96 @@
-import 'package:swagger_dart_code_generator/src/swagger_models/responses/item_schema.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 
 import '../responses/swagger_response.dart';
 import 'swagger_request_parameter.dart';
 
+part 'swagger_request.g.dart';
+
+@JsonSerializable()
 class SwaggerRequest {
   SwaggerRequest({
-    this.type = '',
     this.summary = '',
     this.description = '',
     this.operationId = '',
     this.consumes = const [],
-    this.responses = const [],
+    this.responses = const {},
     this.parameters = const [],
     this.produces = const [],
     this.requestBody,
   });
 
-  SwaggerRequest.fromJson(Map<String, dynamic> json)
-      : summary = json['summary'] as String? ?? '',
-        type = '',
-        description = json['description'] as String? ?? '',
-        operationId = json['operationId'] as String? ?? '',
-        consumes = (json['consumes'] as List<dynamic>?)
-                ?.map((dynamic e) => e.toString())
-                .toList() ??
-            <String>[],
-        requestBody =
-            RequestBody.fromJson(json['requestBody'] as Map<String, dynamic>?),
-        produces = (json['produces'] as List<dynamic>?)
-                ?.map((dynamic e) => e.toString())
-                .toList() ??
-            <String>[],
-        responses = mapResponses(json['responses'] as Map<String, dynamic>?),
-        parameters = mapParameters(json['parameters'] as List<dynamic>?);
-
-  String type;
+  @JsonKey(name: 'summary', defaultValue: '')
   String summary;
+
+  @JsonKey(name: 'description', defaultValue: '')
   String description;
+
+  @JsonKey(name: 'operationId', defaultValue: '')
   String operationId;
+
+  @JsonKey(name: 'consumes', defaultValue: [])
   List<String> consumes;
+
+  @JsonKey(name: 'produces', defaultValue: [])
   List<String> produces;
-  List<SwaggerResponse> responses;
+
+  @JsonKey(name: 'responses', defaultValue: {})
+  Map<String, SwaggerResponse> responses;
+
+  @JsonKey(name: 'parameters', defaultValue: [])
   List<SwaggerRequestParameter> parameters;
+
+  @JsonKey(name: 'requestBody')
   RequestBody? requestBody;
 
-  static List<SwaggerRequestParameter> mapParameters(List<dynamic>? map) {
-    if (map == null) {
-      return [];
-    }
-    final result = map
-        .map((dynamic e) =>
-            SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
-        .toList();
+  Map<String, dynamic> toJson() => _$SwaggerRequestToJson(this);
 
-    return result;
-  }
-
-  static List<SwaggerResponse> mapResponses(Map<String, dynamic>? map) {
-    final results = <SwaggerResponse>[];
-    if (map == null) {
-      return results;
-    }
-    for (var i = 0; i < map.keys.length; i++) {
-      final key = map.keys.elementAt(i);
-      final response =
-          SwaggerResponse.fromJson(map[key] as Map<String, dynamic>);
-      response.code = key;
-
-      results.add(response);
-    }
-
-    return results;
-  }
+  factory SwaggerRequest.fromJson(Map<String, dynamic> json) =>
+      _$SwaggerRequestFromJson(json);
 }
 
+@JsonSerializable()
 class RequestBody {
+  @JsonKey(name: 'content')
   RequestContent? content;
+
+  @JsonKey(name: 'ref', defaultValue: '')
   String ref;
 
-  RequestBody({this.content, this.ref = ''});
+  RequestBody({
+    this.content,
+    this.ref = '',
+  });
 
-  RequestBody.fromJson(Map<String, dynamic>? json)
-      : content = (json == null ||
-                json['content'] == null ||
-                json['content']['application/json'] == null)
-            ? null
-            : RequestContent.fromJson(
-                json['content']['application/json'] as Map<String, dynamic>),
-        ref = json == null ? '' : json['\$ref']?.toString() ?? '';
+  Map<String, dynamic> toJson() => _$RequestBodyToJson(this);
+
+  factory RequestBody.fromJson(Map<String, dynamic> json) =>
+      _$RequestBodyFromJson(json);
 }
 
+@JsonSerializable()
 class RequestContent {
-  RequestContent(
-      {this.items, this.ref = '', this.responseType = '', this.type = ''});
+  RequestContent({
+    this.items,
+    this.ref = '',
+    this.responseType = '',
+    this.type = '',
+  });
 
-  RequestContent.fromJson(Map<dynamic, dynamic> json)
-      : responseType = json['schema'] != null
-            ? json['schema']['type'] as String? ?? ''
-            : '',
-        items = json['schema'] != null && json['schema']['items'] != null
-            ? ItemSchema.fromJson(
-                json['schema']['items'] as Map<String, dynamic>)
-            : null,
-        ref = json['schema'] != null
-            ? json['schema']['\$ref'] as String? ?? ''
-            : '',
-        type = json['schema'] != null
-            ? json['schema']['type'] as String? ?? ''
-            : '';
-
+  @JsonKey(name: 'responseType', defaultValue: '')
   final String responseType;
+
+  @JsonKey(name: 'type', defaultValue: '')
   final String type;
-  final ItemSchema? items;
+
+  @JsonKey(name: 'items')
+  final SwaggerSchema? items;
+
+  @JsonKey(name: 'ref', defaultValue: '')
   final String ref;
+
+  Map<String, dynamic> toJson() => _$RequestContentToJson(this);
+
+  factory RequestContent.fromJson(Map<String, dynamic> json) =>
+      _$RequestContentFromJson(json);
 }

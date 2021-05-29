@@ -145,8 +145,9 @@ $enumsFromRequestBodies
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
     //Link defined parameters with requests
-    swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
-      swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
+    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
+      swaggerPath.requests
+          .forEach((String requestType, SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
                 getOriginalOrOverriddenRequestParameter(
@@ -155,23 +156,18 @@ $enumsFromRequestBodies
       });
     });
 
-    for (var i = 0; i < swaggerRoot.paths.length; i++) {
-      final swaggerPath = swaggerRoot.paths[i];
-
-      for (var j = 0; j < swaggerPath.requests.length; j++) {
-        final swaggerRequest = swaggerPath.requests[j];
-
+    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
+      swaggerPath.requests
+          .forEach((String requestType, SwaggerRequest swaggerRequest) {
         if (swaggerRequest.parameters.isEmpty) {
-          continue;
+          return;
         }
 
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
           var name = SwaggerModelsGenerator.generateRequestEnumName(
-              swaggerPath.path,
-              swaggerRequest.type,
-              swaggerRequestParameter.name);
+              path, requestType, swaggerRequestParameter.name);
 
           name = SwaggerModelsGenerator.getValidatedClassName(name);
 
@@ -190,8 +186,8 @@ $enumsFromRequestBodies
             enumNames.add(swaggerRequestParameter.name);
           }
         }
-      }
-    }
+      });
+    });
 
     return result.toString();
   }
@@ -271,8 +267,8 @@ $enumMap
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
     //Link defined parameters with requests
-    swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
-      swaggerPath.requests.forEach((SwaggerRequest swaggerRequest) {
+    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
+      swaggerPath.requests.forEach((String req, SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
                 getOriginalOrOverriddenRequestParameter(
@@ -281,23 +277,18 @@ $enumMap
       });
     });
 
-    for (var i = 0; i < swaggerRoot.paths.length; i++) {
-      final swaggerPath = swaggerRoot.paths[i];
-
-      for (var j = 0; j < swaggerPath.requests.length; j++) {
-        final swaggerRequest = swaggerPath.requests[j];
-
+    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
+      swaggerPath.requests
+          .forEach((String requestType, SwaggerRequest swaggerRequest) {
         if (swaggerRequest.parameters.isEmpty) {
-          continue;
+          return;
         }
 
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
           var name = SwaggerModelsGenerator.generateRequestEnumName(
-              swaggerPath.path,
-              swaggerRequest.type,
-              swaggerRequestParameter.name);
+              path, requestType, swaggerRequestParameter.name);
 
           if (enumNames.contains(name)) {
             continue;
@@ -311,8 +302,8 @@ $enumMap
             enumNames.add(name);
           }
         }
-      }
-    }
+      });
+    });
 
     return enumNames;
   }
