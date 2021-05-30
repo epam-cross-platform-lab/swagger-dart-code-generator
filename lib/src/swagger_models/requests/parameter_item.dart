@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'parameter_item.g.dart';
+part 'parameter_item.g2.dart';
 
 @JsonSerializable()
 class ParameterItem {
