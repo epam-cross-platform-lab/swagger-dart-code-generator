@@ -21,11 +21,10 @@ dependencies:
   json_annotation: ^4.0.1
   universal_io: ^2.0.4
   collection: ^1.15.0
-  #Only for github. Don't push to pub.dev
-  dart_style: ^2.0.1
   build_runner: ^2.0.4
 
 dev_dependencies:
+  dart_style: ^2.0.1
   json_serializable: ^4.1.3
   pedantic: ^1.11.0
   test: ^1.17.5
