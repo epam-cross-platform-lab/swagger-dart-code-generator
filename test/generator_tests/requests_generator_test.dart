@@ -312,16 +312,18 @@ void main() {
 
     test('Should generate return type by content -> first -> ref', () {
       final result = generator.getReturnTypeName(
-          <SwaggerResponse>[
-            SwaggerResponse(code: '200', content: <Content>[
-              Content(ref: '#components/schemas/TestItem')
-            ])
-          ],
-          '/test/items',
-          'get',
-          <ResponseOverrideValueMap>[],
-          [],
-          {});
+        <SwaggerResponse>[
+          SwaggerResponse(
+              code: '200',
+              content: <Content>[Content(ref: '#components/schemas/TestItem')])
+        ],
+        '/test/items',
+        'get',
+        <ResponseOverrideValueMap>[],
+        [],
+        {},
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
+      );
 
       expect(result, equals('TestItem'));
     });
@@ -384,6 +386,7 @@ void main() {
         requestType: 'get',
         useRequiredAttribute: false,
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, contains('@Body() @required TestItem? testParameter'));
@@ -403,6 +406,7 @@ void main() {
         requestType: 'get',
         useRequiredAttribute: false,
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result,
@@ -423,6 +427,7 @@ void main() {
         requestType: 'get',
         useRequiredAttribute: false,
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(
@@ -442,6 +447,7 @@ void main() {
         allEnumNames: [],
         path: '',
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, contains('@Body() @required Object? testParameter'));
@@ -458,6 +464,7 @@ void main() {
         requestType: '',
         path: '',
         allEnumNames: [],
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result,
@@ -475,6 +482,7 @@ void main() {
         allEnumNames: [],
         path: '',
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, equals(''));
@@ -491,6 +499,7 @@ void main() {
         allEnumNames: [],
         path: '',
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(
@@ -511,6 +520,7 @@ void main() {
         path: '',
         useRequiredAttribute: false,
         requestType: '',
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(
@@ -530,6 +540,7 @@ void main() {
         path: '',
         requestType: '',
         useRequiredAttribute: false,
+        options: GeneratorOptions(inputFolder: '', outputFolder: ''),
       );
 
       expect(result, contains(''));
@@ -755,7 +766,13 @@ void main() {
           name: 'myName',
           isRequired: true,
           schema: SwaggerParameterSchema(ref: '#definitions/MyObject'));
-      final result = generator.getBodyParameter(parameter, 'path', 'type', []);
+      final result = generator.getBodyParameter(
+        parameter,
+        'path',
+        'type',
+        [],
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
+      );
 
       expect(result, equals('@Body() @required MyObject? myName'));
     });
@@ -844,7 +861,8 @@ void main() {
             outputFolder: '',
           ));
 
-          expect(result, contains('Future<chopper.Response<ModelItemsGet\$Response>>'));
+      expect(result,
+          contains('Future<chopper.Response<ModelItemsGet\$Response>>'));
     });
   });
 }

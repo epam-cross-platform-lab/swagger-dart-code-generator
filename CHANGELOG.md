@@ -1,3 +1,44 @@
+# 2.0.2
+
+* Fixed meta version to 1.3.0
+
+# 2.0.1
+
+* Updated dependencies
+* Added possibility to made postfix for models
+
+# 2.0.0-nullsafety.9
+
+* Removed ..RemoveWhere spike on generated models
+
+# 2.0.0-nullsafety.8
+
+* Fixed Issues #167 and #168
+
+# 2.0.0-nullsafety.7+2
+
+* Fixed critical error
+
+# 2.0.0-nullsafety.7+1
+
+* Made header default values not sensative
+
+# 2.0.0-nullsafety.7
+
+* Added build option to set default values for headers
+
+# 2.0.0-nullsafety.6
+
+* Made ALL models parameter not required
+
+# 2.0.0-nullsafety.5
+
+* Fixed generation of Lists of Strings for models
+
+# 2.0.0-nullsafety.4
+
+* Fixed issues with null-safety
+
 # 2.0.0-nullsafety.3+3
 
 * Fixed analyser issues

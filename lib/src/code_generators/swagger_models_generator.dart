@@ -165,7 +165,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     final result = className.pascalCase
-        .split('-')
+        .split(RegExp('-|}|{'))
         .map((String str) => str.capitalize)
         .join();
 
@@ -360,7 +360,7 @@ abstract class SwaggerModelsGenerator {
       GeneratorOptions options,
       Map<String, String> basicTypesMap) {
     final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
-    final parameterName = propertySchema['\$ref'].toString().split('/').last;
+    var parameterName = propertySchema['\$ref'].toString().split('/').last;
 
     String typeName;
     if (basicTypesMap.containsKey(parameterName)) {
@@ -377,6 +377,8 @@ abstract class SwaggerModelsGenerator {
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
+    } else {
+      typeName += options.modelPostfix;
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
@@ -413,6 +415,9 @@ abstract class SwaggerModelsGenerator {
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
+    } else if (!basicTypesMap.containsKey(parameterName) &&
+        !allEnumListNames.contains(typeName)) {
+      typeName += options.modelPostfix;
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
@@ -471,7 +476,14 @@ abstract class SwaggerModelsGenerator {
 
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
-        typeName = ref?.split('/').last ?? 'dynamic';
+        if (ref?.isNotEmpty == true) {
+          typeName = ref!.split('/').last;
+
+          if (!allEnumListNames.contains(typeName) &&
+              !allEnumNames.contains('enums.' + typeName)) {
+            typeName += options.modelPostfix;
+          }
+        }
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
@@ -520,7 +532,14 @@ abstract class SwaggerModelsGenerator {
 
     var jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString";
 
-    var typeName = getParameterTypeName(className, propertyName, val);
+    var typeName = '';
+
+    if (val['\$ref'] != null) {
+      typeName = val['\$ref'].toString().split('/').last.pascalCase +
+          options.modelPostfix;
+    } else {
+      typeName = getParameterTypeName(className, propertyName, val);
+    }
 
     final allEnumsNamesWithoutPrefix =
         allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
@@ -788,26 +807,29 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     entityMap.forEach((key, value) {
       final fieldName = SwaggerModelsGenerator.generateFieldName(key);
 
-      final hasDefaultValue = value['default'] != null ||
-          defaultValues.any((element) =>
-              element.typeName ==
-              _mapBasicTypeToDartType(value['type'].toString(), ''));
+      //Recheck it
+      // final hasDefaultValue = value['default'] != null ||
+      //     defaultValues.any((element) =>
+      //         element.typeName ==
+      //         _mapBasicTypeToDartType(value['type'].toString(), ''));
 
-      final isList = value['type'] == 'array' ||
-          allEnumListNames.contains('enums.${key.pascalCase}');
+      // final isList = value['type'] == 'array' ||
+      //     allEnumListNames.contains('enums.${key.pascalCase}');
 
-      final type = value['\$ref']?.toString().split('/').last.pascalCase ?? key;
+      // final type = value['\$ref']?.toString().split('/').last.pascalCase ?? key;
 
-      final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
-          allEnumNames.contains('enums.${className + type.pascalCase}');
+      // final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
+      //     allEnumNames.contains('enums.${className + type.pascalCase}');
 
-      if ((isList && !options.useDefaultNullForLists) ||
-          hasDefaultValue ||
-          isEnum) {
-        results += '\t\trequired this.$fieldName,\n';
-      } else {
-        results += '\t\tthis.$fieldName,\n';
-      }
+      // if ((isList && !options.useDefaultNullForLists) ||
+      //     hasDefaultValue ||
+      //     isEnum) {
+      //   results += '\t\trequired this.$fieldName,\n';
+      // } else {
+      //   results += '\t\tthis.$fieldName,\n';
+      // }
+
+      results += '\t\tthis.$fieldName,\n';
     });
 
     return '{\n$results\n\t}';
@@ -846,7 +868,8 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       options,
     );
 
-    final validatedClassName = getValidatedClassName(className);
+    final validatedClassName =
+        '${getValidatedClassName(className)}${options.modelPostfix}';
 
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);

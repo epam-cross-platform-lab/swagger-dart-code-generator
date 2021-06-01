@@ -19,6 +19,12 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
                 DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
             .toList() ??
         [],
+    defaultHeaderValuesMap:
+        (json['default_header_values_map'] as List<dynamic>?)
+                ?.map((e) => DefaultHeaderValueMap.fromJson(
+                    Map<String, dynamic>.from(e as Map)))
+                .toList() ??
+            [],
     responseOverrideValueMap:
         (json['response_override_value_map'] as List<dynamic>?)
                 ?.map((e) => ResponseOverrideValueMap.fromJson(
@@ -37,6 +43,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
         ? null
         : IncludeIfNull.fromJson(
             Map<String, dynamic>.from(json['include_if_null'] as Map)),
+    modelPostfix: json['model_postfix'] as String? ?? '',
   );
 }
 
@@ -55,7 +62,9 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'output_folder': instance.outputFolder,
       'use_default_null_for_lists': instance.useDefaultNullForLists,
       'build_only_models': instance.buildOnlyModels,
+      'model_postfix': instance.modelPostfix,
       'default_values_map': instance.defaultValuesMap,
+      'default_header_values_map': instance.defaultHeaderValuesMap,
       'response_override_value_map': instance.responseOverrideValueMap,
     };
 
@@ -100,4 +109,19 @@ Map<String, dynamic> _$ResponseOverrideValueMapToJson(
       'url': instance.url,
       'method': instance.method,
       'overridden_value': instance.overriddenValue,
+    };
+
+DefaultHeaderValueMap _$DefaultHeaderValueMapFromJson(
+    Map<String, dynamic> json) {
+  return DefaultHeaderValueMap(
+    headerName: json['header_name'] as String? ?? '',
+    defaultValue: json['default_value'] as String? ?? '',
+  );
+}
+
+Map<String, dynamic> _$DefaultHeaderValueMapToJson(
+        DefaultHeaderValueMap instance) =>
+    <String, dynamic>{
+      'header_name': instance.headerName,
+      'default_value': instance.defaultValue,
     };

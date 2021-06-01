@@ -35,7 +35,7 @@ class SwaggerAdditionsGenerator {
 
       final fileName = key.split('/').last;
       maps.writeln('  ...$className,');
-      imports.add("import '$fileName.dart';");
+      imports.add("import '${fileName.replaceAll('-', '_')}.dart';");
     });
 
     imports.sort();

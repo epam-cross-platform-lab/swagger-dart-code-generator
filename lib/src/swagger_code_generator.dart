@@ -53,8 +53,10 @@ class SwaggerCodeGenerator {
       _getSwaggerAdditionsGenerator(dartCode).generateImportsContent(
           swaggerFileName, hasModels, buildOnlyModels, hasEnums);
 
-  String generateConverter(String dartCode, String fileName) =>
-      _getSwaggerConverterGenerator(dartCode).generate(dartCode, fileName);
+  String generateConverter(
+          String dartCode, String fileName, GeneratorOptions options) =>
+      _getSwaggerConverterGenerator(dartCode)
+          .generate(dartCode, fileName, options);
 
   String generateResponses(
           String dartCode, String fileName, GeneratorOptions options) =>
