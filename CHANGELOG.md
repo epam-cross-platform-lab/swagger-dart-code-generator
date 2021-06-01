@@ -1,3 +1,7 @@
+# 2.0.3
+
+* Removed meta dependency
+
 # 2.0.2
 
 * Fixed meta version to 1.3.0
