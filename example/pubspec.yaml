@@ -9,12 +9,12 @@ environment:
 dependencies:
   flutter: 
     sdk: flutter
-  chopper: ^4.0.0
+  chopper: ^4.0.1
   
 dev_dependencies:
   swagger_dart_code_generator:
     path: ../
-  chopper_generator: ^4.0.0
+  chopper_generator: ^4.0.1
   build_runner: ^2.0.4
   json_annotation: ^4.0.1
   json_serializable: ^4.1.3
