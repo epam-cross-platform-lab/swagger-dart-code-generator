@@ -12,6 +12,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:recase/recase.dart';
 import 'package:collection/collection.dart';
+import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
 
 import 'constants.dart';
 
@@ -59,7 +60,10 @@ class SwaggerRequestsGenerator {
 
     return Class(
       (c) => c
-        ..methods.addAll([_generateCreateMethod(className, chopperClient), ...allMethodsContent])
+        ..methods.addAll([
+          _generateCreateMethod(className, chopperClient),
+          ...allMethodsContent
+        ])
         ..extend = Reference(kChopperService)
         ..docs.add(kServiceHeader)
         ..annotations.add(refer(kChopperApi).call([]))
@@ -78,9 +82,10 @@ class SwaggerRequestsGenerator {
             (p) => p
               ..named = false
               ..type = Reference('ChopperClient?')
-              ..name = 'client',  
+              ..name = 'client',
           ),
-        )..body = Code(body),
+        )
+        ..body = Code(body),
     );
   }
 
@@ -106,6 +111,7 @@ class SwaggerRequestsGenerator {
         final parameters = _getAllParameters(
           parameters: swaggerRequest.parameters,
           ignoreHeaders: options.ignoreHeaders,
+          modelPostfix: options.modelPostfix,
           path: path,
           requestType: requestType,
         );
@@ -114,6 +120,7 @@ class SwaggerRequestsGenerator {
           responses: swaggerRequest.responses,
           path: path,
           methodName: methodName,
+          modelPostfix: options.modelPostfix,
           overridenResponses: options.responseOverrideValueMap
               .asMap()
               .map((key, value) => MapEntry(value.url, value)),
@@ -123,7 +130,7 @@ class SwaggerRequestsGenerator {
             ? kFutureResponse
             : returnTypeName.asFutureResponse();
 
-        methods.add(Method((m) => m
+        final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
           ..docs.add(_getCommentsForMethod(
             methodDescription: swaggerRequest.summary,
@@ -132,11 +139,72 @@ class SwaggerRequestsGenerator {
           ))
           ..name = methodName
           ..annotations.add(_getMethodAnnotation(requestType, path))
-          ..returns = Reference(returns)));
+          ..returns = Reference(returns));
+
+        if (_hasEnumProperties(method)) {
+          final privateMethod = _getPrivateMethod(method);
+          final publicMethod = _getPublicMethod(method);
+          methods.addAll([publicMethod, privateMethod]);
+        } else {
+          methods.add(method);
+        }
       });
     });
 
     return methods;
+  }
+
+  bool _hasEnumProperties(Method method) {
+    return method.optionalParameters
+        .any((p) => p.type!.symbol!.startsWith('enums') == true);
+  }
+
+  Method _getPrivateMethod(Method method) {
+    final parameters = method.optionalParameters.map((p) {
+      if (p.type!.symbol!.startsWith('enums.')) {
+        return p.copyWith(type: Reference('String?'));
+      }
+
+      return p;
+    });
+
+    return Method(
+      (m) => m
+        ..optionalParameters.addAll(parameters)
+        ..docs.addAll(method.docs)
+        ..name = '_${method.name}'
+        ..annotations.addAll(method.annotations)
+        ..returns = method.returns,
+    );
+  }
+
+  Method _getPublicMethod(Method method) {
+    final parameters =
+        method.optionalParameters.map((p) => p.copyWith(annotations: []));
+
+    return Method(
+      (m) => m
+        ..optionalParameters.addAll(parameters)
+        ..docs.addAll(method.docs)
+        ..name = method.name
+        ..returns = method.returns
+        ..body = _generatePublicMethodReturn(parameters, method.name!),
+    );
+  }
+
+  Code _generatePublicMethodReturn(
+      Iterable<Parameter> parameters, String publicMethodName) {
+    final parametersListString = parameters.map((p) {
+      if (p.type!.symbol!.startsWith('enums.')) {
+        final enumName =
+            p.type!.symbol!.replaceFirst('enums.', '').replaceAll('?', '');
+
+        return '${p.name} : enums.\$${enumName}Map[${p.name}]';
+      }
+      return '${p.name} : ${p.name}';
+    });
+
+    return Code('return _$publicMethodName$parametersListString;');
   }
 
   Expression _getMethodAnnotation(String requestType, String path) {
@@ -198,35 +266,36 @@ class SwaggerRequestsGenerator {
     required String requestType,
   }) {
     final pathString = path.split('/').map((e) => e.pascalCase).join();
-    return 'enums.$pathString\$${requestType.pascalCase}\$${parameterName.pascalCase}';
+    return 'enums.$pathString${requestType.pascalCase}${parameterName.pascalCase}';
   }
 
   String _getParameterTypeName({
     required SwaggerRequestParameter parameter,
     required String path,
     required String requestType,
+    required String modelPostfix,
   }) {
     if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
       return _getEnumParameterTypeName(
           parameterName: parameter.name, path: path, requestType: requestType);
     } else if (parameter.items?.type.isNotEmpty == true) {
-      return _mapParameterName(parameter.items!.type).asList();
-    } else if(parameter.schema?.items?.ref.isNotEmpty == true)
-    {
-      return parameter.schema!.items!.ref.getRef().asList();
+      return _mapParameterName(parameter.items!.type, modelPostfix).asList();
+    } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
+      return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.ref.isNotEmpty == true) {
-      return parameter.schema!.ref.getRef();
+      return parameter.schema!.ref.getRef() + modelPostfix;
     }
+
     final neededType = parameter.type.isNotEmpty
         ? parameter.type
         : parameter.schema?.type ?? '';
 
-    return _mapParameterName(neededType);
+    return _mapParameterName(neededType, modelPostfix);
   }
 
-  String _mapParameterName(String name) {
-    return kBasicTypesMap[name] ?? name.pascalCase;
+  String _mapParameterName(String name, String modelPostfix) {
+    return kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
   }
 
   List<Parameter> _getAllParameters({
@@ -234,6 +303,7 @@ class SwaggerRequestsGenerator {
     required bool ignoreHeaders,
     required String path,
     required String requestType,
+    required String modelPostfix,
   }) {
     final result = parameters
         .where((swaggerParameter) =>
@@ -250,6 +320,7 @@ class SwaggerRequestsGenerator {
                   parameter: swaggerParameter,
                   path: path,
                   requestType: requestType,
+                  modelPostfix: modelPostfix,
                 ).makeNullable(),
               )
               ..named = true
@@ -289,14 +360,13 @@ class SwaggerRequestsGenerator {
   String _getResponseModelName({
     required String path,
     required String methodName,
+    required String modelPostfix,
   }) {
-    final urlString = path.split('/').map((e) => e.pascalCase).join();
-    final methodNamePart = methodName.pascalCase;
-
-    return '$urlString$methodNamePart\$Response';
+    return '${methodName.pascalCase}\$$kResponse$modelPostfix';
   }
 
-  String? _getReturnTypeFromType(SwaggerResponse swaggerResponse) {
+  String? _getReturnTypeFromType(
+      SwaggerResponse swaggerResponse, String modelPostfix) {
     final responseType = swaggerResponse.schema?.type ?? '';
     if (responseType.isEmpty) {
       return null;
@@ -315,33 +385,37 @@ class SwaggerRequestsGenerator {
       return mappedArrayType.asList();
     }
 
-    return kBasicTypesMap[responseType] ?? responseType;
+    return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
   }
 
-  String? _getReturnTypeFromSchema(SwaggerResponse swaggerResponse) {
+  String? _getReturnTypeFromSchema(
+      SwaggerResponse swaggerResponse, String modelPostfix) {
     final listRef = swaggerResponse.schema?.items?.ref ?? '';
 
     if (listRef.isNotEmpty) {
-      return listRef.getRef().asList();
+      return (listRef.getRef() + modelPostfix).asList();
     }
 
     final ref = swaggerResponse.schema?.ref ?? swaggerResponse.ref;
 
     if (ref.isNotEmpty) {
-      return ref.getRef();
+      return ref.getRef() + modelPostfix;
     }
+
     return null;
   }
 
-  String? _getReturnTypeFromOriginalRef(SwaggerResponse swaggerResponse) {
+  String? _getReturnTypeFromOriginalRef(
+      SwaggerResponse swaggerResponse, String modelPostfix) {
     if (swaggerResponse.schema?.originalRef.isNotEmpty == true) {
-      return swaggerResponse.schema?.originalRef;
+      return swaggerResponse.schema!.originalRef + modelPostfix;
     }
 
     return null;
   }
 
-  String? _getReturnTypeFromContent(SwaggerResponse swaggerResponse) {
+  String? _getReturnTypeFromContent(
+      SwaggerResponse swaggerResponse, String modelPostfix) {
     if (swaggerResponse.content.isNotEmpty) {
       final ref = swaggerResponse.content.first.ref;
       if (ref.isNotEmpty) {
@@ -365,7 +439,7 @@ class SwaggerRequestsGenerator {
           }
         }
 
-        return kBasicTypesMap[responseType] ?? responseType;
+        return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
       }
     }
   }
@@ -375,6 +449,7 @@ class SwaggerRequestsGenerator {
     required Map<String, ResponseOverrideValueMap> overridenResponses,
     required String path,
     required String methodName,
+    required String modelPostfix,
   }) {
     if (overridenResponses.containsKey(path)) {
       return overridenResponses[path]!.overriddenValue;
@@ -390,13 +465,17 @@ class SwaggerRequestsGenerator {
 
     if (neededResponse.schema?.type == kObject &&
         neededResponse.schema?.properties.isNotEmpty == true) {
-      return _getResponseModelName(path: path, methodName: methodName);
+      return _getResponseModelName(
+        path: path,
+        methodName: methodName,
+        modelPostfix: modelPostfix,
+      );
     }
 
-    final type = _getReturnTypeFromType(neededResponse) ??
-        _getReturnTypeFromSchema(neededResponse) ??
-        _getReturnTypeFromOriginalRef(neededResponse) ??
-        _getReturnTypeFromContent(neededResponse);
+    final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
+        _getReturnTypeFromSchema(neededResponse, modelPostfix) ??
+        _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
+        _getReturnTypeFromContent(neededResponse, modelPostfix);
 
     return type ?? '';
   }
