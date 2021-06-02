@@ -604,6 +604,29 @@ void main() {
 
       expect(result, contains('final List<TestOriginalRef>? dog;'));
     });
+
+    test('Should return List<Object> by ref', () {
+      final map = <String, dynamic>{
+        'items': {'\$ref': '#/definitions/TestObject'}
+      };
+      const propertyName = 'dog';
+      const className = 'Animals';
+      const propertyKey = 'Dog';
+
+      final result = generator.generateListPropertyContent(
+        propertyName,
+        propertyKey,
+        className,
+        map,
+        false,
+        [],
+        [],
+        GeneratorOptions(inputFolder: '', outputFolder: ''),
+        {},
+      );
+
+      expect(result, contains('final List<TestObject>? dog;'));
+    });
   });
 
   group('generatePropertyContentByType', () {
