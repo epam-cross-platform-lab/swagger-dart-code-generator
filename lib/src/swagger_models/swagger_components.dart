@@ -27,8 +27,13 @@ class SwaggerComponents {
       _$SwaggerComponentsFromJson(json);
 }
 
-Map<String, SwaggerSchema> mapResponses(Map<String, dynamic> json) {
+Map<String, SwaggerSchema> mapResponses(Map<String, dynamic>? json) {
   var results = <String, SwaggerSchema>{};
+
+  if(json == null)
+  {
+    return results;
+  }
 
   json.forEach((key, value) {
     final content =

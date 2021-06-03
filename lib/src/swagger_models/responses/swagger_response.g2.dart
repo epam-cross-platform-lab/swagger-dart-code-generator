@@ -17,10 +17,10 @@ SwaggerResponse _$SwaggerResponseFromJson(Map<String, dynamic> json) {
             ?.map((e) => e as String)
             .toList() ??
         [],
-    content: (json['content'] as List<dynamic>?)
-            ?.map((e) => Content.fromJson(e as Map<String, dynamic>))
-            .toList() ??
-        [],
+    content: (json['content'] as Map<String, dynamic>?)?.map(
+          (k, e) => MapEntry(k, Content.fromJson(e as Map<String, dynamic>)),
+        ) ??
+        {},
     ref: json['ref'] as String? ?? '',
   );
 }

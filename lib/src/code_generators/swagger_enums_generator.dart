@@ -238,7 +238,7 @@ $enumMap
     return result;
   }
 
-  String getValidatedEnumFieldName(String name) {
+  static String getValidatedEnumFieldName(String name) {
     if (name.isEmpty) {
       name = 'null';
     }

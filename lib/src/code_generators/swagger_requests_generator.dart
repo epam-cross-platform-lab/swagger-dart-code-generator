@@ -202,9 +202,9 @@ class SwaggerRequestsGenerator {
         return '${p.name} : enums.\$${enumName}Map[${p.name}]';
       }
       return '${p.name} : ${p.name}';
-    });
+    }).join(', ');
 
-    return Code('return _$publicMethodName$parametersListString;');
+    return Code('return _$publicMethodName($parametersListString);');
   }
 
   Expression _getMethodAnnotation(String requestType, String path) {
@@ -224,8 +224,9 @@ class SwaggerRequestsGenerator {
               options,
             ));
 
-    final header = '///$methodDescription';
-    return [header, ...parametersComments]
+    final formattedDescription = methodDescription.split('\n').join('\n///');
+
+    return ['///$formattedDescription', ...parametersComments]
         .where((String element) => element.isNotEmpty)
         .join('\n');
   }
@@ -265,8 +266,15 @@ class SwaggerRequestsGenerator {
     required String path,
     required String requestType,
   }) {
-    final pathString = path.split('/').map((e) => e.pascalCase).join();
-    return 'enums.$pathString${requestType.pascalCase}${parameterName.pascalCase}';
+    final pathString = path
+        .split('/')
+        .map((e) => e.replaceAll('}', '').replaceAll('{', '').pascalCase)
+        .join();
+
+    final result =
+        'enums.$pathString${requestType.pascalCase}${parameterName.pascalCase}';
+
+    return result;
   }
 
   String _getParameterTypeName({
@@ -285,6 +293,9 @@ class SwaggerRequestsGenerator {
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.ref.isNotEmpty == true) {
       return parameter.schema!.ref.getRef() + modelPostfix;
+    } else if (parameter.schema?.type == kArray &&
+        parameter.schema?.items?.type.isNotEmpty == true) {
+      return  _mapParameterName(parameter.schema!.items!.type, '').asList();
     }
 
     final neededType = parameter.type.isNotEmpty
@@ -417,13 +428,13 @@ class SwaggerRequestsGenerator {
   String? _getReturnTypeFromContent(
       SwaggerResponse swaggerResponse, String modelPostfix) {
     if (swaggerResponse.content.isNotEmpty) {
-      final ref = swaggerResponse.content.first.ref;
+      final ref = swaggerResponse.content.values.first.ref;
       if (ref.isNotEmpty) {
         final type = ref.getRef();
         return kBasicTypesMap[type] ?? type;
       }
 
-      final responseType = swaggerResponse.content.first.responseType;
+      final responseType = swaggerResponse.content.values.first.responseType;
 
       if (responseType.isNotEmpty) {
         if (responseType == kArray) {
@@ -433,7 +444,8 @@ class SwaggerRequestsGenerator {
             return kBasicTypesMap[originalRef]!.asList();
           }
 
-          final ref = swaggerResponse.content.firstOrNull?.items?.ref ?? '';
+          final ref =
+              swaggerResponse.content.values.firstOrNull?.items?.ref ?? '';
           if (ref.isNotEmpty) {
             return kBasicTypesMap[ref]!.asList();
           }

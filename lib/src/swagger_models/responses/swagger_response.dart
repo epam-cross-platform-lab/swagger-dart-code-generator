@@ -10,7 +10,7 @@ class SwaggerResponse {
     this.type = '',
     this.schema,
     this.enumValue = const [],
-    this.content = const [],
+    this.content = const {},
     this.ref = '',
   });
 
@@ -29,8 +29,8 @@ class SwaggerResponse {
   @JsonKey(name: 'enumValue', defaultValue: [])
   List<String> enumValue;
 
-  @JsonKey(name: 'content', defaultValue: [])
-  List<Content> content;
+  @JsonKey(name: 'content', defaultValue: {})
+  Map<String, Content> content;
 
   Map<String, dynamic> toJson() => _$SwaggerResponseToJson(this);
 
