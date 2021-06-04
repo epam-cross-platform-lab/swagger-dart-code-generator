@@ -114,6 +114,7 @@ class SwaggerRequestsGenerator {
           modelPostfix: options.modelPostfix,
           path: path,
           requestType: requestType,
+          root: swaggerRoot,
         );
 
         final returnTypeName = _getReturnTypeName(
@@ -277,11 +278,30 @@ class SwaggerRequestsGenerator {
     return result;
   }
 
+  bool _isEnumRefParameter(
+      SwaggerRequestParameter parameter, SwaggerRoot root) {
+    final schemas = root.components?.schemas ?? {};
+    schemas.addAll(root.definitions);
+
+    final schema = schemas[parameter.schema?.items?.ref.getRef()];
+
+    if (schema == null) {
+      return false;
+    }
+
+    if (schema.type == kString && schema.enumValues.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
   String _getParameterTypeName({
     required SwaggerRequestParameter parameter,
     required String path,
     required String requestType,
     required String modelPostfix,
+    required SwaggerRoot root,
   }) {
     if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
@@ -290,8 +310,9 @@ class SwaggerRequestsGenerator {
     } else if (parameter.items?.type.isNotEmpty == true) {
       return _mapParameterName(parameter.items!.type, modelPostfix).asList();
     } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
-      //.if() is enum?
-
+      if (_isEnumRefParameter(parameter, root)) {
+        return 'enums.${parameter.schema!.items!.ref.getRef()}';
+      }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.ref.isNotEmpty == true) {
       return parameter.schema!.ref.getRef() + modelPostfix;
@@ -319,6 +340,7 @@ class SwaggerRequestsGenerator {
     required String path,
     required String requestType,
     required String modelPostfix,
+    required SwaggerRoot root,
   }) {
     final result = parameters
         .where((swaggerParameter) =>
@@ -336,6 +358,7 @@ class SwaggerRequestsGenerator {
                   path: path,
                   requestType: requestType,
                   modelPostfix: modelPostfix,
+                  root: root,
                 ).makeNullable(),
               )
               ..named = true

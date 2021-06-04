@@ -19,6 +19,7 @@ const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';
 const kResponse = 'Response';
 const kFutureResponse = 'Future<chopper.Response>';
+const kString = 'string';
 
 
 //Request types
