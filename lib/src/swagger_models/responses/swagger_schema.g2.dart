@@ -31,6 +31,10 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) {
             ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
             .toList() ??
         [],
+    anyOf: (json['anyOf'] as List<dynamic>?)
+            ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [],
   );
 }
 
@@ -46,4 +50,5 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'properties': instance.properties,
       'schema': instance.schema,
       'oneOf': instance.oneOf,
+      'anyOf': instance.anyOf,
     };

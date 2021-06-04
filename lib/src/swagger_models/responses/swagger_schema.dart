@@ -15,6 +15,7 @@ class SwaggerSchema {
     required this.format,
     required this.schema,
     required this.oneOf,
+    required this.anyOf,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -46,6 +47,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'oneOf', defaultValue: [])
   List<SwaggerSchema> oneOf;
+
+  @JsonKey(name: 'anyOf', defaultValue: [])
+  List<SwaggerSchema> anyOf;
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerSchemaFromJson(json);

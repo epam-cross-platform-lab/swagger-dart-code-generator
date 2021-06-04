@@ -290,12 +290,16 @@ class SwaggerRequestsGenerator {
     } else if (parameter.items?.type.isNotEmpty == true) {
       return _mapParameterName(parameter.items!.type, modelPostfix).asList();
     } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
+      //.if() is enum?
+
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.ref.isNotEmpty == true) {
       return parameter.schema!.ref.getRef() + modelPostfix;
     } else if (parameter.schema?.type == kArray &&
         parameter.schema?.items?.type.isNotEmpty == true) {
-      return  _mapParameterName(parameter.schema!.items!.type, '').asList();
+      return _mapParameterName(parameter.schema!.items!.type, '').asList();
+    } else if (parameter.schema?.anyOf.firstOrNull?.type.isNotEmpty == true) {
+      return _mapParameterName(parameter.schema!.anyOf.first.type, '');
     }
 
     final neededType = parameter.type.isNotEmpty

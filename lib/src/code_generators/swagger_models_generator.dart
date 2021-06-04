@@ -480,7 +480,8 @@ abstract class SwaggerModelsGenerator {
           typeName = ref!.split('/').last;
 
           if (!allEnumListNames.contains(typeName) &&
-              !allEnumNames.contains('enums.' + typeName)) {
+              !allEnumNames.contains('enums.' + typeName) &&
+              !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
           }
         }
