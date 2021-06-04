@@ -150,8 +150,8 @@ $enumsFromRequestBodies
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverriddenRequestParameter(
-                    parameter, swaggerRoot.components?.parameters ?? []))
+                getOriginalOrOverriddenRequestParameter(parameter,
+                    swaggerRoot.components?.parameters.values.toList() ?? []))
             .toList();
       });
     });
@@ -271,8 +271,8 @@ $enumMap
       swaggerPath.requests.forEach((String req, SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverriddenRequestParameter(
-                    parameter, swaggerRoot.components?.parameters ?? []))
+                getOriginalOrOverriddenRequestParameter(parameter,
+                    swaggerRoot.components?.parameters.values.toList() ?? []))
             .toList();
       });
     });

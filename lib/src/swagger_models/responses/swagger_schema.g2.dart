@@ -10,9 +10,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) {
   return SwaggerSchema(
     type: json['type'] as String? ?? '',
     originalRef: json['originalRef'] as String? ?? '',
-    enumValues:
-        (json['enum'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-            [],
+    enumValuesObj: json['enum'] as List<dynamic>? ?? [],
     properties: (json['properties'] as Map<String, dynamic>?)?.map(
           (k, e) =>
               MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
@@ -45,7 +43,7 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'default': instance.defaultValue,
       'originalRef': instance.originalRef,
       r'$ref': instance.ref,
-      'enum': instance.enumValues,
+      'enum': instance.enumValuesObj,
       'items': instance.items,
       'properties': instance.properties,
       'schema': instance.schema,

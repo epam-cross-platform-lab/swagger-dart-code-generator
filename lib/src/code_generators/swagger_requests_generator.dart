@@ -273,9 +273,9 @@ class SwaggerRequestsGenerator {
         .join();
 
     final result =
-        'enums.$pathString${requestType.pascalCase}${parameterName.pascalCase}';
+        '$pathString${requestType.pascalCase}${parameterName.pascalCase}';
 
-    return result;
+    return result.asEnum();
   }
 
   bool _isEnumRefParameter(
@@ -303,7 +303,9 @@ class SwaggerRequestsGenerator {
     required String modelPostfix,
     required SwaggerRoot root,
   }) {
-    if (parameter.items?.enumValues.isNotEmpty == true ||
+    if (parameter.inParameter == kHeader) {
+      return _mapParameterName(kString, '');
+    } else if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
       return _getEnumParameterTypeName(
           parameterName: parameter.name, path: path, requestType: requestType);
@@ -311,7 +313,7 @@ class SwaggerRequestsGenerator {
       return _mapParameterName(parameter.items!.type, modelPostfix).asList();
     } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return 'enums.${parameter.schema!.items!.ref.getRef()}';
+        return parameter.schema!.items!.ref.getRef().asEnum();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.ref.isNotEmpty == true) {

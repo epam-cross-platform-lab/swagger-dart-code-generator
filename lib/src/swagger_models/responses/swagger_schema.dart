@@ -7,7 +7,7 @@ class SwaggerSchema {
   SwaggerSchema({
     required this.type,
     required this.originalRef,
-    required this.enumValues,
+    required this.enumValuesObj,
     required this.properties,
     required this.items,
     required this.ref,
@@ -34,7 +34,10 @@ class SwaggerSchema {
   String ref;
 
   @JsonKey(name: 'enum', defaultValue: [])
-  List<String> enumValues;
+  List<Object?> enumValuesObj;
+
+  List<String> get enumValues =>
+      enumValuesObj.map((e) => e.toString()).toList();
 
   @JsonKey(name: 'items')
   SwaggerSchema? items;

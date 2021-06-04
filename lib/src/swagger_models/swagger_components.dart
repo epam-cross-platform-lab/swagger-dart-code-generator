@@ -12,8 +12,8 @@ class SwaggerComponents {
     required this.responses,
   });
 
-  @JsonKey(name: 'parameters', defaultValue: [])
-  List<SwaggerRequestParameter> parameters;
+  @JsonKey(name: 'parameters', defaultValue: {})
+  Map<String, SwaggerRequestParameter> parameters;
 
   @JsonKey(name: 'schemas', defaultValue: {})
   Map<String, SwaggerSchema> schemas;

@@ -227,7 +227,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         }
         final properties = schema == null
             ? null
-            : schema['properties'] as Map<String, dynamic>;
+            : schema['properties'] as Map<String, dynamic>?;
 
         if (properties == null) {
           return;

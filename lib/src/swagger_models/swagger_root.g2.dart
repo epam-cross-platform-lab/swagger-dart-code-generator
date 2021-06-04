@@ -25,11 +25,11 @@ SwaggerRoot _$SwaggerRootFromJson(Map<String, dynamic> json) {
     schemes:
         (json['schemes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
             [],
-    parameters: (json['parameters'] as List<dynamic>?)
-            ?.map((e) =>
-                SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
-            .toList() ??
-        [],
+    parameters: (json['parameters'] as Map<String, dynamic>?)?.map(
+          (k, e) => MapEntry(
+              k, SwaggerRequestParameter.fromJson(e as Map<String, dynamic>)),
+        ) ??
+        {},
     definitions: (json['definitions'] as Map<String, dynamic>?)?.map(
           (k, e) =>
               MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),

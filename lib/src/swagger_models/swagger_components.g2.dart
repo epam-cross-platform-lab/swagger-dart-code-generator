@@ -8,17 +8,17 @@ part of 'swagger_components.dart';
 
 SwaggerComponents _$SwaggerComponentsFromJson(Map<String, dynamic> json) {
   return SwaggerComponents(
-    parameters: (json['parameters'] as List<dynamic>?)
-            ?.map((e) =>
-                SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
-            .toList() ??
-        [],
+    parameters: (json['parameters'] as Map<String, dynamic>?)?.map(
+          (k, e) => MapEntry(
+              k, SwaggerRequestParameter.fromJson(e as Map<String, dynamic>)),
+        ) ??
+        {},
     schemas: (json['schemas'] as Map<String, dynamic>?)?.map(
           (k, e) =>
               MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
         ) ??
         {},
-    responses: mapResponses(json['responses'] as Map<String, dynamic>?),
+    responses: mapResponses(json['responses'] as Map<String, dynamic>?) ?? {},
   );
 }
 

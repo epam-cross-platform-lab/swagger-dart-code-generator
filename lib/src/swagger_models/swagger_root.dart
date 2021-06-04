@@ -44,8 +44,8 @@ class SwaggerRoot {
   @JsonKey(name: 'definitions', defaultValue: {})
   Map<String, SwaggerSchema> definitions;
 
-  @JsonKey(name: 'parameters', defaultValue: [])
-  List<SwaggerRequestParameter> parameters;
+  @JsonKey(name: 'parameters', defaultValue: {})
+  Map<String, SwaggerRequestParameter> parameters;
 
   @JsonKey(name: 'components')
   SwaggerComponents? components;
