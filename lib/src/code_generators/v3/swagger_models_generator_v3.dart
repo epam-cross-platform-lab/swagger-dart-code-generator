@@ -72,7 +72,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final components = map['components'] as Map<String, dynamic>?;
     final requestBodies = components == null
         ? null
-        : components['requestBodies'] as Map<String, dynamic>;
+        : components['requestBodies'] as Map<String, dynamic>?;
 
     if (requestBodies == null) {
       return '';
