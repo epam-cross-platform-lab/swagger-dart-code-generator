@@ -422,7 +422,7 @@ class SwaggerRequestsGenerator {
         return null;
       }
 
-      return mappedArrayType.asList();
+      return _mapParameterName(mappedArrayType, modelPostfix).asList();
     }
 
     return kBasicTypesMap[responseType] ?? responseType + modelPostfix;

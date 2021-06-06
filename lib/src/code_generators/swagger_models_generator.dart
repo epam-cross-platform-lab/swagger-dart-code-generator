@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
@@ -473,6 +474,10 @@ abstract class SwaggerModelsGenerator {
     var typeName = '';
     if (items != null) {
       typeName = getValidatedClassName(items['originalRef'] as String? ?? '');
+
+      if (typeName.isNotEmpty && !basicTypes.contains(typeName.toLowerCase())) {
+        typeName += options.modelPostfix;
+      }
 
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
