@@ -71,8 +71,14 @@ import 'package:chopper/chopper.dart' as chopper;''';
         hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
 
     result.writeln("""
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';""");
+
+    if (hasModels) {
+      result.writeln("""
+import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
+""");
+    }
 
     if (chopperImports.isNotEmpty) {
       result.write(chopperImports);

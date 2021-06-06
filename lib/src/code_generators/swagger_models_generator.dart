@@ -474,13 +474,18 @@ abstract class SwaggerModelsGenerator {
     if (items != null) {
       typeName = getValidatedClassName(items['originalRef'] as String? ?? '');
 
+      if (typeName.isNotEmpty && !basicTypes.contains(typeName.toLowerCase())) {
+        typeName += options.modelPostfix;
+      }
+
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
         if (ref?.isNotEmpty == true) {
           typeName = ref!.split('/').last;
 
           if (!allEnumListNames.contains(typeName) &&
-              !allEnumNames.contains('enums.' + typeName)) {
+              !allEnumNames.contains('enums.' + typeName) &&
+              !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
           }
         }
@@ -903,6 +908,10 @@ $copyWithMethod
         .map((e) => e.substring(e.indexOf('final ') + 6))
         .map((e) => e.split(' ')[1])
         .toList();
+
+    if (splittedProperties.isEmpty) {
+      return '';
+    }
 
     final checks = splittedProperties.map((e) => '''
 (identical(other.$e, $e) ||
