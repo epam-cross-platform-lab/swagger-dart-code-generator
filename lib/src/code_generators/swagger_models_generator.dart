@@ -874,6 +874,9 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
+    final equalsOverride =
+        generateEqualsOverride(generatedProperties, validatedClassName);
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $validatedClassName $extendsString{
@@ -883,6 +886,8 @@ $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
+
+$equalsOverride
 }
 $copyWithMethod
 ''';
