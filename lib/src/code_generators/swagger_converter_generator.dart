@@ -61,7 +61,7 @@ ${_generateModelsMapping(dartCode, options)}};''';
 
           final content = response == null
               ? null
-              : response['content'] as Map<String, dynamic>;
+              : response['content'] as Map<String, dynamic>?;
 
           final firstContent = content == null || content.entries.isEmpty
               ? null
@@ -69,7 +69,7 @@ ${_generateModelsMapping(dartCode, options)}};''';
 
           final schema = firstContent == null
               ? null
-              : firstContent['schema'] as Map<String, dynamic>;
+              : firstContent['schema'] as Map<String, dynamic>?;
 
           if (schema != null &&
               content!.entries.length == 1 &&
