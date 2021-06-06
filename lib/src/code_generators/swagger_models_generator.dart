@@ -890,6 +890,30 @@ $copyWithMethod
     return generatedClass;
   }
 
+  String generateEqualsOverride(
+      String generatedProperties, String validatedClassName) {
+    final splittedProperties = generatedProperties
+        .split(';')
+        .where((element) => element.isNotEmpty)
+        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .map((e) => e.split(' ')[1])
+        .toList();
+
+    final checks = splittedProperties.map((e) => '''
+(identical(other.$e, $e) ||
+                const DeepCollectionEquality().equals(other.$e, $e))
+    ''').join(' && ');
+
+    return '''
+@override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is $validatedClassName &&
+            $checks);
+  }
+    ''';
+  }
+
   String generateCopyWithContent(
       String generatedProperties, String validatedClassName) {
     final splittedProperties = generatedProperties
