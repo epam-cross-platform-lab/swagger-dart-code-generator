@@ -1,3 +1,7 @@
+# 2.0.4
+
+* Added equals override method to all Models
+
 # 2.0.3
 
 * Removed meta dependency

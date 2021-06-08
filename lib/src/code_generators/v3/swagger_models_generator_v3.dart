@@ -47,7 +47,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
         final content = response == null
             ? null
-            : response['content'] as Map<String, dynamic>;
+            : response['content'] as Map<String, dynamic>?;
 
         final firstContent = content == null
             ? null
@@ -72,7 +72,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final components = map['components'] as Map<String, dynamic>?;
     final requestBodies = components == null
         ? null
-        : components['requestBodies'] as Map<String, dynamic>;
+        : components['requestBodies'] as Map<String, dynamic>?;
 
     if (requestBodies == null) {
       return '';
@@ -227,7 +227,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         }
         final properties = schema == null
             ? null
-            : schema['properties'] as Map<String, dynamic>;
+            : schema['properties'] as Map<String, dynamic>?;
 
         if (properties == null) {
           return;

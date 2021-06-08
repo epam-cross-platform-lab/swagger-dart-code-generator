@@ -474,13 +474,18 @@ abstract class SwaggerModelsGenerator {
     if (items != null) {
       typeName = getValidatedClassName(items['originalRef'] as String? ?? '');
 
+      if (typeName.isNotEmpty && !basicTypes.contains(typeName.toLowerCase())) {
+        typeName += options.modelPostfix;
+      }
+
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
         if (ref?.isNotEmpty == true) {
           typeName = ref!.split('/').last;
 
           if (!allEnumListNames.contains(typeName) &&
-              !allEnumNames.contains('enums.' + typeName)) {
+              !allEnumNames.contains('enums.' + typeName) &&
+              !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
           }
         }
@@ -874,6 +879,9 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
+    final equalsOverride =
+        generateEqualsOverride(generatedProperties, validatedClassName);
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $validatedClassName $extendsString{
@@ -883,11 +891,41 @@ $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
+
+$equalsOverride
 }
 $copyWithMethod
 ''';
 
     return generatedClass;
+  }
+
+  String generateEqualsOverride(
+      String generatedProperties, String validatedClassName) {
+    final splittedProperties = generatedProperties
+        .split(';')
+        .where((element) => element.isNotEmpty)
+        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .map((e) => e.split(' ')[1])
+        .toList();
+
+    if (splittedProperties.isEmpty) {
+      return '';
+    }
+
+    final checks = splittedProperties.map((e) => '''
+(identical(other.$e, $e) ||
+                const DeepCollectionEquality().equals(other.$e, $e))
+    ''').join(' && ');
+
+    return '''
+@override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is $validatedClassName &&
+            $checks);
+  }
+    ''';
   }
 
   String generateCopyWithContent(
