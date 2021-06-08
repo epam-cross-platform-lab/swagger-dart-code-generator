@@ -1,3 +1,7 @@
+# 2.0.5
+
+* Added new generator_options
+
 # 2.0.4
 
 * Added equals override method to all Models
