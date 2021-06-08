@@ -69,7 +69,8 @@ abstract class SwaggerModelsGenerator {
     );
   }
 
-  static Map<String, dynamic> getClassesFromResponses(String dartCode) {
+  static Map<String, dynamic> getClassesFromResponses(
+      String dartCode, GeneratorOptions options) {
     final swagger = jsonDecode(dartCode);
 
     final results = <String, dynamic>{};
@@ -85,6 +86,17 @@ abstract class SwaggerModelsGenerator {
       requests.removeWhere((key, value) => key == 'parameters');
 
       requests.forEach((request, requestValue) {
+        if (options.excludePaths.isNotEmpty &&
+            options.excludePaths
+                .any((exclPath) => RegExp(exclPath).hasMatch(request))) {
+          return;
+        }
+
+        if (options.includePaths.isNotEmpty &&
+            !options.includePaths
+                .any((inclPath) => RegExp(inclPath).hasMatch(request))) {
+          return;
+        }
         final responses = requestValue['responses'] as Map<String, dynamic>;
 
         final neededResponse = responses['200'];
@@ -117,7 +129,7 @@ abstract class SwaggerModelsGenerator {
             allEnumsNames, options.enumsCaseSensitive)
         : '';
 
-    final classesFromResponses = getClassesFromResponses(dartCode);
+    final classesFromResponses = getClassesFromResponses(dartCode, options);
 
     classes.addAll(classesFromResponses);
 

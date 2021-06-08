@@ -22,6 +22,8 @@ class GeneratorOptions {
     this.useInheritance = true,
     this.includeIfNull,
     this.modelPostfix = '',
+    this.includePaths = const [],
+    this.excludePaths = const [],
   });
 
   /// Build options from a JSON map.
@@ -75,6 +77,12 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: <ResponseOverrideValueMap>[])
   final List<ResponseOverrideValueMap> responseOverrideValueMap;
+
+  @JsonKey(defaultValue: [])
+  final List<String> includePaths;
+
+  @JsonKey(defaultValue: [])
+  final List<String> excludePaths;
 
   /// Convert this options instance to JSON.
   Map<String, dynamic> toJson() => _$GeneratorOptionsToJson(this);
