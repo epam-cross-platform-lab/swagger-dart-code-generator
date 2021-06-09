@@ -6,6 +6,8 @@ import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
+import 'constants.dart';
+
 abstract class SwaggerModelsGenerator {
   static const List<String> keyClasses = ['Response', 'Request'];
   static const basicTypes = [
@@ -491,6 +493,8 @@ abstract class SwaggerModelsGenerator {
         } else if (typeName != 'dynamic') {
           typeName = typeName.pascalCase;
         }
+      } else if (!allEnumNames.contains('enums.$typeName')) {
+        typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
       }
 
       if (allEnumNames.contains('enums.$typeName')) {

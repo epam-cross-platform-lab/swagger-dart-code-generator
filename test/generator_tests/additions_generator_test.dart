@@ -50,7 +50,7 @@ void main() {
       const fileName = 'example_swagger';
       const expectedResult =
           'CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings)';
-      final result = generator.generateCustomJsonConverter(fileName, true);
+      final result = generator.generateCustomJsonConverter(fileName);
 
       expect(result, contains(expectedResult));
     });

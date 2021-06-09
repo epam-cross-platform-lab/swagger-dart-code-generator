@@ -78,9 +78,9 @@ class SwaggerCodeGenerator {
       );
 
   String generateCustomJsonConverter(
-          String dartCode, String fileName, bool hasModels) =>
+          String dartCode, String fileName) =>
       _getSwaggerAdditionsGenerator(dartCode)
-          .generateCustomJsonConverter(fileName, hasModels);
+          .generateCustomJsonConverter(fileName);
 
   String generateDateToJson(String dartCode) =>
       _getSwaggerAdditionsGenerator(dartCode).generateDateToJson();

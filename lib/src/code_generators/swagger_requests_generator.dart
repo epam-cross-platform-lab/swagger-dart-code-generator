@@ -416,7 +416,7 @@ class SwaggerRequestsGenerator {
       final itemsOriginalRef = swaggerResponse.schema?.items?.originalRef;
       final itemsType = swaggerResponse.schema?.items?.type;
       final arrayType = itemsOriginalRef ?? itemsType ?? kObject;
-      final mappedArrayType = kBasicTypesMap[arrayType] ?? arrayType;
+      final mappedArrayType = kBasicTypesMap[arrayType] ?? arrayType + modelPostfix;
 
       if (mappedArrayType.isEmpty) {
         return null;

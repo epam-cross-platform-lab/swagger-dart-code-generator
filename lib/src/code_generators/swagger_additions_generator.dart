@@ -117,11 +117,7 @@ String? _dateToJson(DateTime? date) {
   }
 
   ///Copy-pasted converter from internet
-  String generateCustomJsonConverter(String fileName, bool hasModels) {
-    if (!hasModels) {
-      return '';
-    }
-
+  String generateCustomJsonConverter(String fileName) {
     return '''
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 
