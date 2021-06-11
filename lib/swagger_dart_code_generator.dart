@@ -68,11 +68,15 @@ class SwaggerDartCodeGenerator implements Builder {
     final models = codeGenerator.generateModels(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
+        
+
     final responses = codeGenerator.generateResponses(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
     final requestBodies = codeGenerator.generateRequestBodies(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+
+        
 
     final enums = codeGenerator.generateEnums(
         contents, getFileNameWithoutExtension(fileNameWithExtension));

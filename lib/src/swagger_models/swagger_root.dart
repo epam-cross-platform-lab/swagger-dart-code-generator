@@ -7,7 +7,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_tag.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_root.g2.dart';
+part 'swagger_root.g.dart';
 
 @JsonSerializable()
 class SwaggerRoot {
@@ -59,17 +59,15 @@ class SwaggerRoot {
 Map<String, SwaggerPath> _mapPaths(Map<String, dynamic> paths) {
   return paths.map((path, pathValue) {
     final value = pathValue as Map<String, dynamic>;
-    final parameters = value['parameters'] as Map<String, dynamic>?;
+    final parameters = value['parameters'] as List<dynamic>?;
     value.removeWhere((key, value) => key == 'parameters');
 
     return MapEntry(
       path,
       SwaggerPath(
-        parameters: parameters?.map((key, parameter) => MapEntry(
-                key,
-                SwaggerRequestParameter.fromJson(
-                    parameter as Map<String, dynamic>))) ??
-            {},
+        parameters: parameters?.map((parameter) => SwaggerRequestParameter.fromJson(
+                    parameter as Map<String, dynamic>)).toList() ??
+            [],
         requests: value.map(
           (key, request) => MapEntry(
             key,
