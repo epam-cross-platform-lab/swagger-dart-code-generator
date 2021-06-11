@@ -220,10 +220,7 @@ abstract class SwaggerModelsGenerator {
         final items = parameter['items'] as Map<String, dynamic>? ?? {};
         return getParameterTypeName(className, parameterName, items);
       default:
-        if (parameter['oneOf'] != null) {
-          return 'Object';
-        }
-        return 'undefinedType';
+        return 'Object';
     }
   }
 
@@ -477,10 +474,6 @@ abstract class SwaggerModelsGenerator {
     if (items != null) {
       typeName = getValidatedClassName(items['originalRef'] as String? ?? '');
 
-      if (typeName.isNotEmpty && !basicTypes.contains(typeName.toLowerCase())) {
-        typeName += options.modelPostfix;
-      }
-
       if (typeName.isEmpty) {
         final ref = items['\$ref'] as String?;
         if (ref?.isNotEmpty == true) {
@@ -498,7 +491,8 @@ abstract class SwaggerModelsGenerator {
         } else if (typeName != 'dynamic') {
           typeName = typeName.pascalCase;
         }
-      } else if (!allEnumNames.contains('enums.$typeName')) {
+      } else if (!allEnumNames.contains('enums.$typeName') &&
+          !basicTypes.contains(typeName.toLowerCase())) {
         typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
       }
 

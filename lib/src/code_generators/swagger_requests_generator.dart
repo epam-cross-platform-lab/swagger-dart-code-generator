@@ -283,7 +283,13 @@ class SwaggerRequestsGenerator {
     final schemas = root.components?.schemas ?? {};
     schemas.addAll(root.definitions);
 
-    final schema = schemas[parameter.schema?.items?.ref.getRef()];
+    final refs = [
+      parameter.schema?.items?.ref.getRef(),
+      parameter.schema?.ref.getRef(),
+      parameter.items?.ref.getRef(),
+    ];
+    final schema =
+        schemas[refs.firstWhereOrNull((ref) => ref?.isNotEmpty == true)];
 
     if (schema == null) {
       return false;
@@ -303,6 +309,10 @@ class SwaggerRequestsGenerator {
     required String modelPostfix,
     required SwaggerRoot root,
   }) {
+    if(parameter.name == 'viewState')
+    {
+      var t = 0;
+    }
     if (parameter.inParameter == kHeader) {
       return _mapParameterName(kString, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
@@ -311,11 +321,22 @@ class SwaggerRequestsGenerator {
           parameterName: parameter.name, path: path, requestType: requestType);
     } else if (parameter.items?.type.isNotEmpty == true) {
       return _mapParameterName(parameter.items!.type, modelPostfix).asList();
+    } else if (parameter.items?.ref.isNotEmpty == true) {
+      if (_isEnumRefParameter(parameter, root)) {
+        return parameter.items!.ref.getRef().asEnum();
+      }
+      return _mapParameterName(parameter.items!.ref.getRef(), modelPostfix)
+          .asList();
     } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.schema!.items!.ref.getRef().asEnum();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
+    } else if (parameter.schema?.ref.isNotEmpty == true) {
+      if (_isEnumRefParameter(parameter, root)) {
+        return parameter.schema!.ref.getRef().asEnum();
+      }
+      return (parameter.schema!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.ref.isNotEmpty == true) {
       return parameter.schema!.ref.getRef() + modelPostfix;
     } else if (parameter.schema?.type == kArray &&
@@ -347,6 +368,7 @@ class SwaggerRequestsGenerator {
     final result = parameters
         .where((swaggerParameter) =>
             ignoreHeaders ? swaggerParameter.inParameter != kHeader : true)
+        .where((swaggerParameter) => swaggerParameter.inParameter != kCookie)
         .where((swaggerParameter) => swaggerParameter.inParameter.isNotEmpty)
         .map(
           (swaggerParameter) => Parameter(
@@ -415,8 +437,12 @@ class SwaggerRequestsGenerator {
     if (responseType == kArray) {
       final itemsOriginalRef = swaggerResponse.schema?.items?.originalRef;
       final itemsType = swaggerResponse.schema?.items?.type;
-      final arrayType = itemsOriginalRef ?? itemsType ?? kObject;
-      final mappedArrayType = kBasicTypesMap[arrayType] ?? arrayType + modelPostfix;
+      final itemsRef = swaggerResponse.schema?.items?.ref.getRef();
+
+      final arrayType = [itemsRef, itemsOriginalRef, itemsType, kObject]
+          .firstWhere((element) => element?.isNotEmpty == true)!;
+
+      final mappedArrayType = kBasicTypesMap[arrayType] ?? arrayType;
 
       if (mappedArrayType.isEmpty) {
         return null;
