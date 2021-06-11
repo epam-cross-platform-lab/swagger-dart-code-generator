@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'requests/swagger_request.dart';
 
-part 'swagger_path.g.dart';
+part 'swagger_path.g2.dart';
 
 @JsonSerializable()
 class SwaggerPath {
