@@ -7,7 +7,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_tag.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_root.g.dart';
+part 'swagger_root.g2.dart';
 
 @JsonSerializable()
 class SwaggerRoot {
