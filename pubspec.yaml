@@ -21,7 +21,6 @@ dependencies:
   json_annotation: ^4.0.1
   universal_io: ^2.0.4
   collection: ^1.15.0
-  build_runner: ^2.0.4
   dart_style: ^2.0.1
   code_builder: ^4.0.0
 

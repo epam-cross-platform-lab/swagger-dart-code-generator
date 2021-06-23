@@ -109,12 +109,13 @@ class SwaggerRequestsGenerator {
             options: options);
 
         final parameters = _getAllParameters(
-          parameters: swaggerRequest.parameters,
+          swaggerRequest: swaggerRequest,
           ignoreHeaders: options.ignoreHeaders,
           modelPostfix: options.modelPostfix,
           path: path,
           requestType: requestType,
           root: swaggerRoot,
+          options: options,
         );
 
         final returnTypeName = _getReturnTypeName(
@@ -254,11 +255,9 @@ class SwaggerRequestsGenerator {
     switch (parameter.inParameter) {
       case kFormData:
         return refer(kField).call([]);
-      case kPath:
+      default:
         return refer(parameter.inParameter.pascalCase)
             .call([literalString(parameter.name)]);
-      default:
-        return refer(parameter.inParameter.pascalCase).call([]);
     }
   }
 
@@ -309,10 +308,6 @@ class SwaggerRequestsGenerator {
     required String modelPostfix,
     required SwaggerRoot root,
   }) {
-    if(parameter.name == 'viewState')
-    {
-      var t = 0;
-    }
     if (parameter.inParameter == kHeader) {
       return _mapParameterName(kString, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
@@ -358,13 +353,16 @@ class SwaggerRequestsGenerator {
   }
 
   List<Parameter> _getAllParameters({
-    required List<SwaggerRequestParameter> parameters,
+    required SwaggerRequest swaggerRequest,
     required bool ignoreHeaders,
     required String path,
     required String requestType,
     required String modelPostfix,
     required SwaggerRoot root,
+    required GeneratorOptions options,
   }) {
+    final parameters = swaggerRequest.parameters;
+
     final result = parameters
         .where((swaggerParameter) =>
             ignoreHeaders ? swaggerParameter.inParameter != kHeader : true)
@@ -375,7 +373,8 @@ class SwaggerRequestsGenerator {
             (p) => p
               ..name = swaggerParameter.name.asParameterName()
               ..named = true
-              ..required = true
+              ..required = swaggerParameter.isRequired &&
+                  _getHeaderDefaultValue(swaggerParameter, options) == null
               ..type = Reference(
                 _getParameterTypeName(
                   parameter: swaggerParameter,
@@ -388,12 +387,34 @@ class SwaggerRequestsGenerator {
               ..named = true
               ..annotations.add(
                 _getParameterAnnotation(swaggerParameter),
-              ),
+              )
+              ..defaultTo = _getHeaderDefaultValue(swaggerParameter, options),
           ),
         )
         .toList();
 
+    final requestBody = swaggerRequest.requestBody;
+
+    if(requestBody != null)
+    {
+      //TODO
+    }
+
     return result;
+  }
+
+  Code? _getHeaderDefaultValue(
+      SwaggerRequestParameter swaggerParameter, GeneratorOptions options) {
+    final overridenValue = options.defaultHeaderValuesMap.firstWhereOrNull(
+        (map) =>
+            map.headerName.toLowerCase() ==
+            swaggerParameter.name.toLowerCase());
+
+    if (overridenValue != null) {
+      return Code('\'${overridenValue.defaultValue}\'');
+    }
+
+    return null;
   }
 
   String _getRequestMethodName({

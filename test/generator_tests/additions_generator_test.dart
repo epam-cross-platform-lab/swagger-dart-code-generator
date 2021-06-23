@@ -1,4 +1,3 @@
-import 'package:code_builder/code_builder.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
 import 'package:test/test.dart';
 
