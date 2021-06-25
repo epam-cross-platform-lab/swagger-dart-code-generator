@@ -1,4 +1,4 @@
-# 2.0.5+1
+# 2.0.5+2
 
 * Fixed issue with list of enums in request parameter
 
