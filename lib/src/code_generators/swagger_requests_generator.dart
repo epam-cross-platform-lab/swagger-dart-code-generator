@@ -694,7 +694,8 @@ abstract class $className extends ChopperService''';
     );
   }
 
-  String getResponseModelName(String url, String methodName, String modelPostfix) {
+  String getResponseModelName(
+      String url, String methodName, String modelPostfix) {
     final urlString = url.split('/').map((e) => e.pascalCase).join();
     final methodNamePart = methodName.pascalCase;
     final responseType = SwaggerModelsGenerator.getValidatedClassName(
