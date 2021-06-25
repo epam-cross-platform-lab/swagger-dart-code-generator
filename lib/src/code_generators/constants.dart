@@ -28,7 +28,6 @@ const kFormData = 'formData';
 
 const kDefaultBodyParameter = 'Object';
 const kField = 'Field';
-const kBody = 'Body';
 const kRequestTypeOptions = 'options';
 
 const successDescriptions = ['Success', 'OK', 'default response'];
@@ -49,6 +48,7 @@ const kHeader = 'header';
 const kCookie = 'cookie';
 const kArray = 'array';
 const kEnum = 'enum';
+const kBody = 'body';
 
 
 const kServiceHeader = '''

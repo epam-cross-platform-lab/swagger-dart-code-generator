@@ -26,6 +26,8 @@ extension TypeExtension on String {
 
   String getRef() => split('/').last.pascalCase;
 
+  String withPostfix(String postfix) => '${this}$postfix';
+
   String asList() => 'List<$this>';
 
   String asEnum() => 'enums.$this';

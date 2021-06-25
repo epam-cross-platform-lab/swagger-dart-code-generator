@@ -400,7 +400,10 @@ class SwaggerRequestsGenerator {
       final schema = requestBody.content?.schema;
 
       if (schema != null) {
-        final typeName = _getRequestBodyTypeName(schema: schema);
+        final typeName = _getRequestBodyTypeName(
+          schema: schema,
+          modelPostfix: options.modelPostfix,
+        );
 
         result.add(
           Parameter(
@@ -413,7 +416,7 @@ class SwaggerRequestsGenerator {
               )
               ..named = true
               ..annotations.add(
-                refer(kField).call([]),
+                refer(kBody.pascalCase).call([]),
               ),
           ),
         );
@@ -423,15 +426,16 @@ class SwaggerRequestsGenerator {
     return result;
   }
 
-  String _getRequestBodyTypeName({required SwaggerSchema schema}) {
-    if(schema.type.isNotEmpty)
-    {
+  String _getRequestBodyTypeName({
+    required SwaggerSchema schema,
+    required String modelPostfix,
+  }) {
+    if (schema.type.isNotEmpty) {
       return kBasicTypesMap[schema.type] ?? schema.type;
     }
 
-    if(schema.ref.isNotEmpty)
-    {
-      return schema.ref.getRef();
+    if (schema.ref.isNotEmpty) {
+      return schema.ref.getRef().withPostfix(modelPostfix);
     }
 
     return '';

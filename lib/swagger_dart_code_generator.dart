@@ -139,10 +139,6 @@ class SwaggerDartCodeGenerator implements Builder {
     final result = """
 $imports
 
-// **************************************************************************
-// SwaggerChopperGenerator
-// **************************************************************************
-
 ${options.buildOnlyModels ? '' : requests}
 
 ${options.withConverter ? converter : ''}
