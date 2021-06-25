@@ -1,3 +1,7 @@
+# 2.0.5+1
+
+* Fixed issue with list of enums in request parameter
+
 # 2.0.5
 
 * Added new generator_options

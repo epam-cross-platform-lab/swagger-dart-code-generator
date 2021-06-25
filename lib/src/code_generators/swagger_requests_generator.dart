@@ -372,7 +372,7 @@ $allMethodsContent
     final mapName = getMapName(requestPath, requestType, parameterName, ref);
 
     if (enumListParametersNames.contains(parameterName)) {
-      return '$parameterName!.map((element) {$mapName[element];}).toList()';
+      return '$parameterName!.map((element) => $mapName[element]).toList()';
     }
 
     return '$mapName[$parameterName]';
