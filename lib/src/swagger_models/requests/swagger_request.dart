@@ -51,7 +51,7 @@ class SwaggerRequest {
 
 @JsonSerializable()
 class RequestBody {
-  @JsonKey(name: 'content')
+  @JsonKey(name: 'content', fromJson: _contentFromJson)
   RequestContent? content;
 
   @JsonKey(name: 'ref', defaultValue: '')
@@ -68,26 +68,24 @@ class RequestBody {
       _$RequestBodyFromJson(json);
 }
 
+RequestContent? _contentFromJson(Map<String, dynamic>? map) {
+  if (map == null) {
+    return null;
+  }
+
+  final content = map.values.first as Map<String, dynamic>;
+
+  return RequestContent.fromJson(content);
+}
+
 @JsonSerializable()
 class RequestContent {
   RequestContent({
-    this.items,
-    this.ref = '',
-    this.responseType = '',
-    this.type = '',
+    this.schema,
   });
 
-  @JsonKey(name: 'responseType', defaultValue: '')
-  final String responseType;
-
-  @JsonKey(name: 'type', defaultValue: '')
-  final String type;
-
-  @JsonKey(name: 'items')
-  final SwaggerSchema? items;
-
-  @JsonKey(name: 'ref', defaultValue: '')
-  final String ref;
+  @JsonKey(name: 'schema')
+  final SwaggerSchema? schema;
 
   Map<String, dynamic> toJson() => _$RequestContentToJson(this);
 

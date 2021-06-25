@@ -49,9 +49,7 @@ Map<String, dynamic> _$SwaggerRequestToJson(SwaggerRequest instance) =>
 
 RequestBody _$RequestBodyFromJson(Map<String, dynamic> json) {
   return RequestBody(
-    content: json['content'] == null
-        ? null
-        : RequestContent.fromJson(json['content'] as Map<String, dynamic>),
+    content: _contentFromJson(json['content'] as Map<String, dynamic>?),
     ref: json['ref'] as String? ?? '',
   );
 }
@@ -64,19 +62,13 @@ Map<String, dynamic> _$RequestBodyToJson(RequestBody instance) =>
 
 RequestContent _$RequestContentFromJson(Map<String, dynamic> json) {
   return RequestContent(
-    items: json['items'] == null
+    schema: json['schema'] == null
         ? null
-        : SwaggerSchema.fromJson(json['items'] as Map<String, dynamic>),
-    ref: json['ref'] as String? ?? '',
-    responseType: json['responseType'] as String? ?? '',
-    type: json['type'] as String? ?? '',
+        : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$RequestContentToJson(RequestContent instance) =>
     <String, dynamic>{
-      'responseType': instance.responseType,
-      'type': instance.type,
-      'items': instance.items,
-      'ref': instance.ref,
+      'schema': instance.schema,
     };

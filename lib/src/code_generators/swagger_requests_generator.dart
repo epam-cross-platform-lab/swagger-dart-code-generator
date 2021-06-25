@@ -8,6 +8,7 @@ import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_response.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:recase/recase.dart';
@@ -395,12 +396,45 @@ class SwaggerRequestsGenerator {
 
     final requestBody = swaggerRequest.requestBody;
 
-    if(requestBody != null)
-    {
-      //TODO
+    if (requestBody != null) {
+      final schema = requestBody.content?.schema;
+
+      if (schema != null) {
+        final typeName = _getRequestBodyTypeName(schema: schema);
+
+        result.add(
+          Parameter(
+            (p) => p
+              ..name = kBody
+              ..named = true
+              ..required = true
+              ..type = Reference(
+                typeName.makeNullable(),
+              )
+              ..named = true
+              ..annotations.add(
+                refer(kField).call([]),
+              ),
+          ),
+        );
+      }
     }
 
     return result;
+  }
+
+  String _getRequestBodyTypeName({required SwaggerSchema schema}) {
+    if(schema.type.isNotEmpty)
+    {
+      return kBasicTypesMap[schema.type] ?? schema.type;
+    }
+
+    if(schema.ref.isNotEmpty)
+    {
+      return schema.ref.getRef();
+    }
+
+    return '';
   }
 
   Code? _getHeaderDefaultValue(
