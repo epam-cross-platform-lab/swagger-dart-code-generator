@@ -17,10 +17,7 @@ SwaggerResponse _$SwaggerResponseFromJson(Map<String, dynamic> json) {
             ?.map((e) => e as String)
             .toList() ??
         [],
-    content: (json['content'] as Map<String, dynamic>?)?.map(
-          (k, e) => MapEntry(k, Content.fromJson(e as Map<String, dynamic>)),
-        ) ??
-        {},
+    content: _mapContent(json['content'] as Map<String, dynamic>?),
     ref: json['ref'] as String? ?? '',
   );
 }
@@ -43,6 +40,9 @@ Content _$ContentFromJson(Map<String, dynamic> json) {
     ref: json['ref'] as String? ?? '',
     responseType: json['responseType'] as String? ?? '',
     type: json['type'] as String? ?? '',
+    schema: json['schema'] == null
+        ? null
+        : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
   );
 }
 
@@ -50,5 +50,6 @@ Map<String, dynamic> _$ContentToJson(Content instance) => <String, dynamic>{
       'responseType': instance.responseType,
       'type': instance.type,
       'items': instance.items,
+      'schema': instance.schema,
       'ref': instance.ref,
     };

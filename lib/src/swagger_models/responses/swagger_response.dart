@@ -10,7 +10,7 @@ class SwaggerResponse {
     this.type = '',
     this.schema,
     this.enumValue = const [],
-    this.content = const {},
+    this.content,
     this.ref = '',
   });
 
@@ -29,13 +29,25 @@ class SwaggerResponse {
   @JsonKey(name: 'enumValue', defaultValue: [])
   List<String> enumValue;
 
-  @JsonKey(name: 'content', defaultValue: {})
-  Map<String, Content> content;
+  @JsonKey(name: 'content', fromJson: _mapContent)
+  Content? content;
 
   Map<String, dynamic> toJson() => _$SwaggerResponseToJson(this);
 
   factory SwaggerResponse.fromJson(Map<String, dynamic> json) =>
       _$SwaggerResponseFromJson(json);
+}
+
+Content? _mapContent(Map<String, dynamic>? json)
+{
+  if(json == null || json.isEmpty)
+  {
+    return null;
+  }
+
+  final inner = json.values.first as Map<String, dynamic>;
+
+  return Content.fromJson(inner);
 }
 
 @JsonSerializable()
@@ -45,6 +57,7 @@ class Content {
     this.ref = '',
     this.responseType = '',
     this.type = '',
+    this.schema,
   });
 
   @JsonKey(name: 'responseType', defaultValue: '')
@@ -55,6 +68,9 @@ class Content {
 
   @JsonKey(name: 'items')
   final SwaggerSchema? items;
+
+  @JsonKey(name: 'schema')
+  final SwaggerSchema? schema;
 
   @JsonKey(name: 'ref', defaultValue: '')
   final String ref;

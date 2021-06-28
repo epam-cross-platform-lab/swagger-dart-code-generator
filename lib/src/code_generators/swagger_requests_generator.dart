@@ -541,32 +541,41 @@ class SwaggerRequestsGenerator {
 
   String? _getReturnTypeFromContent(
       SwaggerResponse swaggerResponse, String modelPostfix) {
-    if (swaggerResponse.content.isNotEmpty) {
-      final ref = swaggerResponse.content.values.first.ref;
-      if (ref.isNotEmpty) {
-        final type = ref.getRef();
-        return kBasicTypesMap[type] ?? type;
-      }
+    final content = swaggerResponse.content;
 
-      final responseType = swaggerResponse.content.values.first.responseType;
+    if (content == null) {
+      return null;
+    }
 
-      if (responseType.isNotEmpty) {
-        if (responseType == kArray) {
-          final originalRef = swaggerResponse.schema?.items?.originalRef ?? '';
+    final ref = content.ref;
+    if (ref.isNotEmpty) {
+      final type = ref.getRef().withPostfix(modelPostfix);
+      return kBasicTypesMap[type] ?? type;
+    }
 
-          if (originalRef.isNotEmpty) {
-            return kBasicTypesMap[originalRef]!.asList();
-          }
+    final schemaRef = content.schema?.ref ?? '';
+    if (schemaRef.isNotEmpty) {
+      final type = schemaRef.getRef().withPostfix(modelPostfix);
+      return kBasicTypesMap[type] ?? type;
+    }
 
-          final ref =
-              swaggerResponse.content.values.firstOrNull?.items?.ref ?? '';
-          if (ref.isNotEmpty) {
-            return kBasicTypesMap[ref]!.asList();
-          }
+    final responseType = content.responseType;
+
+    if (responseType.isNotEmpty) {
+      if (responseType == kArray) {
+        final originalRef = swaggerResponse.schema?.items?.originalRef ?? '';
+
+        if (originalRef.isNotEmpty) {
+          return kBasicTypesMap[originalRef]!.asList();
         }
 
-        return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
+        final ref = content.items?.ref ?? '';
+        if (ref.isNotEmpty) {
+          return kBasicTypesMap[ref]!.withPostfix(modelPostfix).asList();
+        }
       }
+
+      return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
     }
   }
 

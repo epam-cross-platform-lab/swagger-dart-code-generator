@@ -35,6 +35,12 @@ targets:
             - header_name: "X-Cus"
               default_value: "X-Cus"
           response_override_value_map:
-            - url: "/store/inventory"
+            - url: "/v2/commons/availableColours"
               method: get
-              overridden_value: "List<dynamic>"
+              overridden_value: "List<Map>"
+            - url: "/v2/commons/availableGenres"
+              method: get
+              overridden_value: "List<GenreV2ResultDto>"
+            - url: "/v2/channels"
+              method: get
+              overridden_value: "List<Channel>"
