@@ -78,6 +78,7 @@ class SwaggerRequestsGenerator {
       (m) => m
         ..returns = Reference(className)
         ..name = 'create'
+        ..static = true
         ..optionalParameters.add(
           Parameter(
             (p) => p
@@ -256,6 +257,8 @@ class SwaggerRequestsGenerator {
     switch (parameter.inParameter) {
       case kFormData:
         return refer(kField).call([]);
+      case kBody:
+        return refer(kBody.pascalCase).call([]);
       default:
         return refer(parameter.inParameter.pascalCase)
             .call([literalString(parameter.name)]);
@@ -568,15 +571,20 @@ class SwaggerRequestsGenerator {
         if (originalRef.isNotEmpty) {
           return kBasicTypesMap[originalRef]!.asList();
         }
-
-        final ref = content.items?.ref ?? '';
-        if (ref.isNotEmpty) {
-          return kBasicTypesMap[ref]!.withPostfix(modelPostfix).asList();
-        }
       }
-
-      return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
     }
+
+    final itemsRef = content.items?.ref ?? '';
+    if (itemsRef.isNotEmpty) {
+      return kBasicTypesMap[itemsRef]!.withPostfix(modelPostfix).asList();
+    }
+
+    final schemaItemsRef = content.schema?.items?.ref ?? '';
+    if (schemaItemsRef.isNotEmpty) {
+      return schemaItemsRef.getRef().withPostfix(modelPostfix).asList();
+    }
+
+    return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
   }
 
   String _getReturnTypeName({
@@ -586,6 +594,9 @@ class SwaggerRequestsGenerator {
     required String methodName,
     required String modelPostfix,
   }) {
+    if (path == '/v1/customer/{customerId}/devices') {
+      var tt = 0;
+    }
     if (overridenResponses.containsKey(path)) {
       return overridenResponses[path]!.overriddenValue;
     }
