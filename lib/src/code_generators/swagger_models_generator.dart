@@ -69,6 +69,42 @@ abstract class SwaggerModelsGenerator {
     );
   }
 
+  static Map<String, dynamic> getClassesFromInnerClasses(
+    Map<String, dynamic> classes,
+    GeneratorOptions options,
+  ) {
+    final result = <String, dynamic>{};
+
+    classes.forEach((classKey, classValue) {
+      final properties = classValue['properties'] as Map<String, dynamic>?;
+
+      if (properties == null) {
+        return;
+      }
+
+      properties.forEach((propertyKey, propertyValue) {
+        final innerClassName =
+            '${getValidatedClassName(classKey)}\$${getValidatedClassName(propertyKey)}';
+
+        if (propertyValue['properties'] != null) {
+          result[innerClassName] = propertyValue;
+        }
+
+        final items = propertyValue['items'] as Map<String, dynamic>?;
+
+        if (items != null && items['properties'] != null) {
+          result[innerClassName] = propertyValue;
+        }
+      });
+    });
+
+    if (result.isNotEmpty) {
+      result.addAll(getClassesFromInnerClasses(result, options));
+    }
+
+    return result;
+  }
+
   static Map<String, dynamic> getClassesFromResponses(
       String dartCode, GeneratorOptions options) {
     final swagger = jsonDecode(dartCode);
@@ -130,8 +166,12 @@ abstract class SwaggerModelsGenerator {
         : '';
 
     final classesFromResponses = getClassesFromResponses(dartCode, options);
-
     classes.addAll(classesFromResponses);
+
+    final classesFromInnerClasses =
+        getClassesFromInnerClasses(classes, options);
+
+    classes.addAll(classesFromInnerClasses);
 
     if (classes.isEmpty) {
       return '';
@@ -193,8 +233,16 @@ abstract class SwaggerModelsGenerator {
   }
 
   String getParameterTypeName(
-      String className, String parameterName, Map<String, dynamic> parameter,
-      [String? refNameParameter]) {
+    String className,
+    String parameterName,
+    Map<String, dynamic> parameter,
+    String modelPostfix,
+    String? refNameParameter,
+  ) {
+    if (parameter['properties'] != null) {
+      return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
+    }
+
     if (refNameParameter != null) {
       return refNameParameter.pascalCase;
     }
@@ -227,7 +275,8 @@ abstract class SwaggerModelsGenerator {
         return 'Object';
       case 'array':
         final items = parameter['items'] as Map<String, dynamic>? ?? {};
-        return getParameterTypeName(className, parameterName, items);
+        return getParameterTypeName(
+            className, parameterName, items, modelPostfix, null);
       default:
         if (parameter['oneOf'] != null) {
           return 'Object';
@@ -378,8 +427,8 @@ abstract class SwaggerModelsGenerator {
     if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName]!;
     } else {
-      typeName = getValidatedClassName(getParameterTypeName(
-          className, propertyName, propertyEntryMap, parameterName));
+      typeName = getValidatedClassName(getParameterTypeName(className,
+          propertyName, propertyEntryMap, options.modelPostfix, parameterName));
     }
 
     final includeIfNullString = generateIncludeIfNullString(options);
@@ -418,8 +467,8 @@ abstract class SwaggerModelsGenerator {
     if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName]!;
     } else {
-      typeName = getValidatedClassName(getParameterTypeName(
-          className, propertyName, propertyEntryMap, parameterName));
+      typeName = getValidatedClassName(getParameterTypeName(className,
+          propertyName, propertyEntryMap, options.modelPostfix, parameterName));
     }
 
     final allEnumsNamesWithoutPrefix =
@@ -516,7 +565,12 @@ abstract class SwaggerModelsGenerator {
 
     if (typeName.isEmpty) {
       typeName = getParameterTypeName(
-          className, propertyName, items as Map<String, dynamic>? ?? {});
+        className,
+        propertyName,
+        items as Map<String, dynamic>? ?? {},
+        options.modelPostfix,
+        null,
+      );
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
@@ -555,7 +609,13 @@ abstract class SwaggerModelsGenerator {
       typeName = val['\$ref'].toString().split('/').last.pascalCase +
           options.modelPostfix;
     } else {
-      typeName = getParameterTypeName(className, propertyName, val);
+      typeName = getParameterTypeName(
+        className,
+        propertyName,
+        val,
+        options.modelPostfix,
+        null,
+      );
     }
 
     final allEnumsNamesWithoutPrefix =

@@ -330,6 +330,7 @@ $allMethodsContent
     final filteredParameters = parameters
         .where((parameter) =>
             ignoreHeaders ? parameter.inParameter != 'header' : true)
+        .where((parameter) => parameter.inParameter != 'cookie')
         .toList();
 
     final enumParametersNames = parameters

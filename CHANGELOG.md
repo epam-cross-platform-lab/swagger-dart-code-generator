@@ -1,3 +1,8 @@
+# 2.0.6
+
+* Fixed Issue ([#163](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/163))
+* Updated logo design
+
 # 2.0.5+2
 
 * Fixed issue with list of enums in request parameter
