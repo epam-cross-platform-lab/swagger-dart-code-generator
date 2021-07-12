@@ -635,9 +635,6 @@ class SwaggerRequestsGenerator {
     required String methodName,
     required String modelPostfix,
   }) {
-    if (path == '/v1/customer/{customerId}/devices') {
-      var tt = 0;
-    }
     if (overridenResponses.containsKey(path)) {
       return overridenResponses[path]!.overriddenValue;
     }

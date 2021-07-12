@@ -15,7 +15,8 @@ void main() {
       final result = generator.generate(model_with_parameters_v3, fileName,
           GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-      expect(result, contains('final enums.TokensResponseTokenType? tokenType'));
+      expect(
+          result, contains('final enums.TokensResponseTokenType? tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
@@ -98,8 +99,8 @@ void main() {
       const parameterName = 'orderId';
       const parameter = <String, dynamic>{'type': 'object'};
       const expectedResult = 'Object';
-      final result =
-          generator.getParameterTypeName(className, parameterName, parameter);
+      final result = generator.getParameterTypeName(
+          className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -109,8 +110,8 @@ void main() {
       const parameterName = 'orderId';
       const parameter = <String, dynamic>{'type': 'array'};
       const expectedResult = 'Object';
-      final result =
-          generator.getParameterTypeName(className, parameterName, parameter);
+      final result = generator.getParameterTypeName(
+          className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -120,8 +121,8 @@ void main() {
       const parameterName = 'orderId';
       const parameter = <String, dynamic>{'oneOf': 'animals'};
       const expectedResult = 'Object';
-      final result =
-          generator.getParameterTypeName(className, parameterName, parameter);
+      final result = generator.getParameterTypeName(
+          className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -130,8 +131,8 @@ void main() {
       const className = 'Animal';
       const parameterName = 'orderId';
       const expectedResult = 'Object';
-      final result =
-          generator.getParameterTypeName(className, parameterName, {});
+      final result = generator.getParameterTypeName(
+          className, parameterName, {}, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -141,8 +142,8 @@ void main() {
       const parameterName = 'orderId';
       const parameter = <String, dynamic>{'\$ref': '#/definitions/Pet'};
       const expectedResult = 'Pet';
-      final result =
-          generator.getParameterTypeName(className, parameterName, parameter);
+      final result = generator.getParameterTypeName(
+          className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -153,7 +154,7 @@ void main() {
       const refNameParameter = 'animals_Object';
       const expectedResult = 'AnimalsObject';
       final result = generator.getParameterTypeName(
-          className, parameterName, {}, refNameParameter);
+          className, parameterName, {}, '', refNameParameter);
 
       expect(result, contains(expectedResult));
     });
@@ -166,8 +167,8 @@ void main() {
         'format': 'date-time'
       };
       const expectedResult = 'DateTime';
-      final result =
-          generator.getParameterTypeName(className, parameterName, parameter);
+      final result = generator.getParameterTypeName(
+          className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -791,7 +792,7 @@ void main() {
             outputFolder: '',
           ));
 
-          expect(result, contains('class ModelItemsGet\$Response'));
+      expect(result, contains('class ModelItemsGet\$Response'));
     });
   });
 }

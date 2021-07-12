@@ -47,7 +47,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
         final content = response == null
             ? null
-            : response['content'] as Map<String, dynamic>;
+            : response['content'] as Map<String, dynamic>?;
 
         final firstContent = content == null
             ? null

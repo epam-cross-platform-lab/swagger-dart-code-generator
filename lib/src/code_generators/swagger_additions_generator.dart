@@ -74,6 +74,13 @@ import 'package:chopper/chopper.dart' as chopper;''';
     result.writeln("""
 import 'package:json_annotation/json_annotation.dart';""");
 
+    if (hasModels) {
+      result.writeln("""
+import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
+""");
+    }
+
     if (chopperImports.isNotEmpty) {
       result.write(chopperImports);
     }
