@@ -1,3 +1,7 @@
+# 2.1.0
+
+* Fully refactored requests generator
+
 # 2.0.6
 
 * Fixed Issue ([#163](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/163))
