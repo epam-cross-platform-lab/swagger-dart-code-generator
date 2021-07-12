@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
+
+import 'constants.dart';
 
 abstract class SwaggerModelsGenerator {
   static const List<String> keyClasses = ['Response', 'Request'];
@@ -278,10 +281,7 @@ abstract class SwaggerModelsGenerator {
         return getParameterTypeName(
             className, parameterName, items, modelPostfix, null);
       default:
-        if (parameter['oneOf'] != null) {
-          return 'Object';
-        }
-        return 'undefinedType';
+        return 'Object';
     }
   }
 
@@ -556,6 +556,9 @@ abstract class SwaggerModelsGenerator {
         } else if (typeName != 'dynamic') {
           typeName = typeName.pascalCase;
         }
+      } else if (!allEnumNames.contains('enums.$typeName') &&
+          !basicTypes.contains(typeName.toLowerCase())) {
+        typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
       }
 
       if (allEnumNames.contains('enums.$typeName')) {

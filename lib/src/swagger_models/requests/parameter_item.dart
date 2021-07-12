@@ -10,13 +10,13 @@ class ParameterItem {
   factory ParameterItem.fromJson(Map<String, dynamic> json) =>
       _$ParameterItemFromJson(json);
 
-  @JsonKey(name: 'type')
+  @JsonKey(name: 'type', defaultValue: '')
   String type;
 
-  @JsonKey(name: 'enum')
+  @JsonKey(name: 'enum', defaultValue: [])
   List<String> enumValues;
 
-  @JsonKey(name: 'default')
+  @JsonKey(name: 'default', defaultValue: '')
   String defaultValue;
 
   Map<String, dynamic> toJson() => _$ParameterItemToJson(this);

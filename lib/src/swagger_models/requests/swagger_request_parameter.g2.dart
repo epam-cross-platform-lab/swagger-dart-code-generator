@@ -23,8 +23,7 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
         : SwaggerRequestItems.fromJson(json['items'] as Map<String, dynamic>),
     schema: json['schema'] == null
         ? null
-        : SwaggerParameterSchema.fromJson(
-            json['schema'] as Map<String, dynamic>),
+        : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
     ref: json[r'$ref'] as String? ?? '',
   );
 }

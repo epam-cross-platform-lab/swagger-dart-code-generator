@@ -12,6 +12,7 @@ SwaggerRequestItems _$SwaggerRequestItemsFromJson(Map<String, dynamic> json) {
     enumValues:
         (json['enum'] as List<dynamic>?)?.map((e) => e as String).toList() ??
             [],
+    ref: json[r'$ref'] as String? ?? '',
   );
 }
 
@@ -20,4 +21,5 @@ Map<String, dynamic> _$SwaggerRequestItemsToJson(
     <String, dynamic>{
       'type': instance.type,
       'enum': instance.enumValues,
+      r'$ref': instance.ref,
     };

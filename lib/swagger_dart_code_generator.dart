@@ -93,8 +93,8 @@ class SwaggerDartCodeGenerator implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final customDecoder = codeGenerator.generateCustomJsonConverter(contents,
-        getFileNameWithoutExtension(fileNameWithExtension), models.isNotEmpty);
+    final customDecoder = codeGenerator.generateCustomJsonConverter(
+        contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final dateToJson = codeGenerator.generateDateToJson(contents);
 
@@ -135,10 +135,6 @@ class SwaggerDartCodeGenerator implements Builder {
     final result = """
 $imports
 
-// **************************************************************************
-// SwaggerChopperGenerator
-// **************************************************************************
-
 ${options.buildOnlyModels ? '' : requests}
 
 ${options.withConverter ? converter : ''}
@@ -149,7 +145,7 @@ $responses
 
 $requestBodies
 
-${options.withBaseUrl && options.withConverter ? customDecoder : ''}
+$customDecoder
 
 $dateToJson
 """;

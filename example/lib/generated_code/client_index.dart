@@ -1,1 +1,1 @@
-export 'example_swagger.swagger.dart' show ExampleSwagger;
+export 'personalization_service.swagger.dart' show PersonalizationService;

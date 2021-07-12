@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/parameter_item.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_parameter_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_items.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 
 part 'swagger_request_parameter.g2.dart';
 
@@ -19,9 +19,6 @@ class SwaggerRequestParameter {
       this.schema,
       this.ref = '',
       this.key = ''});
-
-  factory SwaggerRequestParameter.fromJson(Map<String, dynamic> json) =>
-      _$SwaggerRequestParameterFromJson(json);
 
   @JsonKey(name: 'in', defaultValue: '')
   String inParameter;
@@ -48,7 +45,7 @@ class SwaggerRequestParameter {
   String collectionFormat;
 
   @JsonKey(name: 'schema')
-  SwaggerParameterSchema? schema;
+  SwaggerSchema? schema;
 
   @JsonKey(name: 'items')
   SwaggerRequestItems? items;
@@ -57,4 +54,7 @@ class SwaggerRequestParameter {
   String key;
 
   Map<String, dynamic> toJson() => _$SwaggerRequestParameterToJson(this);
+
+  factory SwaggerRequestParameter.fromJson(Map<String, dynamic> json) =>
+      _$SwaggerRequestParameterFromJson(json);
 }
