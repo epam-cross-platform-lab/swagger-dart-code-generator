@@ -44,6 +44,14 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
         : IncludeIfNull.fromJson(
             Map<String, dynamic>.from(json['include_if_null'] as Map)),
     modelPostfix: json['model_postfix'] as String? ?? '',
+    includePaths: (json['include_paths'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList() ??
+        [],
+    excludePaths: (json['exclude_paths'] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList() ??
+        [],
   );
 }
 
@@ -66,6 +74,8 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'default_values_map': instance.defaultValuesMap,
       'default_header_values_map': instance.defaultHeaderValuesMap,
       'response_override_value_map': instance.responseOverrideValueMap,
+      'include_paths': instance.includePaths,
+      'exclude_paths': instance.excludePaths,
     };
 
 DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) {

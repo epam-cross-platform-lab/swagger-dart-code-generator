@@ -24,7 +24,7 @@ targets:
           include_if_null:
             enabled: true
             value: false
-          input_folder: "swagger_examples/"
+          input_folder: "lib/"
           output_folder: "lib/generated_code/"
           enums_case_sensitive: true
           default_values_map:
@@ -32,6 +32,8 @@ targets:
               default_value: "36"
             - type_name: String
               default_value: ""
+          exclude_paths:
+            - "/pet/findByStatus"
           default_header_values_map:
             - header_name: "X-Rate-Limit"
               default_value: "12121212"

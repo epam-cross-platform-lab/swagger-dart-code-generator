@@ -846,7 +846,7 @@ void main() {
       expect(
           result,
           equals(
-              'myParameter!.map((element) {enums.\$PathGetMyParameterMap[element];}).toList()'));
+              'myParameter!.map((element) => enums.\$PathGetMyParameterMap[element]).toList()'));
     });
   });
 

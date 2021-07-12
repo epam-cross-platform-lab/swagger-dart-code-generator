@@ -114,6 +114,18 @@ $allMethodsContent
         components == null ? null : components['requestBodies'];
 
     swaggerRoot.paths.forEach((SwaggerPath swaggerPath) {
+      if (options.excludePaths.isNotEmpty &&
+          options.excludePaths
+              .any((exclPath) => RegExp(exclPath).hasMatch(swaggerPath.path))) {
+        return;
+      }
+
+      if (options.includePaths.isNotEmpty &&
+          !options.includePaths
+              .any((inclPath) => RegExp(inclPath).hasMatch(swaggerPath.path))) {
+        return;
+      }
+
       swaggerPath.requests
           .where((SwaggerRequest swaggerRequest) =>
               swaggerRequest.type.toLowerCase() != requestTypeOptions)
@@ -318,6 +330,7 @@ $allMethodsContent
     final filteredParameters = parameters
         .where((parameter) =>
             ignoreHeaders ? parameter.inParameter != 'header' : true)
+        .where((parameter) => parameter.inParameter != 'cookie')
         .toList();
 
     final enumParametersNames = parameters
@@ -360,7 +373,7 @@ $allMethodsContent
     final mapName = getMapName(requestPath, requestType, parameterName, ref);
 
     if (enumListParametersNames.contains(parameterName)) {
-      return '$parameterName!.map((element) {$mapName[element];}).toList()';
+      return '$parameterName!.map((element) => $mapName[element]).toList()';
     }
 
     return '$mapName[$parameterName]';
@@ -682,11 +695,12 @@ abstract class $className extends ChopperService''';
     );
   }
 
-  String getResponseModelName(String url, String methodName) {
+  String getResponseModelName(
+      String url, String methodName, String modelPostfix) {
     final urlString = url.split('/').map((e) => e.pascalCase).join();
     final methodNamePart = methodName.pascalCase;
     final responseType = SwaggerModelsGenerator.getValidatedClassName(
-        '$urlString$methodNamePart\$Response');
+        '$urlString$methodNamePart\$Response$modelPostfix');
 
     return responseType;
   }
@@ -719,7 +733,7 @@ abstract class $className extends ChopperService''';
 
     if (neededResponse.schema?.type == 'object' &&
         neededResponse.schema?.properties.isNotEmpty == true) {
-      return getResponseModelName(url, methodName);
+      return getResponseModelName(url, methodName, options.modelPostfix);
     }
 
     if (neededResponse.schema?.type.isNotEmpty ?? false) {
