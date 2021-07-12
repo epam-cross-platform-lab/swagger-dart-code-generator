@@ -68,15 +68,11 @@ class SwaggerDartCodeGenerator implements Builder {
     final models = codeGenerator.generateModels(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
-        
-
     final responses = codeGenerator.generateResponses(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
     final requestBodies = codeGenerator.generateRequestBodies(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
-
-        
 
     final enums = codeGenerator.generateEnums(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
@@ -97,8 +93,8 @@ class SwaggerDartCodeGenerator implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final customDecoder = codeGenerator.generateCustomJsonConverter(contents,
-        getFileNameWithoutExtension(fileNameWithExtension));
+    final customDecoder = codeGenerator.generateCustomJsonConverter(
+        contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final dateToJson = codeGenerator.generateDateToJson(contents);
 
@@ -149,7 +145,7 @@ $responses
 
 $requestBodies
 
-${options.withBaseUrl && options.withConverter ? customDecoder : ''}
+$customDecoder
 
 $dateToJson
 """;

@@ -34,11 +34,8 @@ class SwaggerRequestsGenerator {
       options,
     );
 
-    final tt = service.accept(DartEmitter()).toString();
+    return service.accept(DartEmitter()).toString();
 
-    return tt;
-
-    //return DartFormatter(lineEnding: '\n').format(tt);
   }
 
   Class _generateService(
@@ -406,6 +403,7 @@ class SwaggerRequestsGenerator {
         final typeName = _getRequestBodyTypeName(
           schema: schema,
           modelPostfix: options.modelPostfix,
+          root: root,
         );
 
         result.add(
@@ -429,15 +427,54 @@ class SwaggerRequestsGenerator {
     return result;
   }
 
+  bool _isEnumRef(String ref, SwaggerRoot root) {
+    final schemas = root.components?.schemas ?? <String, SwaggerSchema>{};
+    schemas.addAll(root.definitions);
+    
+    final neededSchemaKey = schemas.keys.firstWhereOrNull((key) => key.getRef() == ref.getRef());
+
+    if(neededSchemaKey == null)
+    {
+      return false;
+    }
+
+    final neededSchema = schemas[neededSchemaKey]!;
+
+    if (neededSchema.type == kString && neededSchema.enumValues.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
   String _getRequestBodyTypeName({
     required SwaggerSchema schema,
     required String modelPostfix,
+    required SwaggerRoot root,
   }) {
     if (schema.type.isNotEmpty) {
+      if (schema.type == kArray) {
+        final ref = schema.items?.ref.getRef() ?? '';
+
+        if (_isEnumRef(ref, root)) {
+          return ref.asEnum().asList();
+        }
+
+        if (ref.isNotEmpty) {
+          return ref.withPostfix(modelPostfix).asList();
+        }
+
+        return '';
+      }
+
       return kBasicTypesMap[schema.type] ?? schema.type;
     }
 
     if (schema.ref.isNotEmpty) {
+      if (_isEnumRef(schema.ref, root)) {
+        return schema.ref.getRef().asEnum();
+      }
+
       return schema.ref.getRef().withPostfix(modelPostfix);
     }
 
@@ -582,6 +619,10 @@ class SwaggerRequestsGenerator {
     final schemaItemsRef = content.schema?.items?.ref ?? '';
     if (schemaItemsRef.isNotEmpty) {
       return schemaItemsRef.getRef().withPostfix(modelPostfix).asList();
+    }
+
+    if (responseType.isEmpty) {
+      return '';
     }
 
     return kBasicTypesMap[responseType] ?? responseType + modelPostfix;

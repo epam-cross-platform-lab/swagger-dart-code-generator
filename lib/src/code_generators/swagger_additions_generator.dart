@@ -184,7 +184,7 @@ final jsonDecoder = CustomJsonDecoder(${fileName.pascalCase}JsonDecoderMappings)
         ? "baseUrl:  'https://$host$basePath'"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
-    final converterString = options.withBaseUrl && options.withConverter
+    final converterString = options.withConverter
         ? 'converter: JsonSerializableConverter(),'
         : 'converter: chopper.JsonConverter(),';
 
