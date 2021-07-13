@@ -239,10 +239,6 @@ abstract class SwaggerModelsGenerator {
     String modelPostfix,
     String? refNameParameter,
   ) {
-    if(parameterName == 'creation_time')
-    {
-      final tt = 0;
-    }
     if (parameter['properties'] != null) {
       return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
     }
