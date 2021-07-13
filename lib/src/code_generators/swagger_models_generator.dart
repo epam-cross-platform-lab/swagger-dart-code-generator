@@ -239,6 +239,10 @@ abstract class SwaggerModelsGenerator {
     String modelPostfix,
     String? refNameParameter,
   ) {
+    if(parameterName == 'creation_time')
+    {
+      final tt = 0;
+    }
     if (parameter['properties'] != null) {
       return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
     }
@@ -269,6 +273,8 @@ abstract class SwaggerModelsGenerator {
           return 'enums.${SwaggerModelsGenerator.getValidatedClassName(SwaggerEnumsGeneratorV2().generateEnumName(className, parameterName))}';
         }
         return 'String';
+      case 'Date':
+        return 'DateTime';
       case 'number':
         return 'double';
       case 'object':
@@ -278,10 +284,7 @@ abstract class SwaggerModelsGenerator {
         return getParameterTypeName(
             className, parameterName, items, modelPostfix, null);
       default:
-        if (parameter['oneOf'] != null) {
-          return 'Object';
-        }
-        return 'undefinedType';
+        return 'Object';
     }
   }
 
