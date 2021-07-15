@@ -361,8 +361,12 @@ class SwaggerRequestsGenerator {
     required SwaggerRoot root,
     required GeneratorOptions options,
   }) {
+    final definedParameters = <String, SwaggerRequestParameter>{};
+    definedParameters.addAll(root.parameters);
+    definedParameters.addAll(root.components?.parameters ?? {});
+
     final parameters = swaggerRequest.parameters
-        .map((par) => root.parameters[par.ref.split('/').last] ?? par)
+        .map((par) => definedParameters[par.ref.split('/').last] ?? par)
         .toList();
 
     final result = parameters
@@ -394,6 +398,10 @@ class SwaggerRequestsGenerator {
           ),
         )
         .toList();
+
+    if (path == '/v3/recommendations/more-like-this') {
+      var tt = 0;
+    }
 
     final requestBody = swaggerRequest.requestBody;
 
