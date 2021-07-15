@@ -35,7 +35,6 @@ class SwaggerRequestsGenerator {
     );
 
     return service.accept(DartEmitter()).toString();
-
   }
 
   Class _generateService(
@@ -362,7 +361,9 @@ class SwaggerRequestsGenerator {
     required SwaggerRoot root,
     required GeneratorOptions options,
   }) {
-    final parameters = swaggerRequest.parameters;
+    final parameters = swaggerRequest.parameters
+        .map((par) => root.parameters[par.ref.split('/').last] ?? par)
+        .toList();
 
     final result = parameters
         .where((swaggerParameter) =>
@@ -430,11 +431,11 @@ class SwaggerRequestsGenerator {
   bool _isEnumRef(String ref, SwaggerRoot root) {
     final schemas = root.components?.schemas ?? <String, SwaggerSchema>{};
     schemas.addAll(root.definitions);
-    
-    final neededSchemaKey = schemas.keys.firstWhereOrNull((key) => key.getRef() == ref.getRef());
 
-    if(neededSchemaKey == null)
-    {
+    final neededSchemaKey =
+        schemas.keys.firstWhereOrNull((key) => key.getRef() == ref.getRef());
+
+    if (neededSchemaKey == null) {
       return false;
     }
 
