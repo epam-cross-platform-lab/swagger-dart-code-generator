@@ -399,10 +399,6 @@ class SwaggerRequestsGenerator {
         )
         .toList();
 
-    if (path == '/v3/recommendations/more-like-this') {
-      var tt = 0;
-    }
-
     final requestBody = swaggerRequest.requestBody;
 
     if (requestBody != null) {
