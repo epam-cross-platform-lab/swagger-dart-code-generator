@@ -573,7 +573,7 @@ $allMethodsContent
       parameterType = 'List<$typeName>';
     } else {
       final neededType =
-          parameter.type.isNotEmpty ? parameter.type : parameter.schema!.type;
+          parameter.type.isNotEmpty ? parameter.type : parameter.schema?.type ?? 'Object';
 
       parameterType =
           getParameterTypeName(neededType, parameter.items?.type ?? '');
