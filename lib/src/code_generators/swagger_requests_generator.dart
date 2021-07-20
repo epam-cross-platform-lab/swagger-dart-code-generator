@@ -130,6 +130,9 @@ class SwaggerRequestsGenerator {
             ? kFutureResponse
             : returnTypeName.asFutureResponse();
 
+        final hasOptionalBody = ['post', 'put', 'patch'].contains(requestType) &&
+            swaggerRequest.parameters.none((p) => p.inParameter == kBody) && swaggerRequest.requestBody == null;
+
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
           ..docs.add(_getCommentsForMethod(
@@ -138,7 +141,8 @@ class SwaggerRequestsGenerator {
             options: options,
           ))
           ..name = methodName
-          ..annotations.add(_getMethodAnnotation(requestType, path))
+          ..annotations
+              .add(_getMethodAnnotation(requestType, path, hasOptionalBody))
           ..returns = Reference(returns));
 
         if (_hasEnumProperties(method)) {
@@ -207,8 +211,18 @@ class SwaggerRequestsGenerator {
     return Code('return _$publicMethodName($parametersListString);');
   }
 
-  Expression _getMethodAnnotation(String requestType, String path) {
-    return refer(requestType.pascalCase).call([], {kPath: literalString(path)});
+  Expression _getMethodAnnotation(
+    String requestType,
+    String path,
+    bool hasOptionalBody,
+  ) {
+    return refer(requestType.pascalCase).call(
+      [],
+      {
+        kPath: literalString(path),
+        if (hasOptionalBody) 'optionalBody': refer(true.toString())
+      },
+    );
   }
 
   String _getCommentsForMethod({
@@ -628,6 +642,11 @@ class SwaggerRequestsGenerator {
     final schemaItemsRef = content.schema?.items?.ref ?? '';
     if (schemaItemsRef.isNotEmpty) {
       return schemaItemsRef.getRef().withPostfix(modelPostfix).asList();
+    }
+
+    final contentSchemaType = content.schema?.type ?? '';
+    if (contentSchemaType.isNotEmpty == true) {
+      return kBasicTypesMap[contentSchemaType];
     }
 
     if (responseType.isEmpty) {

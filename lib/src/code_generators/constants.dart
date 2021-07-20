@@ -24,6 +24,7 @@ const kString = 'string';
 
 //Request types
 const kPath = 'path';
+const kOptionalBody = 'optionalBody';
 const kFormData = 'formData';
 
 const kDefaultBodyParameter = 'Object';
