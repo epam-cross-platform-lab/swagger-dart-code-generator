@@ -1,3 +1,13 @@
+# 2.0.7+1
+
+* Fixed Issue ([#190](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/190))
+* Fixed case when request does not have type specified. Made it Object.
+
+# 2.0.7
+
+* Fixed models generator in cases of List of Lists of Lists of... of some type
+* Formatted code
+
 # 2.0.6+1
 
 * Fixed Issue ([#72](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/72))

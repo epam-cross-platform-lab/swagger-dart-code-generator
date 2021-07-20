@@ -277,8 +277,9 @@ abstract class SwaggerModelsGenerator {
         return 'Object';
       case 'array':
         final items = parameter['items'] as Map<String, dynamic>? ?? {};
-        return getParameterTypeName(
+        final typeName = getParameterTypeName(
             className, parameterName, items, modelPostfix, null);
+        return 'List<$typeName>';
       default:
         return 'Object';
     }
