@@ -130,8 +130,10 @@ class SwaggerRequestsGenerator {
             ? kFutureResponse
             : returnTypeName.asFutureResponse();
 
-        final hasOptionalBody = ['post', 'put', 'patch'].contains(requestType) &&
-            swaggerRequest.parameters.none((p) => p.inParameter == kBody) && swaggerRequest.requestBody == null;
+        final hasOptionalBody =
+            ['post', 'put', 'patch'].contains(requestType) &&
+                swaggerRequest.parameters.none((p) => p.inParameter == kBody) &&
+                swaggerRequest.requestBody == null;
 
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
@@ -420,15 +422,24 @@ class SwaggerRequestsGenerator {
     final requestBody = swaggerRequest.requestBody;
 
     if (requestBody != null) {
+      var typeName = '';
+
+      final ref = requestBody.ref;
+      if (ref.isNotEmpty) {
+        typeName = ref.getRef();
+      }
+
       final schema = requestBody.content?.schema;
 
       if (schema != null) {
-        final typeName = _getRequestBodyTypeName(
+        typeName = _getRequestBodyTypeName(
           schema: schema,
           modelPostfix: options.modelPostfix,
           root: root,
         );
+      }
 
+      if (typeName.isNotEmpty) {
         result.add(
           Parameter(
             (p) => p

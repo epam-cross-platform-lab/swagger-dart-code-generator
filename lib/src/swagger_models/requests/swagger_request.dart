@@ -54,7 +54,7 @@ class RequestBody {
   @JsonKey(name: 'content', fromJson: _contentFromJson)
   RequestContent? content;
 
-  @JsonKey(name: 'ref', defaultValue: '')
+  @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
 
   RequestBody({

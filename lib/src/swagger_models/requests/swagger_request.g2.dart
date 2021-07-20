@@ -50,14 +50,14 @@ Map<String, dynamic> _$SwaggerRequestToJson(SwaggerRequest instance) =>
 RequestBody _$RequestBodyFromJson(Map<String, dynamic> json) {
   return RequestBody(
     content: _contentFromJson(json['content'] as Map<String, dynamic>?),
-    ref: json['ref'] as String? ?? '',
+    ref: json['\$ref'] as String? ?? '',
   );
 }
 
 Map<String, dynamic> _$RequestBodyToJson(RequestBody instance) =>
     <String, dynamic>{
       'content': instance.content,
-      'ref': instance.ref,
+      '\$ref': instance.ref,
     };
 
 RequestContent _$RequestContentFromJson(Map<String, dynamic> json) {
