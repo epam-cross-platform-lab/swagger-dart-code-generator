@@ -331,7 +331,11 @@ class SwaggerRequestsGenerator {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.schema!.ref.getRef().asEnum();
       }
-      return (parameter.schema!.ref.getRef() + modelPostfix).asList();
+
+      if (parameter.schema!.items != null || parameter.schema!.type == kArray) {
+        return (parameter.schema!.ref.getRef() + modelPostfix).asList();
+      }
+      return (parameter.schema!.ref.getRef() + modelPostfix);
     } else if (parameter.schema?.ref.isNotEmpty == true) {
       return parameter.schema!.ref.getRef() + modelPostfix;
     } else if (parameter.schema?.type == kArray &&
