@@ -19,6 +19,8 @@ SwaggerComponents _$SwaggerComponentsFromJson(Map<String, dynamic> json) {
         ) ??
         {},
     responses: mapResponses(json['responses'] as Map<String, dynamic>?) ?? {},
+    requestBodies:
+        mapResponses(json['requestBodies'] as Map<String, dynamic>?) ?? {},
   );
 }
 
@@ -27,4 +29,5 @@ Map<String, dynamic> _$SwaggerComponentsToJson(SwaggerComponents instance) =>
       'parameters': instance.parameters,
       'schemas': instance.schemas,
       'responses': instance.responses,
+      'requestBodies': instance.requestBodies,
     };

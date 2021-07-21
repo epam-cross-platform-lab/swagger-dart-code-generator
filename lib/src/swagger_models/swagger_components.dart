@@ -10,6 +10,7 @@ class SwaggerComponents {
     required this.parameters,
     required this.schemas,
     required this.responses,
+    required this.requestBodies,
   });
 
   @JsonKey(name: 'parameters', defaultValue: {})
@@ -20,6 +21,9 @@ class SwaggerComponents {
 
   @JsonKey(name: 'responses', defaultValue: {},  fromJson: mapResponses)
   Map<String, SwaggerSchema> responses;
+
+  @JsonKey(name: 'requestBodies', defaultValue: {},  fromJson: mapResponses)
+  Map<String, SwaggerSchema> requestBodies;
 
   Map<String, dynamic> toJson() => _$SwaggerComponentsToJson(this);
 
