@@ -428,10 +428,10 @@ class SwaggerRequestsGenerator {
       if (ref.isNotEmpty) {
         typeName = ref.getRef();
 
-        final requestBodyRef = root.components?.requestBodies[ref.getRef()]?.ref ?? '';
+        final requestBodyRef =
+            root.components?.requestBodies[ref.getRef()]?.ref ?? '';
 
-        if(requestBodyRef.isNotEmpty == true)
-        {
+        if (requestBodyRef.isNotEmpty == true) {
           typeName = requestBodyRef.getRef();
         }
       }
@@ -608,11 +608,11 @@ class SwaggerRequestsGenerator {
 
     final ref = swaggerResponse.schema?.ref ?? swaggerResponse.ref;
 
-    if (ref.isEmpty) {
-      return null;
+    if (ref.isNotEmpty) {
+      return ref.getRef() + modelPostfix;
     }
 
-    return ref;
+    return null;
   }
 
   String? _getReturnTypeFromOriginalRef(
