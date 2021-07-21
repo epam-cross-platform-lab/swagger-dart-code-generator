@@ -1,3 +1,8 @@
+# 2.0.8
+
+* Fix case when enum in model has name with underscores.
+* Updated logo design
+
 # 2.0.7+1
 
 * Fixed Issue ([#190](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/190))
