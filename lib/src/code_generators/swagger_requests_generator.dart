@@ -610,8 +610,9 @@ class SwaggerRequestsGenerator {
     final ref = swaggerResponse.schema?.ref ?? swaggerResponse.ref;
 
     if (ref.isNotEmpty) {
-      if (ref.contains(kResponses) &&
-          root.components?.responses.containsKey(ref.getRef()) != true) {
+      final response = root.components?.responses[ref.getRef()];
+
+      if (response?.ref.isNotEmpty == true) {
         return null;
       }
 
