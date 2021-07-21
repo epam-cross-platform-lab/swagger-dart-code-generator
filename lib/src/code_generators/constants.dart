@@ -21,6 +21,8 @@ const kResponse = 'Response';
 const kFutureResponse = 'Future<chopper.Response>';
 const kString = 'string';
 
+const kResponses = '/responses/';
+
 
 //Request types
 const kPath = 'path';

@@ -121,6 +121,7 @@ class SwaggerRequestsGenerator {
           path: path,
           methodName: methodName,
           modelPostfix: options.modelPostfix,
+          swaggerRoot: swaggerRoot,
           overridenResponses: options.responseOverrideValueMap
               .asMap()
               .map((key, value) => MapEntry(value.url, value)),
@@ -599,7 +600,7 @@ class SwaggerRequestsGenerator {
   }
 
   String? _getReturnTypeFromSchema(
-      SwaggerResponse swaggerResponse, String modelPostfix) {
+      SwaggerResponse swaggerResponse, String modelPostfix, SwaggerRoot root) {
     final listRef = swaggerResponse.schema?.items?.ref ?? '';
 
     if (listRef.isNotEmpty) {
@@ -609,6 +610,11 @@ class SwaggerRequestsGenerator {
     final ref = swaggerResponse.schema?.ref ?? swaggerResponse.ref;
 
     if (ref.isNotEmpty) {
+      if (ref.contains(kResponses) &&
+          root.components?.responses.containsKey(ref.getRef()) != true) {
+        return null;
+      }
+
       return ref.getRef() + modelPostfix;
     }
 
@@ -684,6 +690,7 @@ class SwaggerRequestsGenerator {
     required String path,
     required String methodName,
     required String modelPostfix,
+    required SwaggerRoot swaggerRoot,
   }) {
     if (overridenResponses.containsKey(path)) {
       return overridenResponses[path]!.overriddenValue;
@@ -707,7 +714,7 @@ class SwaggerRequestsGenerator {
     }
 
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
-        _getReturnTypeFromSchema(neededResponse, modelPostfix) ??
+        _getReturnTypeFromSchema(neededResponse, modelPostfix, swaggerRoot) ??
         _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
         _getReturnTypeFromContent(neededResponse, modelPostfix);
 
