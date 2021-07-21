@@ -14,7 +14,7 @@ class SwaggerResponse {
     this.ref = '',
   });
 
-  @JsonKey(name: 'ref', defaultValue: '')
+  @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
 
   @JsonKey(name: 'description', defaultValue: '')
