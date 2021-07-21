@@ -45,6 +45,7 @@ const kBasicTypesMap = <String, String>{
 };
 
 const kObject = 'object';
+const kBinary = 'binary';
 const kHeader = 'header';
 const kCookie = 'cookie';
 const kArray = 'array';

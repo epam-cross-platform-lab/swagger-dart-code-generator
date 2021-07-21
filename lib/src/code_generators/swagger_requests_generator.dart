@@ -432,11 +432,15 @@ class SwaggerRequestsGenerator {
       final schema = requestBody.content?.schema;
 
       if (schema != null) {
-        typeName = _getRequestBodyTypeName(
-          schema: schema,
-          modelPostfix: options.modelPostfix,
-          root: root,
-        );
+        if (schema.format == kBinary) {
+          typeName = kObject.pascalCase;
+        } else {
+          typeName = _getRequestBodyTypeName(
+            schema: schema,
+            modelPostfix: options.modelPostfix,
+            root: root,
+          );
+        }
       }
 
       if (typeName.isNotEmpty) {
