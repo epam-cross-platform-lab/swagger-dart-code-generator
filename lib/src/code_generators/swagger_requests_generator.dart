@@ -423,7 +423,7 @@ $allMethodsContent
           '\n  @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)';
     }
 
-    if (returnType.isNotEmpty && returnType != 'num') {
+    if (returnType.isNotEmpty && returnType != 'num' && returnType != 'bool') {
       returnType = returnType.pascalCase;
     }
 
