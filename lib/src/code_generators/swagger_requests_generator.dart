@@ -387,6 +387,14 @@ $allMethodsContent
 
     parameterName = parameterName.replaceAll(',', '');
 
+    // Some API's use an underscore or a dash as the first character in the
+    // parameter. Underscores are a problem because Dart does not allow named
+    // parameters to start with an underscore. Dashes are a problem because
+    // they get confused as a subtraction operator.
+    if (parameterName.startsWith('_') || parameterName.startsWith('-')) {
+      parameterName = parameterName.replaceRange(0, 1, '\$');
+    }
+
     var name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
