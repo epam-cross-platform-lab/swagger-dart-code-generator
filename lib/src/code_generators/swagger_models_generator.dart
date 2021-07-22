@@ -206,6 +206,14 @@ abstract class SwaggerModelsGenerator {
   }
 
   static String getValidatedClassName(String className) {
+    if (basicTypes.contains(className)) {
+      return className;
+    }
+
+    if (exceptionWords.contains(className)) {
+      return 'Object';
+    }
+
     if (className.isEmpty) {
       return className;
     }
@@ -217,7 +225,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     final result = className.pascalCase
-        .split(RegExp('-|}|{'))
+        .split(RegExp('-|\\+|}|{|\\.'))
         .map((String str) => str.capitalize)
         .join();
 
@@ -493,6 +501,8 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
+    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
@@ -581,13 +591,13 @@ abstract class SwaggerModelsGenerator {
     String jsonKeyContent;
     if (unknownEnumValue.isEmpty) {
       jsonKeyContent =
-          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'})\n";
+          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <${getValidatedClassName(typeName)}>[]'})\n";
     } else {
       jsonKeyContent =
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '$jsonKeyContent  final List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$jsonKeyContent  final List<${getValidatedClassName(typeName)}>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateGeneralPropertyContent(
