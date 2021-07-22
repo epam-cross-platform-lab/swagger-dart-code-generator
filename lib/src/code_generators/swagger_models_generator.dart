@@ -57,7 +57,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     if (map.containsKey('\$ref')) {
-      return '';
+      return 'class $className {}';
     }
 
     return generateModelClassString(
