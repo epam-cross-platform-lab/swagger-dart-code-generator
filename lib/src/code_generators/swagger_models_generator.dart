@@ -266,7 +266,7 @@ abstract class SwaggerModelsGenerator {
             parameter['format'] == 'date') {
           return 'DateTime';
         } else if (parameter['enum'] != null) {
-          return 'enums.${SwaggerModelsGenerator.getValidatedClassName(SwaggerEnumsGeneratorV2().generateEnumName(className, parameterName))}';
+          return 'enums.${SwaggerModelsGenerator.getValidatedClassName(SwaggerEnumsGeneratorV2().generateEnumName(SwaggerModelsGenerator.getValidatedClassName(className), parameterName))}';
         }
         return 'String';
       case 'Date':
@@ -358,8 +358,13 @@ abstract class SwaggerModelsGenerator {
       List<String> allEnumNames,
       List<String> allEnumListNames,
       GeneratorOptions options) {
-    var typeName =
-        getValidatedClassName(propertyEntryMap['originalRef'].toString());
+    var typeName = '';
+    final originalRef = propertyEntryMap['originalRef'];
+
+    if (originalRef != null) {
+      typeName =
+          getValidatedClassName(propertyEntryMap['originalRef'].toString());
+    }
 
     if (typeName.isEmpty) {
       typeName = 'dynamic';
