@@ -209,6 +209,14 @@ abstract class SwaggerModelsGenerator {
   }
 
   static String getValidatedClassName(String className) {
+    if (basicTypes.contains(className)) {
+      return className;
+    }
+
+    if (exceptionWords.contains(className)) {
+      return 'Object';
+    }
+
     if (className.isEmpty) {
       return className;
     }
@@ -220,7 +228,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     final result = className.pascalCase
-        .split(RegExp('-|}|{'))
+        .split(RegExp('-|\\+|}|{|\\.'))
         .map((String str) => str.capitalize)
         .join();
 
@@ -269,17 +277,20 @@ abstract class SwaggerModelsGenerator {
             parameter['format'] == 'date') {
           return 'DateTime';
         } else if (parameter['enum'] != null) {
-          return 'enums.${SwaggerModelsGenerator.getValidatedClassName(SwaggerEnumsGeneratorV2().generateEnumName(className, parameterName))}';
+          return 'enums.${SwaggerModelsGenerator.getValidatedClassName(SwaggerEnumsGeneratorV2().generateEnumName(SwaggerModelsGenerator.getValidatedClassName(className), parameterName))}';
         }
         return 'String';
+      case 'Date':
+        return 'DateTime';
       case 'number':
         return 'double';
       case 'object':
         return 'Object';
       case 'array':
         final items = parameter['items'] as Map<String, dynamic>? ?? {};
-        return getParameterTypeName(
+        final typeName = getParameterTypeName(
             className, parameterName, items, modelPostfix, null);
+        return 'List<$typeName>';
       default:
         return 'Object';
     }
@@ -358,8 +369,13 @@ abstract class SwaggerModelsGenerator {
       List<String> allEnumNames,
       List<String> allEnumListNames,
       GeneratorOptions options) {
-    var typeName =
-        getValidatedClassName(propertyEntryMap['originalRef'].toString());
+    var typeName = '';
+    final originalRef = propertyEntryMap['originalRef'];
+
+    if (originalRef != null) {
+      typeName =
+          getValidatedClassName(propertyEntryMap['originalRef'].toString());
+    }
 
     if (typeName.isEmpty) {
       typeName = 'dynamic';
@@ -493,6 +509,8 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
+    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
@@ -584,13 +602,13 @@ abstract class SwaggerModelsGenerator {
     String jsonKeyContent;
     if (unknownEnumValue.isEmpty) {
       jsonKeyContent =
-          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'})\n";
+          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <${getValidatedClassName(typeName)}>[]'})\n";
     } else {
       jsonKeyContent =
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '$jsonKeyContent  final List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$jsonKeyContent  final List<${getValidatedClassName(typeName)}>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateGeneralPropertyContent(
