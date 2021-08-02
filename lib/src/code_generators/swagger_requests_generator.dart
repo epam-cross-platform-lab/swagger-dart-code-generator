@@ -364,7 +364,7 @@ class SwaggerRequestsGenerator {
 
     final neededType = parameter.type.isNotEmpty
         ? parameter.type
-        : parameter.schema?.type ?? '';
+        : parameter.schema?.type ?? kObject.pascalCase;
 
     return _mapParameterName(neededType, modelPostfix);
   }
@@ -610,6 +610,13 @@ class SwaggerRequestsGenerator {
     final ref = swaggerResponse.schema?.ref ?? swaggerResponse.ref;
 
     if (ref.isNotEmpty) {
+      final responses = root.components?.responses ?? {};
+      final neededResponse = responses[ref.getRef()];
+
+      if (neededResponse?.ref.isNotEmpty == true) {
+        return kObject.pascalCase;
+      }
+
       return ref.getRef() + modelPostfix;
     }
 

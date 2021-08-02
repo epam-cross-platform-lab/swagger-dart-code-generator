@@ -19,10 +19,10 @@ class SwaggerComponents {
   @JsonKey(name: 'schemas', defaultValue: {})
   Map<String, SwaggerSchema> schemas;
 
-  @JsonKey(name: 'responses', defaultValue: {},  fromJson: mapResponses)
+  @JsonKey(name: 'responses', defaultValue: {}, fromJson: mapResponses)
   Map<String, SwaggerSchema> responses;
 
-  @JsonKey(name: 'requestBodies', defaultValue: {},  fromJson: mapResponses)
+  @JsonKey(name: 'requestBodies', defaultValue: {}, fromJson: mapResponses)
   Map<String, SwaggerSchema> requestBodies;
 
   Map<String, dynamic> toJson() => _$SwaggerComponentsToJson(this);
@@ -34,19 +34,26 @@ class SwaggerComponents {
 Map<String, SwaggerSchema> mapResponses(Map<String, dynamic>? json) {
   var results = <String, SwaggerSchema>{};
 
-  if(json == null)
-  {
+  if (json == null) {
     return results;
   }
 
   json.forEach((key, value) {
     final content =
         (value as Map<String, dynamic>)['content'] as Map<String, dynamic>?;
-    final appJson = content?['application/json'] as Map<String, dynamic>?;
 
-    if (appJson != null && appJson['schema'] != null) {
-      results[key] =
-          SwaggerSchema.fromJson(appJson['schema'] as Map<String, dynamic>);
+    final appJsonKey = content?.keys.firstWhere(
+            (element) => element.startsWith('application/json'),
+            orElse: () => '') ??
+        '';
+
+    if (appJsonKey.isNotEmpty) {
+      final appJson = content?[appJsonKey] as Map<String, dynamic>?;
+
+      if (appJson != null && appJson['schema'] != null) {
+        results[key] =
+            SwaggerSchema.fromJson(appJson['schema'] as Map<String, dynamic>);
+      }
     }
   });
 
