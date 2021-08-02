@@ -220,7 +220,8 @@ $allMethodsContent
         final parameterCommentsForMethod =
             getParameterCommentsForMethod(swaggerRequest.parameters, options);
 
-        final returnTypeName = getReturnTypeName(
+        final returnTypeName =
+            SwaggerModelsGenerator.getValidatedClassName(getReturnTypeName(
           swaggerRequest.responses,
           swaggerPath.path,
           swaggerRequest.type,
@@ -228,7 +229,7 @@ $allMethodsContent
           dynamicResponses,
           basicTypesMap,
           options,
-        );
+        ));
 
         final generatedMethod = getMethodContent(
             summary: swaggerRequest.summary,
@@ -269,7 +270,7 @@ $allMethodsContent
       return 'List<$type>';
     }
 
-    return content.type;
+    return SwaggerModelsGenerator.getValidatedClassName(content.type);
   }
 
   String getParameterCommentsForMethod(
@@ -386,6 +387,10 @@ $allMethodsContent
 
     parameterName = parameterName.replaceAll(',', '');
 
+    if (parameterName.startsWith('_') || parameterName.startsWith('-')) {
+      parameterName = parameterName.replaceRange(0, 1, '\$');
+    }
+
     var name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
@@ -423,7 +428,7 @@ $allMethodsContent
           '\n  @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)';
     }
 
-    if (returnType.isNotEmpty && returnType != 'num') {
+    if (returnType.isNotEmpty && returnType != 'num' && returnType != 'bool') {
       returnType = returnType.pascalCase;
     }
 
@@ -556,7 +561,7 @@ $allMethodsContent
       parameterType = defaultBodyParameter;
     }
 
-    parameterType = validateParameterType(parameterType);
+    parameterType = SwaggerModelsGenerator.getValidatedClassName(parameterType);
 
     return "@${parameter.inParameter.capitalize}() ${parameter.isRequired ? "@required" : ""} $parameterType? ${validateParameterName(parameter.name)}";
   }
