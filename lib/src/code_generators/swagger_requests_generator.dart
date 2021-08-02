@@ -401,7 +401,8 @@ class SwaggerRequestsGenerator {
               ..name = swaggerParameter.name.asParameterName()
               ..named = true
               ..required = swaggerParameter.isRequired &&
-                  _getHeaderDefaultValue(swaggerParameter, options) == null
+                  _getHeaderDefaultValue(swaggerParameter, options) == null &&
+                  swaggerParameter.inParameter != kHeader
               ..type = Reference(
                 _getParameterTypeName(
                   parameter: swaggerParameter,
