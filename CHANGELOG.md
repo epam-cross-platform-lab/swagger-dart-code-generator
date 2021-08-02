@@ -1,3 +1,9 @@
+# 2.0.8+1
+
+* Fixed Issue ([#187](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/187)) It's about request parameters named "client"
+
+* Fixed Issue ([#188](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/188)) It's about isses with enum names generation.
+
 # 2.0.8
 
 * Fix case when enum in model has name with underscores.

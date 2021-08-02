@@ -175,8 +175,9 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
               (property['items'] != null &&
                   property['items']['enum'] != null)) {
             results.add(SwaggerModelsGenerator.getValidatedClassName(
-                SwaggerEnumsGeneratorV3()
-                    .generateEnumName(className, propertyName)));
+                SwaggerEnumsGeneratorV3().generateEnumName(
+                    SwaggerModelsGenerator.getValidatedClassName(className),
+                    propertyName)));
           }
         });
       });
