@@ -12,11 +12,7 @@ targets:
           header: "//Generated code"
       swagger_dart_code_generator:
         options:
-<<<<<<< HEAD
           input_folder: "lib/"
-=======
-          input_folder: "swaggers/"
->>>>>>> origin/master
           output_folder: "lib/swagger_generated_code/"
           use_inheritance: false
           with_base_url: false
