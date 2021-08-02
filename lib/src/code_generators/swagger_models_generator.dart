@@ -490,6 +490,8 @@ abstract class SwaggerModelsGenerator {
     final allEnumsNamesWithoutPrefix =
         allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
 
+    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
     } else if (!basicTypesMap.containsKey(parameterName) &&
@@ -508,8 +510,6 @@ abstract class SwaggerModelsGenerator {
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
-
-    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
 
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
