@@ -386,6 +386,10 @@ $allMethodsContent
 
     parameterName = parameterName.replaceAll(',', '');
 
+    if (parameterName.startsWith('_') || parameterName.startsWith('-')) {
+      parameterName = parameterName.replaceRange(0, 1, '\$');
+    }
+
     var name = <String>[];
     exceptionWords.forEach((String element) {
       if (parameterName == element) {
@@ -423,7 +427,7 @@ $allMethodsContent
           '\n  @FactoryConverter(request: FormUrlEncodedConverter.requestFactory)';
     }
 
-    if (returnType.isNotEmpty && returnType != 'num') {
+    if (returnType.isNotEmpty && returnType != 'num' && returnType != 'bool') {
       returnType = returnType.pascalCase;
     }
 
