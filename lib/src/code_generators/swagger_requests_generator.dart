@@ -436,6 +436,8 @@ class SwaggerRequestsGenerator {
         if (requestBodyRef.isNotEmpty == true) {
           typeName = requestBodyRef.getRef();
         }
+
+        typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
       }
 
       final schema = requestBody.content?.schema;
@@ -508,7 +510,9 @@ class SwaggerRequestsGenerator {
         }
 
         if (ref.isNotEmpty) {
-          return ref.withPostfix(modelPostfix).asList();
+          return SwaggerModelsGenerator.getValidatedClassName(
+                  ref.withPostfix(modelPostfix))
+              .asList();
         }
 
         return '';
@@ -522,7 +526,8 @@ class SwaggerRequestsGenerator {
         return schema.ref.getRef().asEnum();
       }
 
-      return schema.ref.getRef().withPostfix(modelPostfix);
+      return SwaggerModelsGenerator.getValidatedClassName(
+          schema.ref.getRef().withPostfix(modelPostfix));
     }
 
     return '';
@@ -649,7 +654,9 @@ class SwaggerRequestsGenerator {
 
     final schemaRef = content.schema?.ref ?? '';
     if (schemaRef.isNotEmpty) {
-      final type = schemaRef.getRef().withPostfix(modelPostfix);
+      final type =
+          SwaggerModelsGenerator.getValidatedClassName(schemaRef.getRef())
+              .withPostfix(modelPostfix);
       return kBasicTypesMap[type] ?? type;
     }
 
@@ -672,7 +679,11 @@ class SwaggerRequestsGenerator {
 
     final schemaItemsRef = content.schema?.items?.ref ?? '';
     if (schemaItemsRef.isNotEmpty) {
-      return schemaItemsRef.getRef().withPostfix(modelPostfix).asList();
+      final result =
+          SwaggerModelsGenerator.getValidatedClassName(schemaItemsRef.getRef())
+              .withPostfix(modelPostfix)
+              .asList();
+      return result;
     }
 
     final contentSchemaType = content.schema?.type ?? '';
@@ -719,8 +730,13 @@ class SwaggerRequestsGenerator {
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
         _getReturnTypeFromSchema(neededResponse, modelPostfix, swaggerRoot) ??
         _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
-        _getReturnTypeFromContent(neededResponse, modelPostfix);
+        _getReturnTypeFromContent(neededResponse, modelPostfix) ??
+        '';
 
-    return type ?? '';
+    if (type.isNotEmpty) {
+      return type;
+    }
+
+    return '';
   }
 }

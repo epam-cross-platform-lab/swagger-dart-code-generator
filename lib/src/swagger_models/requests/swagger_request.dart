@@ -69,7 +69,7 @@ class RequestBody {
 }
 
 RequestContent? _contentFromJson(Map<String, dynamic>? map) {
-  if (map == null) {
+  if (map == null || map.isEmpty) {
     return null;
   }
 
