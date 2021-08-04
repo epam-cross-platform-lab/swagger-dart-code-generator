@@ -9,7 +9,9 @@ import 'package:dart_style/dart_style.dart';
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
     SwaggerDartCodeGenerator(options);
 
-const String _inputFileExtension = '.swagger';
+const _inputFileExtensions = ['.swagger', '.json'];
+
+
 const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
@@ -18,7 +20,7 @@ const String _mappingFileName = 'client_mapping.dart';
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final filesList = Directory(options.inputFolder).listSync().where(
-      (FileSystemEntity file) => file.path.endsWith(_inputFileExtension));
+      (FileSystemEntity file) => _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
   final result = <String, List<String>>{};
 

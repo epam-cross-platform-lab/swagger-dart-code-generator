@@ -10,7 +10,7 @@ class SwaggerAdditionsGenerator {
   ///Generates index.dart for all generated services
   String generateIndexes(Map<String, List<String>> buildExtensions) {
     final importsList = buildExtensions.keys.map((String key) {
-      final fileName = key.split('/').last.replaceAll('-', '_');
+      final fileName = key.split('/').last.replaceAll('-', '_').replaceAll('.json', '.swagger');
       final className = getClassNameFromFileName(key.split('/').last);
 
       return 'export \'$fileName.dart\' show $className;';
@@ -34,7 +34,7 @@ class SwaggerAdditionsGenerator {
       final className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
-      final fileName = key.split('/').last;
+      final fileName = key.split('/').last.replaceAll('.json', '.swagger');
       maps.writeln('  ...$className,');
       imports.add("import '${fileName.replaceAll('-', '_')}.dart';");
     });
