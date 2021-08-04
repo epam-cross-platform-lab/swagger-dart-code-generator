@@ -4,7 +4,6 @@ targets:
       - lib/**
       - swaggers/**
       - swaggers2/**
-      - rw_swaggers/**
       - swagger_examples/**
       - $package$
     builders:
@@ -13,7 +12,7 @@ targets:
           header: "//Generated code"
       swagger_dart_code_generator:
         options:
-          input_folder: "rw_swaggers/"
+          input_folder: "swaggers/"
           output_folder: "lib/swagger_generated_code/"
           use_inheritance: false
           with_base_url: false
