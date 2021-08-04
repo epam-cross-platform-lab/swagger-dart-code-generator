@@ -228,10 +228,14 @@ abstract class SwaggerModelsGenerator {
       className = className.substring(6);
     }
 
-    final result = className.pascalCase
-        .split(RegExp(r'\W+|\_'))
-        .map((String str) => str.capitalize)
-        .join();
+    final words = className.split('\$');
+
+    final result = words
+        .map((e) => e.pascalCase
+            .split(RegExp(r'\W+|\_'))
+            .map((String str) => str.capitalize)
+            .join())
+        .join('\$');
 
     if (keyClasses.contains(result)) {
       return '$result\$';
@@ -312,7 +316,7 @@ abstract class SwaggerModelsGenerator {
         exceptionWords.contains(jsonKey)) {
       jsonKey = '\$' + jsonKey;
     }
-    
+
     return jsonKey;
   }
 
