@@ -1,3 +1,7 @@
+# 2.1.0-prerelease.3
+
+* **BREAKING**: includeIfNull now just bool? value. Needs update of build.yaml if this feature used
+
 # 2.1.0-prerelease.2
 
 * Fixed Issue ([#201](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/201))
