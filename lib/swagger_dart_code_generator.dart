@@ -11,7 +11,6 @@ SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
 
 const _inputFileExtensions = ['.swagger', '.json'];
 
-
 const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
@@ -20,7 +19,8 @@ const String _mappingFileName = 'client_mapping.dart';
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final filesList = Directory(options.inputFolder).listSync().where(
-      (FileSystemEntity file) => _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+      (FileSystemEntity file) =>
+          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
   final result = <String, List<String>>{};
 

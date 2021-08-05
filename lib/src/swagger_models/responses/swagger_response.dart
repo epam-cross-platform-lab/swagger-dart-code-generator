@@ -38,10 +38,8 @@ class SwaggerResponse {
       _$SwaggerResponseFromJson(json);
 }
 
-Content? _mapContent(Map<String, dynamic>? json)
-{
-  if(json == null || json.isEmpty)
-  {
+Content? _mapContent(Map<String, dynamic>? json) {
+  if (json == null || json.isEmpty) {
     return null;
   }
 

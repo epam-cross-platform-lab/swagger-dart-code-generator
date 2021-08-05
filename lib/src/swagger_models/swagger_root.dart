@@ -65,8 +65,10 @@ Map<String, SwaggerPath> _mapPaths(Map<String, dynamic> paths) {
     return MapEntry(
       path,
       SwaggerPath(
-        parameters: parameters?.map((parameter) => SwaggerRequestParameter.fromJson(
-                    parameter as Map<String, dynamic>)).toList() ??
+        parameters: parameters
+                ?.map((parameter) => SwaggerRequestParameter.fromJson(
+                    parameter as Map<String, dynamic>))
+                .toList() ??
             [],
         requests: value.map(
           (key, request) => MapEntry(

@@ -23,7 +23,6 @@ const kString = 'string';
 
 const kResponses = '/responses/';
 
-
 //Request types
 const kPath = 'path';
 const kOptionalBody = 'optionalBody';
@@ -53,7 +52,6 @@ const kCookie = 'cookie';
 const kArray = 'array';
 const kEnum = 'enum';
 const kBody = 'body';
-
 
 const kServiceHeader = '''
 // **************************************************************************
