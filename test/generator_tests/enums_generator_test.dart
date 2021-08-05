@@ -1,5 +1,5 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
+//import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
@@ -7,7 +7,7 @@ import '../code_examples.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3();
-  final generatorv2 = SwaggerEnumsGeneratorV2();
+  //final generatorv2 = SwaggerEnumsGeneratorV2();
 
   group('Generate', () {
     // test('Should generate enum from models', () {
