@@ -96,7 +96,7 @@ class SwaggerDartCodeGenerator implements Builder {
         options);
 
     final customDecoder = codeGenerator.generateCustomJsonConverter(
-        contents, getFileNameWithoutExtension(fileNameWithExtension));
+        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
 
     final dateToJson = codeGenerator.generateDateToJson(contents);
 

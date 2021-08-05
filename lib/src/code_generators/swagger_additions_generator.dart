@@ -10,7 +10,11 @@ class SwaggerAdditionsGenerator {
   ///Generates index.dart for all generated services
   String generateIndexes(Map<String, List<String>> buildExtensions) {
     final importsList = buildExtensions.keys.map((String key) {
-      final fileName = key.split('/').last.replaceAll('-', '_').replaceAll('.json', '.swagger');
+      final fileName = key
+          .split('/')
+          .last
+          .replaceAll('-', '_')
+          .replaceAll('.json', '.swagger');
       final className = getClassNameFromFileName(key.split('/').last);
 
       return 'export \'$fileName.dart\' show $className;';
@@ -124,7 +128,11 @@ String? _dateToJson(DateTime? date) {
   }
 
   ///Copy-pasted converter from internet
-  String generateCustomJsonConverter(String fileName) {
+  String generateCustomJsonConverter(
+      String fileName, GeneratorOptions options) {
+    if (!options.withConverter) {
+      return '';
+    }
     return '''
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 
