@@ -232,7 +232,7 @@ void main() {
           [],
           [],
           GeneratorOptions(
-              includeIfNull: IncludeIfNull(enabled: true, value: false),
+              includeIfNull: false,
               inputFolder: '',
               outputFolder: ''));
 
@@ -248,7 +248,7 @@ void main() {
           [],
           [],
           GeneratorOptions(
-              includeIfNull: IncludeIfNull(enabled: false, value: false),
+              includeIfNull: null,
               inputFolder: '',
               outputFolder: ''));
 

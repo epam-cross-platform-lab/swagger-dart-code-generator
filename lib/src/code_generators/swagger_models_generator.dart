@@ -362,11 +362,11 @@ abstract class SwaggerModelsGenerator {
   }
 
   String generateIncludeIfNullString(GeneratorOptions options) {
-    if (options.includeIfNull == null || !options.includeIfNull!.enabled) {
+    if (options.includeIfNull == null) {
       return '';
     }
 
-    return ', includeIfNull: ${options.includeIfNull!.value}';
+    return ', includeIfNull: ${options.includeIfNull}';
   }
 
   String generatePropertyContentByDefault(
