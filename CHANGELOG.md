@@ -1,3 +1,14 @@
+# 2.1.0-prerelease.2
+
+* Fixed Issue ([#201](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/201))
+
+* Fixed Issue ([#202](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/202))
+
+* Added support .json files instead .swagger (.swagger are supported too)
+
+* Fixed errors when models has symbols, dots, numbers...
+
+
 # 2.1.0-prerelease.1
 
 * Fully refactored requests generator
