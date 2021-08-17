@@ -2,45 +2,24 @@ targets:
   $default:
     sources:
       - lib/**
-      - swaggers/**
-      - swaggers2/**
-      - swagger_examples/**
       - $package$
     builders:
-      chopper_generator:
-        options:
-          header: "//Generated code"
       swagger_dart_code_generator:
         options:
-          input_folder: "swaggers/"
-          output_folder: "lib/swagger_generated_code/"
-          use_inheritance: false
-          with_base_url: false
+          with_base_url: true
           with_converter: true
-          use_path_for_request_names: true
+          use_required_attribute_for_headers: true
+          ignore_headers: true
           use_default_null_for_lists: false
+          use_inheritance: false
           build_only_models: false
-          enums_case_sensitive: false
-          ignore_headers: false
-          use_required_attribute_for_headers: false
+          use_path_for_request_names: false
           include_if_null:
             enabled: true
             value: false
-          response_override_value_map:
-            - url: "/v2/commons/availableColours"
-              method: get
-              overridden_value: "List<Map>"
-            - url: "/v2/commons/availableGenres"
-              method: get
-              overridden_value: "List<GenreV2Result>"
-            - url: "/v2/channels"
-              method: get
-              overridden_value: "List<Channel>"
-          default_header_values_map:
-            - header_name: "X-Entitlements-Token"
-              default_value: "X-Entitlements-Token"
-            - header_name: "X-Cus"
-              default_value: "X-Cus"
+          input_folder: "lib/"
+          output_folder: "lib/services/generated_rest_service/"
+          enums_case_sensitive: true
           default_values_map:
-            - type_name: String
-              default_value: ""
+            - type_name: int
+              default_value: "0"
