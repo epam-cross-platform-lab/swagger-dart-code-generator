@@ -115,9 +115,10 @@ targets:
             - "store/*"
           exclude_paths:
             - "exception"
-          include_if_null:
+          include_if_null: NOTE! FOR 2.1.0 and higher use just include_if_null: true/false
             enabled: true
             value: false
+          
 ```
 
 ### **Default Value Map for model generation**
