@@ -556,7 +556,7 @@ class SwaggerRequestsGenerator {
     if (options.usePathForRequestNames || swaggerRequest.operationId.isEmpty) {
       return SwaggerModelsGenerator.generateRequestName(path, requestType);
     } else {
-      return swaggerRequest.operationId;
+      return SwaggerModelsGenerator.getValidatedClassName(swaggerRequest.operationId).camelCase;
     }
   }
 

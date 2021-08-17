@@ -146,7 +146,16 @@ abstract class SwaggerModelsGenerator {
             neededResponse['schema']['properties'] != null) {
           final pathText = path.split('/').map((e) => e.pascalCase).join();
           final requestText = request.pascalCase;
-          results['$pathText$requestText\$Response'] = neededResponse['schema'];
+          final operationId = requestValue['operationId'] as String? ?? '';
+
+          if (options.usePathForRequestNames || operationId.isEmpty) {
+            results['$pathText$requestText\$Response'] =
+                neededResponse['schema'];
+          } else {
+            results['${SwaggerModelsGenerator.getValidatedClassName(operationId)}\$Response'] =
+                neededResponse['schema'];
+          }
+          //results['$pathText$requestText\$Response'] = neededResponse['schema'];
         }
       });
     });
