@@ -1,5 +1,5 @@
 import 'package:recase/recase.dart';
-import 'package:swagger_dart_code_generator/src/exception_words.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 
 extension CapitalizeExtension on String {
   String get capitalize {
@@ -35,25 +35,7 @@ extension TypeExtension on String {
   String asFutureResponse() => 'Future<chopper.Response<$this>>';
 
   String asParameterName() {
-    if (isEmpty) {
-      return this;
-    }
-
-    final parameterName = replaceAll(',', '');
-
-    var name = <String>[];
-    exceptionWords.forEach((String element) {
-      if (parameterName == element) {
-        final result = '\$' + parameterName;
-        name.add(result);
-      }
-    });
-    if (name.isEmpty) {
-      name = parameterName.split('-').map((str) => str.capitalize).toList();
-      name[0] = name[0].lower;
-    }
-
-    return name.join();
+    return SwaggerModelsGenerator.getValidatedClassName(this).camelCase;
   }
 
   String asParameterType() {

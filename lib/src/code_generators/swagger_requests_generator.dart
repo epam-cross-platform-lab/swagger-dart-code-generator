@@ -289,7 +289,7 @@ class SwaggerRequestsGenerator {
         .join();
 
     final result =
-        '$pathString${requestType.pascalCase}${parameterName.pascalCase}';
+        '$pathString${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
 
     return result.asEnum();
   }
@@ -473,7 +473,7 @@ class SwaggerRequestsGenerator {
       }
     }
 
-    return result;
+    return result.distinctParameters();
   }
 
   bool _isEnumRef(String ref, SwaggerRoot root) {

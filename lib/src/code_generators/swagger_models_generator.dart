@@ -782,7 +782,7 @@ abstract class SwaggerModelsGenerator {
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(schemas);
 
-      propertyName = SwaggerModelsGenerator.generateFieldName(propertyName);
+      propertyName = propertyName.asParameterName();
 
       propertyName = getParameterName(propertyName, propertyNames);
 
@@ -949,7 +949,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     entityMap.forEach((key, value) {
       var fieldName = SwaggerModelsGenerator.generateFieldName(key);
 
-      fieldName = getParameterName(fieldName, propertyNames);
+      fieldName = getParameterName(fieldName.asParameterName(), propertyNames);
 
       propertyNames.add(fieldName);
 

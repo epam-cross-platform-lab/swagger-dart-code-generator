@@ -12,7 +12,7 @@ targets:
           header: "//Generated code"
       swagger_dart_code_generator:
         options:
-          input_folder: "swaggers/"
+          input_folder: "lib/"
           output_folder: "lib/swagger_generated_code/"
           use_inheritance: false
           with_base_url: false
@@ -23,9 +23,7 @@ targets:
           enums_case_sensitive: false
           ignore_headers: false
           use_required_attribute_for_headers: false
-          include_if_null:
-            enabled: true
-            value: false
+          include_if_null: false
           response_override_value_map:
             - url: "/v2/commons/availableColours"
               method: get
