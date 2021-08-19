@@ -55,7 +55,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
         final schema = firstContent == null ? null : firstContent['schema'];
 
-        if (schema != null) {
+        if (schema != null && schema['\$ref'] == null) {
           result.addAll({key: schema});
         }
       }

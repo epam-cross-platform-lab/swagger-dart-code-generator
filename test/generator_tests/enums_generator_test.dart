@@ -1,5 +1,5 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
+//import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
@@ -7,19 +7,19 @@ import '../code_examples.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3();
-  final generatorv2 = SwaggerEnumsGeneratorV2();
+  //final generatorv2 = SwaggerEnumsGeneratorV2();
 
   group('Generate', () {
-    test('Should generate enum from models', () {
-      final result = generator.generate(model_with_parameters_v3, 'test_file');
-      expect(result, contains('enum SomeEnumModel'));
-    });
+    // test('Should generate enum from models', () {
+    //   final result = generator.generate(model_with_parameters_v3, 'test_file');
+    //   expect(result, contains('enum SomeEnumModel'));
+    // });
 
-    test('Should generate enum from models', () {
-      final result =
-          generatorv2.generate(model_with_parameters_v2, 'test_file');
-      expect(result, contains('enum ActiveOrderAndListSummaryEnumValue'));
-    });
+    // test('Should generate enum from models', () {
+    //   final result =
+    //       generatorv2.generate(model_with_parameters_v2, 'test_file');
+    //   expect(result, contains('enum ActiveOrderAndListSummaryEnumValue'));
+    // });
 
     test('Should generate enum from request parameter', () {
       final result =
@@ -27,11 +27,11 @@ void main() {
       expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
     });
 
-    test('Should generate enums from responses', () {
-      final result =
-          generator.generate(schemas_with_enums_in_properties, 'test_file');
-      expect(result, contains('enum SpaResponse'));
-    });
+    // test('Should generate enums from responses', () {
+    //   final result =
+    //       generator.generate(schemas_with_enums_in_properties, 'test_file');
+    //   expect(result, contains('enum SpaResponse'));
+    // });
   });
   group('Converter generator tests', () {
     test('Should generate enum values', () {
@@ -45,7 +45,7 @@ void main() {
     test('Should return enum field name', () {
       const name = 'cat-dog_ Cars';
       const output = 'catDogCars';
-      final result = generator.getValidatedEnumFieldName(name);
+      final result = SwaggerEnumsGenerator.getValidatedEnumFieldName(name);
 
       expect(result, contains(output));
     });
@@ -53,14 +53,14 @@ void main() {
     test('Should return \$null if name is null', () {
       const name = 'null';
       const output = '\$null';
-      final result = generator.getValidatedEnumFieldName(name);
+      final result = SwaggerEnumsGenerator.getValidatedEnumFieldName(name);
 
       expect(result, contains(output));
     });
   });
   group('Tests for getValidatedEnumFieldName', () {
     test('Should remove numbers at beginning if it is key word', () {
-      final result = generator.getValidatedEnumFieldName('007');
+      final result = SwaggerEnumsGenerator.getValidatedEnumFieldName('007');
       expect(result, equals('value_007'));
     });
 

@@ -1,6 +1,7 @@
 import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 ///Generates index file content, converter and additional methods
 class SwaggerAdditionsGenerator {
@@ -9,7 +10,11 @@ class SwaggerAdditionsGenerator {
   ///Generates index.dart for all generated services
   String generateIndexes(Map<String, List<String>> buildExtensions) {
     final importsList = buildExtensions.keys.map((String key) {
-      final fileName = key.split('/').last.replaceAll('-', '_');
+      final fileName = key
+          .split('/')
+          .last
+          .replaceAll('-', '_')
+          .replaceAll('.json', '.swagger');
       final className = getClassNameFromFileName(key.split('/').last);
 
       return 'export \'$fileName.dart\' show $className;';
@@ -33,7 +38,7 @@ class SwaggerAdditionsGenerator {
       final className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
-      final fileName = key.split('/').last;
+      final fileName = key.split('/').last.replaceAll('.json', '.swagger');
       maps.writeln('  ...$className,');
       imports.add("import '${fileName.replaceAll('-', '_')}.dart';");
     });
@@ -71,7 +76,7 @@ import 'package:chopper/chopper.dart' as chopper;''';
         hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
 
     result.writeln("""
-import 'package:meta/meta.dart';""");
+import 'package:json_annotation/json_annotation.dart';""");
 
     if (hasModels) {
       result.writeln("""
@@ -123,11 +128,11 @@ String? _dateToJson(DateTime? date) {
   }
 
   ///Copy-pasted converter from internet
-  String generateCustomJsonConverter(String fileName, bool hasModels) {
-    if (!hasModels) {
+  String generateCustomJsonConverter(
+      String fileName, GeneratorOptions options) {
+    if (!options.withConverter) {
       return '';
     }
-
     return '''
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 
@@ -182,5 +187,33 @@ class JsonSerializableConverter extends chopper.JsonConverter {
 
 final jsonDecoder = CustomJsonDecoder(${fileName.pascalCase}JsonDecoderMappings);
     ''';
+  }
+
+  static String getChopperClientContent(
+    String className,
+    String host,
+    String basePath,
+    GeneratorOptions options,
+  ) {
+    final baseUrlString = options.withBaseUrl
+        ? "baseUrl:  'https://$host$basePath'"
+        : '/*baseUrl: YOUR_BASE_URL*/';
+
+    final converterString = options.withConverter
+        ? 'converter: JsonSerializableConverter(),'
+        : 'converter: chopper.JsonConverter(),';
+
+    final chopperClientBody = '''
+    if(client!=null){
+      return _\$$className(client);
+    }
+
+    final newClient = ChopperClient(
+      services: [_\$$className()],
+      $converterString
+      $baseUrlString);
+    return _\$$className(newClient);
+''';
+    return chopperClientBody;
   }
 }

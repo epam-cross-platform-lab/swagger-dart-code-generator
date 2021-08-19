@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
+
+import 'constants.dart';
 
 abstract class SwaggerModelsGenerator {
   static const List<String> keyClasses = ['Response', 'Request'];
@@ -54,7 +57,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     if (map.containsKey('\$ref')) {
-      return '';
+      return 'class $className {}';
     }
 
     return generateModelClassString(
@@ -143,7 +146,16 @@ abstract class SwaggerModelsGenerator {
             neededResponse['schema']['properties'] != null) {
           final pathText = path.split('/').map((e) => e.pascalCase).join();
           final requestText = request.pascalCase;
-          results['$pathText$requestText\$Response'] = neededResponse['schema'];
+          final operationId = requestValue['operationId'] as String? ?? '';
+
+          if (options.usePathForRequestNames || operationId.isEmpty) {
+            results['$pathText$requestText\$Response'] =
+                neededResponse['schema'];
+          } else {
+            results['${SwaggerModelsGenerator.getValidatedClassName(operationId)}\$Response'] =
+                neededResponse['schema'];
+          }
+          //results['$pathText$requestText\$Response'] = neededResponse['schema'];
         }
       });
     });
@@ -224,10 +236,14 @@ abstract class SwaggerModelsGenerator {
       className = className.substring(6);
     }
 
-    final result = className.pascalCase
-        .split(RegExp('-|\\+|}|{|\\.'))
-        .map((String str) => str.capitalize)
-        .join();
+    final words = className.split('\$');
+
+    final result = words
+        .map((e) => e.pascalCase
+            .split(RegExp(r'\W+|\_'))
+            .map((String str) => str.capitalize)
+            .join())
+        .join('\$');
 
     if (keyClasses.contains(result)) {
       return '$result\$';
@@ -295,6 +311,7 @@ abstract class SwaggerModelsGenerator {
 
   static String generateFieldName(String jsonKey) {
     final forbiddenCharacters = <String>['#'];
+
     jsonKey = jsonKey.camelCase;
 
     forbiddenCharacters.forEach((String element) {
@@ -307,6 +324,7 @@ abstract class SwaggerModelsGenerator {
         exceptionWords.contains(jsonKey)) {
       jsonKey = '\$' + jsonKey;
     }
+
     return jsonKey;
   }
 
@@ -353,11 +371,11 @@ abstract class SwaggerModelsGenerator {
   }
 
   String generateIncludeIfNullString(GeneratorOptions options) {
-    if (options.includeIfNull == null || !options.includeIfNull!.enabled) {
+    if (options.includeIfNull == null) {
       return '';
     }
 
-    return ', includeIfNull: ${options.includeIfNull!.value}';
+    return ', includeIfNull: ${options.includeIfNull}';
   }
 
   String generatePropertyContentByDefault(
@@ -487,6 +505,8 @@ abstract class SwaggerModelsGenerator {
     final allEnumsNamesWithoutPrefix =
         allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
 
+    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
     } else if (!basicTypesMap.containsKey(parameterName) &&
@@ -506,9 +526,7 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
-
-    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName? $propertyName;';
   }
 
   String generateEnumPropertyContent(
@@ -571,6 +589,19 @@ abstract class SwaggerModelsGenerator {
         } else if (typeName != 'dynamic') {
           typeName = typeName.pascalCase;
         }
+      } else if (!allEnumNames.contains('enums.$typeName') &&
+          !basicTypes.contains(typeName.toLowerCase())) {
+        typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
+      }
+
+      if (typeName.isNotEmpty) {
+        typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+      }
+
+      if (typeName.isEmpty) {
+        if (items['type'] == 'array' || items['items'] != null) {
+          typeName = 'List<Object>';
+        }
       }
 
       if (allEnumNames.contains('enums.$typeName')) {
@@ -593,16 +624,18 @@ abstract class SwaggerModelsGenerator {
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
+    //typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+
     String jsonKeyContent;
     if (unknownEnumValue.isEmpty) {
       jsonKeyContent =
-          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <${getValidatedClassName(typeName)}>[]'})\n";
+          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'})\n";
     } else {
       jsonKeyContent =
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '$jsonKeyContent  final List<${getValidatedClassName(typeName)}>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$jsonKeyContent  final List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateGeneralPropertyContent(
@@ -710,6 +743,15 @@ abstract class SwaggerModelsGenerator {
     }
   }
 
+  String getParameterName(String name, List<String> names) {
+    if (names.contains(name)) {
+      final newName = '\$$name';
+      return getParameterName(newName, names);
+    }
+
+    return name;
+  }
+
   String generatePropertiesContent(
       Map<String, dynamic> propertiesMap,
       Map<String, dynamic> schemas,
@@ -724,6 +766,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     final results = <String>[];
+    final propertyNames = <String>[];
 
     for (var i = 0; i < propertiesMap.keys.length; i++) {
       var propertyName = propertiesMap.keys.elementAt(i);
@@ -738,6 +781,12 @@ abstract class SwaggerModelsGenerator {
       });
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(schemas);
+
+      propertyName = propertyName.asParameterName();
+
+      propertyName = getParameterName(propertyName, propertyNames);
+
+      propertyNames.add(propertyName);
 
       if (propertyEntryMap.containsKey('type')) {
         results.add(generatePropertyContentByType(
@@ -895,31 +944,14 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     }
 
     var results = '';
+    final propertyNames = <String>[];
 
     entityMap.forEach((key, value) {
-      final fieldName = SwaggerModelsGenerator.generateFieldName(key);
+      var fieldName = SwaggerModelsGenerator.generateFieldName(key);
 
-      //Recheck it
-      // final hasDefaultValue = value['default'] != null ||
-      //     defaultValues.any((element) =>
-      //         element.typeName ==
-      //         _mapBasicTypeToDartType(value['type'].toString(), ''));
+      fieldName = getParameterName(fieldName.asParameterName(), propertyNames);
 
-      // final isList = value['type'] == 'array' ||
-      //     allEnumListNames.contains('enums.${key.pascalCase}');
-
-      // final type = value['\$ref']?.toString().split('/').last.pascalCase ?? key;
-
-      // final isEnum = allEnumNames.contains('enums.${type.pascalCase}') ||
-      //     allEnumNames.contains('enums.${className + type.pascalCase}');
-
-      // if ((isList && !options.useDefaultNullForLists) ||
-      //     hasDefaultValue ||
-      //     isEnum) {
-      //   results += '\t\trequired this.$fieldName,\n';
-      // } else {
-      //   results += '\t\tthis.$fieldName,\n';
-      // }
+      propertyNames.add(fieldName);
 
       results += '\t\tthis.$fieldName,\n';
     });

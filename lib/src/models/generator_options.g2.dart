@@ -39,10 +39,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     useRequiredAttributeForHeaders:
         json['use_required_attribute_for_headers'] as bool? ?? true,
     useInheritance: json['use_inheritance'] as bool? ?? true,
-    includeIfNull: json['include_if_null'] == null
-        ? null
-        : IncludeIfNull.fromJson(
-            Map<String, dynamic>.from(json['include_if_null'] as Map)),
+    includeIfNull: json['include_if_null'] as bool?,
     modelPostfix: json['model_postfix'] as String? ?? '',
     includePaths: (json['include_paths'] as List<dynamic>?)
             ?.map((e) => e as String)
@@ -89,19 +86,6 @@ Map<String, dynamic> _$DefaultValueMapToJson(DefaultValueMap instance) =>
     <String, dynamic>{
       'type_name': instance.typeName,
       'default_value': instance.defaultValue,
-    };
-
-IncludeIfNull _$IncludeIfNullFromJson(Map<String, dynamic> json) {
-  return IncludeIfNull(
-    enabled: json['enabled'] as bool? ?? false,
-    value: json['value'] as bool? ?? false,
-  );
-}
-
-Map<String, dynamic> _$IncludeIfNullToJson(IncludeIfNull instance) =>
-    <String, dynamic>{
-      'enabled': instance.enabled,
-      'value': instance.value,
     };
 
 ResponseOverrideValueMap _$ResponseOverrideValueMapFromJson(

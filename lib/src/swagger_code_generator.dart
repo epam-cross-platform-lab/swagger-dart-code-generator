@@ -7,10 +7,8 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_g
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_requests_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_requests_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class SwaggerCodeGenerator {
@@ -24,12 +22,6 @@ class SwaggerCodeGenerator {
       <int, SwaggerModelsGenerator>{
     2: SwaggerModelsGeneratorV2(),
     3: SwaggerModelsGeneratorV3()
-  };
-
-  final Map<int, SwaggerRequestsGenerator> _requestsMap =
-      <int, SwaggerRequestsGenerator>{
-    2: SwaggerRequestsGeneratorV2(),
-    3: SwaggerRequestsGeneratorV3()
   };
 
   int _getApiVersion(String dartCode) {
@@ -78,13 +70,17 @@ class SwaggerCodeGenerator {
 
   String generateRequests(String dartCode, String className, String fileName,
           GeneratorOptions options) =>
-      _getSwaggerRequestsGenerator(dartCode)
-          .generate(dartCode, className, fileName, options);
+      _getSwaggerRequestsGenerator(dartCode).generate(
+        code: dartCode,
+        className: className,
+        fileName: fileName,
+        options: options,
+      );
 
   String generateCustomJsonConverter(
-          String dartCode, String fileName, bool hasModels) =>
+          String dartCode, String fileName, GeneratorOptions options) =>
       _getSwaggerAdditionsGenerator(dartCode)
-          .generateCustomJsonConverter(fileName, hasModels);
+          .generateCustomJsonConverter(fileName, options);
 
   String generateDateToJson(String dartCode) =>
       _getSwaggerAdditionsGenerator(dartCode).generateDateToJson();
@@ -102,5 +98,5 @@ class SwaggerCodeGenerator {
       _modelsMap[_getApiVersion(dartCode)]!;
 
   SwaggerRequestsGenerator _getSwaggerRequestsGenerator(String dartCode) =>
-      _requestsMap[_getApiVersion(dartCode)]!;
+      SwaggerRequestsGenerator();
 }

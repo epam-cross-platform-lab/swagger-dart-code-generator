@@ -1,4 +1,5 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -49,7 +50,13 @@ void main() {
       const fileName = 'example_swagger';
       const expectedResult =
           'CustomJsonDecoder(ExampleSwaggerJsonDecoderMappings)';
-      final result = generator.generateCustomJsonConverter(fileName, true);
+      final result = generator.generateCustomJsonConverter(
+        fileName,
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+        ),
+      );
 
       expect(result, contains(expectedResult));
     });

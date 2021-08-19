@@ -1,25 +1,61 @@
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 
+part 'swagger_components.g2.dart';
+
+@JsonSerializable()
 class SwaggerComponents {
-  SwaggerComponents({this.parameters = const []});
+  SwaggerComponents({
+    required this.parameters,
+    required this.schemas,
+    required this.responses,
+    required this.requestBodies,
+  });
 
-  List<SwaggerRequestParameter> parameters;
+  @JsonKey(name: 'parameters', defaultValue: {})
+  Map<String, SwaggerRequestParameter> parameters;
 
-  SwaggerComponents.fromJson(Map<String, dynamic> json)
-      : parameters = json['parameters'] == null
-            ? []
-            : mapParameters(json['parameters'] as Map<String, dynamic>);
+  @JsonKey(name: 'schemas', defaultValue: {})
+  Map<String, SwaggerSchema> schemas;
 
-  static List<SwaggerRequestParameter> mapParameters(
-      Map<String, dynamic> parameters) {
-    final parametersList = parameters.keys.map((e) {
-      final parameter = SwaggerRequestParameter.fromJson(
-          parameters[e] as Map<String, dynamic>);
-      parameter.key = e;
+  @JsonKey(name: 'responses', defaultValue: {}, fromJson: mapResponses)
+  Map<String, SwaggerSchema> responses;
 
-      return parameter;
-    }).toList();
+  @JsonKey(name: 'requestBodies', defaultValue: {}, fromJson: mapResponses)
+  Map<String, SwaggerSchema> requestBodies;
 
-    return parametersList;
+  Map<String, dynamic> toJson() => _$SwaggerComponentsToJson(this);
+
+  factory SwaggerComponents.fromJson(Map<String, dynamic> json) =>
+      _$SwaggerComponentsFromJson(json);
+}
+
+Map<String, SwaggerSchema> mapResponses(Map<String, dynamic>? json) {
+  var results = <String, SwaggerSchema>{};
+
+  if (json == null) {
+    return results;
   }
+
+  json.forEach((key, value) {
+    final content =
+        (value as Map<String, dynamic>)['content'] as Map<String, dynamic>?;
+
+    final appJsonKey = content?.keys.firstWhere(
+            (element) => element.startsWith('application/json'),
+            orElse: () => '') ??
+        '';
+
+    if (appJsonKey.isNotEmpty) {
+      final appJson = content?[appJsonKey] as Map<String, dynamic>?;
+
+      if (appJson != null && appJson['schema'] != null) {
+        results[key] =
+            SwaggerSchema.fromJson(appJson['schema'] as Map<String, dynamic>);
+      }
+    }
+  });
+
+  return results;
 }

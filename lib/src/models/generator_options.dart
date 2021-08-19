@@ -52,7 +52,7 @@ class GeneratorOptions {
   final bool usePathForRequestNames;
 
   @JsonKey(defaultValue: null)
-  final IncludeIfNull? includeIfNull;
+  final bool? includeIfNull;
 
   @JsonKey(defaultValue: '')
   final String inputFolder;
@@ -104,22 +104,6 @@ class DefaultValueMap {
 
   /// Convert this default value map instance to JSON.
   Map<String, dynamic> toJson() => _$DefaultValueMapToJson(this);
-}
-
-@JsonSerializable(fieldRename: FieldRename.snake)
-class IncludeIfNull {
-  IncludeIfNull({required this.enabled, required this.value});
-
-  @JsonKey(defaultValue: false)
-  final bool enabled;
-
-  @JsonKey(defaultValue: false)
-  final bool value;
-
-  factory IncludeIfNull.fromJson(Map<String, dynamic> json) =>
-      _$IncludeIfNullFromJson(json);
-
-  Map<String, dynamic> toJson() => _$IncludeIfNullToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
