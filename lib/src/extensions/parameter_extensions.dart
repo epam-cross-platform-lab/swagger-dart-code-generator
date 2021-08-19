@@ -30,7 +30,7 @@ extension ParameterListExtension on List<Parameter> {
         }
         allParameterNames.add(newName);
         results.add(element.copyWith(name: newName));
-      }else{
+      } else {
         allParameterNames.add(element.name);
         results.add(element);
       }
