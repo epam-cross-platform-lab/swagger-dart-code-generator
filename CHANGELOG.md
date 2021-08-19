@@ -1,3 +1,9 @@
+# 2.1.0-prerelease.5
+
+* Fixed Issue ([#212](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/212))
+* Fixed border cases with parameters with duplicated names (for ex 'book' and 'book[]')
+* Fixed cases when Parameters contains forbidden characters
+
 # 2.1.0-prerelease.4
 
 * Fixed Issue ([#208](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/208))
