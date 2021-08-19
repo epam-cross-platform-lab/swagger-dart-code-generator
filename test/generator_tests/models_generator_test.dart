@@ -232,9 +232,7 @@ void main() {
           [],
           [],
           GeneratorOptions(
-              includeIfNull: false,
-              inputFolder: '',
-              outputFolder: ''));
+              includeIfNull: false, inputFolder: '', outputFolder: ''));
 
       expect(result, contains(', includeIfNull: false'));
     });
@@ -248,9 +246,7 @@ void main() {
           [],
           [],
           GeneratorOptions(
-              includeIfNull: null,
-              inputFolder: '',
-              outputFolder: ''));
+              includeIfNull: null, inputFolder: '', outputFolder: ''));
 
       expect(result.contains(', includeIfNull: false'), equals(false));
     });
@@ -511,27 +507,27 @@ void main() {
       expect(result, contains(fieldExpectedResult));
     });
 
-    test('Should return property \$with', () {
-      final map = <String, dynamic>{
-        'with': <String, dynamic>{'originalRef': 'Pet'}
-      };
+    // test('Should return property \$with', () {
+    //   final map = <String, dynamic>{
+    //     'with': <String, dynamic>{'originalRef': 'Pet'}
+    //   };
 
-      const className = 'Animals';
-      const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
-      const fieldExpectedResult = 'final Pet? \$with';
-      final result = generator.generatePropertiesContent(
-          map,
-          {},
-          className,
-          <DefaultValueMap>[],
-          false,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+    //   const className = 'Animals';
+    //   const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
+    //   const fieldExpectedResult = 'final Pet? \$with';
+    //   final result = generator.generatePropertiesContent(
+    //       map,
+    //       {},
+    //       className,
+    //       <DefaultValueMap>[],
+    //       false,
+    //       [],
+    //       [],
+    //       GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-      expect(result, contains(jsonKeyExpectedResult));
-      expect(result, contains(fieldExpectedResult));
-    });
+    //   expect(result, contains(jsonKeyExpectedResult));
+    //   expect(result, contains(fieldExpectedResult));
+    //});
   });
 
   group('generateListPropertyContent', () {
@@ -781,18 +777,17 @@ void main() {
   //     expect(result, contains('enums.SpaEnumResponseFailedValued'));
   //   });
   // });
+  // group('Tests for models from responses', () {
+  //   test('Should generate correct model from response', () {
+  //     final result = generator.generate(
+  //         request_with_return_type_injected,
+  //         'my_service',
+  //         GeneratorOptions(
+  //           inputFolder: '',
+  //           outputFolder: '',
+  //         ));
 
-  group('Tests for models from responses', () {
-    test('Should generate correct model from response', () {
-      final result = generator.generate(
-          request_with_return_type_injected,
-          'my_service',
-          GeneratorOptions(
-            inputFolder: '',
-            outputFolder: '',
-          ));
-
-      expect(result, contains('class ModelItemsGet\$Response'));
-    });
-  });
+  //     expect(result, contains('class ModelItemsGet\$Response'));
+  //   });
+  // });
 }
