@@ -2,6 +2,8 @@
 <img src="https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/assets/lib_full_logo.png" height="100" alt="Swagger dart code generator" />
 </p>
 
+Code partially generated with [chopper](https://pub.dev/packages/chopper)
+
 # :mega: **Build dart types from Swagger/OpenAPI schemas**
 
 [![pub package](https://img.shields.io/pub/v/swagger_dart_code_generator.svg)](https://pub.dartlang.org/packages/swagger_dart_code_generator)
@@ -115,9 +117,10 @@ targets:
             - "store/*"
           exclude_paths:
             - "exception"
-          include_if_null:
+          include_if_null: NOTE! FOR 2.1.0 and higher use just include_if_null: true/false
             enabled: true
             value: false
+          
 ```
 
 ### **Default Value Map for model generation**
