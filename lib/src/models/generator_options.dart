@@ -17,7 +17,6 @@ class GeneratorOptions {
     required this.inputFolder,
     required this.outputFolder,
     this.enumsCaseSensitive = true,
-    this.usePathForRequestNames = false,
     this.useRequiredAttributeForHeaders = true,
     this.useInheritance = true,
     this.includeIfNull,
@@ -47,9 +46,6 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool enumsCaseSensitive;
-
-  @JsonKey(defaultValue: false)
-  final bool usePathForRequestNames;
 
   @JsonKey(defaultValue: null)
   final bool? includeIfNull;

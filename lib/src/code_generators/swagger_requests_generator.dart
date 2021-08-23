@@ -553,13 +553,7 @@ class SwaggerRequestsGenerator {
     required String path,
     required String requestType,
   }) {
-    if (options.usePathForRequestNames || swaggerRequest.operationId.isEmpty) {
-      return SwaggerModelsGenerator.generateRequestName(path, requestType);
-    } else {
-      return SwaggerModelsGenerator.getValidatedClassName(
-              swaggerRequest.operationId)
-          .camelCase;
-    }
+    return SwaggerModelsGenerator.generateRequestName(path, requestType);
   }
 
   static SwaggerResponse? getSuccessedResponse({
