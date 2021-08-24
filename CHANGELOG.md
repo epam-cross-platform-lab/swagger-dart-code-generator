@@ -1,3 +1,8 @@
+# 2.1.0-prerelease.7
+
+* Fixed Issue ([#186](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/186))
+* Fixed Issue ([#204](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/204))
+
 # 2.1.0-prerelease.6
 
 * **BREAKING**: Added dollar signs to generated converter and mappings

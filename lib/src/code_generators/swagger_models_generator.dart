@@ -146,16 +146,8 @@ abstract class SwaggerModelsGenerator {
             neededResponse['schema']['properties'] != null) {
           final pathText = path.split('/').map((e) => e.pascalCase).join();
           final requestText = request.pascalCase;
-          final operationId = requestValue['operationId'] as String? ?? '';
 
-          if (options.usePathForRequestNames || operationId.isEmpty) {
-            results['$pathText$requestText\$Response'] =
-                neededResponse['schema'];
-          } else {
-            results['${SwaggerModelsGenerator.getValidatedClassName(operationId)}\$Response'] =
-                neededResponse['schema'];
-          }
-          //results['$pathText$requestText\$Response'] = neededResponse['schema'];
+          results['$pathText$requestText\$Response'] = neededResponse['schema'];
         }
       });
     });
@@ -393,7 +385,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     if (typeName.isEmpty) {
-      typeName = 'dynamic';
+      typeName = kDynamic;
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
@@ -403,9 +395,13 @@ abstract class SwaggerModelsGenerator {
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
+    if (typeName != kDynamic) {
+      typeName += '?';
+    }
+
     final jsonKeyContent =
         "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue$unknownEnumValue)\n";
-    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateUnknownEnumValue(List<String> allEnumNames,
@@ -586,7 +582,7 @@ abstract class SwaggerModelsGenerator {
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
-        } else if (typeName != 'dynamic') {
+        } else if (typeName != kDynamic) {
           typeName = typeName.pascalCase;
         }
       } else if (!allEnumNames.contains('enums.$typeName') &&
@@ -623,8 +619,6 @@ abstract class SwaggerModelsGenerator {
         allEnumNames, allEnumListNames, typeName, true);
 
     final includeIfNullString = generateIncludeIfNullString(options);
-
-    //typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
 
     String jsonKeyContent;
     if (unknownEnumValue.isEmpty) {
@@ -694,7 +688,11 @@ abstract class SwaggerModelsGenerator {
       jsonKeyContent += ')\n';
     }
 
-    return '''  $jsonKeyContent  final $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    if (typeName != kDynamic) {
+      typeName += '?';
+    }
+
+    return '''  $jsonKeyContent  final $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
   }
 
   String generatePropertyContentByType(

@@ -34,8 +34,6 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     inputFolder: json['input_folder'] as String? ?? '',
     outputFolder: json['output_folder'] as String? ?? '',
     enumsCaseSensitive: json['enums_case_sensitive'] as bool? ?? false,
-    usePathForRequestNames:
-        json['use_path_for_request_names'] as bool? ?? false,
     useRequiredAttributeForHeaders:
         json['use_required_attribute_for_headers'] as bool? ?? true,
     useInheritance: json['use_inheritance'] as bool? ?? true,
@@ -61,7 +59,6 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'ignore_headers': instance.ignoreHeaders,
       'use_inheritance': instance.useInheritance,
       'enums_case_sensitive': instance.enumsCaseSensitive,
-      'use_path_for_request_names': instance.usePathForRequestNames,
       'include_if_null': instance.includeIfNull,
       'input_folder': instance.inputFolder,
       'output_folder': instance.outputFolder,

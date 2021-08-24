@@ -53,6 +53,8 @@ const kArray = 'array';
 const kEnum = 'enum';
 const kBody = 'body';
 
+const kDynamic = 'dynamic';
+
 const kServiceHeader = '''
 // **************************************************************************
 // SwaggerChopperGenerator
