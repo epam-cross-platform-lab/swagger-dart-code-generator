@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Generated API",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "tag1"
+    },
+    {
+      "name": "tag2"
+    }
+  ],
+  "paths": {
+    "/rooms": {
+      "get": {
+        "operationId": "getRooms",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Rooms owner",
+            "name": "id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Loaded rooms",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/room"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/item/all": {
+      "get": {
+        "tags": [
+          "tag1"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListCustomItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "room": {
+        "type": "object",
+        "properties": {
+          "author": {
+            "description": "UUIDv4 of author of last message",
+            "type": "string"
+          },
+          "avatar": {
+            "description": "UUIDv4 of fake user as avatar of room",
+            "type": "string"
+          },
+          "id": {
+            "description": "UUIDv4 of room",
+            "type": "string"
+          },
+          "lastMessage": {
+            "description": "Last message payload",
+            "type": "string"
+          },
+          "name": {
+            "description": "Fake user name as room name",
+            "type": "string"
+          }
+        }
+      },
+      "CustomItem": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ListCustomItem": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CustomItem"
+        }
+      }
+    }
+  }
+}

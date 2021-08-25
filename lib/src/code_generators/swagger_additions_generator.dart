@@ -75,9 +75,6 @@ import 'package:chopper/chopper.dart' as chopper;''';
     final enumsExport =
         hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
 
-    result.writeln("""
-import 'package:json_annotation/json_annotation.dart';""");
-
     if (hasModels) {
       result.writeln("""
 import 'package:json_annotation/json_annotation.dart';

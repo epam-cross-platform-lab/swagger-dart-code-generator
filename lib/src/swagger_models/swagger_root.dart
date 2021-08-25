@@ -56,7 +56,11 @@ class SwaggerRoot {
       _$SwaggerRootFromJson(json);
 }
 
-Map<String, SwaggerPath> _mapPaths(Map<String, dynamic> paths) {
+Map<String, SwaggerPath> _mapPaths(Map<String, dynamic>? paths) {
+  if (paths == null) {
+    return {};
+  }
+
   return paths.map((path, pathValue) {
     final value = pathValue as Map<String, dynamic>;
     final parameters = value['parameters'] as List<dynamic>?;

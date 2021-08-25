@@ -996,6 +996,9 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
+    final getHashContent =
+        generateGetHashContent(generatedProperties, validatedClassName);
+
     final equalsOverride =
         generateEqualsOverride(generatedProperties, validatedClassName);
 
@@ -1010,6 +1013,8 @@ $generatedProperties
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
 $equalsOverride
+
+$getHashContent
 }
 $copyWithMethod
 ''';
@@ -1073,4 +1078,45 @@ $copyWithMethod
 
     return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
   }
+
+  String generateGetHashContent(
+      String generatedProperties, String validatedClassName) {
+    final propertiesHash = generatedProperties
+        .split(';')
+        .where((element) => element.isNotEmpty)
+        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .map((e) => e.substring(e.indexOf(' ') + 1))
+        .map((e) => 'const DeepCollectionEquality().hash($e)')
+        .toList();
+
+    final allHashComponents =
+        [...propertiesHash, 'runtimeType.hashCode'].join(' ^\n');
+
+    return '''
+@override
+int get hashCode =>
+$allHashComponents;
+''';
+  }
 }
+
+// @override
+// int get hashCode =>
+//     runtimeType.hashCode ^
+//     const DeepCollectionEquality().hash(itemId) ^
+//     const DeepCollectionEquality().hash(resolution) ^
+//     const DeepCollectionEquality().hash(watchlistItemType) ^
+//     const DeepCollectionEquality().hash(sourceOrInstance) ^
+//     const DeepCollectionEquality().hash(duration) ^
+//     const DeepCollectionEquality().hash(bookmark) ^
+//     const DeepCollectionEquality().hash(isAdult) ^
+//     const DeepCollectionEquality().hash(ageRating) ^
+//     const DeepCollectionEquality().hash(model) ^
+//     const DeepCollectionEquality().hash(showId) ^
+//     const DeepCollectionEquality().hash(brandingProviderId) ^
+//     const DeepCollectionEquality().hash(seasonId) ^
+//     const DeepCollectionEquality().hash(instanceId) ^
+//     const DeepCollectionEquality().hash(mergedId) ^
+//     const DeepCollectionEquality().hash(title) ^
+//     const DeepCollectionEquality().hash(sources) ^
+//     const DeepCollectionEquality().hash(isAboutThisSeriesAvailable);
