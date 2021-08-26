@@ -19,10 +19,10 @@ class SwaggerComponents {
   @JsonKey(name: 'schemas', defaultValue: {})
   Map<String, SwaggerSchema> schemas;
 
-  @JsonKey(name: 'responses', defaultValue: {}, fromJson: mapResponses)
+  @JsonKey(name: 'responses', fromJson: _mapResponses)
   Map<String, SwaggerSchema> responses;
 
-  @JsonKey(name: 'requestBodies', defaultValue: {}, fromJson: mapResponses)
+  @JsonKey(name: 'requestBodies', fromJson: _mapResponses)
   Map<String, SwaggerSchema> requestBodies;
 
   Map<String, dynamic> toJson() => _$SwaggerComponentsToJson(this);
@@ -31,7 +31,7 @@ class SwaggerComponents {
       _$SwaggerComponentsFromJson(json);
 }
 
-Map<String, SwaggerSchema> mapResponses(Map<String, dynamic>? json) {
+Map<String, SwaggerSchema> _mapResponses(Map<String, dynamic>? json) {
   var results = <String, SwaggerSchema>{};
 
   if (json == null) {

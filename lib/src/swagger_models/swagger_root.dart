@@ -38,7 +38,7 @@ class SwaggerRoot {
   @JsonKey(name: 'schemes', defaultValue: [])
   List<String> schemes;
 
-  @JsonKey(name: 'paths', defaultValue: {}, fromJson: _mapPaths)
+  @JsonKey(name: 'paths', fromJson: _mapPaths)
   Map<String, SwaggerPath> paths;
 
   @JsonKey(name: 'definitions', defaultValue: {})
