@@ -18,9 +18,9 @@ SwaggerComponents _$SwaggerComponentsFromJson(Map<String, dynamic> json) {
               MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
         ) ??
         {},
-    responses: mapResponses(json['responses'] as Map<String, dynamic>?) ?? {},
+    responses: _mapResponses(json['responses'] as Map<String, dynamic>?),
     requestBodies:
-        mapResponses(json['requestBodies'] as Map<String, dynamic>?) ?? {},
+        _mapResponses(json['requestBodies'] as Map<String, dynamic>?),
   );
 }
 
