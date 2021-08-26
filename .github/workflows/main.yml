@@ -25,12 +25,10 @@ jobs:
       run: flutter analyze
     - name: Flutter test coverage
       run: flutter test --coverage
-    - name: Flutter remove not needed coverage
-      run: lcov --remove coverage/lcov.info 'lib/extensions/*' 'lib/models/*' 'lib/swagger_models/*' -o coverage/new_lcov.info
     - uses: codecov/codecov-action@v1.0.2
       with:
         token: ffe96e52-2ac6-46e7-879b-1fea65d896a3
-        file: ./coverage/new_lcov.info
+        file: ./coverage/lcov.info
     # - name: Test coverage
     #   run: flutter pub run test_coverage --min-coverage 70
    
