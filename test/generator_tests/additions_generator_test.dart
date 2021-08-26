@@ -26,7 +26,7 @@ void main() {
 
     test('Should generate correct imports', () {
       final result =
-          generator.generateImportsContent('swagger.fileName', true, false);
+          generator.generateImportsContent('swagger.fileName', true, true);
 
       expect(result,
           contains("import 'swagger.fileName.enums.swagger.dart' as enums;"));
