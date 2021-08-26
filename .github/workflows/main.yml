@@ -29,6 +29,8 @@ jobs:
       with:
         token: ffe96e52-2ac6-46e7-879b-1fea65d896a3
         file: ./coverage/lcov.info
+        ignore:
+          - "./lib/src/models"
     # - name: Test coverage
     #   run: flutter pub run test_coverage --min-coverage 70
    
