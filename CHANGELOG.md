@@ -1,3 +1,13 @@
+# 2.1.0-prerelease.9
+
+**BREAKING**: Removed build_only_models_parameter. Now it's always false
+
+# 2.1.0-prerelease.8
+
+* Fixed Issue ([#221](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/221))
+* Added generation of int get hashCode
+* Added example
+
 # 2.1.0-prerelease.7
 
 * Fixed Issue ([#186](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/186))

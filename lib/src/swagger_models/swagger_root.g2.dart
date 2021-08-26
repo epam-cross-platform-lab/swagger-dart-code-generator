@@ -17,7 +17,7 @@ SwaggerRoot _$SwaggerRootFromJson(Map<String, dynamic> json) {
         ? null
         : SwaggerInfo.fromJson(json['info'] as Map<String, dynamic>),
     host: json['host'] as String? ?? '',
-    paths: _mapPaths(json['paths'] as Map<String, dynamic>) ?? {},
+    paths: _mapPaths(json['paths'] as Map<String, dynamic>?) ?? {},
     tags: (json['tags'] as List<dynamic>?)
             ?.map((e) => SwaggerTag.fromJson(e as Map<String, dynamic>))
             .toList() ??
