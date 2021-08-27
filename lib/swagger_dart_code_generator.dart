@@ -79,8 +79,12 @@ class SwaggerDartCodeGenerator implements Builder {
     final enums = codeGenerator.generateEnums(
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
-    final imports = codeGenerator.generateImportsContent(contents,
-        fileNameWithoutExtension, models.isNotEmpty, enums.isNotEmpty);
+    final imports = codeGenerator.generateImportsContent(
+        contents,
+        fileNameWithoutExtension,
+        models.isNotEmpty,
+        options.buildOnlyModels,
+        enums.isNotEmpty);
 
     final converter = codeGenerator.generateConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
@@ -133,7 +137,7 @@ class SwaggerDartCodeGenerator implements Builder {
     final result = """
 $imports
 
-$requests
+${options.buildOnlyModels ? '' : requests}
 
 ${options.withConverter ? converter : ''}
 
