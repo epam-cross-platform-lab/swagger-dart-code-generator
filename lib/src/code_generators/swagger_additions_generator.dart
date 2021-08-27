@@ -38,9 +38,9 @@ class SwaggerAdditionsGenerator {
       final className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
-      final fileName = key.split('/').last.replaceAll('.json', '.swagger');
+      final fileName = getFileNameBase(key);
       maps.writeln('  ...$className,');
-      imports.add("import '${fileName.replaceAll('-', '_')}.dart';");
+      imports.add("import '$fileName.swagger.dart';");
     });
 
     imports.sort();
@@ -56,13 +56,16 @@ $maps};
   }
 
   ///Generated imports for concrete service
-  String generateImportsContent(
-      String swaggerFileName, bool hasModels, bool hasEnums) {
+  String generateImportsContent(String swaggerFileName, bool hasModels,
+      bool buildOnlyModels, bool hasEnums) {
     final result = StringBuffer();
 
-    final chopperPartImport = "part '$swaggerFileName.swagger.chopper.dart';";
+    final chopperPartImport =
+        buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
-    final chopperImports = '''import 'package:chopper/chopper.dart';
+    final chopperImports = buildOnlyModels
+        ? ''
+        : '''import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;''';
 
     final enumsImport = hasEnums
@@ -79,8 +82,9 @@ import 'package:collection/collection.dart';
 """);
     }
 
-    result.write(chopperImports);
-
+    if (chopperImports.isNotEmpty) {
+      result.write(chopperImports);
+    }
     if (enumsImport.isNotEmpty) {
       result.write(enumsImport);
     }
@@ -91,8 +95,9 @@ import 'package:collection/collection.dart';
 
     result.write('\n\n');
 
-    result.write(chopperPartImport);
-
+    if (chopperPartImport.isNotEmpty) {
+      result.write(chopperPartImport);
+    }
     if (hasModels) {
       result.write("part '$swaggerFileName.swagger.g.dart';");
     }

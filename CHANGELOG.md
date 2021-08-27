@@ -1,6 +1,10 @@
 # 2.1.0-prerelease.9
 
-**BREAKING**: Removed build_only_models_parameter. Now it's always false
+* Fixed Issue ([#228](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/228))
+* Fixed Issue ([#206](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/206))
+* Fixed cases when file names like some_file.extension.swagger.json.dart.json
+* Removed generation of converter when build_only_models is true
+
 
 # 2.1.0-prerelease.8
 

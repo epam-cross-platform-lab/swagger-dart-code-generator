@@ -9,3 +9,11 @@ String getClassNameFromFileName(String file) {
 String getFileNameWithoutExtension(String file) {
   return file.split('.').first;
 }
+
+String getFileNameBase(String filePath) {
+  final fileName = filePath.split('/').last.replaceAll('-', '_');
+
+  final lastDot = fileName.lastIndexOf('.');
+
+  return fileName.substring(0, lastDot);
+}

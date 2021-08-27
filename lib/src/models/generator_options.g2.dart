@@ -13,6 +13,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     ignoreHeaders: json['ignore_headers'] as bool? ?? false,
     useDefaultNullForLists:
         json['use_default_null_for_lists'] as bool? ?? false,
+    buildOnlyModels: json['build_only_models'] as bool? ?? false,
     defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
             ?.map((e) =>
                 DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
@@ -62,6 +63,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'input_folder': instance.inputFolder,
       'output_folder': instance.outputFolder,
       'use_default_null_for_lists': instance.useDefaultNullForLists,
+      'build_only_models': instance.buildOnlyModels,
       'model_postfix': instance.modelPostfix,
       'default_values_map': instance.defaultValuesMap,
       'default_header_values_map': instance.defaultHeaderValuesMap,
