@@ -139,7 +139,7 @@ $imports
 
 ${options.buildOnlyModels ? '' : requests}
 
-${options.withConverter ? converter : ''}
+${options.withConverter && !options.buildOnlyModels ? converter : ''}
 
 $models
 
@@ -147,7 +147,7 @@ $responses
 
 $requestBodies
 
-$customDecoder
+${options.buildOnlyModels ? '' : customDecoder}
 
 $dateToJson
 """;
@@ -178,7 +178,7 @@ $dateToJson
 
     await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
 
-    if (options.withConverter) {
+    if (options.withConverter && !options.buildOnlyModels) {
       final mappingAssetId =
           AssetId(inputId.package, '${options.outputFolder}$_mappingFileName');
 
