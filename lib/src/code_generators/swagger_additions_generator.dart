@@ -38,9 +38,9 @@ class SwaggerAdditionsGenerator {
       final className =
           "${getClassNameFromFileName(key.split('/').last)}$converterClassEnding";
 
-      final fileName = key.split('/').last.replaceAll('.json', '.swagger');
+      final fileName = getFileNameBase(key);
       maps.writeln('  ...$className,');
-      imports.add("import '${fileName.replaceAll('-', '_')}.dart';");
+      imports.add("import '$fileName.swagger.dart';");
     });
 
     imports.sort();

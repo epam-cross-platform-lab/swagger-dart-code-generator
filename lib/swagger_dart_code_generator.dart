@@ -25,8 +25,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final result = <String, List<String>>{};
 
   filesList.forEach((FileSystemEntity element) {
-    final name =
-        element.path.split('/').last.split('.').first.replaceAll('-', '_');
+    final name = getFileNameBase(element.path);
     result[element.path] = <String>[
       '${options.outputFolder}$name$_outputFileExtension',
       '${options.outputFolder}$name$_outputEnumsFileExtension',
@@ -61,7 +60,7 @@ class SwaggerDartCodeGenerator implements Builder {
   Future<void> build(BuildStep buildStep) async {
     final fileNameWithExtension =
         buildStep.inputId.pathSegments.last.replaceAll('-', '_');
-    final fileNameWithoutExtension = fileNameWithExtension.split('.').first;
+    final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
 
     final contents = await buildStep.readAsString(buildStep.inputId);
 
