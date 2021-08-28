@@ -4,6 +4,7 @@ on:
   push:
     branches: [ master ]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,10 +16,15 @@ jobs:
         channel: 'beta' # or: 'dev' or 'beta'
     - name: Install dependencies
       run: flutter pub get
+    - name: Run tests
+      run: flutter pub run test
+    - name: Flutter analyze
+      run: flutter analyze
     - name: Flutter test coverage
       run: flutter test --coverage
     - name: Remove some unnecessary files from coverage
       run: flutter pub run remove_from_coverage -f coverage/lcov.info -r 'swagger_models' -r 'models' -r 'extensions'
     - uses: codecov/codecov-action@v1.0.2
       with:
+        token: ffe96e52-2ac6-46e7-879b-1fea65d896a3
         file: ./coverage/lcov.info

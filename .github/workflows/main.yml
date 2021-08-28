@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2.1.0
     - uses: subosito/flutter-action@v1
@@ -18,7 +16,6 @@ jobs:
         channel: 'beta' # or: 'dev' or 'beta'
     - name: Install dependencies
       run: flutter pub get
-      # working-directory: example
     - name: Run tests
       run: flutter pub run test
     - name: Flutter analyze
@@ -26,13 +23,11 @@ jobs:
     - name: Flutter test coverage
       run: flutter test --coverage
     - name: Remove some unnecessary files from coverage
-      run: flutter pub run remove_from_coverage -f coverage/lcov.info -r 'swagger_models' -r 'models'
+      run: flutter pub run remove_from_coverage -f coverage/lcov.info -r 'swagger_models' -r 'models' -r 'extensions'
     - uses: codecov/codecov-action@v1.0.2
       with:
         token: ffe96e52-2ac6-46e7-879b-1fea65d896a3
         file: ./coverage/lcov.info
-    # - name: Test coverage
-    #   run: flutter pub run test_coverage --min-coverage 70
    
       
       
