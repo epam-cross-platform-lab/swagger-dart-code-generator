@@ -364,6 +364,21 @@ const carsService = '''
             }
         },
         "/cars/schemaRefBody": {
+            "get": {
+                "summary": "Overwritten response",
+                "responses": {
+                    "202": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarType"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "summary": "Its needed to test optionalBody",
                 "requestBody": {
@@ -412,6 +427,56 @@ const carsService = '''
                                     "$ref": "#/components/schemas/CarType"
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/returnTypeTests": {
+            "get": {
+                "summary": "Overwritten response",
+                "responses": {
+                    "202": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "enum",
+                                    "name": "String",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Overwritten response POST",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/CarType"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Overwritten response POST",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "String"
                         }
                     }
                 }
