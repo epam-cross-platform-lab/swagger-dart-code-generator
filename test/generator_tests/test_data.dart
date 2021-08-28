@@ -531,6 +531,129 @@ const carsService = '''
                     }
                 }
             }
+        },
+        "/cars/returnTypeByContent": {
+            "get": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "$ref": "#/components/responses/CarModel"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfCars"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success with original ref",
+                        "schema": {
+                            "items": {
+                                "originalRef": "CarModel"
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "responseType": "array"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/returnTypeContentItemsRef": {
+            "get": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "items": {
+                                    "$ref": "#/components/responses/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/responses/CarModel"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/veryBadResponse": {
+            "get": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Return type by content",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "responseType": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -548,6 +671,12 @@ const carsService = '''
                             "type": "string"
                         }
                     }
+                }
+            },
+            "ListOfCars": {
+                "type": "array",
+                "items": {
+                    "type": "String"
                 }
             },
             "CarType": {

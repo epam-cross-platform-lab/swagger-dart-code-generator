@@ -673,14 +673,14 @@ class SwaggerRequestsGenerator {
         final originalRef = swaggerResponse.schema?.items?.originalRef ?? '';
 
         if (originalRef.isNotEmpty) {
-          return kBasicTypesMap[originalRef]!.asList();
+          return kBasicTypesMap[originalRef]?.asList();
         }
       }
     }
 
     final itemsRef = content.items?.ref ?? '';
     if (itemsRef.isNotEmpty) {
-      return kBasicTypesMap[itemsRef]!.withPostfix(modelPostfix).asList();
+      return kBasicTypesMap[itemsRef]?.withPostfix(modelPostfix).asList();
     }
 
     final schemaItemsRef = content.schema?.items?.ref ?? '';
