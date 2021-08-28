@@ -187,7 +187,7 @@ const carsService = '''
         },
         "/cars/optionalBody": {
             "post": {
-                "summary": "Its needed to test optionalBody generation",
+                "summary": "Its needed to test optionalBody",
                 "responses": {
                     "200": {
                         "description": "Car successfuly loaded",
@@ -203,6 +203,20 @@ const carsService = '''
             },
             "put": {
                 "summary": "Its needed to test cases with form data and body in parameter",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CarType"
+                                }
+                            }
+                        }
+                    }
+                },
                 "parameters": [
                     {
                         "name": "body",
@@ -311,6 +325,91 @@ const carsService = '''
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/postCarExamples": {
+            "post": {
+                "summary": "Its needed to test optionalBody",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "items": {
+                                    "$ref": "#/components/schemas/CarType"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car successfuly loaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/schemaRefBody": {
+            "post": {
+                "summary": "Its needed to test optionalBody",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarType"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car successfuly loaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Its needed to test optionalBody",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarType"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarType"
                                 }
                             }
                         }
