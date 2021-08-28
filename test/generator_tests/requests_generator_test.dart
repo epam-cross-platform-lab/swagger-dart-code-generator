@@ -17,6 +17,13 @@ void main() {
           inputFolder: '',
           outputFolder: '',
           ignoreHeaders: true,
+          responseOverrideValueMap: [
+            ResponseOverrideValueMap(
+              method: 'get',
+              url: '/cars/schemaRefBody',
+              overriddenValue: 'String',
+            )
+          ],
         ),
       );
 
@@ -27,6 +34,12 @@ void main() {
         options: GeneratorOptions(
           inputFolder: '',
           outputFolder: '',
+          defaultHeaderValuesMap: [
+            DefaultHeaderValueMap(
+              defaultValue: '120',
+              headerName: 'id',
+            ),
+          ],
         ),
       );
 
