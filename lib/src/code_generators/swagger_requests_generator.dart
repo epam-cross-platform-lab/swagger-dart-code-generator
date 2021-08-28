@@ -353,8 +353,6 @@ class SwaggerRequestsGenerator {
         return (parameter.schema!.ref.getRef() + modelPostfix).asList();
       }
       return (parameter.schema!.ref.getRef() + modelPostfix);
-    } else if (parameter.schema?.ref.isNotEmpty == true) {
-      return parameter.schema!.ref.getRef() + modelPostfix;
     } else if (parameter.schema?.type == kArray &&
         parameter.schema?.items?.type.isNotEmpty == true) {
       return _mapParameterName(parameter.schema!.items!.type, '').asList();
@@ -634,8 +632,11 @@ class SwaggerRequestsGenerator {
     return null;
   }
 
-  String? _getReturnTypeFromContent(
-      SwaggerResponse swaggerResponse, String modelPostfix) {
+  String? _getReturnTypeFromContent({
+    required SwaggerResponse swaggerResponse,
+    required String modelPostfix,
+    required SwaggerRoot swaggerRoot,
+  }) {
     final content = swaggerResponse.content;
 
     if (content == null) {
@@ -650,10 +651,19 @@ class SwaggerRequestsGenerator {
 
     final schemaRef = content.schema?.ref ?? '';
     if (schemaRef.isNotEmpty) {
-      final type =
+      final neededSchema = swaggerRoot.components?.schemas[schemaRef.getRef()];
+      final typeName =
           SwaggerModelsGenerator.getValidatedClassName(schemaRef.getRef())
               .withPostfix(modelPostfix);
-      return kBasicTypesMap[type] ?? type;
+
+      if (neededSchema?.type == kArray) {
+        return neededSchema?.items?.ref
+            .getRef()
+            .withPostfix(modelPostfix)
+            .asList();
+      }
+
+      return typeName;
     }
 
     final responseType = content.responseType;
@@ -663,14 +673,14 @@ class SwaggerRequestsGenerator {
         final originalRef = swaggerResponse.schema?.items?.originalRef ?? '';
 
         if (originalRef.isNotEmpty) {
-          return kBasicTypesMap[originalRef]!.asList();
+          return kBasicTypesMap[originalRef]?.asList();
         }
       }
     }
 
     final itemsRef = content.items?.ref ?? '';
     if (itemsRef.isNotEmpty) {
-      return kBasicTypesMap[itemsRef]!.withPostfix(modelPostfix).asList();
+      return kBasicTypesMap[itemsRef]?.withPostfix(modelPostfix).asList();
     }
 
     final schemaItemsRef = content.schema?.items?.ref ?? '';
@@ -726,7 +736,11 @@ class SwaggerRequestsGenerator {
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
         _getReturnTypeFromSchema(neededResponse, modelPostfix, swaggerRoot) ??
         _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
-        _getReturnTypeFromContent(neededResponse, modelPostfix) ??
+        _getReturnTypeFromContent(
+          swaggerResponse: neededResponse,
+          modelPostfix: modelPostfix,
+          swaggerRoot: swaggerRoot,
+        ) ??
         '';
 
     if (type.isNotEmpty) {

@@ -17,13 +17,39 @@ void main() {
           inputFolder: '',
           outputFolder: '',
           ignoreHeaders: true,
+          responseOverrideValueMap: [
+            ResponseOverrideValueMap(
+              method: 'get',
+              url: '/cars/schemaRefBody',
+              overriddenValue: 'String',
+            )
+          ],
         ),
       );
 
-      expect(result, contains('Future<chopper.Response<CarModel>>'));
+      final result2 = generator.generate(
+        code: carsService,
+        className: 'CarsService',
+        fileName: 'cars_service',
+        options: GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          defaultHeaderValuesMap: [
+            DefaultHeaderValueMap(
+              defaultValue: '120',
+              headerName: 'id',
+            ),
+          ],
+        ),
+      );
+
+      expect(result2, contains('Future<chopper.Response<CarModel>>'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsGet'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
-      expect(result, contains('Future<chopper.Response<CarModel>> carsAdditionalPut({@Body() required Object? body});'));
+      expect(
+          result,
+          contains(
+              'Future<chopper.Response<CarModel>> carsAdditionalPut({@Body() required Object? body});'));
     });
   });
 }

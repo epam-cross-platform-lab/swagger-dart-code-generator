@@ -1,3 +1,9 @@
+# 2.1.1
+
+* Stabilized generator
+* Fixed issue when parameters named like int, double etc.
+* Fixed Issue ([#108](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/108))
+
 # 2.1.0-prerelease.9
 
 * Fixed Issue ([#228](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/228))

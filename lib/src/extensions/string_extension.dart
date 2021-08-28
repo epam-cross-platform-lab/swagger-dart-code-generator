@@ -35,7 +35,7 @@ extension TypeExtension on String {
   String asFutureResponse() => 'Future<chopper.Response<$this>>';
 
   String asParameterName() {
-    return SwaggerModelsGenerator.getValidatedClassName(this).camelCase;
+    return SwaggerModelsGenerator.getValidatedParameterName(this);
   }
 
   String asParameterType() {
