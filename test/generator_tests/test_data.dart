@@ -481,6 +481,56 @@ const carsService = '''
                     }
                 }
             }
+        },
+        "/cars/returnTypeSchema": {
+            "get": {
+                "summary": "Return type schema",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "items": {
+                                "$ref": "#/components/schemas/CarModel"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Return type schema",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/components/responses/CarModelResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Return type schema",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/components/responses/CarModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/returnTypeOriginalRef": {
+            "get": {
+                "summary": "Return type originalRef",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "originalRef": "CarModel"
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -512,6 +562,17 @@ const carsService = '''
         "requestBodies": {
             "CarModel": {
                 "type": "object",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CarModel"
+                        }
+                    }
+                }
+            }
+        },
+        "responses": {
+            "CarModelResponse": {
                 "content": {
                     "application/json": {
                         "schema": {
