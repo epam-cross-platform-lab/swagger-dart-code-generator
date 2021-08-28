@@ -634,8 +634,11 @@ class SwaggerRequestsGenerator {
     return null;
   }
 
-  String? _getReturnTypeFromContent(
-      SwaggerResponse swaggerResponse, String modelPostfix) {
+  String? _getReturnTypeFromContent({
+    required SwaggerResponse swaggerResponse,
+    required String modelPostfix,
+    required SwaggerRoot swaggerRoot,
+  }) {
     final content = swaggerResponse.content;
 
     if (content == null) {
@@ -650,10 +653,19 @@ class SwaggerRequestsGenerator {
 
     final schemaRef = content.schema?.ref ?? '';
     if (schemaRef.isNotEmpty) {
-      final type =
+      final neededSchema = swaggerRoot.components?.schemas[schemaRef.getRef()];
+      final typeName =
           SwaggerModelsGenerator.getValidatedClassName(schemaRef.getRef())
               .withPostfix(modelPostfix);
-      return kBasicTypesMap[type] ?? type;
+
+      if (neededSchema?.type == kArray) {
+        return neededSchema?.items?.ref
+            .getRef()
+            .withPostfix(modelPostfix)
+            .asList();
+      }
+
+      return typeName;
     }
 
     final responseType = content.responseType;
@@ -726,7 +738,11 @@ class SwaggerRequestsGenerator {
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
         _getReturnTypeFromSchema(neededResponse, modelPostfix, swaggerRoot) ??
         _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
-        _getReturnTypeFromContent(neededResponse, modelPostfix) ??
+        _getReturnTypeFromContent(
+          swaggerResponse: neededResponse,
+          modelPostfix: modelPostfix,
+          swaggerRoot: swaggerRoot,
+        ) ??
         '';
 
     if (type.isNotEmpty) {
