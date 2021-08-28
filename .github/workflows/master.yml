@@ -4,6 +4,7 @@ on:
   push:
     branches: [ master ]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +16,10 @@ jobs:
         channel: 'beta' # or: 'dev' or 'beta'
     - name: Install dependencies
       run: flutter pub get
+    - name: Run tests
+      run: flutter pub run test
+    - name: Flutter analyze
+      run: flutter analyze
     - name: Flutter test coverage
       run: flutter test --coverage
     - name: Remove some unnecessary files from coverage
