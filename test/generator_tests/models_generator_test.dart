@@ -8,68 +8,68 @@ import '../code_examples.dart';
 void main() {
   final generator = SwaggerModelsGeneratorV3();
   final generator2 = SwaggerModelsGeneratorV2();
-  // group('generate', () {
-  //   const fileName = 'order_service.dart';
+  group('generate', () {
+    const fileName = 'order_service.dart';
 
-  //   test('Should parse object name as a field Type', () {
-  //     final result = generator.generate(model_with_parameters_v3, fileName,
-  //         GeneratorOptions(inputFolder: '', outputFolder: ''));
+    test('Should parse object name as a field Type', () {
+      final result = generator.generate(model_with_parameters_v3, fileName,
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-  //     expect(
-  //         result, contains('final enums.TokensResponseTokenType? tokenType'));
-  //   });
+      expect(
+          result, contains('final enums.TokensResponseTokenType? tokenType'));
+    });
 
-  //   test('Should generate .toLower() when caseSensitive: false', () {
-  //     final result = generator.generate(
-  //         model_with_parameters_v3,
-  //         fileName,
-  //         GeneratorOptions(
-  //             enumsCaseSensitive: false, inputFolder: '', outputFolder: ''));
+    test('Should generate .toLower() when caseSensitive: false', () {
+      final result = generator.generate(
+          model_with_parameters_v3,
+          fileName,
+          GeneratorOptions(
+              enumsCaseSensitive: false, inputFolder: '', outputFolder: ''));
 
-  //     expect(
-  //         result,
-  //         contains(
-  //             'element.value.toLowerCase() == someEnumModel.toLowerCase()'));
-  //   });
+      expect(
+          result,
+          contains(
+              'element.value.toLowerCase() == someEnumModel.toLowerCase()'));
+    });
 
-  //   test('Should NOT generate .toLower() when caseSensitive: false', () {
-  //     final result = generator.generate(
-  //         model_with_parameters_v3,
-  //         fileName,
-  //         GeneratorOptions(
-  //             enumsCaseSensitive: true, inputFolder: '', outputFolder: ''));
+    test('Should NOT generate .toLower() when caseSensitive: false', () {
+      final result = generator.generate(
+          model_with_parameters_v3,
+          fileName,
+          GeneratorOptions(
+              enumsCaseSensitive: true, inputFolder: '', outputFolder: ''));
 
-  //     expect(result, contains('element.value == someEnumModel'));
-  //   });
+      expect(result, contains('element.value == someEnumModel'));
+    });
 
-  //   test('Should parse object name as a field Type', () {
-  //     final result = generator2.generate(model_with_parameters_v2, fileName,
-  //         GeneratorOptions(inputFolder: '', outputFolder: ''));
+    test('Should parse object name as a field Type', () {
+      final result = generator2.generate(model_with_parameters_v2, fileName,
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-  //     expect(
-  //         result,
-  //         contains(
-  //             'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
-  //   });
+      expect(
+          result,
+          contains(
+              'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
+    });
 
-  //   test('Should parse object name as a field Type', () {
-  //     const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
-  //     final generatorOptions = GeneratorOptions(
-  //       defaultValuesMap: <DefaultValueMap>[
-  //         DefaultValueMap(
-  //           typeName: 'int',
-  //           defaultValue: '19',
-  //         )
-  //       ],
-  //       inputFolder: '',
-  //       outputFolder: '',
-  //     );
-  //     final result = generator.generate(
-  //         model_with_parameters_v3, fileName, generatorOptions);
+    test('Should parse object name as a field Type', () {
+      const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
+      final generatorOptions = GeneratorOptions(
+        defaultValuesMap: <DefaultValueMap>[
+          DefaultValueMap(
+            typeName: 'int',
+            defaultValue: '19',
+          )
+        ],
+        inputFolder: '',
+        outputFolder: '',
+      );
+      final result = generator.generate(
+          model_with_parameters_v3, fileName, generatorOptions);
 
-  //     expect(result, contains(expectedResult));
-  //   });
-  // });
+      expect(result, contains(expectedResult));
+    });
+  });
 
   group('generateDefaultValueFromMap', () {
     test('Should return default value', () {
@@ -507,27 +507,27 @@ void main() {
       expect(result, contains(fieldExpectedResult));
     });
 
-    // test('Should return property \$with', () {
-    //   final map = <String, dynamic>{
-    //     'with': <String, dynamic>{'originalRef': 'Pet'}
-    //   };
+    test('Should return property \$with', () {
+      final map = <String, dynamic>{
+        'with': <String, dynamic>{'originalRef': 'Pet'}
+      };
 
-    //   const className = 'Animals';
-    //   const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
-    //   const fieldExpectedResult = 'final Pet? \$with';
-    //   final result = generator.generatePropertiesContent(
-    //       map,
-    //       {},
-    //       className,
-    //       <DefaultValueMap>[],
-    //       false,
-    //       [],
-    //       [],
-    //       GeneratorOptions(inputFolder: '', outputFolder: ''));
+      const className = 'Animals';
+      const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
+      const fieldExpectedResult = 'final Pet? \$with';
+      final result = generator.generatePropertiesContent(
+          map,
+          {},
+          className,
+          <DefaultValueMap>[],
+          false,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-    //   expect(result, contains(jsonKeyExpectedResult));
-    //   expect(result, contains(fieldExpectedResult));
-    //});
+      expect(result, contains(jsonKeyExpectedResult));
+      expect(result, contains(fieldExpectedResult));
+    });
   });
 
   group('generateListPropertyContent', () {
@@ -672,26 +672,26 @@ void main() {
     });
   });
 
-  // group('getModelInheritedProperties', () {
-  //   test('Should generate 2 levels of inheritance', () {
-  //     final result = generator.generate(model_with_inheritance, 'MyClass',
-  //         GeneratorOptions(inputFolder: '', outputFolder: ''));
+  group('getModelInheritedProperties', () {
+    test('Should generate 2 levels of inheritance', () {
+      final result = generator.generate(model_with_inheritance, 'MyClass',
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-  //     expect(
-  //         result, contains('class ExtendedErrorModel extends BasicErrorModel'));
-  //   });
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
+    });
 
-  //   test('Should generate 3 levels of inheritance', () {
-  //     final result = generator.generate(model_with_inheritance_3_levels,
-  //         'MyClass', GeneratorOptions(inputFolder: '', outputFolder: ''));
+    test('Should generate 3 levels of inheritance', () {
+      final result = generator.generate(model_with_inheritance_3_levels,
+          'MyClass', GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-  //     expect(result,
-  //         contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
+      expect(result,
+          contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
 
-  //     expect(
-  //         result, contains('class ExtendedErrorModel extends BasicErrorModel'));
-  //   });
-  // });
+      expect(
+          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
+    });
+  });
 
   group('Tests for getValidatedClassName', () {
     test('Should', () {
@@ -727,67 +727,67 @@ void main() {
       expect(result, equals(''));
     });
 
-    // test('Should generate class from responses V3', () {
-    //   final result = generator.generateResponses(
-    //       schemas_responses_with_response,
-    //       'fileName',
-    //       GeneratorOptions(inputFolder: '', outputFolder: ''));
+    test('Should generate class from responses V3', () {
+      final result = generator.generateResponses(
+          schemas_responses_with_response,
+          'fileName',
+          GeneratorOptions(inputFolder: '', outputFolder: ''));
 
-    //   expect(result, contains('class SpaResponse'));
-    // });
+      expect(result, contains('class SpaResponse'));
+    });
 
-    // test('Should generate class from responses V3 and Schemas', () {
-    //   final result = generator.generateResponses(
-    //       schemas_responses_with_response_and_schemas,
-    //       'fileName',
-    //       GeneratorOptions(
-    //         inputFolder: '',
-    //         outputFolder: '',
-    //       ));
+    test('Should generate class from responses V3 and Schemas', () {
+      final result = generator.generateResponses(
+          schemas_responses_with_response_and_schemas,
+          'fileName',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
 
-    //   expect(result, contains('class SpaResponse'));
-    // });
+      expect(result, contains('class SpaResponse'));
+    });
   });
 
-  // group('Tests for getAllEnumNames', () {
-  //   test('Should', () {
-  //     final result = generator2.getAllEnumNames(enum_as_definition_v2);
+  group('Tests for getAllEnumNames', () {
+    test('Should', () {
+      final result = generator2.getAllEnumNames(enum_as_definition_v2);
 
-  //     expect(result, contains('enums.SpaResponse'));
-  //   });
+      expect(result, contains('enums.SpaResponse'));
+    });
 
-  //   test('Should get enum name from schemas', () {
-  //     final result =
-  //         generator.getAllEnumNames(schemas_with_enums_in_properties);
+    test('Should get enum name from schemas', () {
+      final result =
+          generator.getAllEnumNames(schemas_with_enums_in_properties);
 
-  //     expect(result, contains('enums.SpaSchemaSuccessValues'));
-  //   });
+      expect(result, contains('enums.SpaSchemaSuccessValues'));
+    });
 
-  //   test('Should get enum name from responses', () {
-  //     final result =
-  //         generator.getAllEnumNames(schemas_with_enums_in_properties);
+    test('Should get enum name from responses', () {
+      final result =
+          generator.getAllEnumNames(schemas_with_enums_in_properties);
 
-  //     expect(result, contains('enums.SpaResponse'));
-  //   });
+      expect(result, contains('enums.SpaResponse'));
+    });
 
-  //   test('Should get enum name from responses with Enum items', () {
-  //     final result =
-  //         generator.getAllEnumNames(schemas_with_enums_in_properties);
+    test('Should get enum name from responses with Enum items', () {
+      final result =
+          generator.getAllEnumNames(schemas_with_enums_in_properties);
 
-  //     expect(result, contains('enums.SpaEnumResponseFailedValued'));
-  //   });
-  // });
-  // group('Tests for models from responses', () {
-  //   test('Should generate correct model from response', () {
-  //     final result = generator.generate(
-  //         request_with_return_type_injected,
-  //         'my_service',
-  //         GeneratorOptions(
-  //           inputFolder: '',
-  //           outputFolder: '',
-  //         ));
+      expect(result, contains('enums.SpaEnumResponseFailedValued'));
+    });
+  });
+  group('Tests for models from responses', () {
+    test('Should generate correct model from response', () {
+      final result = generator.generate(
+          request_with_return_type_injected,
+          'my_service',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
 
-  //     expect(result, contains('class ModelItemsGet\$Response'));
-  //   });
-  // });
+      expect(result, contains('class ModelItemsGet\$Response'));
+    });
+  });
 }
