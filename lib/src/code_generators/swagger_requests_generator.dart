@@ -353,8 +353,6 @@ class SwaggerRequestsGenerator {
         return (parameter.schema!.ref.getRef() + modelPostfix).asList();
       }
       return (parameter.schema!.ref.getRef() + modelPostfix);
-    } else if (parameter.schema?.ref.isNotEmpty == true) {
-      return parameter.schema!.ref.getRef() + modelPostfix;
     } else if (parameter.schema?.type == kArray &&
         parameter.schema?.items?.type.isNotEmpty == true) {
       return _mapParameterName(parameter.schema!.items!.type, '').asList();

@@ -30,7 +30,7 @@ void main() {
         ),
       );
 
-      expect(result, contains('Future<chopper.Response<CarModel>>'));
+      expect(result2, contains('Future<chopper.Response<CarModel>>'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsGet'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
       expect(
