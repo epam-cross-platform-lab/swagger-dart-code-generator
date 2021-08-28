@@ -248,6 +248,42 @@ abstract class SwaggerModelsGenerator {
     return result;
   }
 
+  static String getValidatedParameterName(String parameterName) {
+    if (exceptionWords.contains(parameterName) ||
+        basicTypes.contains(parameterName)) {
+      return '\$$parameterName';
+    }
+
+    if (parameterName.isEmpty) {
+      return parameterName;
+    }
+
+    final isEnum = parameterName.startsWith('enums.');
+
+    if (isEnum) {
+      parameterName = parameterName.substring(6);
+    }
+
+    final words = parameterName.split('\$');
+
+    final result = words
+        .map((e) => e.pascalCase
+            .split(RegExp(r'\W+|\_'))
+            .map((String str) => str.capitalize)
+            .join())
+        .join('\$');
+
+    if (isEnum) {
+      return 'enums.$result';
+    }
+
+    if (result.isEmpty) {
+      return kUndefinedParameter;
+    }
+
+    return result.camelCase;
+  }
+
   String getParameterTypeName(
     String className,
     String parameterName,
@@ -314,6 +350,10 @@ abstract class SwaggerModelsGenerator {
 
     if (jsonKey.startsWith(RegExp('[0-9]')) ||
         exceptionWords.contains(jsonKey)) {
+      jsonKey = '\$' + jsonKey;
+    }
+
+    if (basicTypes.contains(jsonKey)) {
       jsonKey = '\$' + jsonKey;
     }
 
@@ -692,7 +732,7 @@ abstract class SwaggerModelsGenerator {
       typeName += '?';
     }
 
-    return '''  $jsonKeyContent  final $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};''';
+    return '\t$jsonKeyContent  final $typeName $propertyName;';
   }
 
   String generatePropertyContentByType(
@@ -771,12 +811,6 @@ abstract class SwaggerModelsGenerator {
       final propertyEntryMap =
           propertiesMap[propertyName] as Map<String, dynamic>;
       final propertyKey = propertyName;
-
-      exceptionWords.forEach((String exceptionWord) {
-        if (propertyName == exceptionWord) {
-          propertyName = '\$' + propertyName;
-        }
-      });
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(schemas);
 
@@ -945,9 +979,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final propertyNames = <String>[];
 
     entityMap.forEach((key, value) {
-      var fieldName = SwaggerModelsGenerator.generateFieldName(key);
-
-      fieldName = getParameterName(fieldName.asParameterName(), propertyNames);
+      var fieldName = getParameterName(key.asParameterName(), propertyNames);
 
       propertyNames.add(fieldName);
 
