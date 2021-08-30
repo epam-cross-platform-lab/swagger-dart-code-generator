@@ -4,6 +4,7 @@ import 'package:swagger_dart_code_generator/src/definitions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'constants.dart';
 
 class SwaggerConverterGenerator {
   String generate(String dartCode, String fileName, GeneratorOptions options) {
@@ -34,8 +35,7 @@ ${_generateModelsMapping(dartCode, options)}};''';
           continue;
         }
 
-        if (SwaggerModelsGenerator.basicTypes
-            .contains(definition['type'].toString().toLowerCase())) {
+        if (kBasicTypes.contains(definition['type'].toString().toLowerCase())) {
           continue;
         }
 

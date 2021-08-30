@@ -11,16 +11,6 @@ import 'constants.dart';
 
 abstract class SwaggerModelsGenerator {
   static const List<String> keyClasses = ['Response', 'Request'];
-  static const basicTypes = [
-    'string',
-    'int',
-    'integer',
-    'double',
-    'float',
-    'bool',
-    'boolean',
-    'number',
-  ];
 
   String generate(String dartCode, String fileName, GeneratorOptions options);
   String generateResponses(
@@ -46,7 +36,7 @@ abstract class SwaggerModelsGenerator {
       return '';
     }
 
-    if (basicTypes.contains(map['type'].toString().toLowerCase())) {
+    if (kBasicTypes.contains(map['type'].toString().toLowerCase())) {
       return '';
     }
 
@@ -210,7 +200,7 @@ abstract class SwaggerModelsGenerator {
   }
 
   static String getValidatedClassName(String className) {
-    if (basicTypes.contains(className)) {
+    if (kBasicTypes.contains(className)) {
       return className;
     }
 
@@ -250,7 +240,7 @@ abstract class SwaggerModelsGenerator {
 
   static String getValidatedParameterName(String parameterName) {
     if (exceptionWords.contains(parameterName) ||
-        basicTypes.contains(parameterName)) {
+        kBasicTypes.contains(parameterName)) {
       return '\$$parameterName';
     }
 
@@ -353,7 +343,7 @@ abstract class SwaggerModelsGenerator {
       jsonKey = '\$' + jsonKey;
     }
 
-    if (basicTypes.contains(jsonKey)) {
+    if (kBasicTypes.contains(jsonKey)) {
       jsonKey = '\$' + jsonKey;
     }
 
@@ -604,7 +594,8 @@ abstract class SwaggerModelsGenerator {
     if (items != null) {
       typeName = getValidatedClassName(items['originalRef'] as String? ?? '');
 
-      if (typeName.isNotEmpty && !basicTypes.contains(typeName.toLowerCase())) {
+      if (typeName.isNotEmpty &&
+          !kBasicTypes.contains(typeName.toLowerCase())) {
         typeName += options.modelPostfix;
       }
 
@@ -626,7 +617,7 @@ abstract class SwaggerModelsGenerator {
           typeName = typeName.pascalCase;
         }
       } else if (!allEnumNames.contains('enums.$typeName') &&
-          !basicTypes.contains(typeName.toLowerCase())) {
+          !kBasicTypes.contains(typeName.toLowerCase())) {
         typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
       }
 
@@ -869,7 +860,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     schemas.forEach((key, value) {
-      if (basicTypes.contains(value['type'].toString().toLowerCase()) &&
+      if (kBasicTypes.contains(value['type'].toString().toLowerCase()) &&
           value['enum'] == null) {
         result.addAll({
           key: _mapBasicTypeToDartType(

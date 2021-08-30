@@ -1,3 +1,9 @@
+# 2.1.1+1
+
+* Fixed Issue ([#235](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/235))
+* Fixed cases when field number 'number' generated as $num
+* Fixed cases when field 'num' generated ad 'num' (basic dart type)
+
 # 2.1.1
 
 * Stabilized generator

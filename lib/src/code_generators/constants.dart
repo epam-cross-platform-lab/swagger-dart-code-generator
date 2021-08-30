@@ -12,7 +12,7 @@ const kBasicTypes = [
   'float',
   'bool',
   'boolean',
-  'number',
+  'num',
 ];
 
 const kChopperService = 'ChopperService';
