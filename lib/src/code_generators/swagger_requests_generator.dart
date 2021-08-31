@@ -474,6 +474,22 @@ class SwaggerRequestsGenerator {
     return result.distinctParameters();
   }
 
+  bool _isBasicTypeRef(String ref, SwaggerRoot root) {
+    final schemas = root.components?.schemas ?? <String, SwaggerSchema>{};
+    schemas.addAll(root.definitions);
+
+    final neededSchemaKey =
+        schemas.keys.firstWhereOrNull((key) => key.getRef() == ref.getRef());
+
+    if (neededSchemaKey == null) {
+      return false;
+    }
+
+    final neededSchema = schemas[neededSchemaKey]!;
+
+    return kBasicTypes.contains(neededSchema.type);
+  }
+
   bool _isEnumRef(String ref, SwaggerRoot root) {
     final schemas = root.components?.schemas ?? <String, SwaggerSchema>{};
     schemas.addAll(root.definitions);
@@ -507,6 +523,10 @@ class SwaggerRequestsGenerator {
           return ref.asEnum().asList();
         }
 
+        if (_isBasicTypeRef(ref, root)) {
+          return kObject.pascalCase;
+        }
+
         if (ref.isNotEmpty) {
           return SwaggerModelsGenerator.getValidatedClassName(
                   ref.withPostfix(modelPostfix))
@@ -522,6 +542,10 @@ class SwaggerRequestsGenerator {
     if (schema.ref.isNotEmpty) {
       if (_isEnumRef(schema.ref, root)) {
         return schema.ref.getRef().asEnum();
+      }
+
+      if (_isBasicTypeRef(schema.ref, root)) {
+        return kObject.pascalCase;
       }
 
       return SwaggerModelsGenerator.getValidatedClassName(
@@ -613,7 +637,11 @@ class SwaggerRequestsGenerator {
       final responses = root.components?.responses ?? {};
       final neededResponse = responses[ref.getRef()];
 
-      if (neededResponse?.ref.isNotEmpty == true) {
+      if (neededResponse == null) {
+        return kObject.pascalCase;
+      }
+
+      if (neededResponse.ref.isNotEmpty) {
         return kObject.pascalCase;
       }
 
@@ -652,12 +680,21 @@ class SwaggerRequestsGenerator {
     final schemaRef = content.schema?.ref ?? '';
     if (schemaRef.isNotEmpty) {
       final neededSchema = swaggerRoot.components?.schemas[schemaRef.getRef()];
+
+      if (neededSchema == null) {
+        return kObject.pascalCase;
+      }
+
+      if (kBasicTypes.contains(neededSchema.type)) {
+        return kObject.pascalCase;
+      }
+
       final typeName =
           SwaggerModelsGenerator.getValidatedClassName(schemaRef.getRef())
               .withPostfix(modelPostfix);
 
-      if (neededSchema?.type == kArray) {
-        return neededSchema?.items?.ref
+      if (neededSchema.type == kArray) {
+        return neededSchema.items?.ref
             .getRef()
             .withPostfix(modelPostfix)
             .asList();

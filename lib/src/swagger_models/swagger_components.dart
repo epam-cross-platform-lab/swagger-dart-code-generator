@@ -42,18 +42,17 @@ Map<String, SwaggerSchema> _mapResponses(Map<String, dynamic>? json) {
     final content =
         (value as Map<String, dynamic>)['content'] as Map<String, dynamic>?;
 
-    final appJsonKey = content?.keys.firstWhere(
-            (element) => element.startsWith('application/json'),
-            orElse: () => '') ??
-        '';
+    Map<String, dynamic>? appJson;
 
-    if (appJsonKey.isNotEmpty) {
-      final appJson = content?[appJsonKey] as Map<String, dynamic>?;
+    if (content?.length == 1) {
+      appJson = content?.values.first as Map<String, dynamic>?;
+    } else {
+      appJson = content?['application/json'] as Map<String, dynamic>?;
+    }
 
-      if (appJson != null && appJson['schema'] != null) {
-        results[key] =
-            SwaggerSchema.fromJson(appJson['schema'] as Map<String, dynamic>);
-      }
+    if (appJson != null && appJson['schema'] != null) {
+      results[key] =
+          SwaggerSchema.fromJson(appJson['schema'] as Map<String, dynamic>);
     }
   });
 
