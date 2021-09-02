@@ -112,7 +112,8 @@ abstract class SwaggerModelsGenerator {
     paths.forEach((path, pathValue) {
       final requests = pathValue as Map<String, dynamic>;
 
-      requests.removeWhere((key, value) => key == 'parameters');
+      requests
+          .removeWhere((key, value) => key == 'parameters' || key == 'summary');
 
       requests.forEach((request, requestValue) {
         if (options.excludePaths.isNotEmpty &&
