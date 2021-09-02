@@ -475,8 +475,7 @@ class SwaggerRequestsGenerator {
   }
 
   bool _isBasicTypeRef(String ref, SwaggerRoot root) {
-    final schemas = root.components?.schemas ?? <String, SwaggerSchema>{};
-    schemas.addAll(root.definitions);
+    final schemas = _getAllReusableObjects(root);
 
     final neededSchemaKey =
         schemas.keys.firstWhereOrNull((key) => key.getRef() == ref.getRef());
