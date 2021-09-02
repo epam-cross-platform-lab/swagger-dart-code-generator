@@ -634,8 +634,8 @@ class SwaggerRequestsGenerator {
     final ref = swaggerResponse.schema?.ref ?? swaggerResponse.ref;
 
     if (ref.isNotEmpty) {
-      final responses = root.components?.responses ?? {};
-      final neededResponse = responses[ref.getRef()];
+      final allReusableObjects = _getAllReusableObjects(root);
+      final neededResponse = allReusableObjects[ref.getRef()];
 
       if (neededResponse == null) {
         return kObject.pascalCase;
@@ -649,6 +649,16 @@ class SwaggerRequestsGenerator {
     }
 
     return null;
+  }
+
+  Map<String, SwaggerSchema> _getAllReusableObjects(SwaggerRoot root) {
+    final results = <String, SwaggerSchema>{};
+    results.addAll(root.definitions);
+    results.addAll(root.components?.schemas ?? {});
+    results.addAll(root.components?.responses ?? {});
+    results.addAll(root.components?.requestBodies ?? {});
+
+    return results;
   }
 
   String? _getReturnTypeFromOriginalRef(
