@@ -777,10 +777,6 @@ class SwaggerRequestsGenerator {
       );
     }
 
-    if (path == '/v2/customers/{customerId}/entitlements') {
-      final v = 0;
-    }
-
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
         _getReturnTypeFromSchema(neededResponse, modelPostfix, swaggerRoot) ??
         _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
