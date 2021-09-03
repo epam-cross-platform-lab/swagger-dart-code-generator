@@ -64,7 +64,7 @@ Map<String, SwaggerPath> _mapPaths(Map<String, dynamic>? paths) {
   return paths.map((path, pathValue) {
     final value = pathValue as Map<String, dynamic>;
     final parameters = value['parameters'] as List<dynamic>?;
-    value.removeWhere((key, value) => key == 'parameters');
+    value.removeWhere((key, value) => key == 'parameters' || key == 'summary');
 
     return MapEntry(
       path,

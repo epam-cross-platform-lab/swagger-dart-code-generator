@@ -1,3 +1,7 @@
+# 2.1.1+2
+
+* Fixed issues when content has no application/json child
+
 # 2.1.1+1
 
 * Fixed Issue ([#235](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/235))
