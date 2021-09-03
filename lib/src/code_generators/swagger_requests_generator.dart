@@ -477,14 +477,11 @@ class SwaggerRequestsGenerator {
   bool _isBasicTypeRef(String ref, SwaggerRoot root) {
     final schemas = _getAllReusableObjects(root);
 
-    final neededSchemaKey =
-        schemas.keys.firstWhereOrNull((key) => key.getRef() == ref.getRef());
+    final neededSchema = schemas[ref.getUnformattedRef()];
 
-    if (neededSchemaKey == null) {
+    if (neededSchema == null) {
       return false;
     }
-
-    final neededSchema = schemas[neededSchemaKey]!;
 
     return kBasicTypes.contains(neededSchema.type);
   }
@@ -634,7 +631,7 @@ class SwaggerRequestsGenerator {
 
     if (ref.isNotEmpty) {
       final allReusableObjects = _getAllReusableObjects(root);
-      final neededResponse = allReusableObjects[ref.getRef()];
+      final neededResponse = allReusableObjects[ref.getUnformattedRef()];
 
       if (neededResponse == null) {
         return kObject.pascalCase;
@@ -688,7 +685,8 @@ class SwaggerRequestsGenerator {
 
     final schemaRef = content.schema?.ref ?? '';
     if (schemaRef.isNotEmpty) {
-      final neededSchema = swaggerRoot.components?.schemas[schemaRef.getRef()];
+      final allRefs = _getAllReusableObjects(swaggerRoot);
+      final neededSchema = allRefs[schemaRef.getUnformattedRef()];
 
       if (neededSchema == null) {
         return kObject.pascalCase;
@@ -777,6 +775,10 @@ class SwaggerRequestsGenerator {
         methodName: methodName,
         modelPostfix: modelPostfix,
       );
+    }
+
+    if (path == '/v2/customers/{customerId}/entitlements') {
+      final v = 0;
     }
 
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
