@@ -240,11 +240,6 @@ abstract class SwaggerModelsGenerator {
   }
 
   static String getValidatedParameterName(String parameterName) {
-    if (exceptionWords.contains(parameterName) ||
-        kBasicTypes.contains(parameterName)) {
-      return '\$$parameterName';
-    }
-
     if (parameterName.isEmpty) {
       return parameterName;
     }
@@ -266,6 +261,11 @@ abstract class SwaggerModelsGenerator {
 
     if (isEnum) {
       return 'enums.$result';
+    }
+
+    if (exceptionWords.contains(result.camelCase) ||
+        kBasicTypes.contains(result.camelCase)) {
+      return '\$$parameterName';
     }
 
     if (result.isEmpty) {

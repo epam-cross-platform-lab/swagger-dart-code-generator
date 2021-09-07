@@ -110,6 +110,7 @@ class SwaggerRequestsGenerator {
           swaggerRequest: swaggerRequest,
           ignoreHeaders: options.ignoreHeaders,
           modelPostfix: options.modelPostfix,
+          swaggerPath: swaggerPath,
           path: path,
           requestType: requestType,
           root: swaggerRoot,
@@ -379,12 +380,13 @@ class SwaggerRequestsGenerator {
     required String modelPostfix,
     required SwaggerRoot root,
     required GeneratorOptions options,
+    required SwaggerPath swaggerPath,
   }) {
     final definedParameters = <String, SwaggerRequestParameter>{};
     definedParameters.addAll(root.parameters);
     definedParameters.addAll(root.components?.parameters ?? {});
 
-    final parameters = swaggerRequest.parameters
+    final parameters = [...swaggerRequest.parameters, ...swaggerPath.parameters]
         .map((par) => definedParameters[par.ref.split('/').last] ?? par)
         .toList();
 
