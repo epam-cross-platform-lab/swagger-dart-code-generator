@@ -1,3 +1,10 @@
+# 2.1.1+3
+
+* Fixed Issue ([#240](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/240))
+* Fixed Issue ([#211](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/211))
+* Fixed cases when parameters named by keywords, for example In, For, Class etx
+* Added generation of parameters from, path (not only from requests)
+
 # 2.1.1+2
 
 * Fixed issues when content has no application/json child
