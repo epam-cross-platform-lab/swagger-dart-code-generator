@@ -13,6 +13,7 @@ extension ParameterExtension on Parameter {
           ..required = required
           ..type = type ?? this.type
           ..named = named
+          ..defaultTo = defaultTo
           ..annotations.addAll(annotations ?? this.annotations),
       );
 }

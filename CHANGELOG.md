@@ -1,3 +1,7 @@
+# 2.1.1+4
+
+* Fix for default value for named parameters
+
 # 2.1.1+3
 
 * Fixed Issue ([#240](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/240))
