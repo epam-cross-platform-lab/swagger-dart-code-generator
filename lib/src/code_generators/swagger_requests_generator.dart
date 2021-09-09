@@ -140,7 +140,8 @@ class SwaggerRequestsGenerator {
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
           ..docs.add(_getCommentsForMethod(
-            methodDescription: swaggerRequest.summary,
+            methodSummary: swaggerRequest.summary,
+            methodDescription: swaggerRequest.description,
             parameters: swaggerRequest.parameters,
             options: options,
           ))
@@ -230,6 +231,7 @@ class SwaggerRequestsGenerator {
   }
 
   String _getCommentsForMethod({
+    required String methodSummary,
     required String methodDescription,
     required List<SwaggerRequestParameter> parameters,
     required GeneratorOptions options,
@@ -241,8 +243,16 @@ class SwaggerRequestsGenerator {
               parameter.inParameter,
               options,
             ));
-
-    final formattedDescription = methodDescription.split('\n').join('\n///');
+    List<String> descriptionLines = [];
+    if(!methodSummary.trim().isEmpty) {
+      descriptionLines.addAll(methodSummary.split('\n'));
+      descriptionLines.add("");
+      descriptionLines.add("");
+    }
+    if(!methodDescription.trim().isEmpty){
+      descriptionLines.addAll(methodDescription.split('\n'));
+    }
+      var formattedDescription = descriptionLines.join('\n///');
 
     return ['///$formattedDescription', ...parametersComments]
         .where((String element) => element.isNotEmpty)

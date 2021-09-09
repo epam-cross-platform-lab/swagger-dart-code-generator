@@ -429,10 +429,15 @@ abstract class SwaggerModelsGenerator {
     if (typeName != kDynamic) {
       typeName += '?';
     }
+    var description='';
+    if(propertyEntryMap.containsKey('description')) {
+      description = propertyEntryMap['description']?.toString()?.trim()??'';
+      if(!description.isEmpty) description='/// $description\n';
+    }
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue$unknownEnumValue)\n";
-    return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$description\t$jsonKeyContent\t $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateUnknownEnumValue(List<String> allEnumNames,
@@ -505,10 +510,17 @@ abstract class SwaggerModelsGenerator {
 
     final dateToJsonValue = generateToJsonForDate(propertyEntryMap);
 
+    var description='\n';
+    if(propertyEntryMap.containsKey('description')) {
+      description = propertyEntryMap['description']?.toString()?.trim()??'\n';
+      if(!description.isEmpty) description='/// $description\n';
+    }
+
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
 
-    return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+
+    return '$description\t$jsonKeyContent\t generatePropertyContentBySchema $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generatePropertyContentByRef(
@@ -550,10 +562,16 @@ abstract class SwaggerModelsGenerator {
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
+    var description='\n';
+    if(propertyEntryMap.containsKey('description')) {
+      description = propertyEntryMap['description']?.toString()?.trim()??'\n';
+      if(!description.isEmpty) description='/// $description\n';
+    }
+
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    return '\t$jsonKeyContent\tfinal $typeName? $propertyName;';
+    return '$description\t$jsonKeyContent\t $typeName? $propertyName;';
   }
 
   String generateEnumPropertyContent(
@@ -575,8 +593,8 @@ abstract class SwaggerModelsGenerator {
     final includeIfNullString = generateIncludeIfNullString(options);
 
     return '''
-  @JsonKey($unknownEnumValue$includeIfNullString)
-  final ${className.capitalize + key.capitalize}? ${SwaggerModelsGenerator.generateFieldName(key)};''';
+  @JsonKey($unknownEnumValue$includeIfNullString)\t
+  ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
   }
 
   String generateListPropertyContent(
@@ -652,6 +670,12 @@ abstract class SwaggerModelsGenerator {
 
     final includeIfNullString = generateIncludeIfNullString(options);
 
+    var description='\n';
+    if(propertyEntryMap.containsKey('description')) {
+      description = propertyEntryMap['description']?.toString()?.trim()??'\n';
+      if(!description.isEmpty) description='/// $description\n';
+    }
+
     String jsonKeyContent;
     if (unknownEnumValue.isEmpty) {
       jsonKeyContent =
@@ -661,7 +685,7 @@ abstract class SwaggerModelsGenerator {
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '$jsonKeyContent  final List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$description$jsonKeyContent\t  List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateGeneralPropertyContent(
@@ -723,8 +747,13 @@ abstract class SwaggerModelsGenerator {
     if (typeName != kDynamic) {
       typeName += '?';
     }
+    var description='\n';
+    if(val.containsKey('description')) {
+      description = val['description']?.toString()?.trim()??'\n';
+      if(!description.isEmpty) description='/// $description\n';
+    }
 
-    return '\t$jsonKeyContent  final $typeName $propertyName;';
+    return '$description\t$jsonKeyContent\t  $typeName $propertyName;';
   }
 
   String generatePropertyContentByType(
@@ -949,7 +978,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
   }
 
   return ${neededName.camelCase}
-      .map((e) => ${neededName.camelCase}FromJson(e.toString()))
+      .map((dynamic e) => ${neededName.camelCase}FromJson(e.toString()))
       .toList();
 }
     ''';
@@ -1050,8 +1079,8 @@ $copyWithMethod
       String generatedProperties, String validatedClassName) {
     final splittedProperties = generatedProperties
         .split(';')
-        .where((element) => element.isNotEmpty)
-        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .where((element) => element.split('\t').length>2)
+        .map((e) => e.split('\t')[2].trim())
         .map((e) => e.split(' ')[1])
         .toList();
 
@@ -1078,8 +1107,8 @@ $copyWithMethod
       String generatedProperties, String validatedClassName) {
     final splittedProperties = generatedProperties
         .split(';')
-        .where((element) => element.isNotEmpty)
-        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .where((element) => element.split('\t').length>2)
+        .map((e) => e.split('\t')[2].trim())
         .map((e) {
       final items = e.split(' ');
       if (!items.first.endsWith('?')) {
@@ -1107,8 +1136,8 @@ $copyWithMethod
       String generatedProperties, String validatedClassName) {
     final propertiesHash = generatedProperties
         .split(';')
-        .where((element) => element.isNotEmpty)
-        .map((e) => e.substring(e.indexOf('final ') + 6))
+        .where((element) => element.split('\t').length>2)
+        .map((e) => e.split('\t')[2].trim())
         .map((e) => e.substring(e.indexOf(' ') + 1))
         .map((e) => 'const DeepCollectionEquality().hash($e)')
         .toList();

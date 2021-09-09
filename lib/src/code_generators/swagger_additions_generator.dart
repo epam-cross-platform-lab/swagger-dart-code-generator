@@ -164,7 +164,7 @@ class \$CustomJsonDecoder {
   }
 
   List<T> _decodeList<T>(Iterable values) =>
-      values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();
+      values.where((dynamic v) => v != null).map<T>((dynamic v) => decode<T>(v) as T).toList();
 }
 
 class \$JsonSerializableConverter extends chopper.JsonConverter {
@@ -176,7 +176,7 @@ class \$JsonSerializableConverter extends chopper.JsonConverter {
       return chopper.Response(response.base, null, error: response.error);
     }
 
-    final jsonRes = super.convertResponse(response);
+    final jsonRes = super.convertResponse<ResultType, Item>(response);
     return jsonRes.copyWith<ResultType>(
         body: \$jsonDecoder.decode<Item>(jsonRes.body) as ResultType);
   }
