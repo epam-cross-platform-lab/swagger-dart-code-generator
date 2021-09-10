@@ -1,3 +1,7 @@
+# 2.1.2
+
+* Updated packages json_serializable, json_annotation, build_runner
+
 # 2.1.1+4
 
 * Fix for default value for named parameters
