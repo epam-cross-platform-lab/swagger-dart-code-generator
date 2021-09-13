@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
@@ -116,6 +117,10 @@ abstract class SwaggerModelsGenerator {
           .removeWhere((key, value) => key == 'parameters' || key == 'summary');
 
       requests.forEach((request, requestValue) {
+        if (!supportedRequestTypes.contains(request.toLowerCase())) {
+          return;
+        }
+
         if (options.excludePaths.isNotEmpty &&
             options.excludePaths
                 .any((exclPath) => RegExp(exclPath).hasMatch(request))) {
@@ -377,7 +382,7 @@ abstract class SwaggerModelsGenerator {
     path = path.split('}').map((e) => e.capitalize).join();
     path = path.split(',').map((e) => e.capitalize).join();
 
-    final correctedPath = generateFieldName(path);
+    final correctedPath = SwaggerModelsGenerator.getValidatedClassName(path);
 
     return '${correctedPath.capitalize}${requestType.capitalize}'.camelCase;
   }

@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -64,7 +65,8 @@ Map<String, SwaggerPath> _mapPaths(Map<String, dynamic>? paths) {
   return paths.map((path, pathValue) {
     final value = pathValue as Map<String, dynamic>;
     final parameters = value['parameters'] as List<dynamic>?;
-    value.removeWhere((key, value) => key == 'parameters' || key == 'summary');
+    value.removeWhere(
+        (key, value) => !supportedRequestTypes.contains(key.toLowerCase()));
 
     return MapEntry(
       path,
