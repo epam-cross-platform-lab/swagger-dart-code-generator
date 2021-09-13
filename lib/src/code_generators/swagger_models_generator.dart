@@ -116,6 +116,10 @@ abstract class SwaggerModelsGenerator {
           .removeWhere((key, value) => key == 'parameters' || key == 'summary');
 
       requests.forEach((request, requestValue) {
+        if (!supportedRequestTypes.contains(request.toLowerCase())) {
+          return;
+        }
+
         if (options.excludePaths.isNotEmpty &&
             options.excludePaths
                 .any((exclPath) => RegExp(exclPath).hasMatch(request))) {
@@ -377,7 +381,7 @@ abstract class SwaggerModelsGenerator {
     path = path.split('}').map((e) => e.capitalize).join();
     path = path.split(',').map((e) => e.capitalize).join();
 
-    final correctedPath = generateFieldName(path);
+    final correctedPath = SwaggerModelsGenerator.getValidatedClassName(path);
 
     return '${correctedPath.capitalize}${requestType.capitalize}'.camelCase;
   }

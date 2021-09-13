@@ -1,3 +1,8 @@
+# 2.1.3
+
+* Fixed cases when swagger has not put post get requests
+* Added validation for requests names generation
+
 # 2.1.2
 
 * Updated packages json_serializable, json_annotation, build_runner

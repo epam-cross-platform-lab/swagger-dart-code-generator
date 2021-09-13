@@ -274,8 +274,9 @@ class SwaggerRequestsGenerator {
       case kBody:
         return refer(kBody.pascalCase).call([]);
       default:
+        //https://github.com/lejard-h/chopper/issues/295
         return refer(parameter.inParameter.pascalCase)
-            .call([literalString(parameter.name)]);
+            .call([literalString(parameter.name.replaceAll('\$', ''))]);
     }
   }
 
