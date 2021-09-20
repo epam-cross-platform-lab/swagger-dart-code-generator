@@ -176,7 +176,7 @@ class \$JsonSerializableConverter extends chopper.JsonConverter {
       return chopper.Response(response.base, null, error: response.error);
     }
 
-    final jsonRes = super.convertResponse<ResultType, Item>(response);
+    final jsonRes = super.convertResponse(response);
     return jsonRes.copyWith<ResultType>(
         body: \$jsonDecoder.decode<Item>(jsonRes.body) as ResultType);
   }
