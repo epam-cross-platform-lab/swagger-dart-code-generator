@@ -37,6 +37,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
     useRequiredAttributeForHeaders:
         json['use_required_attribute_for_headers'] as bool? ?? true,
     useInheritance: json['use_inheritance'] as bool? ?? true,
+    usePathForRequestNames: json['use_path_for_request_names'] as bool? ?? true,
     includeIfNull: json['include_if_null'] as bool?,
     modelPostfix: json['model_postfix'] as String? ?? '',
     includePaths: (json['include_paths'] as List<dynamic>?)
@@ -58,6 +59,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
           instance.useRequiredAttributeForHeaders,
       'ignore_headers': instance.ignoreHeaders,
       'use_inheritance': instance.useInheritance,
+      'use_path_for_request_names': instance.usePathForRequestNames,
       'enums_case_sensitive': instance.enumsCaseSensitive,
       'include_if_null': instance.includeIfNull,
       'input_folder': instance.inputFolder,

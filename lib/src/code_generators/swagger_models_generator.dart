@@ -431,8 +431,8 @@ abstract class SwaggerModelsGenerator {
     }
     var description='';
     if(propertyEntryMap.containsKey('description')) {
-      description = propertyEntryMap['description']?.toString()?.trim()??'';
-      if(!description.isEmpty) description='/// $description\n';
+      description = propertyEntryMap['description'].toString().trim();
+      if(description.isNotEmpty) description='/// $description\n';
     }
 
     final jsonKeyContent =
@@ -512,8 +512,8 @@ abstract class SwaggerModelsGenerator {
 
     var description='\n';
     if(propertyEntryMap.containsKey('description')) {
-      description = propertyEntryMap['description']?.toString()?.trim()??'\n';
-      if(!description.isEmpty) description='/// $description\n';
+      description = propertyEntryMap['description'].toString().trim();
+      if(description.isNotEmpty) description='/// $description\n';
     }
 
     final jsonKeyContent =
@@ -564,8 +564,8 @@ abstract class SwaggerModelsGenerator {
 
     var description='\n';
     if(propertyEntryMap.containsKey('description')) {
-      description = propertyEntryMap['description']?.toString()?.trim()??'\n';
-      if(!description.isEmpty) description='/// $description\n';
+      description = propertyEntryMap['description'].toString().trim();
+      if(description.isNotEmpty) description='/// $description\n';
     }
 
     final jsonKeyContent =
@@ -672,8 +672,8 @@ abstract class SwaggerModelsGenerator {
 
     var description='\n';
     if(propertyEntryMap.containsKey('description')) {
-      description = propertyEntryMap['description']?.toString()?.trim()??'\n';
-      if(!description.isEmpty) description='/// $description\n';
+      description = propertyEntryMap['description'].toString().trim();
+      if(description.isNotEmpty) description='/// $description\n';
     }
 
     String jsonKeyContent;
@@ -749,8 +749,8 @@ abstract class SwaggerModelsGenerator {
     }
     var description='\n';
     if(val.containsKey('description')) {
-      description = val['description']?.toString()?.trim()??'\n';
-      if(!description.isEmpty) description='/// $description\n';
+      description = val['description'].toString().trim();
+      if(description.isNotEmpty) description='/// $description\n';
     }
 
     return '$description\t$jsonKeyContent\t  $typeName $propertyName;';

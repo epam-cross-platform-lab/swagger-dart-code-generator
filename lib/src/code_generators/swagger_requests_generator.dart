@@ -16,6 +16,7 @@ import 'package:collection/collection.dart';
 import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
 
 import 'constants.dart';
+import 'swagger_models_generator.dart';
 
 class SwaggerRequestsGenerator {
   String generate({
@@ -243,16 +244,16 @@ class SwaggerRequestsGenerator {
               parameter.inParameter,
               options,
             ));
-    List<String> descriptionLines = [];
-    if(!methodSummary.trim().isEmpty) {
+    var descriptionLines = <String>[];
+    if(methodSummary.trim().isNotEmpty) {
       descriptionLines.addAll(methodSummary.split('\n'));
-      descriptionLines.add("");
-      descriptionLines.add("");
+      descriptionLines.add('');
+      descriptionLines.add('');
     }
-    if(!methodDescription.trim().isEmpty){
+    if(methodDescription.trim().isNotEmpty){
       descriptionLines.addAll(methodDescription.split('\n'));
     }
-      var formattedDescription = descriptionLines.join('\n///');
+    var formattedDescription = descriptionLines.join('\n///');
 
     return ['///$formattedDescription', ...parametersComments]
         .where((String element) => element.isNotEmpty)
@@ -583,7 +584,10 @@ class SwaggerRequestsGenerator {
     required String path,
     required String requestType,
   }) {
-    return SwaggerModelsGenerator.generateRequestName(path, requestType);
+    if(options.usePathForRequestNames || swaggerRequest.operationId.isEmpty){
+        return SwaggerModelsGenerator.generateRequestName(path, requestType);
+    }
+    return SwaggerModelsGenerator.generateFieldName(swaggerRequest.operationId);
   }
 
   static SwaggerResponse? getSuccessedResponse({

@@ -11,6 +11,7 @@ class GeneratorOptions {
     this.ignoreHeaders = false,
     this.useDefaultNullForLists = false,
     this.buildOnlyModels = false,
+    this.usePathForRequestNames = true,
     this.defaultValuesMap = const <DefaultValueMap>[],
     this.defaultHeaderValuesMap = const <DefaultHeaderValueMap>[],
     this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
@@ -61,6 +62,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool buildOnlyModels;
+
+  @JsonKey(defaultValue: true)
+  final bool usePathForRequestNames;
 
   @JsonKey(defaultValue: '')
   final String modelPostfix;
