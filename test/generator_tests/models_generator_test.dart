@@ -11,12 +11,20 @@ void main() {
   group('generate', () {
     const fileName = 'order_service.dart';
 
-    test('Should parse object name as a field Type', () {
+    test('Should parse object name as a immutable field Type', () {
       final result = generator.generate(model_with_parameters_v3, fileName,
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+          GeneratorOptions(inputFolder: '', outputFolder: '', modelsImmutable: true));
 
       expect(
-          result, contains('final enums.TokensResponseTokenType? tokenType'));
+          result, contains('\n\tfinal enums.TokensResponseTokenType? tokenType'));
+    });
+
+    test('Should parse object name as a mutable field Type', () {
+      final result = generator.generate(model_with_parameters_v3, fileName,
+          GeneratorOptions(inputFolder: '', outputFolder: '', modelsImmutable: false));
+
+      expect(
+          result, contains('\n\tenums.TokensResponseTokenType? tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
@@ -461,7 +469,7 @@ void main() {
       expect(result, contains(fieldExpectedResult));
     });
 
-    test('Should return properties from schema', () {
+    test('Should return immutable properties from schema', () {
       final map = <String, dynamic>{
         'Animals': <String, dynamic>{
           'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
@@ -470,7 +478,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet? animals';
+      const fieldExpectedResult = '\n\tfinal Pet? animals';
       final result = generator.generatePropertiesContent(
           map,
           {},
@@ -479,7 +487,31 @@ void main() {
           false,
           [],
           [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+          GeneratorOptions(inputFolder: '', outputFolder: '', modelsImmutable: true));
+
+      expect(result, contains(jsonKeyExpectedResult));
+      expect(result, contains(fieldExpectedResult));
+    });
+
+    test('Should return mutable properties from schema', () {
+      final map = <String, dynamic>{
+        'Animals': <String, dynamic>{
+          'schema': <String, dynamic>{'\$ref': '#/definitions/Pet'}
+        }
+      };
+
+      const className = 'Animals';
+      const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
+      const fieldExpectedResult = '\n\tPet? animals';
+      final result = generator.generatePropertiesContent(
+          map,
+          {},
+          className,
+          <DefaultValueMap>[],
+          false,
+          [],
+          [],
+          GeneratorOptions(inputFolder: '', outputFolder: '', modelsImmutable: false));
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));

@@ -429,6 +429,7 @@ abstract class SwaggerModelsGenerator {
     if (typeName != kDynamic) {
       typeName += '?';
     }
+    
     var description='';
     if(propertyEntryMap.containsKey('description')) {
       description = propertyEntryMap['description'].toString().trim();
@@ -437,7 +438,7 @@ abstract class SwaggerModelsGenerator {
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue$unknownEnumValue)\n";
-    return '$description\t$jsonKeyContent\t $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$description\t$jsonKeyContent\t${_generateFinalIfImmutable(options)}$typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generateUnknownEnumValue(List<String> allEnumNames,
@@ -515,12 +516,11 @@ abstract class SwaggerModelsGenerator {
       description = propertyEntryMap['description'].toString().trim();
       if(description.isNotEmpty) description='/// $description\n';
     }
-
+    
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
-
-
-    return '$description\t$jsonKeyContent\t generatePropertyContentBySchema $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+   
+    return '$description\t$jsonKeyContent\t${_generateFinalIfImmutable(options)}$typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
   String generatePropertyContentByRef(
@@ -570,8 +570,8 @@ abstract class SwaggerModelsGenerator {
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
-
-    return '$description\t$jsonKeyContent\t $typeName? $propertyName;';
+    
+    return '$description\t$jsonKeyContent\t${_generateFinalIfImmutable(options)}$typeName? $propertyName;';
   }
 
   String generateEnumPropertyContent(
@@ -593,8 +593,8 @@ abstract class SwaggerModelsGenerator {
     final includeIfNullString = generateIncludeIfNullString(options);
 
     return '''
-  @JsonKey($unknownEnumValue$includeIfNullString)\t
-  ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
+  @JsonKey($unknownEnumValue$includeIfNullString)
+  \t${_generateFinalIfImmutable(options)}${className.capitalize + key.capitalize}? ${SwaggerModelsGenerator.generateFieldName(key)};''';
   }
 
   String generateListPropertyContent(
@@ -685,8 +685,9 @@ abstract class SwaggerModelsGenerator {
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
     }
 
-    return '$description$jsonKeyContent\t  List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    return '$description$jsonKeyContent\t${_generateFinalIfImmutable(options)}List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
+
 
   String generateGeneralPropertyContent(
       String propertyName,
@@ -753,8 +754,10 @@ abstract class SwaggerModelsGenerator {
       if(description.isNotEmpty) description='/// $description\n';
     }
 
-    return '$description\t$jsonKeyContent\t  $typeName $propertyName;';
+    return '$description\t$jsonKeyContent\t${_generateFinalIfImmutable(options)}$typeName $propertyName;';
   }
+
+  String _generateFinalIfImmutable(GeneratorOptions options) => options.modelsImmutable ? 'final ':'';
 
   String generatePropertyContentByType(
       Map<String, dynamic> propertyEntryMap,
@@ -1081,6 +1084,7 @@ $copyWithMethod
         .split(';')
         .where((element) => element.split('\t').length>2)
         .map((e) => e.split('\t')[2].trim())
+        .map((e) => e.replaceFirst(RegExp(r'^final '),''))
         .map((e) => e.split(' ')[1])
         .toList();
 
@@ -1109,6 +1113,7 @@ $copyWithMethod
         .split(';')
         .where((element) => element.split('\t').length>2)
         .map((e) => e.split('\t')[2].trim())
+        .map((e) => e.replaceFirst(RegExp(r'^final '),''))
         .map((e) {
       final items = e.split(' ');
       if (!items.first.endsWith('?')) {
@@ -1138,6 +1143,7 @@ $copyWithMethod
         .split(';')
         .where((element) => element.split('\t').length>2)
         .map((e) => e.split('\t')[2].trim())
+        .map((e) => e.replaceFirst(RegExp(r'^final '),''))
         .map((e) => e.substring(e.indexOf(' ') + 1))
         .map((e) => 'const DeepCollectionEquality().hash($e)')
         .toList();
