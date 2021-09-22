@@ -240,6 +240,10 @@ abstract class SwaggerModelsGenerator {
       return 'enums.$result';
     }
 
+    if (result.startsWith(RegExp('[0-9]'))) {
+      return '\$$result';
+    }
+
     return result;
   }
 
