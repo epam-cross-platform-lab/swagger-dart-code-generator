@@ -1,3 +1,8 @@
+# 2.1.3+1
+
+* Fixed Issue ([#248](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/248))
+* Fix cases when responses was named like numbers
+
 # 2.1.3
 
 * Fixed cases when swagger has not put post get requests
