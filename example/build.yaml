@@ -24,6 +24,8 @@ targets:
           ignore_headers: false
           use_required_attribute_for_headers: false
           include_if_null: false
+          exclude_paths:
+            - "/items/{id}"
           response_override_value_map:
             - url: "/v2/commons/availableColours"
               method: get

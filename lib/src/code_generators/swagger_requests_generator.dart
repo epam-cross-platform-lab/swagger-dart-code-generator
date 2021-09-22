@@ -100,6 +100,17 @@ class SwaggerRequestsGenerator {
           return;
         }
 
+        if (options.excludePaths
+            .any((excludePath) => RegExp(excludePath).hasMatch(path))) {
+          return;
+        }
+
+        if (options.includePaths.isNotEmpty &&
+            !options.includePaths
+                .any((includePath) => RegExp(includePath).hasMatch(path))) {
+          return;
+        }
+
         final methodName = _getRequestMethodName(
             requestType: requestType,
             swaggerRequest: swaggerRequest,
