@@ -74,7 +74,8 @@ ${_generateModelsMapping(dartCode, options)}};''';
           if (schema != null &&
               content!.entries.length == 1 &&
               !schema.containsKey('\$ref')) {
-            final validatedName = key.capitalize + options.modelPostfix;
+            final validatedName = SwaggerModelsGenerator.getValidatedClassName(
+                key.capitalize + options.modelPostfix);
             result.add('\t$validatedName: $validatedName.fromJsonFactory,');
           }
         }

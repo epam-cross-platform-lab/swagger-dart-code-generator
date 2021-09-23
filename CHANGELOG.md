@@ -1,3 +1,13 @@
+# 2.1.3+2
+
+* Fixed Issue ([#245](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/245))
+* Fixed ability to set exclude_path and include_path
+
+# 2.1.3+1
+
+* Fixed Issue ([#248](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/248))
+* Fix cases when responses was named like numbers
+
 # 2.1.3
 
 * Fixed cases when swagger has not put post get requests
