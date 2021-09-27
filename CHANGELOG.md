@@ -1,3 +1,7 @@
+# 2.2.0
+
+* Upgradet packages
+
 # 2.1.3+2
 
 * Fixed Issue ([#245](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/245))
