@@ -1,3 +1,7 @@
+# 2.2.0+1
+
+* Updated changelog (see previous version changes)
+
 # 2.2.0
 
 * **BREAKING** Upgraded to support json_serializable 5.0.0
