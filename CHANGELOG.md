@@ -1,6 +1,6 @@
 # 2.2.0
 
-* Upgradet packages
+* **BREAKING** Upgraded to support json_serializable 5.0.0
 
 # 2.1.3+2
 
