@@ -32,15 +32,17 @@ void main() {
         className: 'CarsService',
         fileName: 'cars_service',
         options: GeneratorOptions(
-          inputFolder: '',
-          outputFolder: '',
-          defaultHeaderValuesMap: [
-            DefaultHeaderValueMap(
-              defaultValue: '120',
-              headerName: 'id',
-            ),
-          ],
-        ),
+            inputFolder: '',
+            outputFolder: '',
+            defaultHeaderValuesMap: [
+              DefaultHeaderValueMap(
+                defaultValue: '120',
+                headerName: 'id',
+              ),
+            ],
+            includePaths: [
+              'car'
+            ]),
       );
 
       expect(result2, contains('Future<chopper.Response<CarModel>>'));
