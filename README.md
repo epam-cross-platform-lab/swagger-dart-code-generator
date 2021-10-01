@@ -39,6 +39,7 @@ The generated code uses the following packages in run-time:
 ```yaml
 dependencies:
   chopper: ^4.0.1
+  json_annotation: ^4.1.0
 ```
 
 Then run:
