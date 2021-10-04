@@ -5,10 +5,10 @@ targets:
         enabled: True
 builders:
   swagger_dart_code_generator:
-    import: 'package:swagger_dart_code_generator/swagger_dart_code_generator.dart'
-    builder_factories: ['swaggerCodeBuilder']
+    import: "package:swagger_dart_code_generator/swagger_dart_code_generator.dart"
+    builder_factories: ["swaggerCodeBuilder"]
     build_extensions:
-      '$lib$': ['.swagger.dart', '.models.dart', '.converter.dart']
+      "$lib$": [".swagger.dart", ".models.dart", ".converter.dart"]
     build_to: source
     auto_apply: dependents
-    runs_before: ['chopper_generator']
+    runs_before: ["chopper_generator", "json_serializable"]
