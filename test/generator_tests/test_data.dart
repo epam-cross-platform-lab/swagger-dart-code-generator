@@ -25,7 +25,7 @@ const carsService = '''
                 },
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded1",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -45,7 +45,7 @@ const carsService = '''
                 },
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded2",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -118,7 +118,7 @@ const carsService = '''
                 ],
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded3",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -144,7 +144,7 @@ const carsService = '''
                 },
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded4",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -173,7 +173,7 @@ const carsService = '''
                 },
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded5",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -190,7 +190,7 @@ const carsService = '''
                 "summary": "Its needed to test optionalBody",
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded6",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -320,7 +320,7 @@ const carsService = '''
                 ],
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded7",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -351,7 +351,7 @@ const carsService = '''
                 },
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded8",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -394,7 +394,7 @@ const carsService = '''
                 },
                 "responses": {
                     "200": {
-                        "description": "Car successfuly loaded",
+                        "description": "Car successfuly loaded9",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -654,10 +654,90 @@ const carsService = '''
                     }
                 }
             }
+        },
+        "/cars/responseWithAbsendRef": {
+            "put": {
+                "summary": "Sends car to server not existing ref",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car successfuly loaded1",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarMNotExistingCarModelodel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Request body with default type",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CarModelSimple"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/components/responses/CarType"
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/oneMoreRequestBody": {
+            "put": {
+                "summary": "Sends car to server",
+                "requestBody": {
+                    "description": "Car model",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarModelSimple"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/components/responses/NotExistingCarResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "CarModelSimple": {
+                "type": "string"
+            },
             "CarModel": {
                 "type": "object",
                 "properties": {
