@@ -13,6 +13,7 @@ const _inputFileExtensions = ['.swagger', '.json'];
 
 const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
+const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
@@ -29,6 +30,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     result[element.path] = <String>[
       '${options.outputFolder}$name$_outputFileExtension',
       '${options.outputFolder}$name$_outputEnumsFileExtension',
+      '${options.outputFolder}$name$_outputModelsFileExtension',
       '${options.outputFolder}$name$_outputResponsesFileExtension',
     ];
   });
@@ -79,11 +81,13 @@ class SwaggerDartCodeGenerator implements Builder {
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final imports = codeGenerator.generateImportsContent(
-        contents,
-        fileNameWithoutExtension,
-        models.isNotEmpty,
-        options.buildOnlyModels,
-        enums.isNotEmpty);
+      contents,
+      fileNameWithoutExtension,
+      models.isNotEmpty,
+      options.buildOnlyModels,
+      enums.isNotEmpty,
+      options.separateModels,
+    );
 
     final converter = codeGenerator.generateConverter(
         contents, getFileNameWithoutExtension(fileNameWithExtension), options);
@@ -102,10 +106,19 @@ class SwaggerDartCodeGenerator implements Builder {
     final copyAssetId = AssetId(buildStep.inputId.package,
         '${options.outputFolder}$fileNameWithoutExtension$_outputFileExtension');
 
-    await buildStep.writeAsString(
-        copyAssetId,
-        _generateFileContent(imports, requests, converter, models, responses,
-            requestBodies, customDecoder, dateToJson));
+    if (!options.separateModels || !options.buildOnlyModels) {
+      await buildStep.writeAsString(
+          copyAssetId,
+          _generateFileContent(
+              imports,
+              requests,
+              converter,
+              options.separateModels ? '' : models,
+              responses,
+              requestBodies,
+              customDecoder,
+              dateToJson));
+    }
 
     if (enums.isNotEmpty) {
       ///Write enums
@@ -115,6 +128,20 @@ class SwaggerDartCodeGenerator implements Builder {
           '${options.outputFolder}$fileNameWithoutExtension$_outputEnumsFileExtension');
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
+    }
+
+    if (options.separateModels) {
+      ///Write models to separate file
+      final formattedModels = _tryFormatCode(_generateSeparateModelsFileContent(
+        models,
+        fileNameWithoutExtension,
+        enums.isNotEmpty,
+      ));
+
+      final enumsAssetId = AssetId(buildStep.inputId.package,
+          '${options.outputFolder}$fileNameWithoutExtension$_outputModelsFileExtension');
+
+      await buildStep.writeAsString(enumsAssetId, formattedModels);
     }
 
     ///Write additional files on first input
@@ -175,7 +202,9 @@ $dateToJson
 
     final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
 
-    await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
+    if (!options.buildOnlyModels) {
+      await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
+    }
 
     if (options.withConverter && !options.buildOnlyModels) {
       final mappingAssetId =
@@ -186,5 +215,25 @@ $dateToJson
 
       await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
     }
+  }
+
+  String _generateSeparateModelsFileContent(
+    String models,
+    String fileNameWithoutExtension,
+    bool hasEnums,
+  ) {
+    final enumsImport = hasEnums
+        ? "import '$fileNameWithoutExtension.enums.swagger.dart' as enums;"
+        : '';
+
+    return '''
+import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
+$enumsImport
+
+    part '$fileNameWithoutExtension.models.swagger.g.dart';
+
+    $models
+    ''';
   }
 }

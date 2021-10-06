@@ -40,10 +40,20 @@ class SwaggerCodeGenerator {
       _getSwaggerAdditionsGenerator(dartCode)
           .generateConverterMappings(buildExtensions, hasModels);
 
-  String generateImportsContent(String dartCode, String swaggerFileName,
-          bool hasModels, bool buildOnlyModels, bool hasEnums) =>
+  String generateImportsContent(
+    String dartCode,
+    String swaggerFileName,
+    bool hasModels,
+    bool buildOnlyModels,
+    bool hasEnums,
+    bool separateModels,
+  ) =>
       _getSwaggerAdditionsGenerator(dartCode).generateImportsContent(
-          swaggerFileName, hasModels, buildOnlyModels, hasEnums);
+          swaggerFileName,
+          hasModels,
+          buildOnlyModels,
+          hasEnums,
+          separateModels);
 
   String generateConverter(
           String dartCode, String fileName, GeneratorOptions options) =>
