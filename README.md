@@ -84,6 +84,7 @@ targets:
 | `exclude_paths` | `[]` | `false` | List<String> of Regex If not empty -exclude paths matching reges |
 | `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwise - [] |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
+| `separate_models` | `false` | `false` | If option true, generates models into separate file. |
 | `include_if_null` | `null` | `false` | Sets includeIfNull JsonAnnotation feature and sets value for it. If null - not set anything. |
 | `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
 | `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overridden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |
