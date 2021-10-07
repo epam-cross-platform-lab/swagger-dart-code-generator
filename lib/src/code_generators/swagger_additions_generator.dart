@@ -56,8 +56,13 @@ $maps};
   }
 
   ///Generated imports for concrete service
-  String generateImportsContent(String swaggerFileName, bool hasModels,
-      bool buildOnlyModels, bool hasEnums) {
+  String generateImportsContent(
+    String swaggerFileName,
+    bool hasModels,
+    bool buildOnlyModels,
+    bool hasEnums,
+    bool separateModels,
+  ) {
     final result = StringBuffer();
 
     final chopperPartImport =
@@ -75,11 +80,15 @@ import 'package:chopper/chopper.dart' as chopper;''';
     final enumsExport =
         hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
 
-    if (hasModels) {
+    if (hasModels && !separateModels) {
       result.writeln("""
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 """);
+    }
+
+    if (hasModels && separateModels) {
+      result.write("import '$swaggerFileName.models.swagger.dart';");
     }
 
     if (chopperImports.isNotEmpty) {
@@ -93,12 +102,16 @@ import 'package:collection/collection.dart';
       result.write(enumsExport);
     }
 
+    if (hasModels && separateModels) {
+      result.write("export '$swaggerFileName.models.swagger.dart';");
+    }
+
     result.write('\n\n');
 
     if (chopperPartImport.isNotEmpty) {
       result.write(chopperPartImport);
     }
-    if (hasModels) {
+    if (hasModels && !separateModels) {
       result.write("part '$swaggerFileName.swagger.g.dart';");
     }
 

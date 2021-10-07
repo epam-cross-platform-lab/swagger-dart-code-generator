@@ -9,6 +9,7 @@ class GeneratorOptions {
     this.withBaseUrl = true,
     this.withConverter = true,
     this.ignoreHeaders = false,
+    this.separateModels = false,
     this.useDefaultNullForLists = false,
     this.buildOnlyModels = false,
     this.defaultValuesMap = const <DefaultValueMap>[],
@@ -34,6 +35,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
+
+  @JsonKey(defaultValue: false)
+  final bool separateModels;
 
   @JsonKey(defaultValue: true)
   final bool useRequiredAttributeForHeaders;

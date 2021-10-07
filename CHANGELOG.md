@@ -1,3 +1,9 @@
+# 2.2.1
+
+* Added ability to generated models to separate file
+* **BREAKING** Removed generation of client_index if generate only models
+* Fixed Issue ([#244](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/244))
+
 # 2.2.0+1
 
 * Updated changelog (see previous version changes)

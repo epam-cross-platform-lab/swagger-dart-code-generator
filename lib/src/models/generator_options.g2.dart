@@ -6,54 +6,54 @@ part of 'generator_options.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GeneratorOptions _$GeneratorOptionsFromJson(Map json) {
-  return GeneratorOptions(
-    withBaseUrl: json['with_base_url'] as bool? ?? true,
-    withConverter: json['with_converter'] as bool? ?? true,
-    ignoreHeaders: json['ignore_headers'] as bool? ?? false,
-    useDefaultNullForLists:
-        json['use_default_null_for_lists'] as bool? ?? false,
-    buildOnlyModels: json['build_only_models'] as bool? ?? false,
-    defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
-            ?.map((e) =>
-                DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
-            .toList() ??
-        [],
-    defaultHeaderValuesMap:
-        (json['default_header_values_map'] as List<dynamic>?)
-                ?.map((e) => DefaultHeaderValueMap.fromJson(
-                    Map<String, dynamic>.from(e as Map)))
-                .toList() ??
-            [],
-    responseOverrideValueMap:
-        (json['response_override_value_map'] as List<dynamic>?)
-                ?.map((e) => ResponseOverrideValueMap.fromJson(
-                    Map<String, dynamic>.from(e as Map)))
-                .toList() ??
-            [],
-    inputFolder: json['input_folder'] as String? ?? '',
-    outputFolder: json['output_folder'] as String? ?? '',
-    enumsCaseSensitive: json['enums_case_sensitive'] as bool? ?? false,
-    useRequiredAttributeForHeaders:
-        json['use_required_attribute_for_headers'] as bool? ?? true,
-    useInheritance: json['use_inheritance'] as bool? ?? true,
-    includeIfNull: json['include_if_null'] as bool?,
-    modelPostfix: json['model_postfix'] as String? ?? '',
-    includePaths: (json['include_paths'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList() ??
-        [],
-    excludePaths: (json['exclude_paths'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList() ??
-        [],
-  );
-}
+GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
+      withBaseUrl: json['with_base_url'] as bool? ?? true,
+      withConverter: json['with_converter'] as bool? ?? true,
+      ignoreHeaders: json['ignore_headers'] as bool? ?? false,
+      separateModels: json['separate_models'] as bool? ?? false,
+      useDefaultNullForLists:
+          json['use_default_null_for_lists'] as bool? ?? false,
+      buildOnlyModels: json['build_only_models'] as bool? ?? false,
+      defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
+              ?.map((e) =>
+                  DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
+              .toList() ??
+          [],
+      defaultHeaderValuesMap:
+          (json['default_header_values_map'] as List<dynamic>?)
+                  ?.map((e) => DefaultHeaderValueMap.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
+                  .toList() ??
+              [],
+      responseOverrideValueMap:
+          (json['response_override_value_map'] as List<dynamic>?)
+                  ?.map((e) => ResponseOverrideValueMap.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
+                  .toList() ??
+              [],
+      inputFolder: json['input_folder'] as String? ?? '',
+      outputFolder: json['output_folder'] as String? ?? '',
+      enumsCaseSensitive: json['enums_case_sensitive'] as bool? ?? false,
+      useRequiredAttributeForHeaders:
+          json['use_required_attribute_for_headers'] as bool? ?? true,
+      useInheritance: json['use_inheritance'] as bool? ?? true,
+      includeIfNull: json['include_if_null'] as bool?,
+      modelPostfix: json['model_postfix'] as String? ?? '',
+      includePaths: (json['include_paths'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      excludePaths: (json['exclude_paths'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+    );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'with_base_url': instance.withBaseUrl,
       'with_converter': instance.withConverter,
+      'separate_models': instance.separateModels,
       'use_required_attribute_for_headers':
           instance.useRequiredAttributeForHeaders,
       'ignore_headers': instance.ignoreHeaders,
@@ -72,12 +72,11 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'exclude_paths': instance.excludePaths,
     };
 
-DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) {
-  return DefaultValueMap(
-    typeName: json['type_name'] as String? ?? '',
-    defaultValue: json['default_value'] as String? ?? '',
-  );
-}
+DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) =>
+    DefaultValueMap(
+      typeName: json['type_name'] as String? ?? '',
+      defaultValue: json['default_value'] as String? ?? '',
+    );
 
 Map<String, dynamic> _$DefaultValueMapToJson(DefaultValueMap instance) =>
     <String, dynamic>{
@@ -86,13 +85,12 @@ Map<String, dynamic> _$DefaultValueMapToJson(DefaultValueMap instance) =>
     };
 
 ResponseOverrideValueMap _$ResponseOverrideValueMapFromJson(
-    Map<String, dynamic> json) {
-  return ResponseOverrideValueMap(
-    url: json['url'] as String? ?? '',
-    method: json['method'] as String? ?? '',
-    overriddenValue: json['overridden_value'] as String? ?? '',
-  );
-}
+        Map<String, dynamic> json) =>
+    ResponseOverrideValueMap(
+      url: json['url'] as String? ?? '',
+      method: json['method'] as String? ?? '',
+      overriddenValue: json['overridden_value'] as String? ?? '',
+    );
 
 Map<String, dynamic> _$ResponseOverrideValueMapToJson(
         ResponseOverrideValueMap instance) =>
@@ -103,12 +101,11 @@ Map<String, dynamic> _$ResponseOverrideValueMapToJson(
     };
 
 DefaultHeaderValueMap _$DefaultHeaderValueMapFromJson(
-    Map<String, dynamic> json) {
-  return DefaultHeaderValueMap(
-    headerName: json['header_name'] as String? ?? '',
-    defaultValue: json['default_value'] as String? ?? '',
-  );
-}
+        Map<String, dynamic> json) =>
+    DefaultHeaderValueMap(
+      headerName: json['header_name'] as String? ?? '',
+      defaultValue: json['default_value'] as String? ?? '',
+    );
 
 Map<String, dynamic> _$DefaultHeaderValueMapToJson(
         DefaultHeaderValueMap instance) =>
