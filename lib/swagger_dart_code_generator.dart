@@ -114,8 +114,8 @@ class SwaggerDartCodeGenerator implements Builder {
               requests,
               converter,
               options.separateModels ? '' : models,
-              responses,
-              requestBodies,
+              options.separateModels ? '' : responses,
+              options.separateModels ? '' : requestBodies,
               customDecoder,
               dateToJson));
     }
@@ -134,6 +134,8 @@ class SwaggerDartCodeGenerator implements Builder {
       ///Write models to separate file
       final formattedModels = _tryFormatCode(_generateSeparateModelsFileContent(
         models,
+        responses,
+        requestBodies,
         fileNameWithoutExtension,
         enums.isNotEmpty,
       ));
@@ -219,6 +221,8 @@ $dateToJson
 
   String _generateSeparateModelsFileContent(
     String models,
+    String responses,
+    String requestBodies,
     String fileNameWithoutExtension,
     bool hasEnums,
   ) {
@@ -234,6 +238,10 @@ $enumsImport
     part '$fileNameWithoutExtension.models.swagger.g.dart';
 
     $models
+
+    $responses
+
+    $requestBodies
     ''';
   }
 }
