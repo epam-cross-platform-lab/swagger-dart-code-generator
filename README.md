@@ -28,18 +28,20 @@ In general case for each .swagger file three outputs will be created. </br>
 <img src="https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/assets/overview_image.png" width="320" alt="Bloc" />
 
 ## **Installation**
-Add the following to your `pubspec.yaml` file to be able to do code generation:
-```yaml
-dev_dependencies:
-  chopper_generator: ^4.0.2
-  json_serializable: ^5.0.0
-  swagger_dart_code_generator: any
-```
 The generated code uses the following packages in run-time:
 ```yaml
 dependencies:
   chopper: ^4.0.1
   json_annotation: ^4.1.0
+```
+
+Add the following to your `pubspec.yaml` file to be able to do code generation:
+```yaml
+dev_dependencies:
+  build_runner: ^2.1.4
+  chopper_generator: ^4.0.2
+  json_serializable: ^5.0.0
+  swagger_dart_code_generator: any
 ```
 
 Then run:
@@ -84,6 +86,7 @@ targets:
 | `exclude_paths` | `[]` | `false` | List<String> of Regex If not empty -exclude paths matching reges |
 | `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwise - [] |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
+| `separate_models` | `false` | `false` | If option true, generates models into separate file. |
 | `include_if_null` | `null` | `false` | Sets includeIfNull JsonAnnotation feature and sets value for it. If null - not set anything. |
 | `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
 | `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overridden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |

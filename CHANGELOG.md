@@ -1,4 +1,4 @@
-# 2.2.1
+# 2.2.1+1
 
 * Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))
 * Fixed generation of responses and request bodies in separate file
