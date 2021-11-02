@@ -323,6 +323,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
+          '',
           className,
           map,
           {},
@@ -344,6 +345,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator2.generateModelClassContent(
+          '',
           className,
           map,
           {},
@@ -448,6 +450,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
+          '',
           map,
           {},
           className,
@@ -472,6 +475,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
+          '',
           map,
           {},
           className,
@@ -494,6 +498,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
+          '',
           map,
           {},
           className,
@@ -516,6 +521,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
       const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(
+          '',
           map,
           {},
           className,

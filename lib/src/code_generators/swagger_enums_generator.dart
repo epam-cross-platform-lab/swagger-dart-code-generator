@@ -36,9 +36,10 @@ abstract class SwaggerEnumsGenerator {
     final enumsFromClasses = definitions.keys
         .map((String className) {
           return generateEnumsFromClasses(
-              SwaggerModelsGenerator.getValidatedClassName(
-                  className.pascalCase),
-              definitions[className] as Map<String, dynamic>);
+            SwaggerModelsGenerator.getValidatedClassName(className.pascalCase),
+            definitions[className] as Map<String, dynamic>,
+            definitions,
+          );
         })
         .where((element) => element.isNotEmpty)
         .join('\n');
@@ -81,9 +82,10 @@ $enumsFromRequestBodies
           }
 
           return generateEnumsFromClasses(
-              SwaggerModelsGenerator.getValidatedClassName(
-                  className.pascalCase),
-              schema as Map<String, dynamic>);
+            SwaggerModelsGenerator.getValidatedClassName(className.pascalCase),
+            schema as Map<String, dynamic>,
+            {},
+          );
         })
         .where((element) => element.isNotEmpty)
         .join('\n');
@@ -110,9 +112,10 @@ $enumsFromRequestBodies
           }
 
           return generateEnumsFromClasses(
-              SwaggerModelsGenerator.getValidatedClassName(
-                  className.pascalCase),
-              schema as Map<String, dynamic>);
+            SwaggerModelsGenerator.getValidatedClassName(className.pascalCase),
+            schema as Map<String, dynamic>,
+            {},
+          );
         })
         .where((element) => element.isNotEmpty)
         .join('\n');
@@ -376,6 +379,7 @@ $enumMap
   String generateEnumsFromClasses(
     String className,
     Map<String, dynamic> map,
+    Map<String, dynamic> schemas,
   ) {
     if (map['enum'] != null) {
       return generateEnumContentIfPossible(map, className);
@@ -399,6 +403,24 @@ $enumMap
             propertiesContainer['properties'] as Map<String, dynamic>? ?? {};
       } else {
         properties = map['properties'] as Map<String, dynamic>? ?? {};
+      }
+
+      var allOfRef = allOf.firstWhereOrNull(
+        (e) => (e as Map<String, dynamic>).containsKey('\$ref'),
+      ) as Map<String, dynamic>?;
+
+      if (allOfRef != null) {
+        final ref = allOfRef['\$ref'] as String;
+
+        final allOfModel =
+            schemas[ref.getUnformattedRef()] as Map<String, dynamic>? ?? {};
+
+        final allOfModelProperties =
+            allOfModel['properties'] as Map<String, dynamic>? ?? {};
+
+        properties.addAll(allOfModelProperties);
+
+        final tt = 9;
       }
     } else {
       properties = map['properties'] as Map<String, dynamic>? ?? {};

@@ -26,58 +26,6 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   }
 
   @override
-  List<String> getAllEnumNames(String swaggerFile) {
-    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
-
-    final swagger = jsonDecode(swaggerFile);
-
-    final definitions = swagger['definitions'] as Map<String, dynamic>? ?? {};
-
-    if (definitions.isNotEmpty) {
-      definitions.forEach((className, map) {
-        final mapMap = map as Map<String, dynamic>;
-        if (mapMap.containsKey('enum')) {
-          results.add(SwaggerModelsGenerator.getValidatedClassName(
-              className.capitalize));
-          return;
-        }
-
-        if (mapMap['type'] == 'array' &&
-            mapMap['items'] != null &&
-            mapMap['items']['enum'] != null) {
-          results.add(SwaggerModelsGenerator.getValidatedClassName(
-              className.capitalize));
-          return;
-        }
-
-        final properties = map['properties'] as Map<String, dynamic>?;
-
-        if (properties == null) {
-          return;
-        }
-
-        properties.forEach((propertyName, propertyValue) {
-          var property = propertyValue as Map<String, dynamic>;
-
-          if (property.containsKey('enum') ||
-              (property['items'] != null &&
-                  property['items']['enum'] != null)) {
-            results.add(SwaggerEnumsGeneratorV2().generateEnumName(
-                SwaggerModelsGenerator.getValidatedClassName(className),
-                propertyName));
-          }
-        });
-      });
-    }
-
-    final resultsWithPrefix = results.map((element) {
-      return 'enums.$element';
-    }).toList();
-
-    return resultsWithPrefix;
-  }
-
-  @override
   List<String> getAllListEnumNames(String swaggerFile) {
     final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
 
