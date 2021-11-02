@@ -18,7 +18,6 @@ abstract class SwaggerModelsGenerator {
 
   String generateRequestBodies(
       String dartCode, String fileName, GeneratorOptions options);
-  Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap);
   String getExtendsString(Map<String, dynamic> map);
   List<String> getAllEnumNames(String swaggerFile);
   List<String> getAllListEnumNames(String swaggerFile);
@@ -309,6 +308,8 @@ abstract class SwaggerModelsGenerator {
     switch (parameter['type'] as String?) {
       case 'integer':
       case 'int':
+      case 'int32':
+      case 'int64':
         return 'int';
       case 'boolean':
         return 'bool';
@@ -998,7 +999,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       List<String> allEnumNames,
       List<String> allEnumListNames,
       GeneratorOptions options) {
-    final properties = getModelProperties(map);
+    final properties = getModelProperties(map, schemas);
 
     var extendsString = options.useInheritance ? getExtendsString(map) : '';
 
@@ -1130,25 +1131,44 @@ int get hashCode =>
 $allHashComponents;
 ''';
   }
-}
 
-// @override
-// int get hashCode =>
-//     runtimeType.hashCode ^
-//     const DeepCollectionEquality().hash(itemId) ^
-//     const DeepCollectionEquality().hash(resolution) ^
-//     const DeepCollectionEquality().hash(watchlistItemType) ^
-//     const DeepCollectionEquality().hash(sourceOrInstance) ^
-//     const DeepCollectionEquality().hash(duration) ^
-//     const DeepCollectionEquality().hash(bookmark) ^
-//     const DeepCollectionEquality().hash(isAdult) ^
-//     const DeepCollectionEquality().hash(ageRating) ^
-//     const DeepCollectionEquality().hash(model) ^
-//     const DeepCollectionEquality().hash(showId) ^
-//     const DeepCollectionEquality().hash(brandingProviderId) ^
-//     const DeepCollectionEquality().hash(seasonId) ^
-//     const DeepCollectionEquality().hash(instanceId) ^
-//     const DeepCollectionEquality().hash(mergedId) ^
-//     const DeepCollectionEquality().hash(title) ^
-//     const DeepCollectionEquality().hash(sources) ^
-//     const DeepCollectionEquality().hash(isAboutThisSeriesAvailable);
+  Map<String, dynamic> getModelProperties(
+    Map<String, dynamic> modelMap,
+    Map<String, dynamic> schemas,
+  ) {
+    if (!modelMap.containsKey('allOf')) {
+      return modelMap['properties'] as Map<String, dynamic>? ?? {};
+    }
+
+    final allOf = modelMap['allOf'] as List<dynamic>;
+
+    final newModelMap = allOf.firstWhere(
+      (m) => (m as Map<String, dynamic>).containsKey('properties'),
+      orElse: () => null,
+    );
+
+    if (newModelMap == null) {
+      return {};
+    }
+
+    final currentProperties =
+        newModelMap['properties'] as Map<String, dynamic>? ?? {};
+
+    final allOfRef = allOf.firstWhere(
+      (m) => (m as Map<String, dynamic>).containsKey('\$ref'),
+      orElse: () => null,
+    );
+
+    if (allOfRef != null) {
+      final refString = allOfRef['\$ref'].toString();
+      final schema = schemas[refString.getUnformattedRef()];
+
+      final moreProperties =
+          schema['properties'] as Map<String, dynamic>? ?? {};
+
+      currentProperties.addAll(moreProperties);
+    }
+
+    return currentProperties;
+  }
+}

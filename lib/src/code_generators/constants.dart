@@ -38,6 +38,8 @@ const successDescriptions = ['Success', 'OK', 'default response'];
 const kBasicTypesMap = <String, String>{
   'integer': 'int',
   'int': 'int',
+  'int32': 'int',
+  'int64': 'int',
   'boolean': 'bool',
   'bool': 'bool',
   'string': 'String',

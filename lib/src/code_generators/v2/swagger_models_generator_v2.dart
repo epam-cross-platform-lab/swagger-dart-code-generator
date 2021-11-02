@@ -107,11 +107,6 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   }
 
   @override
-  Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
-    return modelMap['properties'] as Map<String, dynamic>? ?? {};
-  }
-
-  @override
   String getExtendsString(Map<String, dynamic> map) {
     return '';
   }

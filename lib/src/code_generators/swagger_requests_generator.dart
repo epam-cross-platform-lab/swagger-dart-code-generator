@@ -281,7 +281,8 @@ class SwaggerRequestsGenerator {
   Expression _getParameterAnnotation(SwaggerRequestParameter parameter) {
     switch (parameter.inParameter) {
       case kFormData:
-        return refer(kField).call([]);
+        return refer(kField)
+            .call([literalString(parameter.name.replaceAll('\$', ''))]);
       case kBody:
         return refer(kBody.pascalCase).call([]);
       default:

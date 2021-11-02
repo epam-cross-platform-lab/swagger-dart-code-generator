@@ -288,28 +288,6 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   }
 
   @override
-  Map<String, dynamic> getModelProperties(Map<String, dynamic> modelMap) {
-    if (!modelMap.containsKey('allOf')) {
-      return modelMap['properties'] as Map<String, dynamic>? ?? {};
-    }
-
-    final allOf = modelMap['allOf'] as List<dynamic>;
-
-    final newModelMap = allOf.firstWhere(
-      (m) => (m as Map<String, dynamic>).containsKey('properties'),
-      orElse: () => null,
-    );
-
-    if (newModelMap == null) {
-      return {};
-    }
-
-    final currentProperties = newModelMap['properties'] as Map<String, dynamic>;
-
-    return currentProperties;
-  }
-
-  @override
   String getExtendsString(Map<String, dynamic> map) {
     if (map.containsKey('allOf')) {
       final allOf = map['allOf'] as List<dynamic>;
