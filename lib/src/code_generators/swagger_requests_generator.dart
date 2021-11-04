@@ -463,6 +463,7 @@ class SwaggerRequestsGenerator {
             schema: schema,
             modelPostfix: options.modelPostfix,
             root: root,
+            requestPath: path + requestType.pascalCase,
           );
         }
       }
@@ -525,6 +526,7 @@ class SwaggerRequestsGenerator {
     required SwaggerSchema schema,
     required String modelPostfix,
     required SwaggerRoot root,
+    required String requestPath,
   }) {
     if (schema.type.isNotEmpty) {
       if (schema.type == kArray) {
@@ -545,6 +547,9 @@ class SwaggerRequestsGenerator {
         }
 
         return '';
+      } else if (schema.type == kObject) {
+        return SwaggerModelsGenerator.getValidatedClassName(
+            '$requestPath\$$kRequestBody');
       }
 
       return kBasicTypesMap[schema.type] ?? schema.type;

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:recase/recase.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:collection/collection.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
 class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
@@ -63,6 +66,54 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     return generateBase(dartCode, fileName, options, result, false);
   }
 
+  Map<String, dynamic> _getRequestBodiesFromRequests(String dartCode) {
+    final root = jsonDecode(dartCode) as Map<String, dynamic>;
+
+    final paths = root['paths'] as Map<String, dynamic>?;
+
+    if (paths == null) {
+      return {};
+    }
+
+    final result = <String, dynamic>{};
+
+    paths.forEach((pathKey, pathValue) {
+      final requests = pathValue as Map<String, dynamic>;
+
+      requests.forEach((requestKey, requestValue) {
+        if (!supportedRequestTypes.contains(requestKey)) {
+          return;
+        }
+
+        final requestBody =
+            requestValue['requestBody'] as Map<String, dynamic>?;
+
+        if (requestBody != null) {
+          final content = requestBody['content'] as Map<String, dynamic>?;
+          if (content != null) {
+            final appJson = content.values.first as Map<String, dynamic>?;
+            if (appJson != null) {
+              final schema = appJson['schema'] as Map<String, dynamic>?;
+
+              if (schema != null) {
+                if (schema['type'] == 'object' &&
+                    schema.containsKey('properties')) {
+                  final className =
+                      '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
+
+                  result[SwaggerModelsGenerator.getValidatedClassName(
+                      className)] = requestBody;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+
+    return result;
+  }
+
   @override
   String generateRequestBodies(
       String dartCode, String fileName, GeneratorOptions options) {
@@ -70,10 +121,13 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
     final components = map['components'] as Map<String, dynamic>?;
     final requestBodies = components == null
-        ? null
-        : components['requestBodies'] as Map<String, dynamic>?;
+        ? <String, dynamic>{}
+        : components['requestBodies'] as Map<String, dynamic>? ??
+            <String, dynamic>{};
 
-    if (requestBodies == null) {
+    requestBodies.addAll(_getRequestBodiesFromRequests(dartCode));
+
+    if (requestBodies.isEmpty) {
       return '';
     }
 
