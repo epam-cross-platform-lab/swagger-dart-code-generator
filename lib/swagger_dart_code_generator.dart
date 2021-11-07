@@ -4,6 +4,7 @@ import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:path/path.dart' show join, normalize;
 
 ///Returns instance of SwaggerDartCodeGenerator
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
@@ -19,25 +20,27 @@ const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
-  final filesList = Directory(options.inputFolder).listSync().where(
+  final filesList = Directory(normalize(options.inputFolder)).listSync().where(
       (FileSystemEntity file) =>
           _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
   final result = <String, List<String>>{};
 
+  var out = normalize(options.outputFolder);
+
   filesList.forEach((FileSystemEntity element) {
     final name = getFileNameBase(element.path);
     result[element.path] = <String>[
-      '${options.outputFolder}$name$_outputFileExtension',
-      '${options.outputFolder}$name$_outputEnumsFileExtension',
-      '${options.outputFolder}$name$_outputModelsFileExtension',
-      '${options.outputFolder}$name$_outputResponsesFileExtension',
+      join(out, '$name$_outputFileExtension'),
+      join(out, '$name$_outputEnumsFileExtension'),
+      join(out, '$name$_outputModelsFileExtension'),
+      join(out, '$name$_outputResponsesFileExtension'),
     ];
   });
 
   ///Register additional outputs in first input
-  result[filesList.first.path]!.add('${options.outputFolder}$_indexFileName');
-  result[filesList.first.path]!.add('${options.outputFolder}$_mappingFileName');
+  result[filesList.first.path]!.add(join(out, _indexFileName));
+  result[filesList.first.path]!.add(join(out, _mappingFileName));
 
   return result;
 }
@@ -104,7 +107,7 @@ class SwaggerDartCodeGenerator implements Builder {
     final dateToJson = codeGenerator.generateDateToJson(contents);
 
     final copyAssetId = AssetId(buildStep.inputId.package,
-        '${options.outputFolder}$fileNameWithoutExtension$_outputFileExtension');
+        join(options.outputFolder, '$fileNameWithoutExtension$_outputFileExtension'));
 
     if (!options.separateModels || !options.buildOnlyModels) {
       await buildStep.writeAsString(
@@ -125,7 +128,7 @@ class SwaggerDartCodeGenerator implements Builder {
       final formatterEnums = _tryFormatCode(enums);
 
       final enumsAssetId = AssetId(buildStep.inputId.package,
-          '${options.outputFolder}$fileNameWithoutExtension$_outputEnumsFileExtension');
+          join(options.outputFolder, '$fileNameWithoutExtension$_outputEnumsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
     }
@@ -141,7 +144,7 @@ class SwaggerDartCodeGenerator implements Builder {
       ));
 
       final enumsAssetId = AssetId(buildStep.inputId.package,
-          '${options.outputFolder}$fileNameWithoutExtension$_outputModelsFileExtension');
+          join(options.outputFolder, '$fileNameWithoutExtension$_outputModelsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formattedModels);
     }
@@ -200,7 +203,7 @@ $dateToJson
     final codeGenerator = SwaggerCodeGenerator();
 
     final indexAssetId =
-        AssetId(inputId.package, '${options.outputFolder}$_indexFileName');
+        AssetId(inputId.package, join(options.outputFolder, _indexFileName));
 
     final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
 
@@ -210,7 +213,7 @@ $dateToJson
 
     if (options.withConverter && !options.buildOnlyModels) {
       final mappingAssetId =
-          AssetId(inputId.package, '${options.outputFolder}$_mappingFileName');
+          AssetId(inputId.package, join(options.outputFolder, _mappingFileName));
 
       final mapping = codeGenerator.generateConverterMappings(
           swaggerCode, buildExtensions, hasModels);
