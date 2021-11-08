@@ -8,7 +8,7 @@ String getClassNameFromFileName(String file) {
 }
 
 String getFileNameWithoutExtension(String file) {
-  return p.context.withoutExtension(file);
+  return file.split('.').first;
 }
 
 String getFileNameBase(String filePath) {
