@@ -19,6 +19,10 @@ const String _outputResponsesFileExtension = '.responses.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
+String normal(String path) {
+  return AssetId('', path).path;
+}
+
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final filesList = Directory(normalize(options.inputFolder)).listSync().where(
       (FileSystemEntity file) =>
@@ -30,7 +34,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   filesList.forEach((FileSystemEntity element) {
     final name = getFileNameBase(element.path);
-    result[element.path] = <String>[
+    result[normal(element.path)] = <String>[
       join(out, '$name$_outputFileExtension'),
       join(out, '$name$_outputEnumsFileExtension'),
       join(out, '$name$_outputModelsFileExtension'),
@@ -39,8 +43,8 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   });
 
   ///Register additional outputs in first input
-  result[filesList.first.path]!.add(join(out, _indexFileName));
-  result[filesList.first.path]!.add(join(out, _mappingFileName));
+  result[normal(filesList.first.path)]!.add(join(out, _indexFileName));
+  result[normal(filesList.first.path)]!.add(join(out, _mappingFileName));
 
   return result;
 }
