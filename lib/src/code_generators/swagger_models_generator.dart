@@ -1213,7 +1213,7 @@ $allHashComponents;
   List<String> getAllEnumNames(String swaggerFile) {
     final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
 
-    final swagger = jsonDecode(swaggerFile);
+    final swagger = jsonDecode(swaggerFile) as Map<String, dynamic>;
 
     final components = swagger['components'] as Map<String, dynamic>?;
 
@@ -1230,8 +1230,12 @@ $allHashComponents;
         : components['responses'] as Map<String, dynamic>?;
 
     final requestBodies = components == null
-        ? null
-        : components['requestBodies'] as Map<String, dynamic>?;
+        ? <String, dynamic>{}
+        : components['requestBodies'] as Map<String, dynamic>? ?? {};
+
+    final moreRequestBodies = getRequestBodiesFromRequests(swagger);
+
+    requestBodies.addAll(moreRequestBodies);
 
     schemas.forEach((className, map) {
       final mapMap = map as Map<String, dynamic>;
@@ -1332,7 +1336,7 @@ $allHashComponents;
       });
     }
 
-    if (requestBodies != null) {
+    if (requestBodies.isNotEmpty) {
       requestBodies.forEach((className, map) {
         final response = requestBodies[className];
         final content = response['content'] as Map<String, dynamic>;
@@ -1369,5 +1373,51 @@ $allHashComponents;
     }).toList();
 
     return resultsWithPrefix;
+  }
+
+  static Map<String, dynamic> getRequestBodiesFromRequests(
+      Map<String, dynamic> map) {
+    final paths = map['paths'] as Map<String, dynamic>? ?? {};
+    if (paths.isEmpty) {
+      return {};
+    }
+
+    final result = <String, dynamic>{};
+
+    paths.forEach((pathKey, pathValue) {
+      final pathMap = pathValue as Map<String, dynamic>;
+
+      pathMap.forEach((requestKey, requestValue) {
+        if (!supportedRequestTypes.contains(requestKey)) {
+          return;
+        }
+
+        final requestMap = requestValue as Map<String, dynamic>? ?? {};
+
+        if (requestMap.containsKey('requestBody')) {
+          final requestBody = requestMap['requestBody'] as Map<String, dynamic>;
+          final content = requestBody['content'] as Map<String, dynamic>?;
+          if (content != null) {
+            final appJson = content.values.first as Map<String, dynamic>?;
+            if (appJson != null) {
+              final schema = appJson['schema'] as Map<String, dynamic>?;
+
+              if (schema != null) {
+                if (schema['type'] == 'object' &&
+                    schema.containsKey('properties')) {
+                  final className =
+                      '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
+
+                  result[SwaggerModelsGenerator.getValidatedClassName(
+                      className)] = requestBody;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+
+    return result;
   }
 }
