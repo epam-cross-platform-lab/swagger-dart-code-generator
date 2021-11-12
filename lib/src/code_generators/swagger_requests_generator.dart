@@ -463,6 +463,7 @@ class SwaggerRequestsGenerator {
             schema: schema,
             modelPostfix: options.modelPostfix,
             root: root,
+            requestPath: path + requestType.pascalCase,
           );
         }
       }
@@ -525,6 +526,7 @@ class SwaggerRequestsGenerator {
     required SwaggerSchema schema,
     required String modelPostfix,
     required SwaggerRoot root,
+    required String requestPath,
   }) {
     if (schema.type.isNotEmpty) {
       if (schema.type == kArray) {
@@ -545,6 +547,9 @@ class SwaggerRequestsGenerator {
         }
 
         return '';
+      } else if (schema.type == kObject) {
+        return SwaggerModelsGenerator.getValidatedClassName(
+            '$requestPath\$$kRequestBody');
       }
 
       return kBasicTypesMap[schema.type] ?? schema.type;
@@ -586,7 +591,15 @@ class SwaggerRequestsGenerator {
     required String path,
     required String requestType,
   }) {
-    return SwaggerModelsGenerator.generateRequestName(path, requestType);
+    String methodName;
+    if (options.usePathForRequestNames || swaggerRequest.operationId.isEmpty) {
+      methodName =
+          SwaggerModelsGenerator.generateRequestName(path, requestType);
+    } else {
+      methodName = swaggerRequest.operationId;
+    }
+
+    return methodName;
   }
 
   static SwaggerResponse? getSuccessedResponse({

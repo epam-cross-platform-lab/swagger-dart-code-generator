@@ -19,6 +19,7 @@ class GeneratorOptions {
     required this.outputFolder,
     this.enumsCaseSensitive = true,
     this.useRequiredAttributeForHeaders = true,
+    this.usePathForRequestNames = true,
     this.useInheritance = true,
     this.includeIfNull,
     this.modelPostfix = '',
@@ -29,6 +30,9 @@ class GeneratorOptions {
   /// Build options from a JSON map.
   factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
       _$GeneratorOptionsFromJson(json);
+
+  @JsonKey(defaultValue: true)
+  final bool usePathForRequestNames;
 
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;

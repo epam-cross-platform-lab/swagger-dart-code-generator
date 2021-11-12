@@ -4,6 +4,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
+import 'test_data.dart';
 
 void main() {
   final generator = SwaggerModelsGeneratorV3();
@@ -323,6 +324,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
+          '',
           className,
           map,
           {},
@@ -344,6 +346,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator2.generateModelClassContent(
+          '',
           className,
           map,
           {},
@@ -448,6 +451,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
+          carsService,
           map,
           {},
           className,
@@ -472,6 +476,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
+          carsService,
           map,
           {},
           className,
@@ -494,6 +499,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
+          carsService,
           map,
           {},
           className,
@@ -516,6 +522,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
       const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(
+          carsService,
           map,
           {},
           className,
