@@ -110,8 +110,10 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final dateToJson = codeGenerator.generateDateToJson(contents);
 
-    final copyAssetId = AssetId(buildStep.inputId.package,
-        join(options.outputFolder, '$fileNameWithoutExtension$_outputFileExtension'));
+    final copyAssetId = AssetId(
+        buildStep.inputId.package,
+        join(options.outputFolder,
+            '$fileNameWithoutExtension$_outputFileExtension'));
 
     if (!options.separateModels || !options.buildOnlyModels) {
       await buildStep.writeAsString(
@@ -131,8 +133,10 @@ class SwaggerDartCodeGenerator implements Builder {
       ///Write enums
       final formatterEnums = _tryFormatCode(enums);
 
-      final enumsAssetId = AssetId(buildStep.inputId.package,
-          join(options.outputFolder, '$fileNameWithoutExtension$_outputEnumsFileExtension'));
+      final enumsAssetId = AssetId(
+          buildStep.inputId.package,
+          join(options.outputFolder,
+              '$fileNameWithoutExtension$_outputEnumsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
     }
@@ -147,8 +151,10 @@ class SwaggerDartCodeGenerator implements Builder {
         enums.isNotEmpty,
       ));
 
-      final enumsAssetId = AssetId(buildStep.inputId.package,
-          join(options.outputFolder, '$fileNameWithoutExtension$_outputModelsFileExtension'));
+      final enumsAssetId = AssetId(
+          buildStep.inputId.package,
+          join(options.outputFolder,
+              '$fileNameWithoutExtension$_outputModelsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formattedModels);
     }
@@ -216,8 +222,8 @@ $dateToJson
     }
 
     if (options.withConverter && !options.buildOnlyModels) {
-      final mappingAssetId =
-          AssetId(inputId.package, join(options.outputFolder, _mappingFileName));
+      final mappingAssetId = AssetId(
+          inputId.package, join(options.outputFolder, _mappingFileName));
 
       final mapping = codeGenerator.generateConverterMappings(
           swaggerCode, buildExtensions, hasModels);
