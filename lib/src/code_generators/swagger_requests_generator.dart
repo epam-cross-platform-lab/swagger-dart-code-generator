@@ -591,7 +591,15 @@ class SwaggerRequestsGenerator {
     required String path,
     required String requestType,
   }) {
-    return SwaggerModelsGenerator.generateRequestName(path, requestType);
+    String methodName;
+    if (options.usePathForRequestNames || swaggerRequest.operationId.isEmpty) {
+      methodName =
+          SwaggerModelsGenerator.generateRequestName(path, requestType);
+    } else {
+      methodName = swaggerRequest.operationId;
+    }
+
+    return methodName;
   }
 
   static SwaggerResponse? getSuccessedResponse({
