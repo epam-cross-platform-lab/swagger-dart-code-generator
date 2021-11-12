@@ -419,8 +419,6 @@ $enumMap
             allOfModel['properties'] as Map<String, dynamic>? ?? {};
 
         properties.addAll(allOfModelProperties);
-
-        final tt = 9;
       }
     } else {
       properties = map['properties'] as Map<String, dynamic>? ?? {};
