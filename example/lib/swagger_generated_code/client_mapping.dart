@@ -1,5 +1,5 @@
-import 'example_swagger.swagger.dart';
+import 'pets_api.swagger.dart';
 
 final Map<Type, Object Function(Map<String, dynamic>)> generatedMapping = {
-  ...ExampleSwaggerJsonDecoderMappings,
+  ...PetsApiJsonDecoderMappings,
 };
