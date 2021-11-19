@@ -3,6 +3,8 @@ import 'package:collection/collection.dart';
 
 import 'package:chopper/chopper.dart';
 import 'package:chopper/chopper.dart' as chopper;
+import 'example_swagger.enums.swagger.dart' as enums;
+export 'example_swagger.enums.swagger.dart';
 
 part 'example_swagger.swagger.chopper2.dart';
 part 'example_swagger.swagger.g2.dart';
@@ -19,134 +21,399 @@ abstract class ExampleSwagger extends ChopperService {
     }
 
     final newClient = ChopperClient(
-      services: [_$ExampleSwagger()],
-      converter: $JsonSerializableConverter(),
-      /*baseUrl: YOUR_BASE_URL*/
-    );
+        services: [_$ExampleSwagger()],
+        converter: $JsonSerializableConverter(),
+        baseUrl: 'https://petstore.swagger.io/v2');
     return _$ExampleSwagger(newClient);
   }
 
-  ///
-  ///@param id Rooms owner
-  @Get(path: '/rooms')
-  Future<chopper.Response<List<Room>>> roomsGet(
-      {@Query('id') required String? id});
+  ///Add a new pet to the store
+  ///@param body Pet object that needs to be added to the store
+  @Post(path: '/pet')
+  Future<chopper.Response> petPost({@Body() required Pet? body});
 
-  ///
-  @Get(path: '/api/item/all')
-  Future<chopper.Response<ListCustomItem>> apiItemAllGet();
+  ///Update an existing pet
+  ///@param body Pet object that needs to be added to the store
+  @Put(path: '/pet')
+  Future<chopper.Response> petPut({@Body() required Pet? body});
+
+  ///Finds Pets by status
+  ///@param status Status values that need to be considered for filter
+  Future<chopper.Response<List<Pet>>> petFindByStatusGet(
+      {required enums.PetFindByStatusGetStatus? status}) {
+    return _petFindByStatusGet(
+        status: enums.$PetFindByStatusGetStatusMap[status]);
+  }
+
+  ///Finds Pets by status
+  ///@param status Status values that need to be considered for filter
+  @Get(path: '/pet/findByStatus')
+  Future<chopper.Response<List<Pet>>> _petFindByStatusGet(
+      {@Query('status') required String? status});
+
+  ///Finds Pets by tags
+  ///@param tags Tags to filter by
+  @Get(path: '/pet/findByTags')
+  Future<chopper.Response<List<Pet>>> petFindByTagsGet(
+      {@Query('tags') required List<String>? tags});
+
+  ///Find pet by ID
+  ///@param petId ID of pet to return
+  @Get(path: '/pet/{petId}')
+  Future<chopper.Response<Pet>> petPetIdGet(
+      {@Path('petId') required int? petId});
+
+  ///Updates a pet in the store with form data
+  ///@param petId ID of pet that needs to be updated
+  ///@param name Updated name of the pet
+  ///@param status Updated status of the pet
+  @Post(path: '/pet/{petId}', optionalBody: true)
+  Future<chopper.Response> petPetIdPost(
+      {@Path('petId') required int? petId,
+      @Field('name') String? name,
+      @Field('status') String? status});
+
+  ///Deletes a pet
+  ///@param api_key
+  ///@param petId Pet id to delete
+  @Delete(path: '/pet/{petId}')
+  Future<chopper.Response> petPetIdDelete(
+      {@Header('api_key') String? apiKey, @Path('petId') required int? petId});
+
+  ///uploads an image
+  ///@param petId ID of pet to update
+  ///@param additionalMetadata Additional data to pass to server
+  ///@param file file to upload
+  @Post(path: '/pet/{petId}/uploadImage', optionalBody: true)
+  Future<chopper.Response<ApiResponse>> petPetIdUploadImagePost(
+      {@Path('petId') required int? petId,
+      @Field('additionalMetadata') String? additionalMetadata,
+      @Field('file') List<String>? file});
+
+  ///Returns pet inventories by status
+  @Get(path: '/store/inventory')
+  Future<chopper.Response<Object>> storeInventoryGet();
+
+  ///Place an order for a pet
+  ///@param body order placed for purchasing the pet
+  @Post(path: '/store/order')
+  Future<chopper.Response<Order>> storeOrderPost(
+      {@Body() required Order? body});
+
+  ///Find purchase order by ID
+  ///@param orderId ID of pet that needs to be fetched
+  @Get(path: '/store/order/{orderId}')
+  Future<chopper.Response<Order>> storeOrderOrderIdGet(
+      {@Path('orderId') required int? orderId});
+
+  ///Delete purchase order by ID
+  ///@param orderId ID of the order that needs to be deleted
+  @Delete(path: '/store/order/{orderId}')
+  Future<chopper.Response> storeOrderOrderIdDelete(
+      {@Path('orderId') required int? orderId});
+
+  ///Create user
+  ///@param body Created user object
+  @Post(path: '/user')
+  Future<chopper.Response> userPost({@Body() required User? body});
+
+  ///Creates list of users with given input array
+  ///@param body List of user object
+  @Post(path: '/user/createWithArray')
+  Future<chopper.Response> userCreateWithArrayPost(
+      {@Body() required List<User>? body});
+
+  ///Creates list of users with given input array
+  ///@param body List of user object
+  @Post(path: '/user/createWithList')
+  Future<chopper.Response> userCreateWithListPost(
+      {@Body() required List<User>? body});
+
+  ///Logs user into the system
+  ///@param username The user name for login
+  ///@param password The password for login in clear text
+  @Get(path: '/user/login')
+  Future<chopper.Response<String>> userLoginGet(
+      {@Query('username') required String? username,
+      @Query('password') required String? password});
+
+  ///Logs out current logged in user session
+  @Get(path: '/user/logout')
+  Future<chopper.Response> userLogoutGet();
+
+  ///Get user by user name
+  ///@param username The name that needs to be fetched. Use user1 for testing.
+  @Get(path: '/user/{username}')
+  Future<chopper.Response<User>> userUsernameGet(
+      {@Path('username') required String? username});
+
+  ///Updated user
+  ///@param username name that need to be updated
+  ///@param body Updated user object
+  @Put(path: '/user/{username}')
+  Future<chopper.Response> userUsernamePut(
+      {@Path('username') required String? username,
+      @Body() required User? body});
+
+  ///Delete user
+  ///@param username The name that needs to be deleted
+  @Delete(path: '/user/{username}')
+  Future<chopper.Response> userUsernameDelete(
+      {@Path('username') required String? username});
 }
 
 final Map<Type, Object Function(Map<String, dynamic>)>
     ExampleSwaggerJsonDecoderMappings = {
-  Room: Room.fromJsonFactory,
-  CustomItem: CustomItem.fromJsonFactory,
-  ListCustomItem: ListCustomItem.fromJsonFactory,
+  Order: Order.fromJsonFactory,
+  Category: Category.fromJsonFactory,
+  User: User.fromJsonFactory,
+  Tag: Tag.fromJsonFactory,
+  Pet: Pet.fromJsonFactory,
+  ApiResponse: ApiResponse.fromJsonFactory,
 };
 
 @JsonSerializable(explicitToJson: true)
-class Room {
-  Room({
-    this.author,
-    this.avatar,
+class Order {
+  Order({
     this.id,
-    this.lastMessage,
-    this.name,
+    this.petId,
+    this.quantity,
+    this.shipDate,
+    this.status,
+    this.complete,
   });
 
-  factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
+  factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
-  @JsonKey(name: 'author', includeIfNull: false, defaultValue: '')
-  final String? author;
-  @JsonKey(name: 'avatar', includeIfNull: false, defaultValue: '')
-  final String? avatar;
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: '')
-  final String? id;
-  @JsonKey(name: 'lastMessage', includeIfNull: false, defaultValue: '')
-  final String? lastMessage;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
-  final String? name;
-  static const fromJsonFactory = _$RoomFromJson;
-  static const toJsonFactory = _$RoomToJson;
-  Map<String, dynamic> toJson() => _$RoomToJson(this);
+  @JsonKey(name: 'id', includeIfNull: false)
+  final int? id;
+  @JsonKey(name: 'petId', includeIfNull: false)
+  final int? petId;
+  @JsonKey(name: 'quantity', includeIfNull: false)
+  final int? quantity;
+  @JsonKey(name: 'shipDate', includeIfNull: false)
+  final DateTime? shipDate;
+  @JsonKey(
+      name: 'status',
+      includeIfNull: false,
+      toJson: orderStatusToJson,
+      fromJson: orderStatusFromJson)
+  final enums.OrderStatus? status;
+  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
+  final bool? complete;
+  static const fromJsonFactory = _$OrderFromJson;
+  static const toJsonFactory = _$OrderToJson;
+  Map<String, dynamic> toJson() => _$OrderToJson(this);
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is Room &&
-            (identical(other.author, author) ||
-                const DeepCollectionEquality().equals(other.author, author)) &&
-            (identical(other.avatar, avatar) ||
-                const DeepCollectionEquality().equals(other.avatar, avatar)) &&
+        (other is Order &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.lastMessage, lastMessage) ||
+            (identical(other.petId, petId) ||
+                const DeepCollectionEquality().equals(other.petId, petId)) &&
+            (identical(other.quantity, quantity) ||
                 const DeepCollectionEquality()
-                    .equals(other.lastMessage, lastMessage)) &&
+                    .equals(other.quantity, quantity)) &&
+            (identical(other.shipDate, shipDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.shipDate, shipDate)) &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)) &&
+            (identical(other.complete, complete) ||
+                const DeepCollectionEquality()
+                    .equals(other.complete, complete)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(petId) ^
+      const DeepCollectionEquality().hash(quantity) ^
+      const DeepCollectionEquality().hash(shipDate) ^
+      const DeepCollectionEquality().hash(status) ^
+      const DeepCollectionEquality().hash(complete) ^
+      runtimeType.hashCode;
+}
+
+extension $OrderExtension on Order {
+  Order copyWith(
+      {int? id,
+      int? petId,
+      int? quantity,
+      DateTime? shipDate,
+      enums.OrderStatus? status,
+      bool? complete}) {
+    return Order(
+        id: id ?? this.id,
+        petId: petId ?? this.petId,
+        quantity: quantity ?? this.quantity,
+        shipDate: shipDate ?? this.shipDate,
+        status: status ?? this.status,
+        complete: complete ?? this.complete);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class Category {
+  Category({
+    this.id,
+    this.name,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
+
+  @JsonKey(name: 'id', includeIfNull: false)
+  final int? id;
+  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
+  final String? name;
+  static const fromJsonFactory = _$CategoryFromJson;
+  static const toJsonFactory = _$CategoryToJson;
+  Map<String, dynamic> toJson() => _$CategoryToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Category &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)));
   }
 
   @override
   int get hashCode =>
-      const DeepCollectionEquality().hash(author) ^
-      const DeepCollectionEquality().hash(avatar) ^
       const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(lastMessage) ^
       const DeepCollectionEquality().hash(name) ^
       runtimeType.hashCode;
 }
 
-extension $RoomExtension on Room {
-  Room copyWith(
-      {String? author,
-      String? avatar,
-      String? id,
-      String? lastMessage,
-      String? name}) {
-    return Room(
-        author: author ?? this.author,
-        avatar: avatar ?? this.avatar,
-        id: id ?? this.id,
-        lastMessage: lastMessage ?? this.lastMessage,
-        name: name ?? this.name);
+extension $CategoryExtension on Category {
+  Category copyWith({int? id, String? name}) {
+    return Category(id: id ?? this.id, name: name ?? this.name);
   }
 }
 
 @JsonSerializable(explicitToJson: true)
-class CustomItem {
-  CustomItem({
-    this.available,
-    this.description,
+class User {
+  User({
     this.id,
-    this.name,
+    this.username,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.password,
+    this.phone,
+    this.userStatus,
   });
 
-  factory CustomItem.fromJson(Map<String, dynamic> json) =>
-      _$CustomItemFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  @JsonKey(name: 'available', includeIfNull: false)
-  final bool? available;
-  @JsonKey(name: 'description', includeIfNull: false, defaultValue: '')
-  final String? description;
-  @JsonKey(name: 'id', includeIfNull: false, defaultValue: '')
-  final String? id;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
-  final String? name;
-  static const fromJsonFactory = _$CustomItemFromJson;
-  static const toJsonFactory = _$CustomItemToJson;
-  Map<String, dynamic> toJson() => _$CustomItemToJson(this);
+  @JsonKey(name: 'id', includeIfNull: false)
+  final int? id;
+  @JsonKey(name: 'username', includeIfNull: false, defaultValue: '')
+  final String? username;
+  @JsonKey(name: 'firstName', includeIfNull: false, defaultValue: '')
+  final String? firstName;
+  @JsonKey(name: 'lastName', includeIfNull: false, defaultValue: '')
+  final String? lastName;
+  @JsonKey(name: 'email', includeIfNull: false, defaultValue: '')
+  final String? email;
+  @JsonKey(name: 'password', includeIfNull: false, defaultValue: '')
+  final String? password;
+  @JsonKey(name: 'phone', includeIfNull: false, defaultValue: '')
+  final String? phone;
+  @JsonKey(name: 'userStatus', includeIfNull: false)
+  final int? userStatus;
+  static const fromJsonFactory = _$UserFromJson;
+  static const toJsonFactory = _$UserToJson;
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is CustomItem &&
-            (identical(other.available, available) ||
+        (other is User &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.username, username) ||
                 const DeepCollectionEquality()
-                    .equals(other.available, available)) &&
-            (identical(other.description, description) ||
+                    .equals(other.username, username)) &&
+            (identical(other.firstName, firstName) ||
                 const DeepCollectionEquality()
-                    .equals(other.description, description)) &&
+                    .equals(other.firstName, firstName)) &&
+            (identical(other.lastName, lastName) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastName, lastName)) &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)) &&
+            (identical(other.password, password) ||
+                const DeepCollectionEquality()
+                    .equals(other.password, password)) &&
+            (identical(other.phone, phone) ||
+                const DeepCollectionEquality().equals(other.phone, phone)) &&
+            (identical(other.userStatus, userStatus) ||
+                const DeepCollectionEquality()
+                    .equals(other.userStatus, userStatus)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(username) ^
+      const DeepCollectionEquality().hash(firstName) ^
+      const DeepCollectionEquality().hash(lastName) ^
+      const DeepCollectionEquality().hash(email) ^
+      const DeepCollectionEquality().hash(password) ^
+      const DeepCollectionEquality().hash(phone) ^
+      const DeepCollectionEquality().hash(userStatus) ^
+      runtimeType.hashCode;
+}
+
+extension $UserExtension on User {
+  User copyWith(
+      {int? id,
+      String? username,
+      String? firstName,
+      String? lastName,
+      String? email,
+      String? password,
+      String? phone,
+      int? userStatus}) {
+    return User(
+        id: id ?? this.id,
+        username: username ?? this.username,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        phone: phone ?? this.phone,
+        userStatus: userStatus ?? this.userStatus);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class Tag {
+  Tag({
+    this.id,
+    this.name,
+  });
+
+  factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
+
+  @JsonKey(name: 'id', includeIfNull: false)
+  final int? id;
+  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
+  final String? name;
+  static const fromJsonFactory = _$TagFromJson;
+  static const toJsonFactory = _$TagToJson;
+  Map<String, dynamic> toJson() => _$TagToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Tag &&
             (identical(other.id, id) ||
                 const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.name, name) ||
@@ -155,37 +422,256 @@ class CustomItem {
 
   @override
   int get hashCode =>
-      const DeepCollectionEquality().hash(available) ^
-      const DeepCollectionEquality().hash(description) ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name) ^
       runtimeType.hashCode;
 }
 
-extension $CustomItemExtension on CustomItem {
-  CustomItem copyWith(
-      {bool? available, String? description, String? id, String? name}) {
-    return CustomItem(
-        available: available ?? this.available,
-        description: description ?? this.description,
-        id: id ?? this.id,
-        name: name ?? this.name);
+extension $TagExtension on Tag {
+  Tag copyWith({int? id, String? name}) {
+    return Tag(id: id ?? this.id, name: name ?? this.name);
   }
 }
 
 @JsonSerializable(explicitToJson: true)
-class ListCustomItem {
-  ListCustomItem();
+class Pet {
+  Pet({
+    this.id,
+    this.category,
+    this.name,
+    this.photoUrls,
+    this.tags,
+    this.status,
+  });
 
-  factory ListCustomItem.fromJson(Map<String, dynamic> json) =>
-      _$ListCustomItemFromJson(json);
+  factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
 
-  static const fromJsonFactory = _$ListCustomItemFromJson;
-  static const toJsonFactory = _$ListCustomItemToJson;
-  Map<String, dynamic> toJson() => _$ListCustomItemToJson(this);
+  @JsonKey(name: 'id', includeIfNull: false)
+  final int? id;
+  @JsonKey(name: 'category', includeIfNull: false)
+  final Category? category;
+  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
+  final String? name;
+  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <String>[])
+  final List<String>? photoUrls;
+  @JsonKey(name: 'tags', includeIfNull: false, defaultValue: <Tag>[])
+  final List<Tag>? tags;
+  @JsonKey(
+      name: 'status',
+      includeIfNull: false,
+      toJson: petStatusToJson,
+      fromJson: petStatusFromJson)
+  final enums.PetStatus? status;
+  static const fromJsonFactory = _$PetFromJson;
+  static const toJsonFactory = _$PetToJson;
+  Map<String, dynamic> toJson() => _$PetToJson(this);
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is Pet &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.category, category) ||
+                const DeepCollectionEquality()
+                    .equals(other.category, category)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.photoUrls, photoUrls) ||
+                const DeepCollectionEquality()
+                    .equals(other.photoUrls, photoUrls)) &&
+            (identical(other.tags, tags) ||
+                const DeepCollectionEquality().equals(other.tags, tags)) &&
+            (identical(other.status, status) ||
+                const DeepCollectionEquality().equals(other.status, status)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(category) ^
+      const DeepCollectionEquality().hash(name) ^
+      const DeepCollectionEquality().hash(photoUrls) ^
+      const DeepCollectionEquality().hash(tags) ^
+      const DeepCollectionEquality().hash(status) ^
+      runtimeType.hashCode;
+}
+
+extension $PetExtension on Pet {
+  Pet copyWith(
+      {int? id,
+      Category? category,
+      String? name,
+      List<String>? photoUrls,
+      List<Tag>? tags,
+      enums.PetStatus? status}) {
+    return Pet(
+        id: id ?? this.id,
+        category: category ?? this.category,
+        name: name ?? this.name,
+        photoUrls: photoUrls ?? this.photoUrls,
+        tags: tags ?? this.tags,
+        status: status ?? this.status);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiResponse {
+  ApiResponse({
+    this.code,
+    this.type,
+    this.message,
+  });
+
+  factory ApiResponse.fromJson(Map<String, dynamic> json) =>
+      _$ApiResponseFromJson(json);
+
+  @JsonKey(name: 'code', includeIfNull: false)
+  final int? code;
+  @JsonKey(name: 'type', includeIfNull: false, defaultValue: '')
+  final String? type;
+  @JsonKey(name: 'message', includeIfNull: false, defaultValue: '')
+  final String? message;
+  static const fromJsonFactory = _$ApiResponseFromJson;
+  static const toJsonFactory = _$ApiResponseToJson;
+  Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is ApiResponse &&
+            (identical(other.code, code) ||
+                const DeepCollectionEquality().equals(other.code, code)) &&
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.message, message) ||
+                const DeepCollectionEquality().equals(other.message, message)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(code) ^
+      const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(message) ^
+      runtimeType.hashCode;
+}
+
+extension $ApiResponseExtension on ApiResponse {
+  ApiResponse copyWith({int? code, String? type, String? message}) {
+    return ApiResponse(
+        code: code ?? this.code,
+        type: type ?? this.type,
+        message: message ?? this.message);
+  }
+}
+
+String? petFindByStatusGetStatusToJson(
+    enums.PetFindByStatusGetStatus? petFindByStatusGetStatus) {
+  return enums.$PetFindByStatusGetStatusMap[petFindByStatusGetStatus];
+}
+
+enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
+    String? petFindByStatusGetStatus) {
+  if (petFindByStatusGetStatus == null) {
+    return enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PetFindByStatusGetStatusMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              petFindByStatusGetStatus.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> petFindByStatusGetStatusListToJson(
+    List<enums.PetFindByStatusGetStatus>? petFindByStatusGetStatus) {
+  if (petFindByStatusGetStatus == null) {
+    return [];
+  }
+
+  return petFindByStatusGetStatus
+      .map((e) => enums.$PetFindByStatusGetStatusMap[e]!)
+      .toList();
+}
+
+List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatusListFromJson(
+    List? petFindByStatusGetStatus) {
+  if (petFindByStatusGetStatus == null) {
+    return [];
+  }
+
+  return petFindByStatusGetStatus
+      .map((e) => petFindByStatusGetStatusFromJson(e.toString()))
+      .toList();
+}
+
+String? orderStatusToJson(enums.OrderStatus? orderStatus) {
+  return enums.$OrderStatusMap[orderStatus];
+}
+
+enums.OrderStatus orderStatusFromJson(String? orderStatus) {
+  if (orderStatus == null) {
+    return enums.OrderStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$OrderStatusMap.entries
+      .firstWhere(
+          (element) => element.value.toLowerCase() == orderStatus.toLowerCase(),
+          orElse: () =>
+              const MapEntry(enums.OrderStatus.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> orderStatusListToJson(List<enums.OrderStatus>? orderStatus) {
+  if (orderStatus == null) {
+    return [];
+  }
+
+  return orderStatus.map((e) => enums.$OrderStatusMap[e]!).toList();
+}
+
+List<enums.OrderStatus> orderStatusListFromJson(List? orderStatus) {
+  if (orderStatus == null) {
+    return [];
+  }
+
+  return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
+}
+
+String? petStatusToJson(enums.PetStatus? petStatus) {
+  return enums.$PetStatusMap[petStatus];
+}
+
+enums.PetStatus petStatusFromJson(String? petStatus) {
+  if (petStatus == null) {
+    return enums.PetStatus.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PetStatusMap.entries
+      .firstWhere(
+          (element) => element.value.toLowerCase() == petStatus.toLowerCase(),
+          orElse: () =>
+              const MapEntry(enums.PetStatus.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> petStatusListToJson(List<enums.PetStatus>? petStatus) {
+  if (petStatus == null) {
+    return [];
+  }
+
+  return petStatus.map((e) => enums.$PetStatusMap[e]!).toList();
+}
+
+List<enums.PetStatus> petStatusListFromJson(List? petStatus) {
+  if (petStatus == null) {
+    return [];
+  }
+
+  return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
 }
 
 typedef $JsonFactory<T> = T Function(Map<String, dynamic> json);
