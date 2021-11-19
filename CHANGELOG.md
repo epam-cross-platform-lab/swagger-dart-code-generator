@@ -1,3 +1,7 @@
+# 2.2.6
+
+* Added working example project
+
 # 2.2.5
 
 * Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))

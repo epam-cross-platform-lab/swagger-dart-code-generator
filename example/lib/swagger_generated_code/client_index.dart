@@ -1,1 +1,1 @@
-export 'pets_api.swagger.dart' show PetsApi;
+export 'example_swagger.swagger.dart' show ExampleSwagger;
