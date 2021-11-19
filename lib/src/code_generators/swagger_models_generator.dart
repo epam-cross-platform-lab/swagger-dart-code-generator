@@ -754,7 +754,7 @@ abstract class SwaggerModelsGenerator {
       jsonKeyContent += ')\n';
     }
 
-    if (typeName != kDynamic && !val.containsKey('default')) {
+    if (typeName != kDynamic) {
       typeName += '?';
     }
 
