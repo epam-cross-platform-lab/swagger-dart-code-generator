@@ -106,17 +106,6 @@ void main() {
     });
   });
 
-  group('generateEnumValuesContent', () {
-    final generator = SwaggerEnumsGeneratorV3();
-    test('Should return enum values', () {
-      final list = <String>['Cats', 'dogs', 'Forgs'];
-      const expectedResult = "\t@JsonValue('Cats')\n  cats";
-      final result = generator.generateEnumValuesContent(list);
-
-      expect(result, contains(expectedResult));
-    });
-  });
-
   group('getOriginalOrOverriddenRequestParameter', () {
     test('Should override parameter if needed', () {
       final incoming =

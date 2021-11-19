@@ -1,3 +1,8 @@
+# 2.2.7
+
+* Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/264))
+* Fix cases with really complex enum names, which are duplicated in result
+
 # 2.2.6
 
 * Added working example project
