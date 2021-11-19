@@ -55,11 +55,6 @@ class SwaggerCodeGenerator {
           hasEnums,
           separateModels);
 
-  String generateConverter(
-          String dartCode, String fileName, GeneratorOptions options) =>
-      _getSwaggerConverterGenerator(dartCode)
-          .generate(dartCode, fileName, options);
-
   String generateResponses(
           String dartCode, String fileName, GeneratorOptions options) =>
       _getSwaggerModelsGenerator(dartCode)

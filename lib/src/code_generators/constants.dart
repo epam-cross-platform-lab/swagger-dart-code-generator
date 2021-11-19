@@ -13,6 +13,9 @@ const kBasicTypes = [
   'bool',
   'boolean',
   'num',
+  'Object',
+  'String',
+  'Map',
 ];
 
 const kChopperService = 'ChopperService';

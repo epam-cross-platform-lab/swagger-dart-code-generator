@@ -96,9 +96,6 @@ class SwaggerDartCodeGenerator implements Builder {
       options.separateModels,
     );
 
-    final converter = codeGenerator.generateConverter(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
-
     final requests = codeGenerator.generateRequests(
         contents,
         getClassNameFromFileName(fileNameWithExtension),
@@ -121,7 +118,6 @@ class SwaggerDartCodeGenerator implements Builder {
           _generateFileContent(
               imports,
               requests,
-              converter,
               options.separateModels ? '' : models,
               options.separateModels ? '' : responses,
               options.separateModels ? '' : requestBodies,
@@ -169,7 +165,6 @@ class SwaggerDartCodeGenerator implements Builder {
   String _generateFileContent(
       String imports,
       String requests,
-      String converter,
       String models,
       String responses,
       String requestBodies,
@@ -179,8 +174,6 @@ class SwaggerDartCodeGenerator implements Builder {
 $imports
 
 ${options.buildOnlyModels ? '' : requests}
-
-${options.withConverter && !options.buildOnlyModels ? converter : ''}
 
 $models
 
