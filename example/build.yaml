@@ -37,6 +37,15 @@ targets:
             - url: "/v2/channels"
               method: get
               overridden_value: "List<Channel>"
+            - url: "/{country}/{lang}/events/segments/{segmentName}"
+              method: get
+              overridden_value: "Map"
+            - url: "/v1/titlePreferredInstance/{titleCrid}"
+              method: get
+              overridden_value: TitlePreferredInstance
+            - url: "/v2/detailscreen/{crid}"
+              method: get
+              overridden_value: "Map<String, dynamic>"
           default_header_values_map:
             - header_name: "X-Entitlements-Token"
               default_value: "X-Entitlements-Token"

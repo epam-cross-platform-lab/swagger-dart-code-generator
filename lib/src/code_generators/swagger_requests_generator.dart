@@ -204,7 +204,16 @@ class SwaggerRequestsGenerator {
       results.add(neededResponse);
     }
 
-    return results.where((element) => element.isNotEmpty).toList();
+    return results.where((element) => _isValidModelName(element)).toList();
+  }
+
+  bool _isValidModelName(String modelName) {
+    if (modelName.isEmpty ||
+        kBasicTypes.contains(modelName) ||
+        modelName.startsWith(kMap)) {
+      return false;
+    }
+    return true;
   }
 
   Method _getPrivateMethod(Method method) {

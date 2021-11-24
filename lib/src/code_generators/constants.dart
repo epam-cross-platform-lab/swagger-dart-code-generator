@@ -15,8 +15,10 @@ const kBasicTypes = [
   'num',
   'Object',
   'String',
-  'Map',
+  kMap,
 ];
+
+const kMap = 'Map';
 
 const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';
