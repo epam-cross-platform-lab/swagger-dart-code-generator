@@ -755,7 +755,8 @@ abstract class SwaggerModelsGenerator {
       jsonKeyContent += ')\n';
     }
 
-    if (typeName != kDynamic && !required) {
+    final isNullable = val.containsKey('nullable') && val['nullable'] == true;
+    if (typeName != kDynamic && (!required || isNullable)) {
       typeName += '?';
     }
 
