@@ -706,7 +706,8 @@ abstract class SwaggerModelsGenerator {
       Map<String, dynamic> val,
       List<String> allEnumNames,
       List<String> allEnumListNames,
-      GeneratorOptions options) {
+      GeneratorOptions options,
+      bool required) {
     final includeIfNullString = generateIncludeIfNullString(options);
 
     var jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString";
@@ -754,7 +755,7 @@ abstract class SwaggerModelsGenerator {
       jsonKeyContent += ')\n';
     }
 
-    if (typeName != kDynamic) {
+    if (typeName != kDynamic && !required) {
       typeName += '?';
     }
 
@@ -771,7 +772,8 @@ abstract class SwaggerModelsGenerator {
       List<String> allEnumsNames,
       List<String> allEnumListNames,
       GeneratorOptions options,
-      Map<String, String> basicTypesMap) {
+      Map<String, String> basicTypesMap,
+      bool required) {
     switch (propertyEntryMap['type'] as String) {
       case 'array':
         return generateListPropertyContent(
@@ -803,6 +805,7 @@ abstract class SwaggerModelsGenerator {
           allEnumsNames,
           allEnumListNames,
           options,
+          required,
         );
     }
   }
@@ -825,7 +828,9 @@ abstract class SwaggerModelsGenerator {
       bool useDefaultNullForLists,
       List<String> allEnumNames,
       List<String> allEnumListNames,
-      GeneratorOptions options) {
+      GeneratorOptions options,
+      List<String> requiredProperties,
+    ) {
     if (propertiesMap.isEmpty) {
       return '';
     }
@@ -858,7 +863,8 @@ abstract class SwaggerModelsGenerator {
             allEnumNames,
             allEnumListNames,
             options,
-            basicTypesMap));
+            basicTypesMap,
+            requiredProperties.contains(propertyName)));
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(
             propertyEntryMap,
@@ -1037,6 +1043,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       List<String> allEnumListNames,
       GeneratorOptions options) {
     final properties = getModelProperties(map, schemas);
+    final requiredProperties = getModelRequired(map);
 
     var extendsString = options.useInheritance ? getExtendsString(map) : '';
 
@@ -1059,6 +1066,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       allEnumNames,
       allEnumListNames,
       options,
+      requiredProperties,
     );
 
     final validatedClassName =
@@ -1168,6 +1176,16 @@ $copyWithMethod
 int get hashCode =>
 $allHashComponents;
 ''';
+  }
+
+  List<String> getModelRequired(
+      Map<String, dynamic> modelMap,
+  ) {
+    if (!modelMap.containsKey('required')) {
+      return [];
+    }
+    final requiredProperties = modelMap['required'] as List<dynamic>;
+    return requiredProperties.cast<String>();
   }
 
   Map<String, dynamic> getModelProperties(
