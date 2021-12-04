@@ -1014,6 +1014,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     List<DefaultValueMap> defaultValues,
     List<String> allEnumNames,
     List<String> allEnumListNames,
+    List<String> requiredProperties,
   ) {
     if (entityMap.isEmpty) {
       return '';
@@ -1027,7 +1028,11 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
       propertyNames.add(fieldName);
 
-      results += '\t\tthis.$fieldName,\n';
+      if (requiredProperties.contains(fieldName)) {
+        results += '\t\trequired this.$fieldName,\n';
+      } else {
+        results += '\t\tthis.$fieldName,\n';
+      }
     });
 
     return '{\n$results\n\t}';
@@ -1055,6 +1060,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       defaultValues,
       allEnumNames,
       allEnumListNames,
+      requiredProperties,
     );
 
     final generatedProperties = generatePropertiesContent(
