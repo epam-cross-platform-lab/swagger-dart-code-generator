@@ -904,7 +904,7 @@ abstract class SwaggerModelsGenerator {
             allEnumListNames,
             options,
             basicTypesMap,
-            requiredProperties.contains(propertyName),
+            requiredProperties.contains(propertyKey),
         ));
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(
@@ -916,7 +916,7 @@ abstract class SwaggerModelsGenerator {
             allEnumListNames,
             options,
             basicTypesMap,
-            requiredProperties.contains(propertyName),
+            requiredProperties.contains(propertyKey),
         ));
       } else if (propertyEntryMap['schema'] != null) {
         results.add(generatePropertyContentBySchema(
@@ -928,7 +928,7 @@ abstract class SwaggerModelsGenerator {
             allEnumListNames,
             options,
             basicTypesMap,
-            requiredProperties.contains(propertyName),
+            requiredProperties.contains(propertyKey),
         ));
       } else {
         results.add(generatePropertyContentByDefault(
@@ -937,7 +937,7 @@ abstract class SwaggerModelsGenerator {
             allEnumNames,
             allEnumListNames,
             options,
-            requiredProperties.contains(propertyName),
+            requiredProperties.contains(propertyKey),
         ));
       }
     }
@@ -1078,7 +1078,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
       propertyNames.add(fieldName);
 
-      if (requiredProperties.contains(fieldName)) {
+      if (requiredProperties.contains(key)) {
         results += '\t\trequired this.$fieldName,\n';
       } else {
         results += '\t\tthis.$fieldName,\n';
