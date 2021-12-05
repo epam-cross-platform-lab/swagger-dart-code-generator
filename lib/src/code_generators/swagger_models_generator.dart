@@ -604,7 +604,7 @@ abstract class SwaggerModelsGenerator {
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
     if (required) {
-      '$debugComment\t$jsonKeyContent\tfinal $typeName $propertyName;';
+      return '$debugComment\t$jsonKeyContent\tfinal $typeName $propertyName;';
     }
 
     return '$debugComment\t$jsonKeyContent\tfinal $typeName? $propertyName;';
