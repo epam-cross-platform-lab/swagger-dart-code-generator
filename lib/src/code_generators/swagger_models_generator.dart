@@ -511,7 +511,9 @@ abstract class SwaggerModelsGenerator {
       List<String> allEnumNames,
       List<String> allEnumListNames,
       GeneratorOptions options,
-      Map<String, String> basicTypesMap) {
+      Map<String, String> basicTypesMap,
+      bool required,
+  ) {
     final propertySchema = propertyEntryMap['schema'] as Map<String, dynamic>;
     var parameterName = propertySchema['\$ref'].toString().split('/').last;
 
@@ -542,6 +544,10 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
 
+    if (required) {
+      return '\t$jsonKeyContent\tfinal $typeName ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
+    }
+
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
@@ -553,7 +559,9 @@ abstract class SwaggerModelsGenerator {
       List<String> allEnumNames,
       List<String> allEnumListNames,
       GeneratorOptions options,
-      Map<String, String> basicTypesMap) {
+      Map<String, String> basicTypesMap,
+      bool required,
+  ) {
     final parameterName = propertyEntryMap['\$ref'].toString().split('/').last;
     String typeName;
     if (basicTypesMap.containsKey(parameterName)) {
@@ -587,6 +595,10 @@ abstract class SwaggerModelsGenerator {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
+    if (required) {
+      '\t$jsonKeyContent\tfinal $typeName $propertyName;';
+    }
+
     return '\t$jsonKeyContent\tfinal $typeName? $propertyName;';
   }
 
@@ -596,6 +608,7 @@ abstract class SwaggerModelsGenerator {
     List<String> allEnumNames,
     List<String> allEnumListNames,
     GeneratorOptions options,
+    bool required,
   ) {
     final enumName = SwaggerModelsGenerator.getValidatedClassName(
         SwaggerEnumsGeneratorV2().generateEnumName(className, key));
@@ -607,6 +620,12 @@ abstract class SwaggerModelsGenerator {
         .substring(2);
 
     final includeIfNullString = generateIncludeIfNullString(options);
+
+    if (required) {
+      return '''
+  @JsonKey($unknownEnumValue$includeIfNullString)
+  final ${className.capitalize + key.capitalize} ${SwaggerModelsGenerator.generateFieldName(key)};''';
+    }
 
     return '''
   @JsonKey($unknownEnumValue$includeIfNullString)
@@ -622,7 +641,9 @@ abstract class SwaggerModelsGenerator {
       List<String> allEnumNames,
       List<String> allEnumListNames,
       GeneratorOptions options,
-      Map<String, String> basicTypesMap) {
+      Map<String, String> basicTypesMap,
+      bool required,
+  ) {
     final items = propertyEntryMap['items'];
 
     var typeName = '';
@@ -693,6 +714,10 @@ abstract class SwaggerModelsGenerator {
     } else {
       jsonKeyContent =
           "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
+    }
+
+    if (required) {
+      return '$jsonKeyContent  final List<$typeName> ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
     }
 
     return '$jsonKeyContent  final List<$typeName>? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
@@ -787,6 +812,7 @@ abstract class SwaggerModelsGenerator {
           allEnumListNames,
           options,
           basicTypesMap,
+          required,
         );
       case 'enum':
         return generateEnumPropertyContent(
@@ -795,6 +821,7 @@ abstract class SwaggerModelsGenerator {
           allEnumsNames,
           allEnumListNames,
           options,
+          required,
         );
       default:
         return generateGeneralPropertyContent(
@@ -865,7 +892,8 @@ abstract class SwaggerModelsGenerator {
             allEnumListNames,
             options,
             basicTypesMap,
-            requiredProperties.contains(propertyName)));
+            requiredProperties.contains(propertyName),
+        ));
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(
             propertyEntryMap,
@@ -875,7 +903,9 @@ abstract class SwaggerModelsGenerator {
             allEnumNames,
             allEnumListNames,
             options,
-            basicTypesMap));
+            basicTypesMap,
+            requiredProperties.contains(propertyName),
+        ));
       } else if (propertyEntryMap['schema'] != null) {
         results.add(generatePropertyContentBySchema(
             propertyEntryMap,
@@ -885,7 +915,9 @@ abstract class SwaggerModelsGenerator {
             allEnumNames,
             allEnumListNames,
             options,
-            basicTypesMap));
+            basicTypesMap,
+            requiredProperties.contains(propertyName),
+        ));
       } else {
         results.add(generatePropertyContentByDefault(propertyEntryMap,
             propertyName, allEnumNames, allEnumListNames, options));
