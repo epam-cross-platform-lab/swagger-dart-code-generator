@@ -21,6 +21,7 @@ const kResponse = 'Response';
 const kRequestBody = 'RequestBody';
 const kFutureResponse = 'Future<chopper.Response>';
 const kString = 'string';
+const kInteger = 'integer';
 const kUndefinedParameter = 'undefinedParameter';
 
 const kResponses = '/responses/';
@@ -40,7 +41,7 @@ const kBasicTypesMap = <String, String>{
   'integer': 'int',
   'int': 'int',
   'int32': 'int',
-  'int64': 'int',
+  'int64': 'double',
   'boolean': 'bool',
   'bool': 'bool',
   'string': 'String',

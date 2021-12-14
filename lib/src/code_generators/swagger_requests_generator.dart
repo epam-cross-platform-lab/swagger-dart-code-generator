@@ -363,6 +363,10 @@ class SwaggerRequestsGenerator {
         return parameter.schema!.ref.getRef().asEnum();
       }
 
+      if (_isEnumRef(parameter.schema!.ref.getUnformattedRef(), root)) {
+        return parameter.schema!.ref.getRef().asEnum();
+      }
+
       if (parameter.schema!.items != null || parameter.schema!.type == kArray) {
         return (parameter.schema!.ref.getRef() + modelPostfix).asList();
       }
@@ -374,7 +378,7 @@ class SwaggerRequestsGenerator {
       return _mapParameterName(parameter.schema!.anyOf.first.type, '');
     }
 
-    final neededType = parameter.type.isNotEmpty
+    var neededType = parameter.type.isNotEmpty
         ? parameter.type
         : parameter.schema?.type ?? kObject.pascalCase;
 
@@ -515,7 +519,8 @@ class SwaggerRequestsGenerator {
 
     final neededSchema = schemas[neededSchemaKey]!;
 
-    if (neededSchema.type == kString && neededSchema.enumValues.isNotEmpty) {
+    if ((neededSchema.type == kString || neededSchema.type == kInteger) &&
+        neededSchema.enumValues.isNotEmpty) {
       return true;
     }
 
