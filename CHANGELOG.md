@@ -1,3 +1,9 @@
+# 2.2.8
+
+* Fixed Issue ([#285](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/285))
+* Fixed generation of enum fields in requests
+* Changed int64 parsing to double
+
 # 2.2.7
 
 * Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/264))
