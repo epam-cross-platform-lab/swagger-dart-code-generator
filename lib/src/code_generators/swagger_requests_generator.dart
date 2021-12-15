@@ -339,19 +339,23 @@ class SwaggerRequestsGenerator {
     required String modelPostfix,
     required SwaggerRoot root,
   }) {
+    final format = parameter.schema?.format ?? '';
+
     if (parameter.inParameter == kHeader) {
-      return _mapParameterName(kString, '');
+      return _mapParameterName(kString, format, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
       return _getEnumParameterTypeName(
           parameterName: parameter.name, path: path, requestType: requestType);
     } else if (parameter.items?.type.isNotEmpty == true) {
-      return _mapParameterName(parameter.items!.type, modelPostfix).asList();
+      return _mapParameterName(parameter.items!.type, format, modelPostfix)
+          .asList();
     } else if (parameter.items?.ref.isNotEmpty == true) {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.items!.ref.getRef().asEnum();
       }
-      return _mapParameterName(parameter.items!.ref.getRef(), modelPostfix)
+      return _mapParameterName(
+              parameter.items!.ref.getRef(), format, modelPostfix)
           .asList();
     } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
       if (_isEnumRefParameter(parameter, root)) {
@@ -373,19 +377,23 @@ class SwaggerRequestsGenerator {
       return (parameter.schema!.ref.getRef() + modelPostfix);
     } else if (parameter.schema?.type == kArray &&
         parameter.schema?.items?.type.isNotEmpty == true) {
-      return _mapParameterName(parameter.schema!.items!.type, '').asList();
+      return _mapParameterName(parameter.schema!.items!.type, format, '')
+          .asList();
     } else if (parameter.schema?.anyOf.firstOrNull?.type.isNotEmpty == true) {
-      return _mapParameterName(parameter.schema!.anyOf.first.type, '');
+      return _mapParameterName(parameter.schema!.anyOf.first.type, format, '');
     }
 
     var neededType = parameter.type.isNotEmpty
         ? parameter.type
         : parameter.schema?.type ?? kObject.pascalCase;
 
-    return _mapParameterName(neededType, modelPostfix);
+    return _mapParameterName(neededType, format, modelPostfix);
   }
 
-  String _mapParameterName(String name, String modelPostfix) {
+  String _mapParameterName(String name, String format, String modelPostfix) {
+    if (name == kInteger && format == kInt64) {
+      return kNum;
+    }
     return kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
   }
 
@@ -646,7 +654,7 @@ class SwaggerRequestsGenerator {
         return null;
       }
 
-      return _mapParameterName(mappedArrayType, modelPostfix).asList();
+      return _mapParameterName(mappedArrayType, '', modelPostfix).asList();
     }
 
     return kBasicTypesMap[responseType] ?? responseType + modelPostfix;
