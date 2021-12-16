@@ -1,4 +1,8 @@
-# 2.2.8
+# 2.2.10
+
+* Fixed support of int64 fields in Models
+
+# 2.2.9
 
 * Fixed support of fields type integer and format int64
 
