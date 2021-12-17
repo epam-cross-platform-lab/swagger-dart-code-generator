@@ -1,6 +1,26 @@
-# 2.2.5+1
 
-* Updated example
+# 2.2.10
+
+* Fixed support of int64 fields in Models
+
+# 2.2.9
+
+* Fixed support of fields type integer and format int64
+
+# 2.2.8
+
+* Fixed Issue ([#285](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/285))
+* Fixed generation of enum fields in requests
+* Changed int64 parsing to double
+
+# 2.2.7
+
+* Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/264))
+* Fix cases with really complex enum names, which are duplicated in result
+
+# 2.2.6
+
+* Added working example project
 
 # 2.2.5
 

@@ -218,27 +218,42 @@ $enumMap
   }
 
   String getEnumValuesContent(List<String> enumValues) {
-    final result = enumValues
-        .map((String enumFieldName) =>
-            "\t@JsonValue('${enumFieldName.replaceAll("\$", "\\\$")}')\n\t${getValidatedEnumFieldName(enumFieldName)}")
-        .join(',\n');
+    print(enumValues);
+    final result = <String>[];
+    final resultStrings = <String>[];
 
-    return result;
+    enumValues.forEach((value) {
+      var validatedValue = getValidatedEnumFieldName(value);
+
+      while (result.contains(validatedValue)) {
+        validatedValue += '\$';
+      }
+
+      result.add(validatedValue);
+      resultStrings.add(
+          "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
+    });
+
+    return resultStrings.join(',\n');
   }
 
   String getEnumValuesMapContent(String enumName, List<String> enumValues) {
-    final neededValues = <String>[];
-    neededValues.addAll(enumValues);
+    final neededStrings = <String>[];
+    final fields = <String>[];
 
-    final unknownEnumPart = ',\n\t$enumName.swaggerGeneratedUnknown: \'\'';
+    enumValues.forEach((value) {
+      var validatedValue = getValidatedEnumFieldName(value);
 
-    final result = neededValues
-            .map((String enumFieldName) =>
-                '\t$enumName.${getValidatedEnumFieldName(enumFieldName)}: \'${enumFieldName.replaceAll('\$', '\\\$')}\'')
-            .join(',\n') +
-        unknownEnumPart;
+      while (fields.contains(validatedValue)) {
+        validatedValue += '\$';
+      }
 
-    return result;
+      fields.add(validatedValue);
+      neededStrings.add(
+          '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
+    });
+
+    return neededStrings.join(',\n');
   }
 
   static String getValidatedEnumFieldName(String name) {
@@ -339,7 +354,9 @@ $enumMap
     enumName = SwaggerModelsGenerator.getValidatedClassName(enumName);
 
     if (map['enum'] != null) {
-      final enumValues = map['enum'] as List<dynamic>;
+      final enumValues =
+          (map['enum'] as List<dynamic>).map((e) => e.toString()).toList();
+
       final stringValues = enumValues.map((e) => e.toString()).toList();
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
@@ -350,7 +367,7 @@ $enumMap
       return """
 enum ${enumName.capitalize} {
 \t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
-${generateEnumValuesContent(enumValues)}
+${getEnumValuesContent(enumValues)}
 }
 
 $enumMap
@@ -367,13 +384,6 @@ $enumMap
     final validatedEnumName =
         SwaggerModelsGenerator.getValidatedClassName(enumName);
     return '${className.capitalize}$validatedEnumName';
-  }
-
-  String generateEnumValuesContent(List<dynamic> values) {
-    return values
-        .map((dynamic e) =>
-            "\t@JsonValue('${e.toString().replaceAll("\$", "\\\$")}')\n  ${getValidatedEnumFieldName(e.toString())}")
-        .join(',\n');
   }
 
   String generateEnumsFromClasses(
