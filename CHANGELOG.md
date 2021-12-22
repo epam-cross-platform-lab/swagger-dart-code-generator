@@ -25,6 +25,7 @@
 # 2.2.5
 
 * Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))
+* Fixed Issue ([#289](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/289))
 * Fixed Issue ([#275](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/275))
 * Returned possibility to use operationId for request name
 * Added generation of requestBodies integrated to requests, when it's complex model
