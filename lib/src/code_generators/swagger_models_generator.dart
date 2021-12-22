@@ -333,6 +333,10 @@ abstract class SwaggerModelsGenerator {
     switch (parameter['type'] as String?) {
       case 'integer':
       case 'int':
+        if (parameter['format'] == kInt64) {
+          return kNum;
+        }
+        return 'int';
       case 'int32':
       case 'int64':
         return 'int';
