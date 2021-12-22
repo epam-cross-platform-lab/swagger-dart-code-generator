@@ -48,10 +48,6 @@ void main() {
       expect(result2, contains('Future<chopper.Response<CarModel>>'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsGet'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
-      expect(
-          result,
-          contains(
-              'Future<chopper.Response<CarModel>> carsAdditionalPut({@Body() required Object? body});'));
     });
   });
 }
