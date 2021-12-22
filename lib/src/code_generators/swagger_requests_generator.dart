@@ -160,22 +160,60 @@ class SwaggerRequestsGenerator {
               .add(_getMethodAnnotation(requestType, path, hasOptionalBody))
           ..returns = Reference(returns));
 
-        if (_hasEnumProperties(method)) {
-          final privateMethod = _getPrivateMethod(method);
-          final publicMethod = _getPublicMethod(method);
-          methods.addAll([publicMethod, privateMethod]);
-        } else {
-          methods.add(method);
-        }
+        final allModels = _getAllMethodModels(
+          swaggerRoot,
+          swaggerRequest,
+          returnTypeName,
+        );
+
+        final privateMethod = _getPrivateMethod(method);
+        final publicMethod = _getPublicMethod(method, allModels);
+        methods.addAll([publicMethod, privateMethod]);
       });
     });
 
     return methods;
   }
 
-  bool _hasEnumProperties(Method method) {
-    return method.optionalParameters
-        .any((p) => p.type!.symbol!.startsWith('enums') == true);
+  List<String> _getAllMethodModels(
+    SwaggerRoot root,
+    SwaggerRequest request,
+    String response,
+  ) {
+    final results = <String>[];
+
+    ///Models from parameters
+    request.parameters.forEach((parameter) {
+      final ref = parameter.anyRef;
+
+      if (ref.isNotEmpty) {
+        final schema = root.allSchemas[ref.getUnformattedRef()];
+
+        if (schema == null || schema.type != kObject) {
+          return;
+        }
+
+        results.add(ref.getRef());
+      }
+    });
+
+    //Models from response
+
+    final neededResponse = response.removeList();
+    if (!kBasicTypes.contains(neededResponse)) {
+      results.add(neededResponse);
+    }
+
+    return results.where((element) => _isValidModelName(element)).toList();
+  }
+
+  bool _isValidModelName(String modelName) {
+    if (modelName.isEmpty ||
+        kBasicTypes.contains(modelName) ||
+        modelName.startsWith(kMap)) {
+      return false;
+    }
+    return true;
   }
 
   Method _getPrivateMethod(Method method) {
@@ -197,7 +235,7 @@ class SwaggerRequestsGenerator {
     );
   }
 
-  Method _getPublicMethod(Method method) {
+  Method _getPublicMethod(Method method, List<String> allModels) {
     final parameters =
         method.optionalParameters.map((p) => p.copyWith(annotations: []));
 
@@ -207,12 +245,19 @@ class SwaggerRequestsGenerator {
         ..docs.addAll(method.docs)
         ..name = method.name
         ..returns = method.returns
-        ..body = _generatePublicMethodReturn(parameters, method.name!),
+        ..body = _generatePublicMethodCode(
+          parameters,
+          method.name!,
+          allModels,
+        ),
     );
   }
 
-  Code _generatePublicMethodReturn(
-      Iterable<Parameter> parameters, String publicMethodName) {
+  Code _generatePublicMethodCode(
+    Iterable<Parameter> parameters,
+    String publicMethodName,
+    List<String> allModels,
+  ) {
     final parametersListString = parameters.map((p) {
       if (p.type!.symbol!.startsWith('enums.')) {
         final enumName =
@@ -222,8 +267,19 @@ class SwaggerRequestsGenerator {
       }
       return '${p.name} : ${p.name}';
     }).join(', ');
+    if (allModels.isNotEmpty) {
+      print(allModels);
+    }
 
-    return Code('return _$publicMethodName($parametersListString);');
+    var allModelsString = '';
+
+    allModels.toSet().forEach((model) {
+      allModelsString +=
+          'generatedMapping.putIfAbsent($model, () => $model.fromJsonFactory);\n';
+    });
+
+    return Code(
+        '$allModelsString\nreturn _$publicMethodName($parametersListString);');
   }
 
   Expression _getMethodAnnotation(
@@ -774,7 +830,18 @@ class SwaggerRequestsGenerator {
           SwaggerModelsGenerator.getValidatedClassName(schemaItemsRef.getRef())
               .withPostfix(modelPostfix)
               .asList();
+
       return result;
+    }
+
+    if (content.schema?.type == kArray) {
+      final itemsType = content.schema?.items?.type ?? '';
+      final itemsFormat = content.schema?.items?.format ?? '';
+
+      if (itemsType.isNotEmpty) {
+        final parameterType = _mapParameterName(itemsType, itemsFormat, '');
+        return parameterType.asList();
+      }
     }
 
     final contentSchemaType = content.schema?.type ?? '';
@@ -834,4 +901,15 @@ class SwaggerRequestsGenerator {
 
     return '';
   }
+}
+
+extension on SwaggerRequestParameter {
+  String get anyRef => schema?.ref ?? items?.ref ?? schema?.items?.ref ?? ref;
+}
+
+extension on SwaggerRoot {
+  Map<String, SwaggerSchema> get allSchemas => {
+        ...definitions,
+        ...components?.schemas ?? {},
+      };
 }

@@ -13,7 +13,12 @@ const kBasicTypes = [
   'bool',
   'boolean',
   'num',
+  'Object',
+  'String',
+  kMap,
 ];
+
+const kMap = 'Map';
 
 const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';

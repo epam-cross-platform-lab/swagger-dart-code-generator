@@ -1,3 +1,8 @@
+# 2.3.0
+
+* Fixed Issue ([#289](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/289))
+* [Possible breaking] Removed json map generation. Applied new approach
+
 # 2.2.10
 
 * Fixed support of int64 fields in Models

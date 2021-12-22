@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_converter_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
@@ -55,11 +54,6 @@ class SwaggerCodeGenerator {
           hasEnums,
           separateModels);
 
-  String generateConverter(
-          String dartCode, String fileName, GeneratorOptions options) =>
-      _getSwaggerConverterGenerator(dartCode)
-          .generate(dartCode, fileName, options);
-
   String generateResponses(
           String dartCode, String fileName, GeneratorOptions options) =>
       _getSwaggerModelsGenerator(dartCode)
@@ -97,9 +91,6 @@ class SwaggerCodeGenerator {
 
   SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator(String dartCode) =>
       SwaggerAdditionsGenerator();
-
-  SwaggerConverterGenerator _getSwaggerConverterGenerator(String dartCode) =>
-      SwaggerConverterGenerator();
 
   SwaggerEnumsGenerator _getSwaggerEnumsGenerator(String dartCode) =>
       _enumsMap[_getApiVersion(dartCode)]!;
