@@ -830,7 +830,18 @@ class SwaggerRequestsGenerator {
           SwaggerModelsGenerator.getValidatedClassName(schemaItemsRef.getRef())
               .withPostfix(modelPostfix)
               .asList();
+
       return result;
+    }
+
+    if (content.schema?.type == kArray) {
+      final itemsType = content.schema?.items?.type ?? '';
+      final itemsFormat = content.schema?.items?.format ?? '';
+
+      if (itemsType.isNotEmpty) {
+        final parameterType = _mapParameterName(itemsType, itemsFormat, '');
+        return parameterType.asList();
+      }
     }
 
     final contentSchemaType = content.schema?.type ?? '';
