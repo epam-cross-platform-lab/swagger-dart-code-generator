@@ -218,7 +218,6 @@ $enumMap
   }
 
   String getEnumValuesContent(List<String> enumValues) {
-    print(enumValues);
     final result = <String>[];
     final resultStrings = <String>[];
 
