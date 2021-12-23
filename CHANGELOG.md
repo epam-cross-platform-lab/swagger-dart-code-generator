@@ -1,6 +1,6 @@
 # 2.3.1
 
-* * Fixed Issue ([#291](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/291))
+* Fixed Issue ([#291](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/291))
 
 # 2.3.0
 

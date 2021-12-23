@@ -267,6 +267,9 @@ class SwaggerRequestsGenerator {
       }
       return '${p.name} : ${p.name}';
     }).join(', ');
+    if (allModels.isNotEmpty) {
+      print(allModels);
+    }
 
     var allModelsString = '';
 
