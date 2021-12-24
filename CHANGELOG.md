@@ -1,3 +1,9 @@
+# 2.3.2
+
+* Fixed Issue ([#290](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/290))
+* Fixed cases with Num instead of num in responses
+* Removed not needed prints
+
 # 2.3.1
 
 * Fixed Issue ([#291](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/291))

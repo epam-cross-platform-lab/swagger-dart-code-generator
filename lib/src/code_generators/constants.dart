@@ -55,6 +55,7 @@ const kBasicTypesMap = <String, String>{
   'file': 'List<String>',
   'number': 'num',
   'object': 'Object',
+  'num': 'num',
 };
 
 const kObject = 'object';
