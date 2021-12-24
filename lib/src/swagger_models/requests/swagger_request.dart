@@ -16,6 +16,7 @@ class SwaggerRequest {
     this.responses = const {},
     this.parameters = const [],
     this.produces = const [],
+    this.security = const [],
     this.requestBody,
   });
 
@@ -36,6 +37,9 @@ class SwaggerRequest {
 
   @JsonKey(name: 'responses', defaultValue: {})
   Map<String, SwaggerResponse> responses;
+
+  @JsonKey(name: 'security', fromJson: _securityFromJson)
+  List<String> security;
 
   @JsonKey(name: 'parameters', defaultValue: [])
   List<SwaggerRequestParameter> parameters;
@@ -91,4 +95,17 @@ class RequestContent {
 
   factory RequestContent.fromJson(Map<String, dynamic> json) =>
       _$RequestContentFromJson(json);
+}
+
+List<String> _securityFromJson(List? map) {
+  if (map == null) {
+    return [];
+  }
+
+  final result = map
+      .map((e) => (e as Map<String, dynamic>?)?.keys)
+      .expand((ee) => ee?.toList() ?? <String>[])
+      .toList();
+
+  return result;
 }
