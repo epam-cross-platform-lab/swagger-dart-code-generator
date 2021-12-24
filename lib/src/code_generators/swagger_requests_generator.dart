@@ -467,9 +467,15 @@ class SwaggerRequestsGenerator {
     definedParameters.addAll(root.parameters);
     definedParameters.addAll(root.components?.parameters ?? {});
 
-    final parameters = [...swaggerRequest.parameters, ...swaggerPath.parameters]
-        .map((par) => definedParameters[par.ref.split('/').last] ?? par)
-        .toList();
+    final securityParameters = swaggerRequest.security
+        .map((e) => root.securityDefinitions[e])
+        .whereNotNull();
+
+    final parameters = [
+      ...swaggerRequest.parameters,
+      ...swaggerPath.parameters,
+      ...securityParameters,
+    ].map((par) => definedParameters[par.ref.split('/').last] ?? par).toList();
 
     final result = parameters
         .where((swaggerParameter) =>
