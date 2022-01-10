@@ -1,3 +1,8 @@
+# 2.3.3
+
+* Fixed Issue ([#297](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/297))
+* Removed use_inheritance option. Inheritance is supported by copy-pasting parent fields
+
 # 2.3.2
 
 * Fixed Issue ([#290](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/290))

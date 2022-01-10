@@ -1042,8 +1042,6 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       GeneratorOptions options) {
     final properties = getModelProperties(map, schemas);
 
-    var extendsString = options.useInheritance ? getExtendsString(map) : '';
-
     final generatedConstructorProperties = generateConstructorPropertiesContent(
       className,
       properties,
@@ -1079,7 +1077,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
-class $validatedClassName $extendsString{
+class $validatedClassName {
 \t$validatedClassName($generatedConstructorProperties);\n
 \tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
 $generatedProperties

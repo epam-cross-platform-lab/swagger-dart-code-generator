@@ -679,27 +679,6 @@ void main() {
     });
   });
 
-  group('getModelInheritedProperties', () {
-    test('Should generate 2 levels of inheritance', () {
-      final result = generator.generate(model_with_inheritance, 'MyClass',
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
-
-      expect(
-          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
-    });
-
-    test('Should generate 3 levels of inheritance', () {
-      final result = generator.generate(model_with_inheritance_3_levels,
-          'MyClass', GeneratorOptions(inputFolder: '', outputFolder: ''));
-
-      expect(result,
-          contains('class MostExtendedErrorModel extends ExtendedErrorModel'));
-
-      expect(
-          result, contains('class ExtendedErrorModel extends BasicErrorModel'));
-    });
-  });
-
   group('Tests for getValidatedClassName', () {
     test('Should', () {
       final result = SwaggerModelsGenerator.getValidatedClassName('Request');
