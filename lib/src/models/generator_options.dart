@@ -20,7 +20,6 @@ class GeneratorOptions {
     this.enumsCaseSensitive = true,
     this.useRequiredAttributeForHeaders = true,
     this.usePathForRequestNames = true,
-    this.useInheritance = true,
     this.includeIfNull,
     this.modelPostfix = '',
     this.includePaths = const [],
@@ -48,9 +47,6 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool ignoreHeaders;
-
-  @JsonKey(defaultValue: true)
-  final bool useInheritance;
 
   @JsonKey(defaultValue: false)
   final bool enumsCaseSensitive;
