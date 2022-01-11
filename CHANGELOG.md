@@ -1,3 +1,7 @@
+# 2.3.4+1
+
+* Fixed fromJson method for integer Enum fields
+
 # 2.3.4
 
 * Fixed Issue ([#268](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/268))
