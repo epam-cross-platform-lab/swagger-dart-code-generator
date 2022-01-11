@@ -963,17 +963,26 @@ String? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}
   return enums.\$${neededName}Map[${neededName.camelCase}];
 }
 
-enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase}) {
+enums.$neededName ${neededName.camelCase}FromJson(Object? ${neededName.camelCase}) {
 
-  if(${neededName.camelCase} == null)
+if(${neededName.camelCase} is int)
   {
-    return enums.$neededName.swaggerGeneratedUnknown;
+    return enums.\$${neededName}Map.entries
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}.toString(),
+      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
+      .key;
   }
 
-  return enums.\$${neededName}Map.entries
+if(${neededName.camelCase} is String)
+  {
+ return enums.\$${neededName}Map.entries
       .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString,
       orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
       .key;
+
+      }
+  
+    return enums.$neededName.swaggerGeneratedUnknown;
 }
 
 List<String> ${neededName.camelCase}ListToJson(
