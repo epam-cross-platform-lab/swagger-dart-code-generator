@@ -1,6 +1,6 @@
 # 2.3.4+1
 
-* Fixed fromJson method for integer Enum fields
+* Fixed fromJson method for integer Enum fields in models
 
 # 2.3.4
 
