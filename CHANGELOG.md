@@ -1,3 +1,8 @@
+# 2.3.4
+
+* Fixed Issue ([#268](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/268))
+* Added support of integer enum values
+
 # 2.3.3
 
 * Fixed Issue ([#297](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/297))

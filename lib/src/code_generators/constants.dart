@@ -31,6 +31,8 @@ const kInt64 = 'int64';
 const kNum = 'num';
 const kUndefinedParameter = 'undefinedParameter';
 
+const kIntegerTypes = [kInteger, kInt64, kNum];
+
 const kResponses = '/responses/';
 
 //Request types

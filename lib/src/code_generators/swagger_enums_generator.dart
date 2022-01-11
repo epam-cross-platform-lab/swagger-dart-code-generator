@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:recase/recase.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -182,8 +183,16 @@ $enumsFromRequestBodies
               swaggerRequestParameter.items?.enumValues ??
               [];
 
+          final isInteger =
+              kIntegerTypes.contains(swaggerRequestParameter.schema?.type) ||
+                  kIntegerTypes.contains(swaggerRequestParameter.items?.type);
+
           if (enumValues.isNotEmpty) {
-            final enumContent = generateEnumContent(name, enumValues);
+            final enumContent = generateEnumContent(
+              name,
+              enumValues,
+              isInteger,
+            );
 
             result.writeln(enumContent);
             enumNames.add(swaggerRequestParameter.name);
@@ -195,8 +204,15 @@ $enumsFromRequestBodies
     return result.toString();
   }
 
-  String generateEnumContent(String enumName, List<String> enumValues) {
-    final enumValuesContent = getEnumValuesContent(enumValues);
+  String generateEnumContent(
+    String enumName,
+    List<String> enumValues,
+    bool isInteger,
+  ) {
+    final enumValuesContent = getEnumValuesContent(
+      enumValues: enumValues,
+      isInteger: isInteger,
+    );
 
     final enumMap = '''
 \n\tconst \$${enumName}Map = {
@@ -217,7 +233,10 @@ $enumMap
     return result;
   }
 
-  String getEnumValuesContent(List<String> enumValues) {
+  String getEnumValuesContent({
+    required List<String> enumValues,
+    required bool isInteger,
+  }) {
     final result = <String>[];
     final resultStrings = <String>[];
 
@@ -229,8 +248,14 @@ $enumMap
       }
 
       result.add(validatedValue);
-      resultStrings.add(
-          "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
+
+      if (isInteger) {
+        resultStrings.add(
+            "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
+      } else {
+        resultStrings.add(
+            "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
+      }
     });
 
     return resultStrings.join(',\n');
@@ -363,10 +388,12 @@ $enumMap
       };
       ''';
 
+      final isInteger = kIntegerTypes.contains(map['type']);
+
       return """
 enum ${enumName.capitalize} {
 \t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
-${getEnumValuesContent(enumValues)}
+${getEnumValuesContent(enumValues: enumValues, isInteger: isInteger)}
 }
 
 $enumMap
