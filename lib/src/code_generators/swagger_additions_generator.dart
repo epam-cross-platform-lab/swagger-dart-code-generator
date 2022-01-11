@@ -181,7 +181,7 @@ final \$jsonDecoder = \$CustomJsonDecoder(generatedMapping);
     GeneratorOptions options,
   ) {
     final baseUrlString = options.withBaseUrl
-        ? "baseUrl:  'https://$host$basePath'"
+        ? "baseUrl:  baseUrl ?? 'http://$host$basePath'"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
     final converterString = options.withConverter
