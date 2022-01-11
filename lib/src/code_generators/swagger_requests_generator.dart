@@ -75,22 +75,18 @@ class SwaggerRequestsGenerator {
         ..returns = Reference(className)
         ..name = 'create'
         ..static = true
-        ..optionalParameters.add(
-          Parameter(
-            (p) => p
-              ..named = true
-              ..type = Reference('ChopperClient?')
-              ..name = 'client',
-          )
-        )
-        ..optionalParameters.add(
-          Parameter(
-                (p) => p
-              ..named = true
-              ..type = Reference('String?')
-              ..name = 'baseUrl',
-          )
-        )
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
+            ..type = Reference('ChopperClient?')
+            ..name = 'client',
+        ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
+            ..type = Reference('String?')
+            ..name = 'baseUrl',
+        ))
         ..body = Code(body),
     );
   }
