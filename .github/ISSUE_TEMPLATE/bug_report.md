@@ -16,6 +16,9 @@ Please attach swagger and code snippet of generated value
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Swagger specification link**
+Link to swagger/OpenApi documentation
+
 **Library version used:**
 Please specify library version
 
