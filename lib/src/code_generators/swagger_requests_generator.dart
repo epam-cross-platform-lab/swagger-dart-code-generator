@@ -360,7 +360,7 @@ class SwaggerRequestsGenerator {
         .join();
 
     final result =
-        '$pathString${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
+        '${SwaggerModelsGenerator.getValidatedClassName(pathString)}${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
 
     return result.asEnum();
   }

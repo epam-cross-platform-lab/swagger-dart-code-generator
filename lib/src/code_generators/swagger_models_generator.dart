@@ -297,7 +297,7 @@ abstract class SwaggerModelsGenerator {
 
     if (exceptionWords.contains(result.camelCase) ||
         kBasicTypes.contains(result.camelCase)) {
-      return '\$$parameterName';
+      return '\$$result';
     }
 
     if (result.isEmpty) {
