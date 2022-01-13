@@ -75,22 +75,18 @@ class SwaggerRequestsGenerator {
         ..returns = Reference(className)
         ..name = 'create'
         ..static = true
-        ..optionalParameters.add(
-          Parameter(
-            (p) => p
-              ..named = true
-              ..type = Reference('ChopperClient?')
-              ..name = 'client',
-          )
-        )
-        ..optionalParameters.add(
-          Parameter(
-                (p) => p
-              ..named = true
-              ..type = Reference('String?')
-              ..name = 'baseUrl',
-          )
-        )
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
+            ..type = Reference('ChopperClient?')
+            ..name = 'client',
+        ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
+            ..type = Reference('String?')
+            ..name = 'baseUrl',
+        ))
         ..body = Code(body),
     );
   }
@@ -364,7 +360,7 @@ class SwaggerRequestsGenerator {
         .join();
 
     final result =
-        '$pathString${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
+        '${SwaggerModelsGenerator.getValidatedClassName(pathString)}${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
 
     return result.asEnum();
   }

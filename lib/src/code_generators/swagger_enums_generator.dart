@@ -148,15 +148,24 @@ $enumsFromRequestBodies
     final map = jsonDecode(swagger) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
+    final definedParameters = <String, SwaggerRequestParameter>{};
+    definedParameters.addAll(swaggerRoot.parameters);
+    definedParameters.addAll(swaggerRoot.components?.parameters ?? {});
+
     //Link defined parameters with requests
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
       swaggerPath.requests
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
-        swaggerRequest.parameters = swaggerRequest.parameters
-            .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverriddenRequestParameter(parameter,
-                    swaggerRoot.components?.parameters.values.toList() ?? []))
-            .toList();
+        swaggerRequest.parameters =
+            swaggerRequest.parameters.map((SwaggerRequestParameter parameter) {
+          if (definedParameters
+              .containsKey(parameter.ref.getUnformattedRef())) {
+            return definedParameters[parameter.ref.getUnformattedRef()]!;
+          }
+
+          return getOriginalOrOverriddenRequestParameter(parameter,
+              swaggerRoot.components?.parameters.values.toList() ?? []);
+        }).toList();
       });
     });
 
