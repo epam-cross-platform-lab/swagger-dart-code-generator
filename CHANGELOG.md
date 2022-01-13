@@ -1,3 +1,8 @@
+# 2.3.5
+
+* Fixed Issue ([#263](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/263))
+* Fixed generation of Enums, defined in /parameters/ and used in request parameters
+
 # 2.3.4+1
 
 * Fixed fromJson method for integer Enum fields in models
