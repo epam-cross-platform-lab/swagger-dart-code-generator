@@ -371,9 +371,9 @@ class SwaggerRequestsGenerator {
     schemas.addAll(root.definitions);
 
     final refs = [
-      parameter.schema?.items?.ref.getRef(),
-      parameter.schema?.ref.getRef(),
-      parameter.items?.ref.getRef(),
+      parameter.schema?.items?.ref.getUnformattedRef(),
+      parameter.schema?.ref.getUnformattedRef(),
+      parameter.items?.ref.getUnformattedRef(),
     ];
     final schema =
         schemas[refs.firstWhereOrNull((ref) => ref?.isNotEmpty == true)];
