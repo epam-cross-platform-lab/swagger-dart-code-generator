@@ -839,8 +839,12 @@ abstract class SwaggerModelsGenerator {
 
     for (var i = 0; i < propertiesMap.keys.length; i++) {
       var propertyName = propertiesMap.keys.elementAt(i);
-      final propertyEntryMap =
-          propertiesMap[propertyName] as Map<String, dynamic>;
+
+      final propertyEntry = propertiesMap[propertyName];
+      final propertyEntryMap = propertyEntry is Map<String, dynamic>
+          ? propertyEntry
+          : <String, dynamic>{};
+
       final propertyKey = propertyName;
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(swagger);
@@ -1212,10 +1216,12 @@ $allHashComponents;
       final refString = allOfRef['\$ref'].toString();
       final schema = schemas[refString.getUnformattedRef()];
 
-      final moreProperties =
-          schema['properties'] as Map<String, dynamic>? ?? {};
+      if (schema != null) {
+        final moreProperties =
+            schema['properties'] as Map<String, dynamic>? ?? {};
 
-      currentProperties.addAll(moreProperties);
+        currentProperties.addAll(moreProperties);
+      }
     }
 
     return currentProperties;
@@ -1303,10 +1309,13 @@ $allHashComponents;
       }
 
       properties.forEach((propertyName, propertyValue) {
-        var property = propertyValue as Map<String, dynamic>;
+        if (propertyValue is! Map<String, dynamic>) {
+          return;
+        }
 
-        if (property.containsKey('enum') ||
-            (property['items'] != null && property['items']['enum'] != null)) {
+        if (propertyValue.containsKey('enum') ||
+            (propertyValue['items'] != null &&
+                propertyValue['items']['enum'] != null)) {
           results.add(SwaggerModelsGenerator.getValidatedClassName(
               SwaggerEnumsGeneratorV3().generateEnumName(
                   SwaggerModelsGenerator.getValidatedClassName(className),

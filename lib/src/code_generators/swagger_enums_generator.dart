@@ -367,7 +367,12 @@ $enumMap
 
     final gemeratedEnumsContent = map.keys
         .map((String key) {
-          final enumValuesMap = map[key] as Map<String, dynamic>;
+          final enumValues = map[key];
+
+          final enumValuesMap = enumValues is Map<String, dynamic>
+              ? enumValues
+              : <String, dynamic>{};
+          map[key];
 
           if (enumValuesMap.containsKey('type')) {
             return generateEnumContentIfPossible(

@@ -1,3 +1,8 @@
+# 2.3.6
+
+* Fixed Issue ([#311](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/311))
+* Fixed some borded cases in Swagger generator
+
 # 2.3.5
 
 * Fixed Issue ([#263](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/263))
