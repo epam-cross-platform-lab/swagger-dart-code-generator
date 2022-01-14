@@ -717,7 +717,9 @@ abstract class SwaggerModelsGenerator {
 
     var typeName = '';
 
-    if (val['\$ref'] != null) {
+    if (val.containsKey(kAdditionalProperties)) {
+      typeName = kMapStringDynamic;
+    } else if (val['\$ref'] != null) {
       typeName = val['\$ref'].toString().split('/').last.pascalCase +
           options.modelPostfix;
     } else {
