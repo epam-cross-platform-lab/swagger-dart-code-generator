@@ -1,3 +1,8 @@
+# 2.3.7
+
+* Fixed Issue ([#305](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/305))
+* Fixed enum prefix for list of enums in requests when Enums contain names with symbols
+
 # 2.3.6
 
 * Fixed Issue ([#311](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/311))
