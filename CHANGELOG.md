@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 # 2.3.8
 
 * Fixed Issue ([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
 * Added generation of 'Map<String, dynamic>' for fields with additional properties
 
-=======
->>>>>>> origin/master
 # 2.3.7
 
 * Fixed Issue ([#305](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/305))
