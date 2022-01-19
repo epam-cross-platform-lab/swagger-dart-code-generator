@@ -1,3 +1,8 @@
+# 2.3.9
+
+* Fixed Issue ([#313](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/313))
+* Fixed cases with array string definitions
+
 # 2.3.8
 
 * Fixed Issue ([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
