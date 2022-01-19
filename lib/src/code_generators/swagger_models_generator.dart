@@ -565,12 +565,12 @@ abstract class SwaggerModelsGenerator {
     } else {
       typeName = getValidatedClassName(getParameterTypeName(className,
           propertyName, propertyEntryMap, options.modelPostfix, parameterName));
+
+      typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
     }
 
     final allEnumsNamesWithoutPrefix =
         allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
-
-    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
@@ -922,6 +922,16 @@ abstract class SwaggerModelsGenerator {
           key: _mapBasicTypeToDartType(
               value['type'].toString(), value['format'].toString())
         });
+      }
+
+      if (value['type'] == kArray && value['items'] != null) {
+        final ref = value['items']['\$ref'] as String? ?? '';
+
+        if (result[ref.getUnformattedRef()] != null) {
+          result[key] = result[ref.getUnformattedRef()]!.asList();
+        } else if (ref.isNotEmpty) {
+          result[key] = ref.getRef().asList();
+        }
       }
     });
 
