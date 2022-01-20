@@ -42,7 +42,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     ];
   });
 
-  ///Register additional outputs in first input
+  //Register additional outputs in first input
   result[normal(filesList.first.path)]!.add(join(out, _indexFileName));
   result[normal(filesList.first.path)]!.add(join(out, _mappingFileName));
 
@@ -102,9 +102,6 @@ class SwaggerDartCodeGenerator implements Builder {
         getFileNameWithoutExtension(fileNameWithExtension),
         options);
 
-    final customDecoder = codeGenerator.generateCustomJsonConverter(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
-
     final dateToJson = codeGenerator.generateDateToJson(contents);
 
     final copyAssetId = AssetId(
@@ -121,7 +118,6 @@ class SwaggerDartCodeGenerator implements Builder {
               options.separateModels ? '' : models,
               options.separateModels ? '' : responses,
               options.separateModels ? '' : requestBodies,
-              customDecoder,
               dateToJson));
     }
 
@@ -162,14 +158,8 @@ class SwaggerDartCodeGenerator implements Builder {
     }
   }
 
-  String _generateFileContent(
-      String imports,
-      String requests,
-      String models,
-      String responses,
-      String requestBodies,
-      String customDecoder,
-      String dateToJson) {
+  String _generateFileContent(String imports, String requests, String models,
+      String responses, String requestBodies, String dateToJson) {
     final result = """
 $imports
 
@@ -181,7 +171,6 @@ $responses
 
 $requestBodies
 
-${options.buildOnlyModels ? '' : customDecoder}
 
 $dateToJson
 """;
@@ -212,16 +201,6 @@ $dateToJson
 
     if (!options.buildOnlyModels) {
       await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
-    }
-
-    if (options.withConverter && !options.buildOnlyModels) {
-      final mappingAssetId = AssetId(
-          inputId.package, join(options.outputFolder, _mappingFileName));
-
-      final mapping = codeGenerator.generateConverterMappings(
-          swaggerCode, buildExtensions, hasModels);
-
-      await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
     }
   }
 

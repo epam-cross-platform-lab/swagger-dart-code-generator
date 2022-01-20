@@ -13,14 +13,13 @@ targets:
       swagger_dart_code_generator:
         options:
           input_folder: "lib/"
-          output_folder: "lib/swagger_generated_code/"
+          output_folder: "lib/inf/api/"
           use_inheritance: false
           with_base_url: true
-          with_converter: true
           use_path_for_request_names: true
           use_default_null_for_lists: false
           build_only_models: false
-          separate_models: false
+          separate_models: true
           enums_case_sensitive: false
           ignore_headers: false
           use_required_attribute_for_headers: false

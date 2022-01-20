@@ -14,8 +14,7 @@ enum OrderStatus {
 const $OrderStatusMap = {
   OrderStatus.placed: 'placed',
   OrderStatus.approved: 'approved',
-  OrderStatus.delivered: 'delivered',
-  OrderStatus.swaggerGeneratedUnknown: ''
+  OrderStatus.delivered: 'delivered'
 };
 
 enum PetStatus {
@@ -32,8 +31,7 @@ enum PetStatus {
 const $PetStatusMap = {
   PetStatus.available: 'available',
   PetStatus.pending: 'pending',
-  PetStatus.sold: 'sold',
-  PetStatus.swaggerGeneratedUnknown: ''
+  PetStatus.sold: 'sold'
 };
 
 enum PetFindByStatusGetStatus {
@@ -50,6 +48,5 @@ enum PetFindByStatusGetStatus {
 const $PetFindByStatusGetStatusMap = {
   PetFindByStatusGetStatus.available: 'available',
   PetFindByStatusGetStatus.pending: 'pending',
-  PetFindByStatusGetStatus.sold: 'sold',
-  PetFindByStatusGetStatus.swaggerGeneratedUnknown: ''
+  PetFindByStatusGetStatus.sold: 'sold'
 };

@@ -8,11 +8,14 @@ environment:
 
 dependencies:
   chopper: ^4.0.1
+  retrofit: ^3.0.1
   
 dev_dependencies:
   swagger_dart_code_generator:
     path: ../
+  retrofit_generator: ^3.0.1+1 
   chopper_generator: ^4.0.1
   build_runner: ^2.1.2
-  json_annotation: ^4.1.0
-  json_serializable: ^4.1.4
+  json_annotation: ^4.4.0 
+  json_serializable: ^6.1.4
+

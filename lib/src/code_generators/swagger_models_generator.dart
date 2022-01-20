@@ -1081,8 +1081,6 @@ class $validatedClassName {
 \t$validatedClassName($generatedConstructorProperties);\n
 \tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
 $generatedProperties
-\tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
-\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
 $equalsOverride

@@ -47,52 +47,31 @@ class SwaggerRequestsGenerator {
       swaggerRoot: swaggerRoot,
       options: options,
     );
+    var baseUrlParameter = ParameterBuilder()
+      ..name = 'dio'
+      ..type = refer('Dio');
 
-    final chopperClient = SwaggerAdditionsGenerator.getChopperClientContent(
-      className,
-      swaggerRoot.host,
-      swaggerRoot.basePath,
-      options,
-    );
+    var dioParameter = ParameterBuilder()
+      ..name = 'baseUrl'
+      ..required = false
+      ..named = true
+      ..type = refer('String');
 
-    return Class(
-      (c) => c
-        ..methods.addAll([
-          _generateCreateMethod(className, chopperClient),
-          ...allMethodsContent
-        ])
-        ..extend = Reference(kChopperService)
-        ..docs.add(kServiceHeader)
-        ..annotations.add(refer(kChopperApi).call([]))
+    var classCtor = ConstructorBuilder()
+      ..optionalParameters.add(dioParameter.build())
+      ..requiredParameters.add(baseUrlParameter.build())
+      ..redirect = Reference('_$className')
+      ..body = Code(' _$className')
+      ..factory = true;
+
+    return Class((c) {
+      c
         ..abstract = true
-        ..name = className,
-    );
-  }
-
-  Method _generateCreateMethod(String className, String body) {
-    return Method(
-      (m) => m
-        ..returns = Reference(className)
-        ..name = 'create'
-        ..static = true
-        ..optionalParameters.add(
-          Parameter(
-            (p) => p
-              ..named = true
-              ..type = Reference('ChopperClient?')
-              ..name = 'client',
-          )
-        )
-        ..optionalParameters.add(
-          Parameter(
-                (p) => p
-              ..named = true
-              ..type = Reference('String?')
-              ..name = 'baseUrl',
-          )
-        )
-        ..body = Code(body),
-    );
+        ..annotations.add(refer(kRetrofitApi).call([]))
+        ..name = className
+        ..constructors.add(classCtor.build())
+        ..methods.addAll(allMethodsContent);
+    });
   }
 
   List<Method> _getAllMethodsContent({
@@ -100,7 +79,6 @@ class SwaggerRequestsGenerator {
     required GeneratorOptions options,
   }) {
     final methods = <Method>[];
-
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
       swaggerPath.requests
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
@@ -176,7 +154,7 @@ class SwaggerRequestsGenerator {
 
         final privateMethod = _getPrivateMethod(method);
         final publicMethod = _getPublicMethod(method, allModels);
-        methods.addAll([publicMethod, privateMethod]);
+        methods.add(method);
       });
     });
 
@@ -292,13 +270,9 @@ class SwaggerRequestsGenerator {
     String path,
     bool hasOptionalBody,
   ) {
-    return refer(requestType.pascalCase).call(
-      [],
-      {
-        kPath: literalString(path),
-        if (hasOptionalBody) 'optionalBody': refer(true.toString())
-      },
-    );
+    return refer(requestType.toUpperCase()).call([
+      literalString(path),
+    ]);
   }
 
   String _getCommentsForMethod({
@@ -488,13 +462,14 @@ class SwaggerRequestsGenerator {
         .where((swaggerParameter) => swaggerParameter.inParameter != kCookie)
         .where((swaggerParameter) => swaggerParameter.inParameter.isNotEmpty)
         .map(
-          (swaggerParameter) => Parameter(
-            (p) => p
+          (swaggerParameter) => Parameter((p) {
+            final isRequired = swaggerParameter.isRequired &&
+                _getHeaderDefaultValue(swaggerParameter, options) == null &&
+                swaggerParameter.inParameter != kHeader;
+            p
               ..name = swaggerParameter.name.asParameterName()
               ..named = true
-              ..required = swaggerParameter.isRequired &&
-                  _getHeaderDefaultValue(swaggerParameter, options) == null &&
-                  swaggerParameter.inParameter != kHeader
+              ..required = isRequired
               ..type = Reference(
                 _getParameterTypeName(
                   parameter: swaggerParameter,
@@ -502,14 +477,14 @@ class SwaggerRequestsGenerator {
                   requestType: requestType,
                   modelPostfix: modelPostfix,
                   root: root,
-                ).makeNullable(),
+                ).makeNullableIfRequired(isRequired),
               )
               ..named = true
               ..annotations.add(
                 _getParameterAnnotation(swaggerParameter),
               )
-              ..defaultTo = _getHeaderDefaultValue(swaggerParameter, options),
-          ),
+              ..defaultTo = _getHeaderDefaultValue(swaggerParameter, options);
+          }),
         )
         .toList();
 

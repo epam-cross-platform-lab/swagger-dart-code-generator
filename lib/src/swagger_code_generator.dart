@@ -34,11 +34,6 @@ class SwaggerCodeGenerator {
           String dartCode, Map<String, List<String>> buildExtensions) =>
       _getSwaggerAdditionsGenerator(dartCode).generateIndexes(buildExtensions);
 
-  String generateConverterMappings(String dartCode,
-          Map<String, List<String>> buildExtensions, bool hasModels) =>
-      _getSwaggerAdditionsGenerator(dartCode)
-          .generateConverterMappings(buildExtensions, hasModels);
-
   String generateImportsContent(
     String dartCode,
     String swaggerFileName,
@@ -80,11 +75,6 @@ class SwaggerCodeGenerator {
         fileName: fileName,
         options: options,
       );
-
-  String generateCustomJsonConverter(
-          String dartCode, String fileName, GeneratorOptions options) =>
-      _getSwaggerAdditionsGenerator(dartCode)
-          .generateCustomJsonConverter(fileName, options);
 
   String generateDateToJson(String dartCode) =>
       _getSwaggerAdditionsGenerator(dartCode).generateDateToJson();

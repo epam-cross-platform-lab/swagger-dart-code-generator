@@ -24,6 +24,14 @@ extension TypeExtension on String {
     return '$this?';
   }
 
+  String makeNullableIfRequired(bool isRequired) {
+    if (endsWith('?') || isRequired) {
+      return this;
+    }
+
+    return '$this?';
+  }
+
   String getRef() => split('/').last.pascalCase;
 
   String getUnformattedRef() => split('/').last;
@@ -36,7 +44,7 @@ extension TypeExtension on String {
 
   String asEnum() => 'enums.$this';
 
-  String asFutureResponse() => 'Future<chopper.Response<$this>>';
+  String asFutureResponse() => 'Future<$this>';
 
   String asParameterName() {
     return SwaggerModelsGenerator.getValidatedParameterName(this);

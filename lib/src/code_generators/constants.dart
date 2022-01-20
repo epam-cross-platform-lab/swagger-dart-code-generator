@@ -22,9 +22,10 @@ const kMap = 'Map';
 
 const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';
+const kRetrofitApi = 'RestApi';
 const kResponse = 'Response';
 const kRequestBody = 'RequestBody';
-const kFutureResponse = 'Future<chopper.Response>';
+const kFutureResponse = 'Future<void>';
 const kString = 'string';
 const kInteger = 'integer';
 const kInt64 = 'int64';
