@@ -44,7 +44,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   //Register additional outputs in first input
   result[normal(filesList.first.path)]!.add(join(out, _indexFileName));
-  result[normal(filesList.first.path)]!.add(join(out, _mappingFileName));
 
   return result;
 }
