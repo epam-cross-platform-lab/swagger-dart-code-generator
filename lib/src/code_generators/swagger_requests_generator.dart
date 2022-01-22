@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:code_builder/code_builder.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -338,7 +337,7 @@ class SwaggerRequestsGenerator {
         .join();
 
     final result =
-        '$pathString${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
+        '${SwaggerModelsGenerator.getValidatedClassName(pathString)}${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
 
     return result.asEnum();
   }
@@ -349,9 +348,9 @@ class SwaggerRequestsGenerator {
     schemas.addAll(root.definitions);
 
     final refs = [
-      parameter.schema?.items?.ref.getRef(),
-      parameter.schema?.ref.getRef(),
-      parameter.items?.ref.getRef(),
+      parameter.schema?.items?.ref.getUnformattedRef(),
+      parameter.schema?.ref.getUnformattedRef(),
+      parameter.items?.ref.getUnformattedRef(),
     ];
     final schema =
         schemas[refs.firstWhereOrNull((ref) => ref?.isNotEmpty == true)];

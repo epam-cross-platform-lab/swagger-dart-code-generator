@@ -1,3 +1,32 @@
+# 2.3.9
+
+* Fixed Issue ([#313](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/313))
+* Fixed cases with array string definitions
+
+# 2.3.8
+
+* Fixed Issue ([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
+* Added generation of 'Map<String, dynamic>' for fields with additional properties
+
+# 2.3.7
+
+* Fixed Issue ([#305](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/305))
+* Fixed enum prefix for list of enums in requests when Enums contain names with symbols
+
+# 2.3.6
+
+* Fixed Issue ([#311](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/311))
+* Fixed some borded cases in Swagger generator
+
+# 2.3.5
+
+* Fixed Issue ([#263](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/263))
+* Fixed generation of Enums, defined in /parameters/ and used in request parameters
+
+# 2.3.4+1
+
+* Fixed fromJson method for integer Enum fields in models
+
 # 2.3.4
 
 * Fixed Issue ([#268](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/268))

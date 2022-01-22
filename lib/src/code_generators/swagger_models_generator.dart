@@ -297,7 +297,7 @@ abstract class SwaggerModelsGenerator {
 
     if (exceptionWords.contains(result.camelCase) ||
         kBasicTypes.contains(result.camelCase)) {
-      return '\$$parameterName';
+      return '\$$result';
     }
 
     if (result.isEmpty) {
@@ -565,12 +565,12 @@ abstract class SwaggerModelsGenerator {
     } else {
       typeName = getValidatedClassName(getParameterTypeName(className,
           propertyName, propertyEntryMap, options.modelPostfix, parameterName));
+
+      typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
     }
 
     final allEnumsNamesWithoutPrefix =
         allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
-
-    typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
@@ -717,7 +717,9 @@ abstract class SwaggerModelsGenerator {
 
     var typeName = '';
 
-    if (val['\$ref'] != null) {
+    if (val.containsKey(kAdditionalProperties)) {
+      typeName = kMapStringDynamic;
+    } else if (val['\$ref'] != null) {
       typeName = val['\$ref'].toString().split('/').last.pascalCase +
           options.modelPostfix;
     } else {
@@ -839,8 +841,12 @@ abstract class SwaggerModelsGenerator {
 
     for (var i = 0; i < propertiesMap.keys.length; i++) {
       var propertyName = propertiesMap.keys.elementAt(i);
-      final propertyEntryMap =
-          propertiesMap[propertyName] as Map<String, dynamic>;
+
+      final propertyEntry = propertiesMap[propertyName];
+      final propertyEntryMap = propertyEntry is Map<String, dynamic>
+          ? propertyEntry
+          : <String, dynamic>{};
+
       final propertyKey = propertyName;
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(swagger);
@@ -917,6 +923,16 @@ abstract class SwaggerModelsGenerator {
               value['type'].toString(), value['format'].toString())
         });
       }
+
+      if (value['type'] == kArray && value['items'] != null) {
+        final ref = value['items']['\$ref'] as String? ?? '';
+
+        if (result[ref.getUnformattedRef()] != null) {
+          result[key] = result[ref.getUnformattedRef()]!.asList();
+        } else if (ref.isNotEmpty) {
+          result[key] = ref.getRef().asList();
+        }
+      }
     });
 
     return result;
@@ -963,17 +979,26 @@ String? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}
   return enums.\$${neededName}Map[${neededName.camelCase}];
 }
 
-enums.$neededName ${neededName.camelCase}FromJson(String? ${neededName.camelCase}) {
+enums.$neededName ${neededName.camelCase}FromJson(Object? ${neededName.camelCase}) {
 
-  if(${neededName.camelCase} == null)
+if(${neededName.camelCase} is int)
   {
-    return enums.$neededName.swaggerGeneratedUnknown;
+    return enums.\$${neededName}Map.entries
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}.toString(),
+      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
+      .key;
   }
 
-  return enums.\$${neededName}Map.entries
+if(${neededName.camelCase} is String)
+  {
+ return enums.\$${neededName}Map.entries
       .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString,
       orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
       .key;
+
+      }
+  
+    return enums.$neededName.swaggerGeneratedUnknown;
 }
 
 List<String> ${neededName.camelCase}ListToJson(
@@ -1201,10 +1226,12 @@ $allHashComponents;
       final refString = allOfRef['\$ref'].toString();
       final schema = schemas[refString.getUnformattedRef()];
 
-      final moreProperties =
-          schema['properties'] as Map<String, dynamic>? ?? {};
+      if (schema != null) {
+        final moreProperties =
+            schema['properties'] as Map<String, dynamic>? ?? {};
 
-      currentProperties.addAll(moreProperties);
+        currentProperties.addAll(moreProperties);
+      }
     }
 
     return currentProperties;
@@ -1292,10 +1319,13 @@ $allHashComponents;
       }
 
       properties.forEach((propertyName, propertyValue) {
-        var property = propertyValue as Map<String, dynamic>;
+        if (propertyValue is! Map<String, dynamic>) {
+          return;
+        }
 
-        if (property.containsKey('enum') ||
-            (property['items'] != null && property['items']['enum'] != null)) {
+        if (propertyValue.containsKey('enum') ||
+            (propertyValue['items'] != null &&
+                propertyValue['items']['enum'] != null)) {
           results.add(SwaggerModelsGenerator.getValidatedClassName(
               SwaggerEnumsGeneratorV3().generateEnumName(
                   SwaggerModelsGenerator.getValidatedClassName(className),

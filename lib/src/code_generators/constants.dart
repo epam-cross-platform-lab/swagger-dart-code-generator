@@ -19,6 +19,7 @@ const kBasicTypes = [
 ];
 
 const kMap = 'Map';
+const kMapStringDynamic = 'Map<String,dynamic>';
 
 const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';
@@ -44,6 +45,7 @@ const kFormData = 'formData';
 const kDefaultBodyParameter = 'Object';
 const kField = 'Field';
 const kRequestTypeOptions = 'options';
+const kAdditionalProperties = 'additionalProperties';
 
 const successDescriptions = ['Success', 'OK', 'default response'];
 
