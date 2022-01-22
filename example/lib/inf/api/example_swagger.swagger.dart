@@ -14,29 +14,28 @@ abstract class ExampleSwagger {
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
   @POST('/pet')
-  Future<void> petPost({@Body() required Pet body});
+  Future<void> addPet({@Body() required Pet body});
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
   @PUT('/pet')
-  Future<void> petPut({@Body() required Pet body});
+  Future<void> updatePet({@Body() required Pet body});
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
   @GET('/pet/findByStatus')
-  Future<List<Pet>> petFindByStatusGet(
+  Future<List<Pet>> findPetsByStatus(
       {@Query('status') required enums.PetFindByStatusGetStatus status});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
   @GET('/pet/findByTags')
-  Future<List<Pet>> petFindByTagsGet(
-      {@Query('tags') required List<String> tags});
+  Future<List<Pet>> findPetsByTags({@Query('tags') required List<String> tags});
 
   ///Find pet by ID
   ///@param petId ID of pet to return
   @GET('/pet/{petId}')
-  Future<Pet> petPetIdGet(
+  Future<Pet> getPetById(
       {@Path('petId') required int petId, @Header('api_key') String? apiKey});
 
   ///Updates a pet in the store with form data
@@ -44,7 +43,7 @@ abstract class ExampleSwagger {
   ///@param name Updated name of the pet
   ///@param status Updated status of the pet
   @POST('/pet/{petId}')
-  Future<void> petPetIdPost(
+  Future<void> updatePetWithForm(
       {@Path('petId') required int petId,
       @Field('name') String? name,
       @Field('status') String? status});
@@ -53,7 +52,7 @@ abstract class ExampleSwagger {
   ///@param api_key
   ///@param petId Pet id to delete
   @DELETE('/pet/{petId}')
-  Future<void> petPetIdDelete(
+  Future<void> deletePet(
       {@Header('api_key') String? apiKey, @Path('petId') required int petId});
 
   ///uploads an image
@@ -61,73 +60,73 @@ abstract class ExampleSwagger {
   ///@param additionalMetadata Additional data to pass to server
   ///@param file file to upload
   @POST('/pet/{petId}/uploadImage')
-  Future<ApiResponse> petPetIdUploadImagePost(
+  Future<ApiResponse> uploadFile(
       {@Path('petId') required int petId,
       @Field('additionalMetadata') String? additionalMetadata,
       @Field('file') List<String>? file});
 
   ///Returns pet inventories by status
   @GET('/store/inventory')
-  Future<Object> storeInventoryGet({@Header('api_key') String? apiKey});
+  Future<Object> getInventory({@Header('api_key') String? apiKey});
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
   @POST('/store/order')
-  Future<Order> storeOrderPost({@Body() required Order body});
+  Future<Order> placeOrder({@Body() required Order body});
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
   @GET('/store/order/{orderId}')
-  Future<Order> storeOrderOrderIdGet({@Path('orderId') required int orderId});
+  Future<Order> getOrderById({@Path('orderId') required int orderId});
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
   @DELETE('/store/order/{orderId}')
-  Future<void> storeOrderOrderIdDelete({@Path('orderId') required int orderId});
+  Future<void> deleteOrder({@Path('orderId') required int orderId});
 
   ///Create user
   ///@param body Created user object
   @POST('/user')
-  Future<void> userPost({@Body() required User body});
+  Future<void> createUser({@Body() required User body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
   @POST('/user/createWithArray')
-  Future<void> userCreateWithArrayPost({@Body() required List<User> body});
+  Future<void> createUsersWithArrayInput({@Body() required List<User> body});
 
   ///Creates list of users with given input array
   ///@param body List of user object
   @POST('/user/createWithList')
-  Future<void> userCreateWithListPost({@Body() required List<User> body});
+  Future<void> createUsersWithListInput({@Body() required List<User> body});
 
   ///Logs user into the system
   ///@param username The user name for login
   ///@param password The password for login in clear text
   @GET('/user/login')
-  Future<String> userLoginGet(
+  Future<String> loginUser(
       {@Query('username') required String username,
       @Query('password') required String password});
 
   ///Logs out current logged in user session
   @GET('/user/logout')
-  Future<void> userLogoutGet();
+  Future<void> logoutUser();
 
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
   @GET('/user/{username}')
-  Future<User> userUsernameGet({@Path('username') required String username});
+  Future<User> getUserByName({@Path('username') required String username});
 
   ///Updated user
   ///@param username name that need to be updated
   ///@param body Updated user object
   @PUT('/user/{username}')
-  Future<void> userUsernamePut(
+  Future<void> updateUser(
       {@Path('username') required String username, @Body() required User body});
 
   ///Delete user
   ///@param username The name that needs to be deleted
   @DELETE('/user/{username}')
-  Future<void> userUsernameDelete({@Path('username') required String username});
+  Future<void> deleteUser({@Path('username') required String username});
 }
 
 // ignore: unused_element

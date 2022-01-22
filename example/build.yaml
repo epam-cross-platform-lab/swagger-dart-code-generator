@@ -16,7 +16,7 @@ targets:
           output_folder: "lib/inf/api/"
           use_inheritance: false
           with_base_url: true
-          use_path_for_request_names: true
+          use_path_for_request_names: false
           use_default_null_for_lists: false
           build_only_models: false
           separate_models: true
