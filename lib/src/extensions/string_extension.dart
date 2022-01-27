@@ -32,7 +32,8 @@ extension TypeExtension on String {
 
   String asList() => 'List<$this>';
 
-  String removeList() => replaceAll('List<', '').replaceAll('>', '');
+  String removeListOrStream() =>
+      replaceAll('List<', '').replaceAll('Stream<', '').replaceAll('>', '');
 
   String asEnum() => 'enums.$this';
 
