@@ -1,4 +1,4 @@
-# 2.3.9
+# 2.3.10
 
 * Fixed cases when we have Stream<SomeClass> as request parameter
 * Fixed cases when we have List<List<....<SomeClass>>> in model properties
