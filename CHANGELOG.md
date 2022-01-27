@@ -1,5 +1,10 @@
 # 2.3.9
 
+* Fixed cases when we have Stream<SomeClass> as request parameter
+* Fixed cases when we have List<List<....<SomeClass>>> in model properties
+
+# 2.3.9
+
 * Fixed Issue ([#313](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/313))
 * Fixed cases with array string definitions
 

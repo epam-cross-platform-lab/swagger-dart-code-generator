@@ -617,16 +617,15 @@ abstract class SwaggerModelsGenerator {
   final ${className.capitalize + key.capitalize}? ${SwaggerModelsGenerator.generateFieldName(key)};''';
   }
 
-  String generateListPropertyContent(
-      String propertyName,
-      String propertyKey,
-      String className,
-      Map<String, dynamic> propertyEntryMap,
-      bool useDefaultNullForLists,
-      List<String> allEnumNames,
-      List<String> allEnumListNames,
-      GeneratorOptions options,
-      Map<String, String> basicTypesMap) {
+  String _generateListPropertyTypeName({
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required Map<String, dynamic> propertyEntryMap,
+    required GeneratorOptions options,
+    required Map<String, String> basicTypesMap,
+    required String propertyName,
+    required String className,
+  }) {
     final items = propertyEntryMap['items'];
 
     var typeName = '';
@@ -652,7 +651,7 @@ abstract class SwaggerModelsGenerator {
 
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
-        } else if (typeName != kDynamic) {
+        } else if (typeName.isNotEmpty && typeName != kDynamic) {
           typeName = typeName.pascalCase;
         }
       } else if (!allEnumNames.contains('enums.$typeName') &&
@@ -666,7 +665,15 @@ abstract class SwaggerModelsGenerator {
 
       if (typeName.isEmpty) {
         if (items['type'] == 'array' || items['items'] != null) {
-          typeName = 'List<Object>';
+          return _generateListPropertyTypeName(
+            allEnumListNames: allEnumListNames,
+            allEnumNames: allEnumNames,
+            basicTypesMap: basicTypesMap,
+            className: className,
+            options: options,
+            propertyEntryMap: items as Map<String, dynamic>,
+            propertyName: propertyName,
+          ).asList();
         }
       }
 
@@ -684,6 +691,29 @@ abstract class SwaggerModelsGenerator {
         null,
       );
     }
+
+    return typeName;
+  }
+
+  String generateListPropertyContent(
+      String propertyName,
+      String propertyKey,
+      String className,
+      Map<String, dynamic> propertyEntryMap,
+      bool useDefaultNullForLists,
+      List<String> allEnumNames,
+      List<String> allEnumListNames,
+      GeneratorOptions options,
+      Map<String, String> basicTypesMap) {
+    final typeName = _generateListPropertyTypeName(
+      allEnumListNames: allEnumListNames,
+      allEnumNames: allEnumNames,
+      basicTypesMap: basicTypesMap,
+      className: className,
+      options: options,
+      propertyEntryMap: propertyEntryMap,
+      propertyName: propertyName,
+    );
 
     final unknownEnumValue = generateUnknownEnumValue(
         allEnumNames, allEnumListNames, typeName, true);
