@@ -5,28 +5,23 @@
 
 # 2.3.9
 
-* Fixed Issue ([#313](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/313))
-* Fixed cases with array string definitions
+* Fixed cases with array string definitions([#313](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/313))
 
 # 2.3.8
 
-* Fixed Issue ([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
-* Added generation of 'Map<String, dynamic>' for fields with additional properties
+* Added generation of 'Map<String, dynamic>' for fields with additional properties([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
 
 # 2.3.7
 
-* Fixed Issue ([#305](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/305))
-* Fixed enum prefix for list of enums in requests when Enums contain names with symbols
+* Fixed enum prefix for list of enums in requests when Enums contain names with symbols([#305](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/305))
 
 # 2.3.6
 
-* Fixed Issue ([#311](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/311))
-* Fixed some borded cases in Swagger generator
+* Fixed some borded cases in Swagger generator([#311](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/311))
 
 # 2.3.5
 
-* Fixed Issue ([#263](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/263))
-* Fixed generation of Enums, defined in /parameters/ and used in request parameters
+* Fixed generation of Enums, defined in /parameters/ and used in request parameters([#263](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/263))
 
 # 2.3.4+1
 
@@ -34,28 +29,24 @@
 
 # 2.3.4
 
-* Fixed Issue ([#268](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/268))
-* Added support of integer enum values
+* Added support of integer enum values([#268](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/268))
 
 # 2.3.3
 
-* Fixed Issue ([#297](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/297))
-* Removed use_inheritance option. Inheritance is supported by copy-pasting parent fields
+* Removed use_inheritance option. Inheritance is supported by copy-pasting parent fields([#297](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/297))
 
 # 2.3.2
 
-* Fixed Issue ([#290](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/290))
-* Fixed cases with Num instead of num in responses
-* Removed not needed prints
+* Fixed cases with Num instead of num in responses([#290](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/290))
+* Remove prints
 
 # 2.3.1
 
-* Fixed Issue ([#291](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/291))
+* Fix build warnings with no explanation during build([#291](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/291))
 
 # 2.3.0
 
-* Fixed Issue ([#289](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/289))
-* [Possible breaking] Removed json map generation. Applied new approach
+* [**BREAKING**]: Removed json map generation. Applied new approach([#289](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/289))
 
 # 2.2.10
 
@@ -67,25 +58,21 @@
 
 # 2.2.8
 
-* Fixed Issue ([#285](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/285))
 * Fixed generation of enum fields in requests
-* Changed int64 parsing to double
+* Changed int64 parsing to double([#285](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/285))
 
 # 2.2.7
 
-* Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/264))
-* Fix cases with really complex enum names, which are duplicated in result
+* Fix cases with complex enum names, which are duplicated in result([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/264))
 
 # 2.2.6
 
-* Added working example project
+* Added example project
 
 # 2.2.5
 
-* Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))
-* Fixed Issue ([#275](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/275))
-* Returned possibility to use operationId for request name
-* Added generation of requestBodies integrated to requests, when it's complex model
+* Returned possibility to use operationId for request name([#275](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/275))
+* Added generation of requestBodies integrated to requests, when it's complex model([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))
 
 # 2.2.4
 
@@ -94,18 +81,16 @@
 
 # 2.2.3
 
-* Fixed Issue ([#138](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/138))
-* Fixed Issue ([#269](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/269))
-* Fixed generation of fields with type int32, int64. Parsing it like int
+* Added support `AllOf`([#138](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/138))
 
-* Fixed Issue ([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))
-* Fixed generation of responses and request bodies in separate file
+* Fixed problem with underscore (_) in form field names([#269](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/269))
+* Fixed generation of fields with type int32, int64. Parsing it like int
+* Fixed generation of responses and request bodies in separate file([#265](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/265))
 
 # 2.2.1
 
-* Added ability to generated models to separate file
-* **BREAKING** Removed generation of client_index if generate only models
-* Fixed Issue ([#244](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/244))
+* Added ability to generated models to separate file([#244](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/244))
+* [**BREAKING**]: Removed generation of client_index if generate only models
 
 # 2.2.0+1
 
@@ -113,17 +98,15 @@
 
 # 2.2.0
 
-* **BREAKING** Upgraded to support json_serializable 5.0.0
+* [**BREAKING**]: Upgraded to support json_serializable 5.0.0
 
 # 2.1.3+2
 
-* Fixed Issue ([#245](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/245))
-* Fixed ability to set exclude_path and include_path
+* Fixed ability to set exclude_path and include_path([#245](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/245))
 
 # 2.1.3+1
 
-* Fixed Issue ([#248](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/248))
-* Fix cases when responses was named like numbers
+* Fix cases when responses was named like numbers([#248](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/248))
 
 # 2.1.3
 
@@ -140,10 +123,8 @@
 
 # 2.1.1+3
 
-* Fixed Issue ([#240](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/240))
-* Fixed Issue ([#211](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/211))
-* Fixed cases when parameters named by keywords, for example In, For, Class etx
-* Added generation of parameters from, path (not only from requests)
+* Fixed cases when parameters named by keywords, for example In, For, Class etx([#211](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/211))
+* Added generation of parameters from, path (not only from requests)([#240](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/240))
 
 # 2.1.1+2
 
@@ -151,65 +132,53 @@
 
 # 2.1.1+1
 
-* Fixed Issue ([#235](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/235))
-* Fixed cases when field number 'number' generated as $num
+* Fixed cases when field number 'number' generated as $num([#235](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/235))
 * Fixed cases when field 'num' generated ad 'num' (basic dart type)
 
 # 2.1.1
 
-* Stabilized generator
-* Fixed issue when parameters named like int, double etc.
-* Fixed Issue ([#108](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/108))
+* Fixed issue when parameters named like int, double etc.([#108](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/108))
 
 # 2.1.0-prerelease.9
 
-* Fixed Issue ([#228](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/228))
-* Fixed Issue ([#206](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/206))
-* Fixed cases when file names like some_file.extension.swagger.json.dart.json
-* Removed generation of converter when build_only_models is true
+* Fixed cases when file names like some_file.extension.swagger.json.dart.json([#228](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/228))
+* Removed generation of converter when build_only_models is true([#206](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/206))
 
 
 # 2.1.0-prerelease.8
 
-* Fixed Issue ([#221](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/221))
-* Added generation of int get hashCode
-* Added example
+* Added generation of int get hashCode([#221](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/221))
+* Added example project
 
 # 2.1.0-prerelease.7
 
-* Fixed Issue ([#186](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/186))
-* Fixed Issue ([#204](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/204))
+* Make dynamic non nullable([#186](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/186))
+* Always generate request names from path([#204](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/204))
+* [**BREAKING**]: Remove `use_path_for_request_names` build option([#204](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/204))
 
 # 2.1.0-prerelease.6
 
-* **BREAKING**: Added dollar signs to generated converter and mappings
+* [**BREAKING**]: Added dollar signs to generated converter and mappings
 
 # 2.1.0-prerelease.5
 
-* Fixed Issue ([#212](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/212))
-* Fixed border cases with parameters with duplicated names (for ex 'book' and 'book[]')
-* Fixed cases when Parameters contains forbidden characters
+* Fixed border cases with parameters with duplicated names (for ex 'book' and 'book[]')([#212](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/212))
+* Fixed cases when Parameters contains forbidden characters([#212](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/212))
 
 # 2.1.0-prerelease.4
 
-* Fixed Issue ([#208](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/208))
 * Fixed cases with dashes in request named
 * Fixed models from responses names generation
+* Fixed type `YamlMap` is not a subtype of type `bool?` in type cast([#208](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/208))
 
 # 2.1.0-prerelease.3
 
-* **BREAKING**: includeIfNull now just bool? value. Needs update of build.yaml if this feature used
+* [**BREAKING**]: `includeIfNull` now `bool?` value. Needs update of `build.yaml` if this feature used
 
 # 2.1.0-prerelease.2
 
-* Fixed Issue ([#201](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/201))
-
-* Fixed Issue ([#202](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/202))
-
-* Added support .json files instead .swagger (.swagger are supported too)
-
-* Fixed errors when models has symbols, dots, numbers...
-
+* Added support .json files instead .swagger (.swagger are supported too)([#201](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/201))
+* Fixed errors when models has symbols, dots, numbers...([#202](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/202))
 
 # 2.1.0-prerelease.1
 
@@ -217,9 +186,8 @@
 
 # 2.0.8+1
 
-* Fixed Issue ([#187](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/187)) It's about request parameters named "client"
-
-* Fixed Issue ([#188](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/188)) It's about isses with enum names generation.
+* Fixed class Attribute / Request Param collision([#187](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/187))
+* Fixed enum maps in swagger.g.dart are missing `enums.`([#188](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/188)) 
 
 # 2.0.8
 
@@ -228,8 +196,7 @@
 
 # 2.0.7+1
 
-* Fixed Issue ([#190](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/190))
-* Fixed case when request does not have type specified. Made it Object.
+* Fixed case when request does not have type specified. Made it Object.([#190](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/190))
 
 # 2.0.7
 
@@ -238,11 +205,11 @@
 
 # 2.0.6+1
 
-* Fixed Issue ([#72](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/72))
+* Add support for swagger 3.0.1([#72](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/72))
 
 # 2.0.6
 
-* Fixed Issue ([#163](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/163))
+* Generate objects from injected objects([#163](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/163))
 * Updated logo design
 
 # 2.0.5+2
@@ -276,7 +243,8 @@
 
 # 2.0.0-nullsafety.8
 
-* Fixed Issues #167 and #168
+* Fixed Incorrect generated param name([#168](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/168))
+* Fixed unsupported generated import in client_mapping.dart([#167](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/167))
 
 # 2.0.0-nullsafety.7+2
 
@@ -284,7 +252,7 @@
 
 # 2.0.0-nullsafety.7+1
 
-* Made header default values not sensative
+* Made header default values not sensitive
 
 # 2.0.0-nullsafety.7
 
@@ -292,7 +260,7 @@
 
 # 2.0.0-nullsafety.6
 
-* Made ALL models parameter not required
+* Made all models parameter not required
 
 # 2.0.0-nullsafety.5
 
@@ -358,12 +326,12 @@
 
 * Removed dependency to intl
 * Removed support of template of date
-* Setted Date parsing to yyyy-MM-dd
+* Set date parsing to `yyyy-MM-dd`
 
 # 1.6.6
 
-* Added generation of custom Date to json mapping.
-* Added build parameter with Date format date_formatter (String)
+* Added generation of custom date to json mapping.
+* Added string build parameter with date format `date_formatter`
 
 # 1.6.5+2
 
@@ -379,11 +347,11 @@
 
 # 1.6.4
 
-* Added support of default value per item for bool properties. For ex. "name": bool, "defalut": true => defaultValue: true
+* Added support of default value per item for bool properties. For ex. `"name": bool`, default is `true`
 
 # 1.6.3
 
-* Fixed issue with allOf exception
+* Fixed issue with `allOf` exception
 
 # 1.6.2
 
@@ -417,7 +385,7 @@
 
 # 1.4.7
 
-* Fixed Issue ([#102](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/102))
+* Fixed problems with dash in file name([#102](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/102))
 
 # 1.4.6
 
@@ -425,21 +393,21 @@
 
 # 1.4.5
 
-* Fixed Issue ([#99](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/99))
-* **BREAKING**: Fixed enums naming. Enums with _ are replaced by PascalCase. For example, Response_type replaced by ResponseType.
+* Fixed problems with dash in file name([#99](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/99))
+* [**BREAKING**]: Fixed enums naming. Enums with _ are replaced by PascalCase. For example, Response_type replaced by ResponseType.
 
 # 1.4.4
 
-* Fixed issue with build_only_models flag
-* **BREAKING**: fix misspelling with `overridden` word. If you use it, please add additional `d`.
+* Fixed issue with `build_only_models` flag
+* [**BREAKING**]: fix misspelling with `overridden` word. If you use it, please add additional `d`.
 
 # 1.4.3
 
-* Fixed error with ref in allOf and bool values in enums
+* Fixed error with ref in `allOf` and bool values in enums
 
 # 1.4.2
 
-* Fixed issue with adding responses to JsonSerializableConverter mapping
+* Fixed issue with adding responses to `JsonSerializableConverter` mapping
 
 # 1.4.1
 
@@ -470,10 +438,10 @@
 
 # 1.3.5
 
-* Fixed commas in request parameters
-* Removed defaultValue property for generated Lists of Enums
 * Added new flag use_path_for_request_names. Read README to learn more about it
+* Fixed commas in request parameters
 * Fixed extends+ClassName structure for Swagger v3
+* [**BREAKING**]:Removed `defaultValue` property for generated Lists of Enums
 
 # 1.3.4
 
@@ -496,7 +464,7 @@
 
 # 1.3.0
 
-* Fixed Issue ([#68](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/68))
+* Remove code duplicates([#68](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/68))
 
 # 1.2.2
 
@@ -509,7 +477,7 @@
 # 1.2.0
 
 * Enums become being generated in separate file
-* Fixed Issue ([#58](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/58))
+* Fixed issues with big swagger files([#58](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/58))
 * Fixed some bugs
 
 ## 1.1.0
@@ -539,7 +507,7 @@
 
 ## 1.0.6
 
-* Added support of unknownEnumValue: MyClass.swaggerGeneratedUnknown
+* Added support of `unknownEnumValue: MyClass.swaggerGeneratedUnknown`
 
 ## 1.0.5
 
@@ -579,4 +547,4 @@
 
 ## 1.0.0
 
-* First release
+* Initial release
