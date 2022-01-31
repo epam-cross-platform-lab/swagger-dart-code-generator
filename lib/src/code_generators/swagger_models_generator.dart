@@ -4,6 +4,7 @@ import 'package:collection/src/iterable_extensions.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
@@ -547,6 +548,35 @@ abstract class SwaggerModelsGenerator {
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
+  String generatePropertyContentByAllOf({
+    required Map<String, dynamic> propertyEntryMap,
+    required String propertyKey,
+    required GeneratorOptions options,
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required String propertyName,
+  }) {
+    final allOf = propertyEntryMap['allOf'] as List;
+    String typeName;
+
+    if (allOf.length != 1) {
+      typeName = kDynamic;
+    } else {
+      typeName = SwaggerModelsGenerator.getValidatedClassName(
+          allOf.first['\$ref'].toString().getRef());
+    }
+
+    final includeIfNullString = generateIncludeIfNullString(options);
+
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, false);
+
+    final jsonKeyContent =
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
+
+    return '\t$jsonKeyContent\tfinal $typeName? $propertyName;';
+  }
+
   String generatePropertyContentByRef(
       Map<String, dynamic> propertyEntryMap,
       String propertyName,
@@ -897,6 +927,16 @@ abstract class SwaggerModelsGenerator {
             allEnumListNames,
             options,
             basicTypesMap));
+      } else if (propertyEntryMap['allOf'] != null) {
+        results.add(generatePropertyContentByAllOf(
+          propertyEntryMap: propertyEntryMap,
+          allEnumListNames: allEnumListNames,
+          allEnumNames: allEnumNames,
+          options: options,
+          propertyKey: propertyKey,
+          propertyName: propertyName,
+        ));
+        final allOf = propertyEntryMap['allIOf'];
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(
             propertyEntryMap,
