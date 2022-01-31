@@ -547,6 +547,35 @@ abstract class SwaggerModelsGenerator {
     return '\t$jsonKeyContent\tfinal $typeName? ${SwaggerModelsGenerator.generateFieldName(propertyName)};';
   }
 
+  String generatePropertyContentByAllOf({
+    required Map<String, dynamic> propertyEntryMap,
+    required String propertyKey,
+    required GeneratorOptions options,
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required String propertyName,
+  }) {
+    final allOf = propertyEntryMap['allOf'] as List;
+    String typeName;
+
+    if (allOf.length != 1) {
+      typeName = kDynamic;
+    } else {
+      typeName = SwaggerModelsGenerator.getValidatedClassName(
+          allOf.first['\$ref'].toString().getRef());
+    }
+
+    final includeIfNullString = generateIncludeIfNullString(options);
+
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, false);
+
+    final jsonKeyContent =
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
+
+    return '\t$jsonKeyContent\tfinal $typeName? $propertyName;';
+  }
+
   String generatePropertyContentByRef(
       Map<String, dynamic> propertyEntryMap,
       String propertyName,
@@ -897,6 +926,15 @@ abstract class SwaggerModelsGenerator {
             allEnumListNames,
             options,
             basicTypesMap));
+      } else if (propertyEntryMap['allOf'] != null) {
+        results.add(generatePropertyContentByAllOf(
+          propertyEntryMap: propertyEntryMap,
+          allEnumListNames: allEnumListNames,
+          allEnumNames: allEnumNames,
+          options: options,
+          propertyKey: propertyKey,
+          propertyName: propertyName,
+        ));
       } else if (propertyEntryMap['\$ref'] != null) {
         results.add(generatePropertyContentByRef(
             propertyEntryMap,
