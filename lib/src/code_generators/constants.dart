@@ -3,7 +3,7 @@ const List<String> successResponseCodes = [
   '201',
 ];
 
-const List<String> kKeyClasses = ['Response', 'Request'];
+const List<String> kKeyClasses = ['Response', 'Request', 'Type'];
 const kBasicTypes = [
   'string',
   'int',

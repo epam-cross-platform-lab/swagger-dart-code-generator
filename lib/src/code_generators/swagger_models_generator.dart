@@ -13,8 +13,6 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'constants.dart';
 
 abstract class SwaggerModelsGenerator {
-  static const List<String> keyClasses = ['Response', 'Request'];
-
   String generate(String dartCode, String fileName, GeneratorOptions options);
   String generateResponses(
       String dartCode, String fileName, GeneratorOptions options);
@@ -256,7 +254,7 @@ abstract class SwaggerModelsGenerator {
             .join())
         .join('\$');
 
-    if (keyClasses.contains(result)) {
+    if (kKeyClasses.contains(result)) {
       return '$result\$';
     }
 
