@@ -359,8 +359,8 @@ class SwaggerRequestsGenerator {
         .map((e) => e.replaceAll('}', '').replaceAll('{', '').pascalCase)
         .join();
 
-    final result =
-        '${SwaggerModelsGenerator.getValidatedClassName(pathString)}${requestType.pascalCase}${SwaggerModelsGenerator.getValidatedClassName(parameterName)}';
+    final result = SwaggerModelsGenerator.getValidatedClassName(
+        '$pathString ${requestType.pascalCase} $parameterName');
 
     return result.asEnum();
   }
