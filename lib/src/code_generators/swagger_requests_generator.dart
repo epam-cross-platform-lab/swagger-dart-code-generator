@@ -898,16 +898,6 @@ class SwaggerRequestsGenerator {
       );
     }
 
-    final a = _getReturnTypeFromContent(
-      swaggerResponse: neededResponse,
-      modelPostfix: modelPostfix,
-      swaggerRoot: swaggerRoot,
-    );
-
-    if (path == '/Test/LoadUsers') {
-      final tt = 0;
-    }
-
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
         _getReturnTypeFromSchema(neededResponse, modelPostfix, swaggerRoot) ??
         _getReturnTypeFromOriginalRef(neededResponse, modelPostfix) ??
