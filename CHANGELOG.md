@@ -1,3 +1,7 @@
+# 2.3.13
+
+* Fixed generation of Response<List<List<SomeClass>>> ([#331](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/331))
+
 # 2.3.12
 
 * Upgraded allOf generation without parameters ([#329](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/329))
