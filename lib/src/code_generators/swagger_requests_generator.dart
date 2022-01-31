@@ -845,7 +845,13 @@ class SwaggerRequestsGenerator {
       final itemsType = content.schema?.items?.type ?? '';
       final itemsFormat = content.schema?.items?.format ?? '';
 
-      if (itemsType.isNotEmpty) {
+      if (itemsType == kArray && content.schema?.items?.items?.ref != null) {
+        final itemsItemsType = content.schema?.items?.items?.ref.getRef() ??
+            content.schema?.items?.items?.type ??
+            kObject;
+
+        return itemsItemsType.asList().asList();
+      } else if (itemsType.isNotEmpty) {
         final parameterType = _mapParameterName(itemsType, itemsFormat, '');
         return parameterType.asList();
       }
@@ -890,6 +896,16 @@ class SwaggerRequestsGenerator {
         methodName: methodName,
         modelPostfix: modelPostfix,
       );
+    }
+
+    final a = _getReturnTypeFromContent(
+      swaggerResponse: neededResponse,
+      modelPostfix: modelPostfix,
+      swaggerRoot: swaggerRoot,
+    );
+
+    if (path == '/Test/LoadUsers') {
+      final tt = 0;
     }
 
     final type = _getReturnTypeFromType(neededResponse, modelPostfix) ??
