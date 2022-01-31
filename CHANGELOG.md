@@ -1,4 +1,9 @@
-# 2.3.9
+# 2.3.11
+
+* Fixed Issue ([#328](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/328))
+* Fixed cases when classes has name "Type"
+
+# 2.3.10
 
 * Fixed cases when we have Stream<SomeClass> as request parameter
 * Fixed cases when we have List<List<....<SomeClass>>> in model properties
