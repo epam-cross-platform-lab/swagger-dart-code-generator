@@ -30,12 +30,7 @@
 build/
 
 # Code generation related
-*.g.dart
-*.chopper.dart
 *.lock
-*.swagger.dart
-!example_swagger.swagger.dart
-!example_swagger.enums.swagger.dart
 *.pubspec.lock
 *.swagger
 *.test_coverage.dart
