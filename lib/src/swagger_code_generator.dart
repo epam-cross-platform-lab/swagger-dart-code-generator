@@ -30,29 +30,23 @@ class SwaggerCodeGenerator {
     return openApi != null ? 3 : 2;
   }
 
-  String generateIndexes(
-          String dartCode, Map<String, List<String>> buildExtensions) =>
-      _getSwaggerAdditionsGenerator(dartCode).generateIndexes(buildExtensions);
+  String generateIndexes(Map<String, List<String>> buildExtensions) =>
+      _getSwaggerAdditionsGenerator().generateIndexes(buildExtensions);
 
-  String generateConverterMappings(String dartCode,
+  String generateConverterMappings(
           Map<String, List<String>> buildExtensions, bool hasModels) =>
-      _getSwaggerAdditionsGenerator(dartCode)
+      _getSwaggerAdditionsGenerator()
           .generateConverterMappings(buildExtensions, hasModels);
 
   String generateImportsContent(
-    String dartCode,
     String swaggerFileName,
     bool hasModels,
     bool buildOnlyModels,
     bool hasEnums,
     bool separateModels,
   ) =>
-      _getSwaggerAdditionsGenerator(dartCode).generateImportsContent(
-          swaggerFileName,
-          hasModels,
-          buildOnlyModels,
-          hasEnums,
-          separateModels);
+      _getSwaggerAdditionsGenerator().generateImportsContent(swaggerFileName,
+          hasModels, buildOnlyModels, hasEnums, separateModels);
 
   String generateResponses(
           String dartCode, String fileName, GeneratorOptions options) =>
@@ -82,14 +76,14 @@ class SwaggerCodeGenerator {
       );
 
   String generateCustomJsonConverter(
-          String dartCode, String fileName, GeneratorOptions options) =>
-      _getSwaggerAdditionsGenerator(dartCode)
+          String fileName, GeneratorOptions options) =>
+      _getSwaggerAdditionsGenerator()
           .generateCustomJsonConverter(fileName, options);
 
-  String generateDateToJson(String dartCode) =>
-      _getSwaggerAdditionsGenerator(dartCode).generateDateToJson();
+  String generateDateToJson() =>
+      _getSwaggerAdditionsGenerator().generateDateToJson();
 
-  SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator(String dartCode) =>
+  SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator() =>
       SwaggerAdditionsGenerator();
 
   SwaggerEnumsGenerator _getSwaggerEnumsGenerator(String dartCode) =>
