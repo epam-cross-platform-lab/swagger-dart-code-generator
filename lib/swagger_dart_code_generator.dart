@@ -5,6 +5,7 @@ import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' show join, normalize;
+import 'package:http/http.dart' as http;
 
 ///Returns instance of SwaggerDartCodeGenerator
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
@@ -42,6 +43,18 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     ];
   });
 
+  options.inputUrls.forEach((url) {
+    final name = getFileNameBase(url.split('/').last);
+    result[normal(filesList.first.path)]!
+        .add(join(out, '$name$_outputFileExtension'));
+    result[normal(filesList.first.path)]!
+        .add(join(out, '$name$_outputEnumsFileExtension'));
+    result[normal(filesList.first.path)]!
+        .add(join(out, '$name$_outputModelsFileExtension'));
+    result[normal(filesList.first.path)]!
+        .add(join(out, '$name$_outputResponsesFileExtension'));
+  });
+
   ///Register additional outputs in first input
   result[normal(filesList.first.path)]!.add(join(out, _indexFileName));
   result[normal(filesList.first.path)]!.add(join(out, _mappingFileName));
@@ -73,6 +86,43 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final contents = await buildStep.readAsString(buildStep.inputId);
 
+    ///Write file content
+    await _generateAndWriteFile(
+      contents: contents,
+      fileNameWithExtension: fileNameWithExtension,
+      fileNameWithoutExtension: fileNameWithoutExtension,
+      buildStep: buildStep,
+    );
+
+    ///Write additional files on first input
+    if (buildExtensions.keys.first == buildStep.inputId.path) {
+      if (options.inputUrls.isNotEmpty) {
+        for (final url in options.inputUrls) {
+          final contents = await _download(url);
+
+          final fileNameWithExtension =
+              url.split('/').last.replaceAll('-', '_');
+
+          final fileNameWithoutExtension =
+              getFileNameBase(fileNameWithExtension);
+
+          await _generateAndWriteFile(
+            contents: contents,
+            buildStep: buildStep,
+            fileNameWithExtension: fileNameWithExtension,
+            fileNameWithoutExtension: fileNameWithoutExtension,
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _generateAndWriteFile({
+    required String contents,
+    required String fileNameWithoutExtension,
+    required String fileNameWithExtension,
+    required BuildStep buildStep,
+  }) async {
     final codeGenerator = SwaggerCodeGenerator();
 
     final models = codeGenerator.generateModels(
@@ -158,7 +208,11 @@ class SwaggerDartCodeGenerator implements Builder {
     ///Write additional files on first input
     if (buildExtensions.keys.first == buildStep.inputId.path) {
       await _generateAdditionalFiles(
-          contents, buildStep.inputId, buildStep, models.isNotEmpty);
+        contents,
+        buildStep.inputId,
+        buildStep,
+        models.isNotEmpty,
+      );
     }
   }
 
@@ -250,4 +304,10 @@ $enumsImport
     $requestBodies
     ''';
   }
+}
+
+Future<String> _download(String url) async {
+  var response = await http.get(Uri.parse(url));
+
+  return response.body;
 }

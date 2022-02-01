@@ -48,6 +48,10 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           [],
+      inputUrls: (json['input_urls'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -55,6 +59,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'use_path_for_request_names': instance.usePathForRequestNames,
       'with_base_url': instance.withBaseUrl,
       'with_converter': instance.withConverter,
+      'input_urls': instance.inputUrls,
       'separate_models': instance.separateModels,
       'use_required_attribute_for_headers':
           instance.useRequiredAttributeForHeaders,
