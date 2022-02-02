@@ -1,3 +1,7 @@
+# 2.3.14-prerelease.1
+
+* Added ability to use swagger files from internet ([#316](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/316))
+
 # 2.3.13
 
 * Fixed generation of Response<List<List<SomeClass>>> ([#331](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/331))
