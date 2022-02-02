@@ -283,9 +283,10 @@ abstract class SwaggerModelsGenerator {
     final words = parameterName.split('\$');
 
     final result = words
-        .map((e) => e.pascalCase
+        .map((e) => e
             .split(RegExp(r'\W+|\_'))
-            .map((String str) => str.capitalize)
+            .mapIndexed(
+                (int index, String str) => index == 0 ? str : str.capitalize)
             .join())
         .join('\$');
 
