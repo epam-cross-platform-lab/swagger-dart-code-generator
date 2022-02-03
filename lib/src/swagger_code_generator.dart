@@ -30,13 +30,11 @@ class SwaggerCodeGenerator {
     return openApi != null ? 3 : 2;
   }
 
-  String generateIndexes(Map<String, List<String>> buildExtensions) =>
-      _getSwaggerAdditionsGenerator().generateIndexes(buildExtensions);
+  String generateIndexes(List<String> fileNames) =>
+      _getSwaggerAdditionsGenerator().generateIndexes(fileNames);
 
-  String generateConverterMappings(
-          Map<String, List<String>> buildExtensions, bool hasModels) =>
-      _getSwaggerAdditionsGenerator()
-          .generateConverterMappings(buildExtensions, hasModels);
+  String generateConverterMappings(bool hasModels) =>
+      _getSwaggerAdditionsGenerator().generateConverterMappings(hasModels);
 
   String generateImportsContent(
     String swaggerFileName,
