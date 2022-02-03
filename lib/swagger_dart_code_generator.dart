@@ -17,8 +17,9 @@ const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
 const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
+const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
-const kAdditionalResult = 'lib/swagger_dart_code_generator_temp.dart';
+const kAdditionalResult = 'lib/main.dart';
 
 String normal(String path) {
   return AssetId('', path).path;
@@ -30,8 +31,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final filesList = Directory(normalize(options.inputFolder)).listSync().where(
       (FileSystemEntity file) =>
           _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
-
-  File(kAdditionalResult).createSync();
 
   var out = normalize(options.outputFolder);
 
@@ -59,6 +58,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   });
 
   ///Register additional outputs in first input
+  result[kAdditionalResult]!.add(join(out, _indexFileName));
   result[kAdditionalResult]!.add(join(out, _mappingFileName));
   print('\n\n\n$result');
   return result;
@@ -84,7 +84,6 @@ class SwaggerDartCodeGenerator implements Builder {
   Future<void> build(BuildStep buildStep) async {
     if (buildStep.inputId.path == kAdditionalResult) {
       await _generateAndWriteAdditionalFiles(buildStep);
-      File(kAdditionalResult).deleteSync();
       return;
     }
 
@@ -260,6 +259,15 @@ $dateToJson
   Future<void> _generateAdditionalFiles(
       AssetId inputId, BuildStep buildStep, bool hasModels) async {
     final codeGenerator = SwaggerCodeGenerator();
+
+    final indexAssetId =
+        AssetId(inputId.package, join(options.outputFolder, _indexFileName));
+
+    final imports = codeGenerator.generateIndexes(buildExtensions);
+
+    if (!options.buildOnlyModels) {
+      await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
+    }
 
     if (options.withConverter && !options.buildOnlyModels) {
       final mappingAssetId = AssetId(

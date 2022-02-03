@@ -20,6 +20,17 @@ void main() {
       expect(result,
           contains("import 'swagger.fileName.enums.swagger.dart' as enums;"));
     });
+
+    test('Should generate indexes file', () {
+      final result = generator.generateIndexes(<String, List<String>>{
+        'someFile.dart': <String>['someFile.swagger.dart'],
+        'secondFile.dart': <String>['secondFile.swagger.dart']
+      });
+
+      expect(result, contains("export 'someFile.dart.dart' show SomeFile;"));
+      expect(
+          result, contains("export 'secondFile.dart.dart' show SecondFile;"));
+    });
   });
   group('Test for generateDateToJson', () {
     final generator = SwaggerAdditionsGenerator();
