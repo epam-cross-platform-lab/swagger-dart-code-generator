@@ -1,8 +1,8 @@
-# 2.4.0-prerelease.1
+# 2.4.0-prerelease.2
 
 * Added ability to use swagger files from internet ([#316](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/316))
-* [**BREAKING**] Removed generation of index file because it's useless
 * `input_folder` option is not requited now
+* Fixed naming issues and enum names generation
 
 # 2.3.13
 
