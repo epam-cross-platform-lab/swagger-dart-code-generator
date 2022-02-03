@@ -421,9 +421,8 @@ $enumMap
   }
 
   String generateEnumName(String className, String enumName) {
-    final validatedEnumName =
-        SwaggerModelsGenerator.getValidatedClassName(enumName);
-    return '${className.capitalize}$validatedEnumName';
+    return SwaggerModelsGenerator.getValidatedClassName(
+        '${className.capitalize}_$enumName');
   }
 
   String generateEnumsFromClasses(
