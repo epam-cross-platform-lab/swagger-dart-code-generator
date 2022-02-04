@@ -36,19 +36,14 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   var out = normalize(options.outputFolder);
 
-  filesList.forEach((FileSystemEntity element) {
-    final name = getFileNameBase(element.path);
-    result[normal(element.path)] = <String>[
-      join(out, '$name$_outputFileExtension'),
-      join(out, '$name$_outputEnumsFileExtension'),
-      join(out, '$name$_outputModelsFileExtension'),
-      join(out, '$name$_outputResponsesFileExtension'),
-    ];
-  });
+  final allFilesPaths = [
+    ...options.inputUrls,
+    ...filesList.map((e) => e.path),
+  ];
 
   result[kAdditionalResult] = [];
 
-  options.inputUrls.forEach((url) {
+  allFilesPaths.forEach((url) {
     final name = getFileNameBase(url.split('/').last);
     result[kAdditionalResult]!.add(join(out, '$name$_outputFileExtension'));
     result[kAdditionalResult]!
@@ -57,6 +52,11 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputModelsFileExtension'));
     result[kAdditionalResult]!
         .add(join(out, '$name$_outputResponsesFileExtension'));
+  });
+
+  options.inputUrls.forEach((url) {
+    result[kAdditionalResult]!
+        .add(join(normalize(options.inputFolder), url.split('/').last));
   });
 
   ///Register additional outputs in first input
@@ -83,44 +83,46 @@ class SwaggerDartCodeGenerator implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    if (buildStep.inputId.path == kAdditionalResult) {
-      await _generateAndWriteAdditionalFiles(buildStep);
-      File(kAdditionalResult).deleteSync();
+    for (final url in options.inputUrls) {
+      final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
 
-      return;
+      final contents = await _download(url);
+
+      await buildStep.writeAsString(
+          AssetId(
+            buildStep.inputId.package,
+            join(options.inputFolder, '$fileNameWithExtension'),
+          ),
+          contents);
     }
 
-    final fileNameWithExtension =
-        buildStep.inputId.pathSegments.last.replaceAll('-', '_');
-    final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
+    final filesList = Directory(normalize(options.inputFolder))
+        .listSync()
+        .where((FileSystemEntity file) =>
+            _inputFileExtensions.any((ending) => file.path.endsWith(ending)))
+        .map((e) => e.path);
 
-    final contents = await buildStep.readAsString(buildStep.inputId);
+    await _generateAndWriteFiles(buildStep, filesList);
 
-    ///Write file content
-    await _generateAndWriteFile(
-      contents: contents,
-      fileNameWithExtension: fileNameWithExtension,
-      fileNameWithoutExtension: fileNameWithoutExtension,
-      buildStep: buildStep,
-    );
+    File(kAdditionalResult).deleteSync();
   }
 
-  Future<void> _generateAndWriteAdditionalFiles(BuildStep buildStep) async {
-    if (options.inputUrls.isNotEmpty) {
-      for (final url in options.inputUrls) {
-        final contents = await _download(url);
+  Future<void> _generateAndWriteFiles(
+      BuildStep buildStep, Iterable<String> urls) async {
+    for (final url in urls) {
+      final file = File(url);
+      final contents = await file.readAsString();
 
-        final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
+      final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
 
-        final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
+      final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
 
-        await _generateAndWriteFile(
-          contents: contents,
-          buildStep: buildStep,
-          fileNameWithExtension: fileNameWithExtension,
-          fileNameWithoutExtension: fileNameWithoutExtension,
-        );
-      }
+      await _generateAndWriteFile(
+        contents: contents,
+        buildStep: buildStep,
+        fileNameWithExtension: fileNameWithExtension,
+        fileNameWithoutExtension: fileNameWithoutExtension,
+      );
     }
 
     await _generateAdditionalFiles(
