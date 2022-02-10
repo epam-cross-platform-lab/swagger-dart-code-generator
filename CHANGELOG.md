@@ -1,3 +1,6 @@
+# 2.4.0-prerelease.3
+
+* Added toString generation for models ([#340](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/340))
 # 2.4.0-prerelease.2
 
 * Added ability to use swagger files from internet ([#316](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/316))
