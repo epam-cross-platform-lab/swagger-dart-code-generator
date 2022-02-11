@@ -1,3 +1,8 @@
+# 2.4.0-prerelease.4
+
+* Updated lints ([#339](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/339))
+* Added generation enum names with `x-enumNames` or `x-enum-varnames` ([#307](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/307))
+
 # 2.4.0-prerelease.3
 
 * Added toString generation for models ([#340](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/340))
