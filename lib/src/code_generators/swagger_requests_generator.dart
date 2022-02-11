@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:code_builder/code_builder.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -19,12 +17,11 @@ import 'constants.dart';
 
 class SwaggerRequestsGenerator {
   String generate({
-    required String code,
+    required Map<String, dynamic> map,
     required String className,
     required String fileName,
     required GeneratorOptions options,
   }) {
-    final map = jsonDecode(code) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
     final service = _generateService(

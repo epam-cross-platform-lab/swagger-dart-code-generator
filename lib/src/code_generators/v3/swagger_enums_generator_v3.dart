@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 
 class SwaggerEnumsGeneratorV3 extends SwaggerEnumsGenerator {
   @override
-  String generate(String dartCode, String fileName) {
-    final map = jsonDecode(dartCode) as Map<String, dynamic>;
-
+  String generate(Map<String, dynamic> map, String fileName) {
     final components = map['components'] as Map<String, dynamic>?;
     final schemas = components == null
         ? null
@@ -24,7 +21,7 @@ class SwaggerEnumsGeneratorV3 extends SwaggerEnumsGenerator {
         .addAll(SwaggerModelsGenerator.getRequestBodiesFromRequests(map));
 
     return generateFromMap(
-      dartCode,
+      map,
       fileName,
       schemas ?? {},
       responses ?? {},

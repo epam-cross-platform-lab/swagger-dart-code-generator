@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -6,31 +5,29 @@ import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   @override
-  String generate(String dartCode, String fileName, GeneratorOptions options) {
-    final dynamic map = jsonDecode(dartCode);
+  String generate(
+      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
     final definitions = map['definitions'] as Map<String, dynamic>?;
-    return generateBase(dartCode, fileName, options, definitions ?? {}, true);
+    return generateBase(map, fileName, options, definitions ?? {}, true);
   }
 
   @override
   String generateResponses(
-      String dartCode, String fileName, GeneratorOptions options) {
+      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
     return '';
   }
 
   @override
   String generateRequestBodies(
-      String dartCode, String fileName, GeneratorOptions options) {
+      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
     return '';
   }
 
   @override
-  List<String> getAllListEnumNames(String swaggerFile) {
-    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
+  List<String> getAllListEnumNames(Map<String, dynamic> map) {
+    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
 
-    final swagger = jsonDecode(swaggerFile);
-
-    final definitions = swagger['definitions'] as Map<String, dynamic>?;
+    final definitions = map['definitions'] as Map<String, dynamic>?;
 
     if (definitions != null) {
       definitions.forEach((className, map) {

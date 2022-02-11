@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
-import 'test_data.dart';
 
 void main() {
   final generator = SwaggerModelsGeneratorV3();
@@ -13,16 +14,19 @@ void main() {
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
-      final result = generator.generate(modelWithParametersV3, fileName,
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final map =
+          jsonDecode(schemasResponsesWithResponse) as Map<String, dynamic>;
+      final result = generator.generate(
+          map, fileName, GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(
           result, contains('final enums.TokensResponseTokenType? tokenType'));
     });
 
     test('Should generate .toLower() when caseSensitive: false', () {
+      final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
       final result = generator.generate(
-          modelWithParametersV3,
+          map,
           fileName,
           GeneratorOptions(
               enumsCaseSensitive: false, inputFolder: '', outputFolder: ''));
@@ -34,8 +38,9 @@ void main() {
     });
 
     test('Should NOT generate .toLower() when caseSensitive: false', () {
+      final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
       final result = generator.generate(
-          modelWithParametersV3,
+          map,
           fileName,
           GeneratorOptions(
               enumsCaseSensitive: true, inputFolder: '', outputFolder: ''));
@@ -44,8 +49,9 @@ void main() {
     });
 
     test('Should parse object name as a field Type', () {
-      final result = generator2.generate(modelWithParametersV2, fileName,
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final map = jsonDecode(modelWithParametersV2) as Map<String, dynamic>;
+      final result = generator2.generate(
+          map, fileName, GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(
           result,
@@ -55,6 +61,7 @@ void main() {
 
     test('Should parse object name as a field Type', () {
       const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
+      final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
       final generatorOptions = GeneratorOptions(
         defaultValuesMap: <DefaultValueMap>[
           DefaultValueMap(
@@ -65,8 +72,7 @@ void main() {
         inputFolder: '',
         outputFolder: '',
       );
-      final result =
-          generator.generate(modelWithParametersV3, fileName, generatorOptions);
+      final result = generator.generate(map, fileName, generatorOptions);
 
       expect(result, contains(expectedResult));
     });
@@ -324,7 +330,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
-          '',
+          {},
           className,
           map,
           {},
@@ -346,7 +352,7 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator2.generateModelClassContent(
-          '',
+          {},
           className,
           map,
           {},
@@ -447,11 +453,12 @@ void main() {
       final map = <String, dynamic>{
         'Animals': <String, dynamic>{'\$ref': '#/definitions/Pet'}
       };
+
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
-          carsService,
+          map,
           map,
           {},
           className,
@@ -476,7 +483,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
-          carsService,
+          map,
           map,
           {},
           className,
@@ -499,7 +506,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
-          carsService,
+          map,
           map,
           {},
           className,
@@ -522,7 +529,7 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
       const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(
-          carsService,
+          map,
           map,
           {},
           className,
@@ -705,22 +712,33 @@ void main() {
 
   group('Tests for generateResponses', () {
     test('Should generate empty string for V2', () {
-      final result = generator2.generateResponses(schemasResponsesWithResponse,
-          'fileName', GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final map =
+          jsonDecode(schemasResponsesWithResponse) as Map<String, dynamic>;
+      final result = generator2.generateResponses(
+          map,
+          'fileName',
+          GeneratorOptions(
+            inputFolder: '',
+            outputFolder: '',
+          ));
 
       expect(result, equals(''));
     });
 
     test('Should generate class from responses V3', () {
-      final result = generator.generateResponses(schemasResponsesWithResponse,
-          'fileName', GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final map =
+          jsonDecode(schemasResponsesWithResponse) as Map<String, dynamic>;
+      final result = generator.generateResponses(
+          map, 'fileName', GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains('class SpaResponse'));
     });
 
     test('Should generate class from responses V3 and Schemas', () {
+      final map = jsonDecode(schemasResponsesWithResponseAndSchemas)
+          as Map<String, dynamic>;
       final result = generator.generateResponses(
-          schemasResponsesWithResponseAndSchemas,
+          map,
           'fileName',
           GeneratorOptions(
             inputFolder: '',
@@ -733,33 +751,42 @@ void main() {
 
   group('Tests for getAllEnumNames', () {
     test('Should', () {
-      final result = generator2.getAllEnumNames(enumAsDefinitionV2);
+      final map = jsonDecode(enumAsDefinitionV2) as Map<String, dynamic>;
+      final result = generator2.getAllEnumNames(map);
 
       expect(result, contains('enums.SpaResponse'));
     });
 
     test('Should get enum name from schemas', () {
-      final result = generator.getAllEnumNames(schemasWithEnumsInProperties);
+      final map =
+          jsonDecode(schemasWithEnumsInProperties) as Map<String, dynamic>;
+      final result = generator.getAllEnumNames(map);
 
       expect(result, contains('enums.SpaSchemaSuccessValues'));
     });
 
     test('Should get enum name from responses', () {
-      final result = generator.getAllEnumNames(schemasWithEnumsInProperties);
+      final map =
+          jsonDecode(schemasWithEnumsInProperties) as Map<String, dynamic>;
+      final result = generator.getAllEnumNames(map);
 
       expect(result, contains('enums.SpaResponse'));
     });
 
     test('Should get enum name from responses with Enum items', () {
-      final result = generator.getAllEnumNames(schemasWithEnumsInProperties);
+      final map =
+          jsonDecode(schemasWithEnumsInProperties) as Map<String, dynamic>;
+      final result = generator.getAllEnumNames(map);
 
       expect(result, contains('enums.SpaEnumResponseFailedValued'));
     });
   });
   group('Tests for models from responses', () {
     test('Should generate correct model from response', () {
+      final map =
+          jsonDecode(requestWithReturnTypeInjected) as Map<String, dynamic>;
       final result = generator.generate(
-          requestWithReturnTypeInjected,
+          map,
           'my_service',
           GeneratorOptions(
             inputFolder: '',

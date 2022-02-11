@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
@@ -9,22 +8,19 @@ import 'package:collection/collection.dart';
 
 class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   @override
-  String generate(String dartCode, String fileName, GeneratorOptions options) {
-    final dynamic map = jsonDecode(dartCode);
-
+  String generate(
+      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
     final components = map['components'] as Map<String, dynamic>?;
     final schemas = components == null
         ? null
         : components['schemas'] as Map<String, dynamic>?;
 
-    return generateBase(dartCode, fileName, options, schemas ?? {}, true);
+    return generateBase(map, fileName, options, schemas ?? {}, true);
   }
 
   @override
   String generateResponses(
-      String dartCode, String fileName, GeneratorOptions options) {
-    final dynamic map = jsonDecode(dartCode);
-
+      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
     final components = map['components'] as Map<String, dynamic>?;
     final responses = components == null
         ? null
@@ -62,13 +58,11 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(dartCode, fileName, options, result, false);
+    return generateBase(map, fileName, options, result, false);
   }
 
-  Map<String, dynamic> _getRequestBodiesFromRequests(String dartCode) {
-    final root = jsonDecode(dartCode) as Map<String, dynamic>;
-
-    final paths = root['paths'] as Map<String, dynamic>?;
+  Map<String, dynamic> _getRequestBodiesFromRequests(Map<String, dynamic> map) {
+    final paths = map['paths'] as Map<String, dynamic>?;
 
     if (paths == null) {
       return {};
@@ -115,16 +109,14 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
   @override
   String generateRequestBodies(
-      String dartCode, String fileName, GeneratorOptions options) {
-    final dynamic map = jsonDecode(dartCode);
-
+      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
     final components = map['components'] as Map<String, dynamic>?;
     final requestBodies = components == null
         ? <String, dynamic>{}
         : components['requestBodies'] as Map<String, dynamic>? ??
             <String, dynamic>{};
 
-    requestBodies.addAll(_getRequestBodiesFromRequests(dartCode));
+    requestBodies.addAll(_getRequestBodiesFromRequests(map));
 
     if (requestBodies.isEmpty) {
       return '';
@@ -158,16 +150,14 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(dartCode, fileName, options, result, false);
+    return generateBase(map, fileName, options, result, false);
   }
 
   @override
-  List<String> getAllListEnumNames(String swaggerFile) {
-    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
+  List<String> getAllListEnumNames(Map<String, dynamic> map) {
+    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
 
-    final swagger = jsonDecode(swaggerFile);
-
-    final components = swagger['components'] as Map<String, dynamic>?;
+    final components = map['components'] as Map<String, dynamic>?;
 
     final schemas = components == null
         ? null

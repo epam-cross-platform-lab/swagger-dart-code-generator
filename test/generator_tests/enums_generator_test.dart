@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 //import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
@@ -22,8 +24,9 @@ void main() {
     // });
 
     test('Should generate enum from request parameter', () {
-      final result =
-          generator.generate(requestWithRnumInParameter, 'test_file');
+      final map =
+          jsonDecode(requestWithRnumInParameter) as Map<String, dynamic>;
+      final result = generator.generate(map, 'test_file');
 
       expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
     });
@@ -70,14 +73,15 @@ void main() {
     });
 
     test('Should remove numbers at beginning if it is key word', () {
-      final result =
-          SwaggerEnumsGenerator.getEnumNamesFromRequests(requestWithEnum);
+      final map = jsonDecode(requestWithEnum) as Map<String, dynamic>;
+      final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
       expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
-      final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(
-          requestWithListOfEnumInParameter);
+      final map =
+          jsonDecode(requestWithListOfEnumInParameter) as Map<String, dynamic>;
+      final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });

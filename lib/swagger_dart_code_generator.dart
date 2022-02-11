@@ -1,17 +1,21 @@
+import 'dart:convert';
+
 import 'package:build/build.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
+import 'package:swagger_dart_code_generator/src/extensions/yaml_extensions.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' show join, normalize;
 import 'package:http/http.dart' as http;
+import 'package:yaml/yaml.dart';
 
 ///Returns instance of SwaggerDartCodeGenerator
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
     SwaggerDartCodeGenerator(options);
 
-const _inputFileExtensions = ['.swagger', '.json'];
+const _inputFileExtensions = ['.swagger', '.json', '.yaml'];
 
 const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
@@ -111,14 +115,23 @@ class SwaggerDartCodeGenerator implements Builder {
       BuildStep buildStep, Iterable<String> urls) async {
     for (final url in urls) {
       final file = File(url);
-      final contents = await file.readAsString();
+      var contents = await file.readAsString();
+
+      Map<String, dynamic> contentMap;
+
+      if (url.endsWith('.yaml')) {
+        final t = loadYaml(contents) as YamlMap;
+        contentMap = t.toMap();
+      } else {
+        contentMap = jsonDecode(contents) as Map<String, dynamic>;
+      }
 
       final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
 
       final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
 
       await _generateAndWriteFile(
-        contents: contents,
+        contents: contentMap,
         buildStep: buildStep,
         fileNameWithExtension: fileNameWithExtension,
         fileNameWithoutExtension: fileNameWithoutExtension,
@@ -135,7 +148,7 @@ class SwaggerDartCodeGenerator implements Builder {
   }
 
   Future<void> _generateAndWriteFile({
-    required String contents,
+    required Map<String, dynamic> contents,
     required String fileNameWithoutExtension,
     required String fileNameWithExtension,
     required BuildStep buildStep,
