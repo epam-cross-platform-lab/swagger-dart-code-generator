@@ -5,6 +5,7 @@ import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
 import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' show join, normalize;
+import 'package:http/http.dart' as http;
 
 ///Returns instance of SwaggerDartCodeGenerator
 SwaggerDartCodeGenerator swaggerCodeBuilder(BuilderOptions options) =>
@@ -18,34 +19,49 @@ const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
+const kAdditionalResult = 'lib/swagger_dart_code_generator_temp.dart';
 
 String normal(String path) {
   return AssetId('', path).path;
 }
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
+  final result = <String, List<String>>{};
+
   final filesList = Directory(normalize(options.inputFolder)).listSync().where(
       (FileSystemEntity file) =>
           _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
-  final result = <String, List<String>>{};
+  File(kAdditionalResult).createSync();
 
   var out = normalize(options.outputFolder);
 
-  filesList.forEach((FileSystemEntity element) {
-    final name = getFileNameBase(element.path);
-    result[normal(element.path)] = <String>[
-      join(out, '$name$_outputFileExtension'),
-      join(out, '$name$_outputEnumsFileExtension'),
-      join(out, '$name$_outputModelsFileExtension'),
-      join(out, '$name$_outputResponsesFileExtension'),
-    ];
-  });
+  final allFilesPaths = [
+    ...options.inputUrls,
+    ...filesList.map((e) => e.path),
+  ];
+
+  result[kAdditionalResult] = [];
+
+  for (var url in allFilesPaths) {
+    final name = getFileNameBase(url.split('/').last);
+    result[kAdditionalResult]!.add(join(out, '$name$_outputFileExtension'));
+    result[kAdditionalResult]!
+        .add(join(out, '$name$_outputEnumsFileExtension'));
+    result[kAdditionalResult]!
+        .add(join(out, '$name$_outputModelsFileExtension'));
+    result[kAdditionalResult]!
+        .add(join(out, '$name$_outputResponsesFileExtension'));
+  }
+
+  for (var url in options.inputUrls) {
+    result[kAdditionalResult]!
+        .add(join(normalize(options.inputFolder), url.split('/').last));
+  }
 
   ///Register additional outputs in first input
-  result[normal(filesList.first.path)]!.add(join(out, _indexFileName));
-  result[normal(filesList.first.path)]!.add(join(out, _mappingFileName));
-
+  result[kAdditionalResult]!.add(join(out, _indexFileName));
+  result[kAdditionalResult]!.add(join(out, _mappingFileName));
   return result;
 }
 
@@ -67,12 +83,63 @@ class SwaggerDartCodeGenerator implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    final fileNameWithExtension =
-        buildStep.inputId.pathSegments.last.replaceAll('-', '_');
-    final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
+    for (final url in options.inputUrls) {
+      final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
 
-    final contents = await buildStep.readAsString(buildStep.inputId);
+      final contents = await _download(url);
 
+      await buildStep.writeAsString(
+          AssetId(
+            buildStep.inputId.package,
+            join(options.inputFolder, fileNameWithExtension),
+          ),
+          contents);
+    }
+
+    final filesList = Directory(normalize(options.inputFolder))
+        .listSync()
+        .where((FileSystemEntity file) =>
+            _inputFileExtensions.any((ending) => file.path.endsWith(ending)))
+        .map((e) => e.path);
+
+    await _generateAndWriteFiles(buildStep, filesList);
+
+    File(kAdditionalResult).deleteSync();
+  }
+
+  Future<void> _generateAndWriteFiles(
+      BuildStep buildStep, Iterable<String> urls) async {
+    for (final url in urls) {
+      final file = File(url);
+      final contents = await file.readAsString();
+
+      final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
+
+      final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
+
+      await _generateAndWriteFile(
+        contents: contents,
+        buildStep: buildStep,
+        fileNameWithExtension: fileNameWithExtension,
+        fileNameWithoutExtension: fileNameWithoutExtension,
+      );
+    }
+
+    await _generateAdditionalFiles(
+      buildStep.inputId,
+      buildStep,
+      true,
+    );
+
+    return;
+  }
+
+  Future<void> _generateAndWriteFile({
+    required String contents,
+    required String fileNameWithoutExtension,
+    required String fileNameWithExtension,
+    required BuildStep buildStep,
+  }) async {
     final codeGenerator = SwaggerCodeGenerator();
 
     final models = codeGenerator.generateModels(
@@ -88,7 +155,6 @@ class SwaggerDartCodeGenerator implements Builder {
         contents, getFileNameWithoutExtension(fileNameWithExtension));
 
     final imports = codeGenerator.generateImportsContent(
-      contents,
       fileNameWithoutExtension,
       models.isNotEmpty,
       options.buildOnlyModels,
@@ -103,9 +169,9 @@ class SwaggerDartCodeGenerator implements Builder {
         options);
 
     final customDecoder = codeGenerator.generateCustomJsonConverter(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+        getFileNameWithoutExtension(fileNameWithExtension), options);
 
-    final dateToJson = codeGenerator.generateDateToJson(contents);
+    final dateToJson = codeGenerator.generateDateToJson();
 
     final copyAssetId = AssetId(
         buildStep.inputId.package,
@@ -154,12 +220,6 @@ class SwaggerDartCodeGenerator implements Builder {
 
       await buildStep.writeAsString(enumsAssetId, formattedModels);
     }
-
-    ///Write additional files on first input
-    if (buildExtensions.keys.first == buildStep.inputId.path) {
-      await _generateAdditionalFiles(
-          contents, buildStep.inputId, buildStep, models.isNotEmpty);
-    }
   }
 
   String _generateFileContent(
@@ -201,14 +261,18 @@ $dateToJson
     }
   }
 
-  Future<void> _generateAdditionalFiles(String swaggerCode, AssetId inputId,
-      BuildStep buildStep, bool hasModels) async {
+  Future<void> _generateAdditionalFiles(
+      AssetId inputId, BuildStep buildStep, bool hasModels) async {
     final codeGenerator = SwaggerCodeGenerator();
 
     final indexAssetId =
         AssetId(inputId.package, join(options.outputFolder, _indexFileName));
 
-    final imports = codeGenerator.generateIndexes(swaggerCode, buildExtensions);
+    final allFiles = buildExtensions.keys.toList();
+    allFiles.remove(kAdditionalResult);
+    allFiles.addAll(options.inputUrls);
+
+    final imports = codeGenerator.generateIndexes(allFiles);
 
     if (!options.buildOnlyModels) {
       await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
@@ -218,8 +282,7 @@ $dateToJson
       final mappingAssetId = AssetId(
           inputId.package, join(options.outputFolder, _mappingFileName));
 
-      final mapping = codeGenerator.generateConverterMappings(
-          swaggerCode, buildExtensions, hasModels);
+      final mapping = codeGenerator.generateConverterMappings(hasModels);
 
       await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
     }
@@ -250,4 +313,10 @@ $enumsImport
     $requestBodies
     ''';
   }
+}
+
+Future<String> _download(String url) async {
+  var response = await http.get(Uri.parse(url));
+
+  return response.body;
 }

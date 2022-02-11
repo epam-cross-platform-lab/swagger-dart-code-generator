@@ -24,6 +24,7 @@ class GeneratorOptions {
     this.modelPostfix = '',
     this.includePaths = const [],
     this.excludePaths = const [],
+    this.inputUrls = const [],
   });
 
   /// Build options from a JSON map.
@@ -38,6 +39,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
+
+  @JsonKey(defaultValue: [])
+  List<String> inputUrls;
 
   @JsonKey(defaultValue: false)
   final bool separateModels;

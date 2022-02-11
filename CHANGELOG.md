@@ -1,6 +1,20 @@
+# 2.4.0-prerelease.4
+
+* Updated lints ([#339](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/339))
+* Added generation enum names with `x-enumNames` or `x-enum-varnames` ([#307](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/307))
+
+# 2.4.0-prerelease.3
+
+* Added toString generation for models ([#340](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/340))
+# 2.4.0-prerelease.2
+
+* Added ability to use swagger files from internet ([#316](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/316))
+* `input_folder` option is not requited now
+* Fixed naming issues and enum names generation
+
 # 2.3.13
 
-* Fixed generation of Response<List<List<SomeClass>>> ([#331](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/331))
+* Fixed generation of `Response<List<List<SomeClass>>>` ([#331](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/331))
 
 # 2.3.12
 
@@ -8,12 +22,12 @@
 
 # 2.3.11
 
-* Fixed cases when classes has name "Type" ([#328](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/328))
+* Fixed cases when classes has name `Type` ([#328](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/328))
 
 # 2.3.10
 
-* Fixed cases when we have Stream<SomeClass> as request parameter
-* Fixed cases when we have List<List<....<SomeClass>>> in model properties
+* Fixed cases when we have `Stream<SomeClass>` as request parameter
+* Fixed cases when we have `List<List<....<SomeClass>>>` in model properties
 
 # 2.3.9
 
@@ -21,7 +35,7 @@
 
 # 2.3.8
 
-* Added generation of 'Map<String, dynamic>' for fields with additional properties([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
+* Added generation of `Map<String, dynamic>` for fields with additional properties([#296](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/296))
 
 # 2.3.7
 

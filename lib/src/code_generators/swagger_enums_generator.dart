@@ -14,7 +14,7 @@ abstract class SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
-  String generate(String swagger, String fileName);
+  String generate(String dartCode, String fileName);
 
   String generateFromMap(
       String dartCode,
@@ -221,6 +221,7 @@ $enumsFromRequestBodies
     final enumValuesContent = getEnumValuesContent(
       enumValues: enumValues,
       isInteger: isInteger,
+      enumValuesNames: [],
     );
 
     final enumMap = '''
@@ -244,13 +245,21 @@ $enumMap
 
   String getEnumValuesContent({
     required List<String> enumValues,
+    required List<String> enumValuesNames,
     required bool isInteger,
   }) {
     final result = <String>[];
     final resultStrings = <String>[];
 
-    enumValues.forEach((value) {
-      var validatedValue = getValidatedEnumFieldName(value);
+    for (int i = 0; i < enumValues.length; i++) {
+      final value = enumValues[i];
+      var validatedValue = value;
+
+      if (enumValuesNames.length == enumValues.length) {
+        validatedValue = enumValuesNames[i];
+      }
+
+      validatedValue = getValidatedEnumFieldName(validatedValue);
 
       while (result.contains(validatedValue)) {
         validatedValue += '\$';
@@ -265,7 +274,7 @@ $enumMap
         resultStrings.add(
             "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
       }
-    });
+    }
 
     return resultStrings.join(',\n');
   }
@@ -274,7 +283,7 @@ $enumMap
     final neededStrings = <String>[];
     final fields = <String>[];
 
-    enumValues.forEach((value) {
+    for (var value in enumValues) {
       var validatedValue = getValidatedEnumFieldName(value);
 
       while (fields.contains(validatedValue)) {
@@ -284,7 +293,7 @@ $enumMap
       fields.add(validatedValue);
       neededStrings.add(
           '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-    });
+    }
 
     return neededStrings.join(',\n');
   }
@@ -396,9 +405,22 @@ $enumMap
           (map['enum'] as List<dynamic>).map((e) => e.toString()).toList();
 
       final stringValues = enumValues.map((e) => e.toString()).toList();
+
+      final enumValuesNames =
+          (map[kEnumNames] ?? map[kEnumVarnames]) as List? ?? [];
+
+      var enumValuesNamesList = <String>[];
+      if (enumValues.isNotEmpty) {
+        enumValuesNamesList = enumValuesNames.map((e) => e.toString()).toList();
+      }
+
+      final mapValues = enumValuesNamesList.length == stringValues.length
+          ? enumValuesNamesList
+          : stringValues;
+
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(enumName, stringValues)}
+\t${getEnumValuesMapContent(enumName, mapValues)}
       };
       ''';
 
@@ -407,7 +429,11 @@ $enumMap
       return """
 enum ${enumName.capitalize} {
 \t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
-${getEnumValuesContent(enumValues: enumValues, isInteger: isInteger)}
+${getEnumValuesContent(
+        enumValues: enumValues,
+        enumValuesNames: enumValuesNamesList,
+        isInteger: isInteger,
+      )}
 }
 
 $enumMap
@@ -421,9 +447,8 @@ $enumMap
   }
 
   String generateEnumName(String className, String enumName) {
-    final validatedEnumName =
-        SwaggerModelsGenerator.getValidatedClassName(enumName);
-    return '${className.capitalize}$validatedEnumName';
+    return SwaggerModelsGenerator.getValidatedClassName(
+        '${className.capitalize}_$enumName');
   }
 
   String generateEnumsFromClasses(

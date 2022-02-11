@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'example_swagger.swagger.dart';
+part of 'pets_api.swagger.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,13 +8,13 @@ part of 'example_swagger.swagger.dart';
 
 Order _$OrderFromJson(Map<String, dynamic> json) {
   return Order(
-    id: json['id'] as int?,
-    petId: json['petId'] as int?,
+    id: json['id'] as num?,
+    petId: json['petId'] as num?,
     quantity: json['quantity'] as int?,
     shipDate: json['shipDate'] == null
         ? null
         : DateTime.parse(json['shipDate'] as String),
-    status: orderStatusFromJson(json['status'] as String?),
+    status: orderStatusFromJson(json['status']),
     complete: json['complete'] as bool? ?? false,
   );
 }
@@ -39,7 +39,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
 
 Category _$CategoryFromJson(Map<String, dynamic> json) {
   return Category(
-    id: json['id'] as int?,
+    id: json['id'] as num?,
     name: json['name'] as String? ?? '',
   );
 }
@@ -60,7 +60,7 @@ Map<String, dynamic> _$CategoryToJson(Category instance) {
 
 User _$UserFromJson(Map<String, dynamic> json) {
   return User(
-    id: json['id'] as int?,
+    id: json['id'] as num?,
     username: json['username'] as String? ?? '',
     firstName: json['firstName'] as String? ?? '',
     lastName: json['lastName'] as String? ?? '',
@@ -93,7 +93,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
 
 Tag _$TagFromJson(Map<String, dynamic> json) {
   return Tag(
-    id: json['id'] as int?,
+    id: json['id'] as num?,
     name: json['name'] as String? ?? '',
   );
 }
@@ -114,7 +114,7 @@ Map<String, dynamic> _$TagToJson(Tag instance) {
 
 Pet _$PetFromJson(Map<String, dynamic> json) {
   return Pet(
-    id: json['id'] as int?,
+    id: json['id'] as num?,
     category: json['category'] == null
         ? null
         : Category.fromJson(json['category'] as Map<String, dynamic>),
@@ -127,7 +127,7 @@ Pet _$PetFromJson(Map<String, dynamic> json) {
             ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
             .toList() ??
         [],
-    status: petStatusFromJson(json['status'] as String?),
+    status: petStatusFromJson(json['status']),
   );
 }
 

@@ -4,28 +4,28 @@ import 'package:collection/collection.dart';
 import 'package:chopper/chopper.dart';
 import 'client_mapping.dart';
 import 'package:chopper/chopper.dart' as chopper;
-import 'example_swagger.enums.swagger.dart' as enums;
-export 'example_swagger.enums.swagger.dart';
+import 'pets_api.enums.swagger.dart' as enums;
+export 'pets_api.enums.swagger.dart';
 
-part 'example_swagger.swagger.chopper.dart';
-part 'example_swagger.swagger.g.dart';
+part 'pets_api.swagger.chopper.dart';
+part 'pets_api.swagger.g.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
 // **************************************************************************
 
 @ChopperApi()
-abstract class ExampleSwagger extends ChopperService {
-  static ExampleSwagger create({ChopperClient? client, String? baseUrl}) {
+abstract class PetsApi extends ChopperService {
+  static PetsApi create({ChopperClient? client, String? baseUrl}) {
     if (client != null) {
-      return _$ExampleSwagger(client);
+      return _$PetsApi(client);
     }
 
     final newClient = ChopperClient(
-        services: [_$ExampleSwagger()],
+        services: [_$PetsApi()],
         converter: $JsonSerializableConverter(),
         baseUrl: baseUrl ?? 'http://petstore.swagger.io/v2');
-    return _$ExampleSwagger(newClient);
+    return _$PetsApi(newClient);
   }
 
   ///Add a new pet to the store

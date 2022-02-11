@@ -13,7 +13,7 @@ void main() {
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
-      final result = generator.generate(model_with_parameters_v3, fileName,
+      final result = generator.generate(modelWithParametersV3, fileName,
           GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(
@@ -22,7 +22,7 @@ void main() {
 
     test('Should generate .toLower() when caseSensitive: false', () {
       final result = generator.generate(
-          model_with_parameters_v3,
+          modelWithParametersV3,
           fileName,
           GeneratorOptions(
               enumsCaseSensitive: false, inputFolder: '', outputFolder: ''));
@@ -35,7 +35,7 @@ void main() {
 
     test('Should NOT generate .toLower() when caseSensitive: false', () {
       final result = generator.generate(
-          model_with_parameters_v3,
+          modelWithParametersV3,
           fileName,
           GeneratorOptions(
               enumsCaseSensitive: true, inputFolder: '', outputFolder: ''));
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('Should parse object name as a field Type', () {
-      final result = generator2.generate(model_with_parameters_v2, fileName,
+      final result = generator2.generate(modelWithParametersV2, fileName,
           GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(
@@ -65,8 +65,8 @@ void main() {
         inputFolder: '',
         outputFolder: '',
       );
-      final result = generator.generate(
-          model_with_parameters_v3, fileName, generatorOptions);
+      final result =
+          generator.generate(modelWithParametersV3, fileName, generatorOptions);
 
       expect(result, contains(expectedResult));
     });
@@ -519,8 +519,8 @@ void main() {
       };
 
       const className = 'Animals';
-      const jsonKeyExpectedResult = "\t@JsonKey(name: '\$With')\n";
-      const fieldExpectedResult = 'final Pet? \$With';
+      const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
+      const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(
           carsService,
           map,
@@ -705,26 +705,22 @@ void main() {
 
   group('Tests for generateResponses', () {
     test('Should generate empty string for V2', () {
-      final result = generator2.generateResponses(
-          schemas_responses_with_response,
-          'fileName',
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final result = generator2.generateResponses(schemasResponsesWithResponse,
+          'fileName', GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, equals(''));
     });
 
     test('Should generate class from responses V3', () {
-      final result = generator.generateResponses(
-          schemas_responses_with_response,
-          'fileName',
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final result = generator.generateResponses(schemasResponsesWithResponse,
+          'fileName', GeneratorOptions(inputFolder: '', outputFolder: ''));
 
       expect(result, contains('class SpaResponse'));
     });
 
     test('Should generate class from responses V3 and Schemas', () {
       final result = generator.generateResponses(
-          schemas_responses_with_response_and_schemas,
+          schemasResponsesWithResponseAndSchemas,
           'fileName',
           GeneratorOptions(
             inputFolder: '',
@@ -737,28 +733,25 @@ void main() {
 
   group('Tests for getAllEnumNames', () {
     test('Should', () {
-      final result = generator2.getAllEnumNames(enum_as_definition_v2);
+      final result = generator2.getAllEnumNames(enumAsDefinitionV2);
 
       expect(result, contains('enums.SpaResponse'));
     });
 
     test('Should get enum name from schemas', () {
-      final result =
-          generator.getAllEnumNames(schemas_with_enums_in_properties);
+      final result = generator.getAllEnumNames(schemasWithEnumsInProperties);
 
       expect(result, contains('enums.SpaSchemaSuccessValues'));
     });
 
     test('Should get enum name from responses', () {
-      final result =
-          generator.getAllEnumNames(schemas_with_enums_in_properties);
+      final result = generator.getAllEnumNames(schemasWithEnumsInProperties);
 
       expect(result, contains('enums.SpaResponse'));
     });
 
     test('Should get enum name from responses with Enum items', () {
-      final result =
-          generator.getAllEnumNames(schemas_with_enums_in_properties);
+      final result = generator.getAllEnumNames(schemasWithEnumsInProperties);
 
       expect(result, contains('enums.SpaEnumResponseFailedValued'));
     });
@@ -766,7 +759,7 @@ void main() {
   group('Tests for models from responses', () {
     test('Should generate correct model from response', () {
       final result = generator.generate(
-          request_with_return_type_injected,
+          requestWithReturnTypeInjected,
           'my_service',
           GeneratorOptions(
             inputFolder: '',

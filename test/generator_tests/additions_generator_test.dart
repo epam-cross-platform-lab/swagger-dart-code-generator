@@ -22,14 +22,13 @@ void main() {
     });
 
     test('Should generate indexes file', () {
-      final result = generator.generateIndexes(<String, List<String>>{
-        'someFile.dart': <String>['someFile.swagger.dart'],
-        'secondFile.dart': <String>['secondFile.swagger.dart']
-      });
+      final result = generator.generateIndexes(<String>[
+        'someFile.dart',
+        'secondFile',
+      ]);
 
       expect(result, contains("export 'someFile.dart.dart' show SomeFile;"));
-      expect(
-          result, contains("export 'secondFile.dart.dart' show SecondFile;"));
+      expect(result, contains("export 'secondFile.dart' show SecondFile;"));
     });
   });
   group('Test for generateDateToJson', () {
