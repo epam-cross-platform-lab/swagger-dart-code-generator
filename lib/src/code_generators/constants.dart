@@ -74,6 +74,9 @@ const kDynamic = 'dynamic';
 
 const supportedRequestTypes = ['get', 'post', 'put', 'delete', 'head', 'patch'];
 
+const kEnumNames = 'x-enumNames';
+const kEnumVarnames = 'x-enum-varnames';
+
 const kServiceHeader = '''
 // **************************************************************************
 // SwaggerChopperGenerator

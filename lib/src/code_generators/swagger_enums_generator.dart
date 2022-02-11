@@ -221,6 +221,7 @@ $enumsFromRequestBodies
     final enumValuesContent = getEnumValuesContent(
       enumValues: enumValues,
       isInteger: isInteger,
+      enumValuesNames: [],
     );
 
     final enumMap = '''
@@ -244,13 +245,21 @@ $enumMap
 
   String getEnumValuesContent({
     required List<String> enumValues,
+    required List<String> enumValuesNames,
     required bool isInteger,
   }) {
     final result = <String>[];
     final resultStrings = <String>[];
 
-    for (var value in enumValues) {
-      var validatedValue = getValidatedEnumFieldName(value);
+    for (int i = 0; i < enumValues.length; i++) {
+      final value = enumValues[i];
+      var validatedValue = value;
+
+      if (enumValuesNames.length == enumValues.length) {
+        validatedValue = enumValuesNames[i];
+      }
+
+      validatedValue = getValidatedEnumFieldName(validatedValue);
 
       while (result.contains(validatedValue)) {
         validatedValue += '\$';
@@ -396,9 +405,22 @@ $enumMap
           (map['enum'] as List<dynamic>).map((e) => e.toString()).toList();
 
       final stringValues = enumValues.map((e) => e.toString()).toList();
+
+      final enumValuesNames =
+          (map[kEnumNames] ?? map[kEnumVarnames]) as List? ?? [];
+
+      var enumValuesNamesList = <String>[];
+      if (enumValues.isNotEmpty) {
+        enumValuesNamesList = enumValuesNames.map((e) => e.toString()).toList();
+      }
+
+      final mapValues = enumValuesNamesList.length == stringValues.length
+          ? enumValuesNamesList
+          : stringValues;
+
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(enumName, stringValues)}
+\t${getEnumValuesMapContent(enumName, mapValues)}
       };
       ''';
 
@@ -407,7 +429,11 @@ $enumMap
       return """
 enum ${enumName.capitalize} {
 \t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
-${getEnumValuesContent(enumValues: enumValues, isInteger: isInteger)}
+${getEnumValuesContent(
+        enumValues: enumValues,
+        enumValuesNames: enumValuesNamesList,
+        isInteger: isInteger,
+      )}
 }
 
 $enumMap
