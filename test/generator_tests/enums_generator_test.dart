@@ -38,8 +38,11 @@ void main() {
     test('Should generate enum values', () {
       final values = <String>['file_sup'];
       const output = "\t@JsonValue('file_sup')\n\tfileSup";
-      final result =
-          generator.getEnumValuesContent(enumValues: values, isInteger: false);
+      final result = generator.getEnumValuesContent(
+        enumValues: values,
+        isInteger: false,
+        enumValuesNames: [],
+      );
 
       expect(result, contains(output));
     });
