@@ -28,8 +28,7 @@ void main() {
       ]);
 
       expect(result, contains("export 'someFile.dart.dart' show SomeFile;"));
-      expect(
-          result, contains("export 'secondFile.dart.dart' show SecondFile;"));
+      expect(result, contains("export 'secondFile.dart' show SecondFile;"));
     });
   });
   group('Test for generateDateToJson', () {

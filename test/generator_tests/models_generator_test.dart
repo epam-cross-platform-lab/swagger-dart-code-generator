@@ -519,8 +519,8 @@ void main() {
       };
 
       const className = 'Animals';
-      const jsonKeyExpectedResult = "\t@JsonKey(name: '\$With')\n";
-      const fieldExpectedResult = 'final Pet? \$With';
+      const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
+      const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(
           carsService,
           map,
