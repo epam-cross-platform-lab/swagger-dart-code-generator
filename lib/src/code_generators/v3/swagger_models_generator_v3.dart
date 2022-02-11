@@ -42,7 +42,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
             .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
         : <String>[];
 
-    responses.keys.forEach((key) {
+    for (var key in responses.keys) {
       if (!allModelNames.contains(key)) {
         final response = responses[key] as Map<String, dynamic>?;
 
@@ -60,7 +60,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
           result.addAll({key: schema});
         }
       }
-    });
+    }
 
     return generateBase(dartCode, fileName, options, result, false);
   }
@@ -138,7 +138,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
             .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
         : <String>[];
 
-    requestBodies.keys.forEach((key) {
+    for (var key in requestBodies.keys) {
       if (!allModelNames.contains(key)) {
         final response = requestBodies[key] as Map<String, dynamic>?;
 
@@ -156,7 +156,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
           result.addAll({key: schema});
         }
       }
-    });
+    }
 
     return generateBase(dartCode, fileName, options, result, false);
   }

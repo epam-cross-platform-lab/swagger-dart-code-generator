@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:collection/src/iterable_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
@@ -219,9 +219,9 @@ abstract class SwaggerModelsGenerator {
 
     final listEnums = getAllListEnumNames(dartCode);
 
-    listEnums.forEach((listEnum) {
+    for (var listEnum in listEnums) {
       results = results.replaceAll(' $listEnum ', ' List<$listEnum> ');
-    });
+    }
 
     return results;
   }
@@ -370,11 +370,11 @@ abstract class SwaggerModelsGenerator {
 
     jsonKey = jsonKey.camelCase;
 
-    forbiddenCharacters.forEach((String element) {
+    for (var element in forbiddenCharacters) {
       if (jsonKey.startsWith(element)) {
         jsonKey = '\$forbiddenFieldName';
       }
-    });
+    }
 
     if (jsonKey.startsWith(RegExp('[0-9]')) ||
         exceptionWords.contains(jsonKey)) {

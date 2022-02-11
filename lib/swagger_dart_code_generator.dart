@@ -43,7 +43,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   result[kAdditionalResult] = [];
 
-  allFilesPaths.forEach((url) {
+  for (var url in allFilesPaths) {
     final name = getFileNameBase(url.split('/').last);
     result[kAdditionalResult]!.add(join(out, '$name$_outputFileExtension'));
     result[kAdditionalResult]!
@@ -52,12 +52,12 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputModelsFileExtension'));
     result[kAdditionalResult]!
         .add(join(out, '$name$_outputResponsesFileExtension'));
-  });
+  }
 
-  options.inputUrls.forEach((url) {
+  for (var url in options.inputUrls) {
     result[kAdditionalResult]!
         .add(join(normalize(options.inputFolder), url.split('/').last));
-  });
+  }
 
   ///Register additional outputs in first input
   result[kAdditionalResult]!.add(join(out, _indexFileName));
@@ -91,7 +91,7 @@ class SwaggerDartCodeGenerator implements Builder {
       await buildStep.writeAsString(
           AssetId(
             buildStep.inputId.package,
-            join(options.inputFolder, '$fileNameWithExtension'),
+            join(options.inputFolder, fileNameWithExtension),
           ),
           contents);
     }

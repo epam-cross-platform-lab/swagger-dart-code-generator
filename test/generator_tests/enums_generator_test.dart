@@ -23,7 +23,7 @@ void main() {
 
     test('Should generate enum from request parameter', () {
       final result =
-          generator.generate(request_with_enum_in_parameter, 'test_file');
+          generator.generate(requestWithRnumInParameter, 'test_file');
 
       expect(result, contains('enum V3OrderOrderIdStatePutOrderStateRequest'));
     });
@@ -68,13 +68,13 @@ void main() {
 
     test('Should remove numbers at beginning if it is key word', () {
       final result =
-          SwaggerEnumsGenerator.getEnumNamesFromRequests(request_with_enum);
+          SwaggerEnumsGenerator.getEnumNamesFromRequests(requestWithEnum);
       expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
       final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(
-          request_with_list_of_enum_in_parameter);
+          requestWithListOfEnumInParameter);
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });

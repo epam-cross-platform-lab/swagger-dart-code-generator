@@ -187,19 +187,19 @@ class SwaggerRequestsGenerator {
     final results = <String>[];
 
     ///Models from parameters
-    request.parameters.forEach((parameter) {
+    for (var parameter in request.parameters) {
       final ref = parameter.anyRef;
 
       if (ref.isNotEmpty) {
         final schema = root.allSchemas[ref.getUnformattedRef()];
 
         if (schema == null || schema.type != kObject) {
-          return;
+          continue;
         }
 
         results.add(ref.getRef());
       }
-    });
+    }
 
     //Models from response
 

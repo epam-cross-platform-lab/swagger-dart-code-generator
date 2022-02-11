@@ -14,7 +14,7 @@ abstract class SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
-  String generate(String swagger, String fileName);
+  String generate(String dartCode, String fileName);
 
   String generateFromMap(
       String dartCode,
@@ -249,7 +249,7 @@ $enumMap
     final result = <String>[];
     final resultStrings = <String>[];
 
-    enumValues.forEach((value) {
+    for (var value in enumValues) {
       var validatedValue = getValidatedEnumFieldName(value);
 
       while (result.contains(validatedValue)) {
@@ -265,7 +265,7 @@ $enumMap
         resultStrings.add(
             "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
       }
-    });
+    }
 
     return resultStrings.join(',\n');
   }
@@ -274,7 +274,7 @@ $enumMap
     final neededStrings = <String>[];
     final fields = <String>[];
 
-    enumValues.forEach((value) {
+    for (var value in enumValues) {
       var validatedValue = getValidatedEnumFieldName(value);
 
       while (fields.contains(validatedValue)) {
@@ -284,7 +284,7 @@ $enumMap
       fields.add(validatedValue);
       neededStrings.add(
           '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-    });
+    }
 
     return neededStrings.join(',\n');
   }
