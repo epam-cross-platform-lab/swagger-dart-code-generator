@@ -35,7 +35,7 @@ build/
 *.swagger
 *.test_coverage.dart
 lcov.info
-!example_swagger.swagger
+!pet_service_swagger.swagger
 doc/
 
 # Android related
