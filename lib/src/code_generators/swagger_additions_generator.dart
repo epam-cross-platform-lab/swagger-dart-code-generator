@@ -12,7 +12,8 @@ class SwaggerAdditionsGenerator {
           .split('/')
           .last
           .replaceAll('-', '_')
-          .replaceAll('.json', '.swagger');
+          .replaceAll('.json', '.swagger')
+          .replaceAll('.yaml', '.swagger');
       final className = getClassNameFromFileName(key.split('/').last);
 
       return 'export \'$fileName.dart\' show $className;';

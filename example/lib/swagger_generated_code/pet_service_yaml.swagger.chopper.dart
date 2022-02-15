@@ -1,20 +1,20 @@
 //Generated code
 
-part of 'pets_api.swagger.dart';
+part of 'pet_service_yaml.swagger.dart';
 
 // **************************************************************************
 // ChopperGenerator
 // **************************************************************************
 
-// ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
-class _$PetsApi extends PetsApi {
-  _$PetsApi([ChopperClient? client]) {
+// ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations, unnecessary_brace_in_string_interps
+class _$PetServiceYaml extends PetServiceYaml {
+  _$PetServiceYaml([ChopperClient? client]) {
     if (client == null) return;
     this.client = client;
   }
 
   @override
-  final definitionType = PetsApi;
+  final definitionType = PetServiceYaml;
 
   @override
   Future<Response<dynamic>> _petPost({required Pet? body}) {
@@ -50,7 +50,7 @@ class _$PetsApi extends PetsApi {
 
   @override
   Future<Response<Pet>> _petPetIdGet({required int? petId, String? apiKey}) {
-    final $url = '/pet/$petId';
+    final $url = '/pet/${petId}';
     final $headers = {
       if (apiKey != null) 'api_key': apiKey,
     };
@@ -62,7 +62,7 @@ class _$PetsApi extends PetsApi {
   @override
   Future<Response<dynamic>> _petPetIdPost(
       {required int? petId, String? name, String? status}) {
-    final $url = '/pet/$petId';
+    final $url = '/pet/${petId}';
     final $body = <String, dynamic>{'name': name, 'status': status};
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -71,7 +71,7 @@ class _$PetsApi extends PetsApi {
   @override
   Future<Response<dynamic>> _petPetIdDelete(
       {String? apiKey, required int? petId}) {
-    final $url = '/pet/$petId';
+    final $url = '/pet/${petId}';
     final $headers = {
       if (apiKey != null) 'api_key': apiKey,
     };
@@ -83,7 +83,7 @@ class _$PetsApi extends PetsApi {
   @override
   Future<Response<ApiResponse>> _petPetIdUploadImagePost(
       {required int? petId, String? additionalMetadata, List<String>? file}) {
-    final $url = '/pet/$petId/uploadImage';
+    final $url = '/pet/${petId}/uploadImage';
     final $body = <String, dynamic>{
       'additionalMetadata': additionalMetadata,
       'file': file
@@ -113,14 +113,14 @@ class _$PetsApi extends PetsApi {
 
   @override
   Future<Response<Order>> _storeOrderOrderIdGet({required int? orderId}) {
-    final $url = '/store/order/$orderId';
+    final $url = '/store/order/${orderId}';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<Order, Order>($request);
   }
 
   @override
   Future<Response<dynamic>> _storeOrderOrderIdDelete({required int? orderId}) {
-    final $url = '/store/order/$orderId';
+    final $url = '/store/order/${orderId}';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -172,7 +172,7 @@ class _$PetsApi extends PetsApi {
 
   @override
   Future<Response<User>> _userUsernameGet({required String? username}) {
-    final $url = '/user/$username';
+    final $url = '/user/${username}';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<User, User>($request);
   }
@@ -180,7 +180,7 @@ class _$PetsApi extends PetsApi {
   @override
   Future<Response<dynamic>> _userUsernamePut(
       {required String? username, required User? body}) {
-    final $url = '/user/$username';
+    final $url = '/user/${username}';
     final $body = body;
     final $request = Request('PUT', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -188,7 +188,7 @@ class _$PetsApi extends PetsApi {
 
   @override
   Future<Response<dynamic>> _userUsernameDelete({required String? username}) {
-    final $url = '/user/$username';
+    final $url = '/user/${username}';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }

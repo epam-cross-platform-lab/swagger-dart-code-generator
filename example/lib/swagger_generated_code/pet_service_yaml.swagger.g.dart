@@ -1,23 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pets_api.swagger.dart';
+part of 'pet_service_yaml.swagger.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Order _$OrderFromJson(Map<String, dynamic> json) {
-  return Order(
-    id: json['id'] as num?,
-    petId: json['petId'] as num?,
-    quantity: json['quantity'] as int?,
-    shipDate: json['shipDate'] == null
-        ? null
-        : DateTime.parse(json['shipDate'] as String),
-    status: orderStatusFromJson(json['status']),
-    complete: json['complete'] as bool? ?? false,
-  );
-}
+Order _$OrderFromJson(Map<String, dynamic> json) => Order(
+      id: json['id'] as num?,
+      petId: json['petId'] as num?,
+      quantity: json['quantity'] as int?,
+      shipDate: json['shipDate'] == null
+          ? null
+          : DateTime.parse(json['shipDate'] as String),
+      status: orderStatusFromJson(json['status']),
+      complete: json['complete'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$OrderToJson(Order instance) {
   final val = <String, dynamic>{};
@@ -37,12 +35,10 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
   return val;
 }
 
-Category _$CategoryFromJson(Map<String, dynamic> json) {
-  return Category(
-    id: json['id'] as num?,
-    name: json['name'] as String? ?? '',
-  );
-}
+Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
+      id: json['id'] as num?,
+      name: json['name'] as String? ?? '',
+    );
 
 Map<String, dynamic> _$CategoryToJson(Category instance) {
   final val = <String, dynamic>{};
@@ -58,18 +54,16 @@ Map<String, dynamic> _$CategoryToJson(Category instance) {
   return val;
 }
 
-User _$UserFromJson(Map<String, dynamic> json) {
-  return User(
-    id: json['id'] as num?,
-    username: json['username'] as String? ?? '',
-    firstName: json['firstName'] as String? ?? '',
-    lastName: json['lastName'] as String? ?? '',
-    email: json['email'] as String? ?? '',
-    password: json['password'] as String? ?? '',
-    phone: json['phone'] as String? ?? '',
-    userStatus: json['userStatus'] as int?,
-  );
-}
+User _$UserFromJson(Map<String, dynamic> json) => User(
+      id: json['id'] as num?,
+      username: json['username'] as String? ?? '',
+      firstName: json['firstName'] as String? ?? '',
+      lastName: json['lastName'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      password: json['password'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      userStatus: json['userStatus'] as int?,
+    );
 
 Map<String, dynamic> _$UserToJson(User instance) {
   final val = <String, dynamic>{};
@@ -91,12 +85,10 @@ Map<String, dynamic> _$UserToJson(User instance) {
   return val;
 }
 
-Tag _$TagFromJson(Map<String, dynamic> json) {
-  return Tag(
-    id: json['id'] as num?,
-    name: json['name'] as String? ?? '',
-  );
-}
+Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
+      id: json['id'] as num?,
+      name: json['name'] as String? ?? '',
+    );
 
 Map<String, dynamic> _$TagToJson(Tag instance) {
   final val = <String, dynamic>{};
@@ -112,24 +104,22 @@ Map<String, dynamic> _$TagToJson(Tag instance) {
   return val;
 }
 
-Pet _$PetFromJson(Map<String, dynamic> json) {
-  return Pet(
-    id: json['id'] as num?,
-    category: json['category'] == null
-        ? null
-        : Category.fromJson(json['category'] as Map<String, dynamic>),
-    name: json['name'] as String? ?? '',
-    photoUrls: (json['photoUrls'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList() ??
-        [],
-    tags: (json['tags'] as List<dynamic>?)
-            ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
-            .toList() ??
-        [],
-    status: petStatusFromJson(json['status']),
-  );
-}
+Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
+      id: json['id'] as num?,
+      category: json['category'] == null
+          ? null
+          : Category.fromJson(json['category'] as Map<String, dynamic>),
+      name: json['name'] as String? ?? '',
+      photoUrls: (json['photoUrls'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      tags: (json['tags'] as List<dynamic>?)
+              ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      status: petStatusFromJson(json['status']),
+    );
 
 Map<String, dynamic> _$PetToJson(Pet instance) {
   final val = <String, dynamic>{};
@@ -149,13 +139,11 @@ Map<String, dynamic> _$PetToJson(Pet instance) {
   return val;
 }
 
-ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) {
-  return ApiResponse(
-    code: json['code'] as int?,
-    type: json['type'] as String? ?? '',
-    message: json['message'] as String? ?? '',
-  );
-}
+ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
+      code: json['code'] as int?,
+      type: json['type'] as String? ?? '',
+      message: json['message'] as String? ?? '',
+    );
 
 Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) {
   final val = <String, dynamic>{};
