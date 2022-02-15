@@ -970,7 +970,9 @@ abstract class SwaggerModelsGenerator {
       Map<String, dynamic> rootMap) {
     final result = <String, String>{};
 
-    final components = rootMap['components'] as Map<String, dynamic>? ?? {};
+    final map = Map.from(rootMap);
+
+    final components = map['components'] as Map<String, dynamic>? ?? {};
 
     final definitions = rootMap['definitions'] as Map<String, dynamic>? ?? {};
 
@@ -978,10 +980,13 @@ abstract class SwaggerModelsGenerator {
 
     final responses = components['responses'] as Map<String, dynamic>? ?? {};
 
-    schemas.addAll(definitions);
-    schemas.addAll(responses);
+    final allClasses = {
+      ...definitions,
+      ...responses,
+      ...schemas,
+    };
 
-    schemas.forEach((key, value) {
+    allClasses.forEach((key, value) {
       if (kBasicTypes.contains(value['type'].toString().toLowerCase()) &&
           value['enum'] == null) {
         result.addAll({
