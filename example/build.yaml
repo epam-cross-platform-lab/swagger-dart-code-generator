@@ -4,6 +4,7 @@ targets:
       - lib/**
       - swaggers/**
       - swaggers2/**
+      - input_folder/**
       - swagger_examples/**
       - $package$
     builders:
@@ -12,11 +13,8 @@ targets:
           header: "//Generated code"
       swagger_dart_code_generator:
         options:
-          input_folder: "lib/"
+          input_folder: "input_folder/"
           output_folder: "lib/swagger_generated_code/"
-          use_inheritance: false
-          input_urls:
-            - "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/lib/example_swagger.json"
           with_base_url: true
           with_converter: true
           use_path_for_request_names: true

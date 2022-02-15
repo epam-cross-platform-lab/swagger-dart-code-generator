@@ -2,30 +2,32 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 
 import 'package:chopper/chopper.dart';
+import 'dart:convert';
+
 import 'client_mapping.dart';
 import 'package:chopper/chopper.dart' as chopper;
-import 'example_swagger.enums.swagger.dart' as enums;
-export 'example_swagger.enums.swagger.dart';
+import 'pet_service_json.enums.swagger.dart' as enums;
+export 'pet_service_json.enums.swagger.dart';
 
-part 'example_swagger.swagger.chopper.dart';
-part 'example_swagger.swagger.g.dart';
+part 'pet_service_json.swagger.chopper.dart';
+part 'pet_service_json.swagger.g.dart';
 
 // **************************************************************************
 // SwaggerChopperGenerator
 // **************************************************************************
 
 @ChopperApi()
-abstract class ExampleSwagger extends ChopperService {
-  static ExampleSwagger create({ChopperClient? client, String? baseUrl}) {
+abstract class PetServiceJson extends ChopperService {
+  static PetServiceJson create({ChopperClient? client, String? baseUrl}) {
     if (client != null) {
-      return _$ExampleSwagger(client);
+      return _$PetServiceJson(client);
     }
 
     final newClient = ChopperClient(
-        services: [_$ExampleSwagger()],
+        services: [_$PetServiceJson()],
         converter: $JsonSerializableConverter(),
         baseUrl: baseUrl ?? 'http://petstore.swagger.io/v2');
-    return _$ExampleSwagger(newClient);
+    return _$PetServiceJson(newClient);
   }
 
   ///Add a new pet to the store
@@ -350,6 +352,9 @@ class Order {
   Map<String, dynamic> toJson() => _$OrderToJson(this);
 
   @override
+  String toString() => jsonEncode(this);
+
+  @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is Order &&
@@ -418,6 +423,9 @@ class Category {
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 
   @override
+  String toString() => jsonEncode(this);
+
+  @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is Category &&
@@ -474,6 +482,9 @@ class User {
   static const fromJsonFactory = _$UserFromJson;
   static const toJsonFactory = _$UserToJson;
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  @override
+  String toString() => jsonEncode(this);
 
   @override
   bool operator ==(dynamic other) {
@@ -555,6 +566,9 @@ class Tag {
   Map<String, dynamic> toJson() => _$TagToJson(this);
 
   @override
+  String toString() => jsonEncode(this);
+
+  @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is Tag &&
@@ -609,6 +623,9 @@ class Pet {
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
   Map<String, dynamic> toJson() => _$PetToJson(this);
+
+  @override
+  String toString() => jsonEncode(this);
 
   @override
   bool operator ==(dynamic other) {
@@ -679,6 +696,9 @@ class ApiResponse {
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
   Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
+
+  @override
+  String toString() => jsonEncode(this);
 
   @override
   bool operator ==(dynamic other) {

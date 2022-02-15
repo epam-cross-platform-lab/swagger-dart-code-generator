@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
@@ -8,9 +10,11 @@ void main() {
   group('Additions generator tests', () {
     final generator = SwaggerRequestsGenerator();
 
+    final map = jsonDecode(carsService) as Map<String, dynamic>;
+
     test('Should generate CarsApi', () {
       final result = generator.generate(
-        code: carsService,
+        map: map,
         className: 'CarsService',
         fileName: 'cars_service',
         options: GeneratorOptions(
@@ -28,7 +32,7 @@ void main() {
       );
 
       final result2 = generator.generate(
-        code: carsService,
+        map: map,
         className: 'CarsService',
         fileName: 'cars_service',
         options: GeneratorOptions(

@@ -13,17 +13,18 @@ import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'constants.dart';
 
 abstract class SwaggerModelsGenerator {
-  String generate(String dartCode, String fileName, GeneratorOptions options);
+  String generate(
+      Map<String, dynamic> map, String fileName, GeneratorOptions options);
   String generateResponses(
-      String dartCode, String fileName, GeneratorOptions options);
+      Map<String, dynamic> map, String fileName, GeneratorOptions options);
 
   String generateRequestBodies(
-      String dartCode, String fileName, GeneratorOptions options);
+      Map<String, dynamic> map, String fileName, GeneratorOptions options);
   String getExtendsString(Map<String, dynamic> map);
-  List<String> getAllListEnumNames(String swaggerFile);
+  List<String> getAllListEnumNames(Map<String, dynamic> map);
 
   String generateModelClassContent(
-      String swaggerFile,
+      Map<String, dynamic> rootMap,
       String className,
       Map<String, dynamic> map,
       Map<String, dynamic> schemas,
@@ -51,7 +52,7 @@ abstract class SwaggerModelsGenerator {
     }
 
     return generateModelClassString(
-      swaggerFile,
+      rootMap,
       className,
       map,
       schemas,
@@ -100,12 +101,12 @@ abstract class SwaggerModelsGenerator {
   }
 
   static Map<String, dynamic> getClassesFromResponses(
-      String dartCode, GeneratorOptions options) {
-    final swagger = jsonDecode(dartCode);
-
+    Map<String, dynamic> map,
+    GeneratorOptions options,
+  ) {
     final results = <String, dynamic>{};
 
-    final paths = swagger['paths'] as Map<String, dynamic>?;
+    final paths = map['paths'] as Map<String, dynamic>?;
     if (paths == null) {
       return results;
     }
@@ -172,20 +173,20 @@ abstract class SwaggerModelsGenerator {
   }
 
   String generateBase(
-      String dartCode,
+      Map<String, dynamic> map,
       String fileName,
       GeneratorOptions options,
       Map<String, dynamic> classes,
       bool generateFromJsonToJsonForRequests) {
-    final allEnumsNames = getAllEnumNames(dartCode);
-    final allEnumListNames = getAllListEnumNames(dartCode);
+    final allEnumsNames = getAllEnumNames(map);
+    final allEnumListNames = getAllListEnumNames(map);
 
     final generatedEnumFromJsonToJson = generateFromJsonToJsonForRequests
         ? genetateEnumFromJsonToJsonMethods(
             allEnumsNames, options.enumsCaseSensitive)
         : '';
 
-    final classesFromResponses = getClassesFromResponses(dartCode, options);
+    final classesFromResponses = getClassesFromResponses(map, options);
     classes.addAll(classesFromResponses);
 
     final classesFromInnerClasses =
@@ -203,7 +204,7 @@ abstract class SwaggerModelsGenerator {
       }
 
       return generateModelClassContent(
-        dartCode,
+        map,
         className.pascalCase,
         classes[className] as Map<String, dynamic>,
         classes,
@@ -217,7 +218,7 @@ abstract class SwaggerModelsGenerator {
 
     var results = '$generatedClasses\n$generatedEnumFromJsonToJson';
 
-    final listEnums = getAllListEnumNames(dartCode);
+    final listEnums = getAllListEnumNames(map);
 
     for (var listEnum in listEnums) {
       results = results.replaceAll(' $listEnum ', ' List<$listEnum> ');
@@ -881,7 +882,7 @@ abstract class SwaggerModelsGenerator {
   }
 
   String generatePropertiesContent(
-      String swagger,
+      Map<String, dynamic> rootMap,
       Map<String, dynamic> propertiesMap,
       Map<String, dynamic> schemas,
       String className,
@@ -907,7 +908,7 @@ abstract class SwaggerModelsGenerator {
 
       final propertyKey = propertyName;
 
-      final basicTypesMap = generateBasicTypesMapFromSchemas(swagger);
+      final basicTypesMap = generateBasicTypesMapFromSchemas(rootMap);
 
       propertyName = propertyName.asParameterName();
 
@@ -966,23 +967,26 @@ abstract class SwaggerModelsGenerator {
   }
 
   static Map<String, String> generateBasicTypesMapFromSchemas(
-      String swaggerFile) {
+      Map<String, dynamic> rootMap) {
     final result = <String, String>{};
 
-    final swagger = jsonDecode(swaggerFile);
+    final map = Map.from(rootMap);
 
-    final components = swagger['components'] as Map<String, dynamic>? ?? {};
+    final components = map['components'] as Map<String, dynamic>? ?? {};
 
-    final definitions = swagger['definitions'] as Map<String, dynamic>? ?? {};
+    final definitions = rootMap['definitions'] as Map<String, dynamic>? ?? {};
 
     final schemas = components['schemas'] as Map<String, dynamic>? ?? {};
 
     final responses = components['responses'] as Map<String, dynamic>? ?? {};
 
-    schemas.addAll(definitions);
-    schemas.addAll(responses);
+    final allClasses = {
+      ...definitions,
+      ...responses,
+      ...schemas,
+    };
 
-    schemas.forEach((key, value) {
+    allClasses.forEach((key, value) {
       if (kBasicTypes.contains(value['type'].toString().toLowerCase()) &&
           value['enum'] == null) {
         result.addAll({
@@ -1123,7 +1127,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
   }
 
   String generateModelClassString(
-      String swaggerFile,
+      Map<String, dynamic> rootMap,
       String className,
       Map<String, dynamic> map,
       Map<String, dynamic> schemas,
@@ -1144,7 +1148,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     );
 
     final generatedProperties = generatePropertiesContent(
-      swaggerFile,
+      rootMap,
       properties,
       schemas,
       className,
@@ -1309,14 +1313,12 @@ $allHashComponents;
     return currentProperties;
   }
 
-  List<String> getAllEnumNames(String swaggerFile) {
-    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(swaggerFile);
+  List<String> getAllEnumNames(Map<String, dynamic> map) {
+    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
 
-    final swagger = jsonDecode(swaggerFile) as Map<String, dynamic>;
+    final components = map['components'] as Map<String, dynamic>?;
 
-    final components = swagger['components'] as Map<String, dynamic>?;
-
-    final definitions = swagger['definitions'] as Map<String, dynamic>? ?? {};
+    final definitions = map['definitions'] as Map<String, dynamic>? ?? {};
 
     final schemas = components == null
         ? <String, dynamic>{}
@@ -1332,7 +1334,7 @@ $allHashComponents;
         ? <String, dynamic>{}
         : components['requestBodies'] as Map<String, dynamic>? ?? {};
 
-    final moreRequestBodies = getRequestBodiesFromRequests(swagger);
+    final moreRequestBodies = getRequestBodiesFromRequests(map);
 
     requestBodies.addAll(moreRequestBodies);
 

@@ -1,7 +1,7 @@
-import 'swagger_generated_code/example_swagger.swagger.dart';
+import 'package:example/swagger_generated_code/pet_service_yaml.swagger.dart';
 
 void main() async {
-  final petsApi = ExampleSwagger.create();
+  final petsApi = PetServiceYaml.create();
 
   final postResult = await petsApi.petPost(
     body: Pet(

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
@@ -14,16 +13,15 @@ abstract class SwaggerEnumsGenerator {
   static const String defaultEnumFieldName = 'value_';
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
-  String generate(String dartCode, String fileName);
+  String generate(Map<String, dynamic> map, String fileName);
 
   String generateFromMap(
-      String dartCode,
+      Map<String, dynamic> map,
       String fileName,
       Map<String, dynamic> definitions,
       Map<String, dynamic> responses,
       Map<String, dynamic> requestBodies) {
-    final enumsFromRequests =
-        generateEnumsContentFromRequests(dartCode, fileName);
+    final enumsFromRequests = generateEnumsContentFromRequests(map, fileName);
 
     final enumsFromResponses = generateEnumsFromResponses(responses);
 
@@ -142,10 +140,10 @@ $enumsFromRequestBodies
     return neededParameter;
   }
 
-  String generateEnumsContentFromRequests(String swagger, String fileName) {
+  String generateEnumsContentFromRequests(
+      Map<String, dynamic> map, String fileName) {
     final enumNames = <String>[];
     final result = StringBuffer();
-    final map = jsonDecode(swagger) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
     final definedParameters = <String, SwaggerRequestParameter>{};
@@ -321,9 +319,8 @@ $enumMap
     return result.lower;
   }
 
-  static List<String> getEnumNamesFromRequests(String swagger) {
+  static List<String> getEnumNamesFromRequests(Map<String, dynamic> map) {
     final enumNames = <String>[];
-    final map = jsonDecode(swagger) as Map<String, dynamic>;
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
     //Link defined parameters with requests
