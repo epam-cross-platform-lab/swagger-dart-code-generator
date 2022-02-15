@@ -14,8 +14,7 @@ void main() {
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
-      final map =
-          jsonDecode(schemasResponsesWithResponse) as Map<String, dynamic>;
+      final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
       final result = generator.generate(
           map, fileName, GeneratorOptions(inputFolder: '', outputFolder: ''));
 
