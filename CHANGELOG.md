@@ -1,3 +1,9 @@
+# 2.4.1
+
+* Fixed cases when class has name `Query` ([#343](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/343))
+* Fixed cases when we have class and field named `class` and it's enum ([#283](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/283))
+* Fixed names duplication when generator generates list of outputs
+
 # 2.4.0
 
 * Downgraded `path` dependency
