@@ -1,3 +1,7 @@
+# 2.4.0
+
+* Downgraded `path` dependency
+
 # 2.4.0-prerelease.5
 
 * :partying_face: Implemented yaml format support :partying_face: ([#337](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/337))

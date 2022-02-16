@@ -784,7 +784,7 @@ abstract class SwaggerModelsGenerator {
     } else {
       typeName = getParameterTypeName(
         className,
-        propertyName,
+        propertyKey,
         val,
         options.modelPostfix,
         null,

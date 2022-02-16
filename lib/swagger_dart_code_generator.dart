@@ -30,7 +30,7 @@ String normal(String path) {
 }
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
-  final result = <String, List<String>>{};
+  final result = <String, Set<String>>{};
 
   final filesList = Directory(normalize(options.inputFolder)).listSync().where(
       (FileSystemEntity file) =>
@@ -47,10 +47,11 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     ...filesList.map((e) => e.path),
   ];
 
-  result[additionalResultPath] = [];
+  result[additionalResultPath] = {};
 
   for (var url in allFilesPaths) {
     final name = getFileNameBase(url.split('/').last);
+
     result[additionalResultPath]!.add(join(out, '$name$_outputFileExtension'));
     result[additionalResultPath]!
         .add(join(out, '$name$_outputEnumsFileExtension'));
@@ -68,7 +69,9 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   ///Register additional outputs in first input
   result[additionalResultPath]!.add(join(out, _indexFileName));
   result[additionalResultPath]!.add(join(out, _mappingFileName));
-  return result;
+  print(jsonEncode(allFilesPaths));
+
+  return result.map((key, value) => MapEntry(key, value.toList()));
 }
 
 ///Root library entry
@@ -286,10 +289,6 @@ $dateToJson
 
     final indexAssetId =
         AssetId(inputId.package, join(options.outputFolder, _indexFileName));
-
-    //final additionalResultPath = '${options.inputFolder}$kAdditionalResult';
-
-    //allFiles.remove(additionalResultPath);
 
     final imports = codeGenerator.generateIndexes(allFiles);
 
