@@ -210,7 +210,7 @@ class SwaggerDartCodeGenerator implements Builder {
               options.separateModels ? '' : responses,
               options.separateModels ? '' : requestBodies,
               customDecoder,
-              dateToJson));
+              options.separateModels ? '' : dateToJson));
     }
 
     if (enums.isNotEmpty) {
@@ -232,6 +232,7 @@ class SwaggerDartCodeGenerator implements Builder {
         responses,
         requestBodies,
         fileNameWithoutExtension,
+        dateToJson,
         enums.isNotEmpty,
       ));
 
@@ -311,6 +312,7 @@ $dateToJson
     String responses,
     String requestBodies,
     String fileNameWithoutExtension,
+    String dateToJson,
     bool hasEnums,
   ) {
     final enumsImport = hasEnums
@@ -320,6 +322,7 @@ $dateToJson
     return '''
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
+import 'dart:convert';
 $enumsImport
 
     part '$fileNameWithoutExtension.models.swagger.g.dart';
@@ -329,6 +332,8 @@ $enumsImport
     $responses
 
     $requestBodies
+
+    $dateToJson
     ''';
   }
 }
