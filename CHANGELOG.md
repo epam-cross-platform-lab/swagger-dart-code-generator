@@ -1,9 +1,6 @@
-# 2.4.3
-
-* Added linter rule `ignore_for_file` for generated files ([#350](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/350))
-
 # 2.4.2
 
+* Added linter rule `ignore_for_file` for generated files ([#350](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/350))
 * Fixed `dateToJson` generation when `separateModels=true` ([#347](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/347))
 # 2.4.1
 
