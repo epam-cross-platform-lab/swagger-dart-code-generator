@@ -59,6 +59,8 @@ import 'package:chopper/chopper.dart' as chopper;''';
 
     if (hasModels && !separateModels) {
       result.writeln("""
+// ignore_for_file: type=lint
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 """);
