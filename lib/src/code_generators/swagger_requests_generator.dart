@@ -84,6 +84,12 @@ class SwaggerRequestsGenerator {
             ..type = Reference('String?')
             ..name = 'baseUrl',
         ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
+            ..type = Reference('Iterable<dynamic>?')
+            ..name = 'interceptors',
+        ))
         ..body = Code(body),
     );
   }

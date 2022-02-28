@@ -50,7 +50,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   result[additionalResultPath] = {};
 
   for (var url in allFilesPaths) {
-    final name = getFileNameBase(url.split('/').last);
+    final name = removeFileExtension(getFileNameBase(url));
 
     result[additionalResultPath]!.add(join(out, '$name$_outputFileExtension'));
     result[additionalResultPath]!
@@ -69,7 +69,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   ///Register additional outputs in first input
   result[additionalResultPath]!.add(join(out, _indexFileName));
   result[additionalResultPath]!.add(join(out, _mappingFileName));
-  print(jsonEncode(allFilesPaths));
 
   return result.map((key, value) => MapEntry(key, value.toList()));
 }
@@ -93,7 +92,7 @@ class SwaggerDartCodeGenerator implements Builder {
   @override
   Future<void> build(BuildStep buildStep) async {
     for (final url in options.inputUrls) {
-      final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
+      final fileNameWithExtension = getFileNameBase(url);
 
       final contents = await _download(url);
 
@@ -134,9 +133,10 @@ class SwaggerDartCodeGenerator implements Builder {
         contentMap = jsonDecode(contents) as Map<String, dynamic>;
       }
 
-      final fileNameWithExtension = url.split('/').last.replaceAll('-', '_');
+      final fileNameWithExtension = getFileNameBase(url);
 
-      final fileNameWithoutExtension = getFileNameBase(fileNameWithExtension);
+      final fileNameWithoutExtension =
+          removeFileExtension(fileNameWithExtension);
 
       await _generateAndWriteFile(
         contents: contentMap,
@@ -165,16 +165,16 @@ class SwaggerDartCodeGenerator implements Builder {
     final codeGenerator = SwaggerCodeGenerator();
 
     final models = codeGenerator.generateModels(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+        contents, removeFileExtension(fileNameWithExtension), options);
 
     final responses = codeGenerator.generateResponses(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+        contents, removeFileExtension(fileNameWithExtension), options);
 
     final requestBodies = codeGenerator.generateRequestBodies(
-        contents, getFileNameWithoutExtension(fileNameWithExtension), options);
+        contents, removeFileExtension(fileNameWithExtension), options);
 
     final enums = codeGenerator.generateEnums(
-        contents, getFileNameWithoutExtension(fileNameWithExtension));
+        contents, removeFileExtension(fileNameWithExtension));
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
@@ -187,11 +187,11 @@ class SwaggerDartCodeGenerator implements Builder {
     final requests = codeGenerator.generateRequests(
         contents,
         getClassNameFromFileName(fileNameWithExtension),
-        getFileNameWithoutExtension(fileNameWithExtension),
+        removeFileExtension(fileNameWithExtension),
         options);
 
     final customDecoder = codeGenerator.generateCustomJsonConverter(
-        getFileNameWithoutExtension(fileNameWithExtension), options);
+        removeFileExtension(fileNameWithExtension), options);
 
     final dateToJson = codeGenerator.generateDateToJson();
 
@@ -320,6 +320,8 @@ $dateToJson
         : '';
 
     return '''
+// ignore_for_file: type=lint
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
