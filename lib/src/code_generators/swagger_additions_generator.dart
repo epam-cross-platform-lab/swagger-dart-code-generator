@@ -8,13 +8,12 @@ class SwaggerAdditionsGenerator {
   ///Generates index.dart for all generated services
   String generateIndexes(List<String> fileNames) {
     final importsList = fileNames.map((key) {
-      final fileName = key
-          .split('/')
-          .last
+      final actualFileName = getFileNameBase(key);
+      final fileName = actualFileName
           .replaceAll('-', '_')
           .replaceAll('.json', '.swagger')
           .replaceAll('.yaml', '.swagger');
-      final className = getClassNameFromFileName(key.split('/').last);
+      final className = getClassNameFromFileName(actualFileName);
 
       return 'export \'$fileName.dart\' show $className;';
     }).toList();
@@ -198,6 +197,7 @@ final \$jsonDecoder = \$CustomJsonDecoder(generatedMapping);
     final newClient = ChopperClient(
       services: [_\$$className()],
       $converterString
+      interceptors: interceptors ?? [],
       $baseUrlString);
     return _\$$className(newClient);
 ''';
