@@ -1,3 +1,6 @@
+# 2.4.3
+
+* Rid of generation temp file while generation in process ([#352](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/352))
 # 2.4.2
 
 * Added linter rule `ignore_for_file` for generated files ([#350](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/350))
