@@ -23,10 +23,29 @@ const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
-const kAdditionalResult = 'swagger_dart_code_generator_temp.dart';
+
+String additionalResultPath = '';
 
 String normal(String path) {
   return AssetId('', path).path;
+}
+
+String _getAdditionalResultPath(GeneratorOptions options) {
+  final filesList = Directory(normalize(options.inputFolder)).listSync();
+
+  if (filesList.isNotEmpty) {
+    return filesList.first.path;
+  }
+
+  final urlList = options.inputUrls;
+  if (urlList.isNotEmpty) {
+    final path =
+        normalize('${options.inputFolder}${getFileNameBase(urlList.first)}');
+    File(path).createSync();
+    return path;
+  }
+
+  return Directory(normalize(options.inputFolder)).listSync().first.path;
 }
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
@@ -36,7 +55,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
       (FileSystemEntity file) =>
           _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
-  final additionalResultPath = '${options.inputFolder}$kAdditionalResult';
+  additionalResultPath = _getAdditionalResultPath(options);
 
   File(additionalResultPath).createSync();
 
@@ -59,11 +78,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputModelsFileExtension'));
     result[additionalResultPath]!
         .add(join(out, '$name$_outputResponsesFileExtension'));
-  }
-
-  for (var url in options.inputUrls) {
-    result[additionalResultPath]!
-        .add(join(normalize(options.inputFolder), url.split('/').last));
   }
 
   ///Register additional outputs in first input
@@ -96,12 +110,9 @@ class SwaggerDartCodeGenerator implements Builder {
 
       final contents = await _download(url);
 
-      await buildStep.writeAsString(
-          AssetId(
-            buildStep.inputId.package,
-            join(options.inputFolder, fileNameWithExtension),
-          ),
-          contents);
+      final filePath = join(options.inputFolder, fileNameWithExtension);
+      await File(filePath).create();
+      await File(filePath).writeAsString(contents);
     }
 
     final filesList = Directory(normalize(options.inputFolder))
@@ -112,10 +123,6 @@ class SwaggerDartCodeGenerator implements Builder {
         .toList();
 
     await _generateAndWriteFiles(buildStep, filesList);
-
-    final additionalResultPath = '${options.inputFolder}$kAdditionalResult';
-
-    File(additionalResultPath).deleteSync();
   }
 
   Future<void> _generateAndWriteFiles(
