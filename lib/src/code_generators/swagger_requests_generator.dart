@@ -208,7 +208,7 @@ class SwaggerRequestsGenerator {
 
     final neededResponse = response.removeListOrStream();
     if (!kBasicTypes.contains(neededResponse)) {
-      results.add(neededResponse);
+      results.add(SwaggerModelsGenerator.getValidatedClassName(neededResponse));
     }
 
     return results.where((element) => _isValidModelName(element)).toList();
