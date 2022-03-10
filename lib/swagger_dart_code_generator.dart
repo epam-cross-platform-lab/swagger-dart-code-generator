@@ -55,7 +55,8 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
       (FileSystemEntity file) =>
           _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
-  additionalResultPath = _getAdditionalResultPath(options);
+  additionalResultPath =
+      _getAdditionalResultPath(options).replaceAll('\\', '/');
 
   File(additionalResultPath).createSync();
 
