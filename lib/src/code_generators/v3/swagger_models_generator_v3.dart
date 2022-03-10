@@ -84,7 +84,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         if (requestBody != null) {
           final content = requestBody['content'] as Map<String, dynamic>?;
           if (content != null) {
-            final appJson = content.values.first as Map<String, dynamic>?;
+            final appJson = content.values.firstOrNull as Map<String, dynamic>?;
             if (appJson != null) {
               final schema = appJson['schema'] as Map<String, dynamic>?;
 
