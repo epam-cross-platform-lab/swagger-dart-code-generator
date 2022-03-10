@@ -1502,7 +1502,7 @@ $allHashComponents;
           final requestBody = requestMap['requestBody'] as Map<String, dynamic>;
           final content = requestBody['content'] as Map<String, dynamic>?;
           if (content != null) {
-            final appJson = content.values.first as Map<String, dynamic>?;
+            final appJson = content.values.firstOrNull as Map<String, dynamic>?;
             if (appJson != null) {
               final schema = appJson['schema'] as Map<String, dynamic>?;
 

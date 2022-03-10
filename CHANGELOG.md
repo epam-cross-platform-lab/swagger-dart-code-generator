@@ -1,3 +1,8 @@
+# 2.4.4
+
+* Fixed responses named `Query` ([#343](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/343))
+* Fixed Bad state: no element on special swagger ([#355](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/355))
+
 # 2.4.3
 
 * Rid of generation temp file while generation in process ([#352](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/352))
