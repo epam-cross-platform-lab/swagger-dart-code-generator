@@ -20,7 +20,10 @@ part 'pet_service_yaml.swagger.g.dart';
 
 @ChopperApi()
 abstract class PetServiceYaml extends ChopperService {
-  static PetServiceYaml create({ChopperClient? client, String? baseUrl}) {
+  static PetServiceYaml create(
+      {ChopperClient? client,
+      String? baseUrl,
+      Iterable<dynamic>? interceptors}) {
     if (client != null) {
       return _$PetServiceYaml(client);
     }
@@ -28,6 +31,7 @@ abstract class PetServiceYaml extends ChopperService {
     final newClient = ChopperClient(
         services: [_$PetServiceYaml()],
         converter: $JsonSerializableConverter(),
+        interceptors: interceptors ?? [],
         baseUrl: baseUrl ?? 'http://petstore.swagger.io/v2');
     return _$PetServiceYaml(newClient);
   }
