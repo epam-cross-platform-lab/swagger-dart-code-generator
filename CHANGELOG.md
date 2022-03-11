@@ -1,3 +1,7 @@
+# 2.4.5
+
+* Fixed generation on Windows ([#354](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/354))
+
 # 2.4.4
 
 * Fixed responses named `Query` ([#343](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/343))
