@@ -25,6 +25,7 @@ class GeneratorOptions {
     this.includePaths = const [],
     this.excludePaths = const [],
     this.inputUrls = const [],
+    this.cutFromModelNames = '',
   });
 
   /// Build options from a JSON map.
@@ -66,6 +67,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool useDefaultNullForLists;
+
+  @JsonKey(defaultValue: '')
+  final String cutFromModelNames;
 
   @JsonKey(defaultValue: false)
   final bool buildOnlyModels;

@@ -1,17 +1,25 @@
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:collection/collection.dart';
 
-abstract class SwaggerEnumsGenerator {
+abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
+  final GeneratorOptions _options;
+
+  @override
+  GeneratorOptions get options => _options;
+
   static const String defaultEnumFieldName = 'value_';
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
+
+  SwaggerEnumsGenerator(this._options);
 
   String generate(Map<String, dynamic> map, String fileName);
 
@@ -35,7 +43,7 @@ abstract class SwaggerEnumsGenerator {
     final enumsFromClasses = definitions.keys
         .map((String className) {
           return generateEnumsFromClasses(
-            SwaggerModelsGenerator.getValidatedClassName(className.pascalCase),
+            getValidatedClassName(className.pascalCase),
             definitions[className] as Map<String, dynamic>,
             definitions,
           );
@@ -81,7 +89,7 @@ $enumsFromRequestBodies
           }
 
           return generateEnumsFromClasses(
-            SwaggerModelsGenerator.getValidatedClassName(className.pascalCase),
+            getValidatedClassName(className.pascalCase),
             schema as Map<String, dynamic>,
             {},
           );
@@ -111,7 +119,7 @@ $enumsFromRequestBodies
           }
 
           return generateEnumsFromClasses(
-            SwaggerModelsGenerator.getValidatedClassName(className.pascalCase),
+            getValidatedClassName(className.pascalCase),
             schema as Map<String, dynamic>,
             {},
           );
@@ -120,24 +128,6 @@ $enumsFromRequestBodies
         .join('\n');
 
     return enumsFromRequestBodies;
-  }
-
-  static SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(
-      SwaggerRequestParameter swaggerRequestParameter,
-      List<SwaggerRequestParameter> definedParameters) {
-    if (swaggerRequestParameter.ref.isEmpty || definedParameters.isEmpty) {
-      return swaggerRequestParameter;
-    }
-
-    final parameterClassName = swaggerRequestParameter.ref.split('/').last;
-
-    final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) =>
-            element.name == parameterClassName ||
-            element.key == parameterClassName,
-        orElse: () => swaggerRequestParameter);
-
-    return neededParameter;
   }
 
   String generateEnumsContentFromRequests(
@@ -177,10 +167,10 @@ $enumsFromRequestBodies
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = SwaggerModelsGenerator.generateRequestEnumName(
+          var name = generateRequestEnumName(
               path, requestType, swaggerRequestParameter.name);
 
-          name = SwaggerModelsGenerator.getValidatedClassName(name);
+          name = getValidatedClassName(name);
 
           if (enumNames.contains(name)) {
             continue;
@@ -319,52 +309,6 @@ $enumMap
     return result.lower;
   }
 
-  static List<String> getEnumNamesFromRequests(Map<String, dynamic> map) {
-    final enumNames = <String>[];
-    final swaggerRoot = SwaggerRoot.fromJson(map);
-
-    //Link defined parameters with requests
-    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
-      swaggerPath.requests.forEach((String req, SwaggerRequest swaggerRequest) {
-        swaggerRequest.parameters = swaggerRequest.parameters
-            .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverriddenRequestParameter(parameter,
-                    swaggerRoot.components?.parameters.values.toList() ?? []))
-            .toList();
-      });
-    });
-
-    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
-      swaggerPath.requests
-          .forEach((String requestType, SwaggerRequest swaggerRequest) {
-        if (swaggerRequest.parameters.isEmpty) {
-          return;
-        }
-
-        for (var p = 0; p < swaggerRequest.parameters.length; p++) {
-          final swaggerRequestParameter = swaggerRequest.parameters[p];
-
-          var name = SwaggerModelsGenerator.generateRequestEnumName(
-              path, requestType, swaggerRequestParameter.name);
-
-          if (enumNames.contains(name)) {
-            continue;
-          }
-
-          final enumValues = swaggerRequestParameter.schema?.enumValues ??
-              swaggerRequestParameter.items?.enumValues ??
-              [];
-
-          if (enumValues.isNotEmpty) {
-            enumNames.add(name);
-          }
-        }
-      });
-    });
-
-    return enumNames;
-  }
-
   String generateEnumsContentFromModelProperties(
       Map<String, dynamic> map, String className) {
     if (map.isEmpty) {
@@ -395,7 +339,7 @@ $enumMap
 
   String generateEnumContentIfPossible(
       Map<String, dynamic> map, String enumName) {
-    enumName = SwaggerModelsGenerator.getValidatedClassName(enumName);
+    enumName = getValidatedClassName(enumName);
 
     if (map['enum'] != null) {
       final enumValues =
@@ -441,11 +385,6 @@ $enumMap
     } else {
       return '';
     }
-  }
-
-  String generateEnumName(String className, String enumName) {
-    return SwaggerModelsGenerator.getValidatedClassName(
-        '${className.capitalize}_$enumName');
   }
 
   String generateEnumsFromClasses(

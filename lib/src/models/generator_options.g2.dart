@@ -52,6 +52,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           [],
+      cutFromModelNames: json['cut_from_model_names'] as String? ?? '',
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -69,6 +70,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'input_folder': instance.inputFolder,
       'output_folder': instance.outputFolder,
       'use_default_null_for_lists': instance.useDefaultNullForLists,
+      'cut_from_model_names': instance.cutFromModelNames,
       'build_only_models': instance.buildOnlyModels,
       'model_postfix': instance.modelPostfix,
       'default_values_map': instance.defaultValuesMap,

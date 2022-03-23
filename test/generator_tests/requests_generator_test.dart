@@ -8,45 +8,41 @@ import 'test_data.dart';
 
 void main() {
   group('Additions generator tests', () {
-    final generator = SwaggerRequestsGenerator();
-
     final map = jsonDecode(carsService) as Map<String, dynamic>;
 
     test('Should generate CarsApi', () {
-      final result = generator.generate(
+      final result = SwaggerRequestsGenerator(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        ignoreHeaders: true,
+        responseOverrideValueMap: [
+          ResponseOverrideValueMap(
+            method: 'get',
+            url: '/cars/schemaRefBody',
+            overriddenValue: 'String',
+          )
+        ],
+      )).generate(
         map: map,
         className: 'CarsService',
         fileName: 'cars_service',
-        options: GeneratorOptions(
-          inputFolder: '',
-          outputFolder: '',
-          ignoreHeaders: true,
-          responseOverrideValueMap: [
-            ResponseOverrideValueMap(
-              method: 'get',
-              url: '/cars/schemaRefBody',
-              overriddenValue: 'String',
-            )
-          ],
-        ),
       );
 
-      final result2 = generator.generate(
+      final result2 = SwaggerRequestsGenerator(GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          defaultHeaderValuesMap: [
+            DefaultHeaderValueMap(
+              defaultValue: '120',
+              headerName: 'id',
+            ),
+          ],
+          includePaths: [
+            'car'
+          ])).generate(
         map: map,
         className: 'CarsService',
         fileName: 'cars_service',
-        options: GeneratorOptions(
-            inputFolder: '',
-            outputFolder: '',
-            defaultHeaderValuesMap: [
-              DefaultHeaderValueMap(
-                defaultValue: '120',
-                headerName: 'id',
-              ),
-            ],
-            includePaths: [
-              'car'
-            ]),
       );
 
       expect(result2, contains('Future<chopper.Response<CarModel>>'));

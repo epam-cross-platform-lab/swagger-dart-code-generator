@@ -1,7 +1,6 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
@@ -15,12 +14,18 @@ import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.
 
 import 'constants.dart';
 
-class SwaggerRequestsGenerator {
+class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
+  final GeneratorOptions _options;
+
+  @override
+  GeneratorOptions get options => _options;
+
+  SwaggerRequestsGenerator(this._options);
+
   String generate({
     required Map<String, dynamic> map,
     required String className,
     required String fileName,
-    required GeneratorOptions options,
   }) {
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
@@ -28,7 +33,6 @@ class SwaggerRequestsGenerator {
       swaggerRoot,
       className,
       fileName,
-      options,
     );
 
     return service.accept(DartEmitter()).toString();
@@ -38,18 +42,15 @@ class SwaggerRequestsGenerator {
     SwaggerRoot swaggerRoot,
     String className,
     String fileName,
-    GeneratorOptions options,
   ) {
     final allMethodsContent = _getAllMethodsContent(
       swaggerRoot: swaggerRoot,
-      options: options,
     );
 
-    final chopperClient = SwaggerAdditionsGenerator.getChopperClientContent(
+    final chopperClient = getChopperClientContent(
       className,
       swaggerRoot.host,
       swaggerRoot.basePath,
-      options,
     );
 
     return Class(
@@ -96,7 +97,6 @@ class SwaggerRequestsGenerator {
 
   List<Method> _getAllMethodsContent({
     required SwaggerRoot swaggerRoot,
-    required GeneratorOptions options,
   }) {
     final methods = <Method>[];
 
@@ -119,10 +119,10 @@ class SwaggerRequestsGenerator {
         }
 
         final methodName = _getRequestMethodName(
-            requestType: requestType,
-            swaggerRequest: swaggerRequest,
-            path: path,
-            options: options);
+          requestType: requestType,
+          swaggerRequest: swaggerRequest,
+          path: path,
+        );
 
         final parameters = _getAllParameters(
           swaggerRequest: swaggerRequest,
@@ -132,7 +132,6 @@ class SwaggerRequestsGenerator {
           path: path,
           requestType: requestType,
           root: swaggerRoot,
-          options: options,
         );
 
         final returnTypeName = _getReturnTypeName(
@@ -160,7 +159,6 @@ class SwaggerRequestsGenerator {
           ..docs.add(_getCommentsForMethod(
             methodDescription: swaggerRequest.summary,
             parameters: swaggerRequest.parameters,
-            options: options,
           ))
           ..name = methodName
           ..annotations
@@ -208,7 +206,7 @@ class SwaggerRequestsGenerator {
 
     final neededResponse = response.removeListOrStream();
     if (!kBasicTypes.contains(neededResponse)) {
-      results.add(SwaggerModelsGenerator.getValidatedClassName(neededResponse));
+      results.add(getValidatedClassName(neededResponse));
     }
 
     return results.where((element) => _isValidModelName(element)).toList();
@@ -303,14 +301,12 @@ class SwaggerRequestsGenerator {
   String _getCommentsForMethod({
     required String methodDescription,
     required List<SwaggerRequestParameter> parameters,
-    required GeneratorOptions options,
   }) {
     final parametersComments = parameters
         .map((SwaggerRequestParameter parameter) => _createSummaryParameters(
               parameter.name,
               parameter.description,
               parameter.inParameter,
-              options,
             ));
 
     final formattedDescription = methodDescription.split('\n').join('\n///');
@@ -321,10 +317,10 @@ class SwaggerRequestsGenerator {
   }
 
   String _createSummaryParameters(
-      String parameterName,
-      String parameterDescription,
-      String inParameter,
-      GeneratorOptions options) {
+    String parameterName,
+    String parameterDescription,
+    String inParameter,
+  ) {
     if (inParameter == kHeader && options.ignoreHeaders) {
       return '';
     }
@@ -362,7 +358,7 @@ class SwaggerRequestsGenerator {
         .map((e) => e.replaceAll('}', '').replaceAll('{', '').pascalCase)
         .join();
 
-    final result = SwaggerModelsGenerator.getValidatedClassName(
+    final result = getValidatedClassName(
         '$pathString ${requestType.pascalCase} $parameterName');
 
     return result.asEnum();
@@ -464,7 +460,6 @@ class SwaggerRequestsGenerator {
     required String requestType,
     required String modelPostfix,
     required SwaggerRoot root,
-    required GeneratorOptions options,
     required SwaggerPath swaggerPath,
   }) {
     final definedParameters = <String, SwaggerRequestParameter>{};
@@ -492,7 +487,7 @@ class SwaggerRequestsGenerator {
               ..name = swaggerParameter.name.asParameterName()
               ..named = true
               ..required = swaggerParameter.isRequired &&
-                  _getHeaderDefaultValue(swaggerParameter, options) == null &&
+                  _getHeaderDefaultValue(swaggerParameter) == null &&
                   swaggerParameter.inParameter != kHeader
               ..type = Reference(
                 _getParameterTypeName(
@@ -507,7 +502,7 @@ class SwaggerRequestsGenerator {
               ..annotations.add(
                 _getParameterAnnotation(swaggerParameter),
               )
-              ..defaultTo = _getHeaderDefaultValue(swaggerParameter, options),
+              ..defaultTo = _getHeaderDefaultValue(swaggerParameter),
           ),
         )
         .toList();
@@ -528,7 +523,7 @@ class SwaggerRequestsGenerator {
           typeName = requestBodyRef.getRef();
         }
 
-        typeName = SwaggerModelsGenerator.getValidatedClassName(typeName);
+        typeName = getValidatedClassName(typeName);
       }
 
       final schema = requestBody.content?.schema;
@@ -620,15 +615,12 @@ class SwaggerRequestsGenerator {
         }
 
         if (ref.isNotEmpty) {
-          return SwaggerModelsGenerator.getValidatedClassName(
-                  ref.withPostfix(modelPostfix))
-              .asList();
+          return getValidatedClassName(ref.withPostfix(modelPostfix)).asList();
         }
 
         return '';
       } else if (schema.type == kObject) {
-        return SwaggerModelsGenerator.getValidatedClassName(
-            '$requestPath\$$kRequestBody');
+        return getValidatedClassName('$requestPath\$$kRequestBody');
       }
 
       return kBasicTypesMap[schema.type] ?? schema.type;
@@ -643,15 +635,14 @@ class SwaggerRequestsGenerator {
         return kObject.pascalCase;
       }
 
-      return SwaggerModelsGenerator.getValidatedClassName(
+      return getValidatedClassName(
           schema.ref.getRef().withPostfix(modelPostfix));
     }
 
     return '';
   }
 
-  Code? _getHeaderDefaultValue(
-      SwaggerRequestParameter swaggerParameter, GeneratorOptions options) {
+  Code? _getHeaderDefaultValue(SwaggerRequestParameter swaggerParameter) {
     final overridenValue = options.defaultHeaderValuesMap.firstWhereOrNull(
         (map) =>
             map.headerName.toLowerCase() ==
@@ -666,14 +657,12 @@ class SwaggerRequestsGenerator {
 
   String _getRequestMethodName({
     required SwaggerRequest swaggerRequest,
-    required GeneratorOptions options,
     required String path,
     required String requestType,
   }) {
     String methodName;
     if (options.usePathForRequestNames || swaggerRequest.operationId.isEmpty) {
-      methodName =
-          SwaggerModelsGenerator.generateRequestName(path, requestType);
+      methodName = generateRequestName(path, requestType);
     } else {
       methodName = swaggerRequest.operationId;
     }
@@ -804,8 +793,7 @@ class SwaggerRequestsGenerator {
       }
 
       final typeName =
-          SwaggerModelsGenerator.getValidatedClassName(schemaRef.getRef())
-              .withPostfix(modelPostfix);
+          getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
 
       if (neededSchema.type == kArray) {
         return neededSchema.items?.ref
@@ -836,10 +824,9 @@ class SwaggerRequestsGenerator {
 
     final schemaItemsRef = content.schema?.items?.ref ?? '';
     if (schemaItemsRef.isNotEmpty) {
-      final result =
-          SwaggerModelsGenerator.getValidatedClassName(schemaItemsRef.getRef())
-              .withPostfix(modelPostfix)
-              .asList();
+      final result = getValidatedClassName(schemaItemsRef.getRef())
+          .withPostfix(modelPostfix)
+          .asList();
 
       return result;
     }
@@ -916,6 +903,34 @@ class SwaggerRequestsGenerator {
     }
 
     return '';
+  }
+
+  String getChopperClientContent(
+    String className,
+    String host,
+    String basePath,
+  ) {
+    final baseUrlString = options.withBaseUrl
+        ? "baseUrl:  baseUrl ?? 'http://$host$basePath'"
+        : '/*baseUrl: YOUR_BASE_URL*/';
+
+    final converterString = options.withConverter
+        ? 'converter: \$JsonSerializableConverter(),'
+        : 'converter: chopper.JsonConverter(),';
+
+    final chopperClientBody = '''
+    if(client!=null){
+      return _\$$className(client);
+    }
+
+    final newClient = ChopperClient(
+      services: [_\$$className()],
+      $converterString
+      interceptors: interceptors ?? [],
+      $baseUrlString);
+    return _\$$className(newClient);
+''';
+    return chopperClientBody;
   }
 }
 

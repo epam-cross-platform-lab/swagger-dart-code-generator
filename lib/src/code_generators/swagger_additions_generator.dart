@@ -1,8 +1,16 @@
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 ///Generates index file content, converter and additional methods
-class SwaggerAdditionsGenerator {
+class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
+  final GeneratorOptions _options;
+
+  @override
+  GeneratorOptions get options => _options;
+
+  SwaggerAdditionsGenerator(this._options);
+
   static const mappingVariableName = 'generatedMapping';
 
   ///Generates index.dart for all generated services
@@ -116,8 +124,7 @@ String? _dateToJson(DateTime? date) {
   }
 
   ///Copy-pasted converter from internet
-  String generateCustomJsonConverter(
-      String fileName, GeneratorOptions options) {
+  String generateCustomJsonConverter(String fileName) {
     if (!options.withConverter) {
       return '';
     }
@@ -175,34 +182,5 @@ class \$JsonSerializableConverter extends chopper.JsonConverter {
 
 final \$jsonDecoder = \$CustomJsonDecoder(generatedMapping);
     ''';
-  }
-
-  static String getChopperClientContent(
-    String className,
-    String host,
-    String basePath,
-    GeneratorOptions options,
-  ) {
-    final baseUrlString = options.withBaseUrl
-        ? "baseUrl:  baseUrl ?? 'http://$host$basePath'"
-        : '/*baseUrl: YOUR_BASE_URL*/';
-
-    final converterString = options.withConverter
-        ? 'converter: \$JsonSerializableConverter(),'
-        : 'converter: chopper.JsonConverter(),';
-
-    final chopperClientBody = '''
-    if(client!=null){
-      return _\$$className(client);
-    }
-
-    final newClient = ChopperClient(
-      services: [_\$$className()],
-      $converterString
-      interceptors: interceptors ?? [],
-      $baseUrlString);
-    return _\$$className(newClient);
-''';
-    return chopperClientBody;
   }
 }
