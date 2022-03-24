@@ -82,6 +82,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
           (p) => p
             ..named = true
+            ..type = Reference('Authenticator?')
+            ..name = 'authenticator',
+        ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
             ..type = Reference('String?')
             ..name = 'baseUrl',
         ))
@@ -927,6 +933,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       services: [_\$$className()],
       $converterString
       interceptors: interceptors ?? [],
+      authenticator: authenticator,
       $baseUrlString);
     return _\$$className(newClient);
 ''';
