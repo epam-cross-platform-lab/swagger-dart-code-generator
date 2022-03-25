@@ -32,7 +32,11 @@ void main() {
 
     test('Should generate .toLower() when caseSensitive: false', () {
       final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
-      final result = generator.generate(map, fileName);
+      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        enumsCaseSensitive: false,
+      )).generate(map, fileName);
 
       expect(
           result,
@@ -60,7 +64,18 @@ void main() {
     test('Should parse object name as a field Type', () {
       const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
       final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
-      final result = generator.generate(map, fileName);
+      final result = SwaggerModelsGeneratorV3(
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          defaultValuesMap: [
+            DefaultValueMap(
+              typeName: 'int',
+              defaultValue: '19',
+            ),
+          ],
+        ),
+      ).generate(map, fileName);
 
       expect(result, contains(expectedResult));
     });
@@ -221,7 +236,11 @@ void main() {
     test('Should generate includeIfNull if option is true', () {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
-      final result = generator.generatePropertyContentByDefault(
+      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        includeIfNull: false,
+      )).generatePropertyContentByDefault(
         propertyEntryMap,
         propertyName,
         [],
