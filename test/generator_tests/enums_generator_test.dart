@@ -3,12 +3,18 @@ import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 //import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
 
 void main() {
-  final generator = SwaggerEnumsGeneratorV3();
+  final generator = SwaggerEnumsGeneratorV3(
+    GeneratorOptions(
+      inputFolder: '',
+      outputFolder: '',
+    ),
+  );
   //final generatorv2 = SwaggerEnumsGeneratorV2();
 
   group('Generate', () {
@@ -74,20 +80,25 @@ void main() {
 
     test('Should remove numbers at beginning if it is key word', () {
       final map = jsonDecode(requestWithEnum) as Map<String, dynamic>;
-      final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
+      final result = generator.getEnumNamesFromRequests(map);
       expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
       final map =
           jsonDecode(requestWithListOfEnumInParameter) as Map<String, dynamic>;
-      final result = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
+      final result = generator.getEnumNamesFromRequests(map);
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });
 
   group('generateEnumContentIfPossible', () {
-    final generator = SwaggerEnumsGeneratorV3();
+    final generator = SwaggerEnumsGeneratorV3(
+      GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+      ),
+    );
     test('Should generate enum', () {
       final map = <String, dynamic>{
         'items': {
@@ -102,7 +113,12 @@ void main() {
   });
 
   group('generateEnumName', () {
-    final generator = SwaggerEnumsGeneratorV3();
+    final generator = SwaggerEnumsGeneratorV3(
+      GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+      ),
+    );
 
     test('Should generate enum name', () {
       const className = 'animal';
@@ -123,9 +139,8 @@ void main() {
             name: 'TestParameter', type: 'Overridden parameter')
       ];
 
-      final result =
-          SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
-              incoming, overriddenParameters);
+      final result = generator.getOriginalOrOverriddenRequestParameter(
+          incoming, overriddenParameters);
 
       expect(result.type, equals('Overridden parameter'));
     });
@@ -138,9 +153,8 @@ void main() {
             key: 'TestParameter', name: 'Overridden parameter')
       ];
 
-      final result =
-          SwaggerEnumsGenerator.getOriginalOrOverriddenRequestParameter(
-              incoming, overriddenParameters);
+      final result = generator.getOriginalOrOverriddenRequestParameter(
+          incoming, overriddenParameters);
 
       expect(result.name, equals('Original parameter'));
     });

@@ -1,26 +1,25 @@
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:collection/collection.dart';
 
 class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
+  SwaggerModelsGeneratorV3(GeneratorOptions options) : super(options);
+
   @override
-  String generate(
-      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
+  String generate(Map<String, dynamic> map, String fileName) {
     final components = map['components'] as Map<String, dynamic>?;
     final schemas = components == null
         ? null
         : components['schemas'] as Map<String, dynamic>?;
 
-    return generateBase(map, fileName, options, schemas ?? {}, true);
+    return generateBase(map, fileName, schemas ?? {}, true);
   }
 
   @override
-  String generateResponses(
-      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
+  String generateResponses(Map<String, dynamic> map, String fileName) {
     final components = map['components'] as Map<String, dynamic>?;
     final responses = components == null
         ? null
@@ -35,7 +34,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final allModelNames = components!.containsKey('schemas')
         ? (components['schemas'] as Map<String, dynamic>)
             .keys
-            .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
+            .map((e) => getValidatedClassName(e))
         : <String>[];
 
     for (var key in responses.keys) {
@@ -58,7 +57,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(map, fileName, options, result, false);
+    return generateBase(map, fileName, result, false);
   }
 
   Map<String, dynamic> _getRequestBodiesFromRequests(Map<String, dynamic> map) {
@@ -94,8 +93,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
                   final className =
                       '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
 
-                  result[SwaggerModelsGenerator.getValidatedClassName(
-                      className)] = requestBody;
+                  result[getValidatedClassName(className)] = requestBody;
                 }
               }
             }
@@ -108,8 +106,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   }
 
   @override
-  String generateRequestBodies(
-      Map<String, dynamic> map, String fileName, GeneratorOptions options) {
+  String generateRequestBodies(Map<String, dynamic> map, String fileName) {
     final components = map['components'] as Map<String, dynamic>?;
     final requestBodies = components == null
         ? <String, dynamic>{}
@@ -127,7 +124,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final allModelNames = components!.containsKey('schemas')
         ? (components['schemas'] as Map<String, dynamic>)
             .keys
-            .map((e) => SwaggerModelsGenerator.getValidatedClassName(e))
+            .map((e) => getValidatedClassName(e))
         : <String>[];
 
     for (var key in requestBodies.keys) {
@@ -150,12 +147,12 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(map, fileName, options, result, false);
+    return generateBase(map, fileName, result, false);
   }
 
   @override
   List<String> getAllListEnumNames(Map<String, dynamic> map) {
-    final results = SwaggerEnumsGenerator.getEnumNamesFromRequests(map);
+    final results = getEnumNamesFromRequests(map);
 
     final components = map['components'] as Map<String, dynamic>?;
 
@@ -170,8 +167,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         if (mapMap['type'] == 'array' &&
             mapMap['items'] != null &&
             mapMap['items']['enum'] != null) {
-          results.add(SwaggerModelsGenerator.getValidatedClassName(
-              className.capitalize));
+          results.add(getValidatedClassName(className.capitalize));
           return;
         }
       });
@@ -193,7 +189,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
 
       final ref = refItem['\$ref'].toString().split('/').last;
 
-      final className = SwaggerModelsGenerator.getValidatedClassName(ref);
+      final className = getValidatedClassName(ref);
 
       return 'extends $className';
     }

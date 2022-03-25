@@ -1,9 +1,15 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Additions generator tests', () {
-    final generator = SwaggerAdditionsGenerator();
+    final generator = SwaggerAdditionsGenerator(
+      GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+      ),
+    );
 
     test('Should generate correct imports', () {
       final result = generator.generateImportsContent(
@@ -32,7 +38,12 @@ void main() {
     });
   });
   group('Test for generateDateToJson', () {
-    final generator = SwaggerAdditionsGenerator();
+    final generator = SwaggerAdditionsGenerator(
+      GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+      ),
+    );
     test('Should dateToJson with parameter', () {
       const expectedResult = 'String? _dateToJson(DateTime? date)';
       final result = generator.generateDateToJson();

@@ -1,3 +1,8 @@
+# 2.4.6
+
+* Added authentication to `create` method ([#360](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/360))
+* Added ability to refactor model names ([#361](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/361))
+
 # 2.4.5
 
 * Fixed generation on Windows ([#354](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/354))

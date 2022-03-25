@@ -182,7 +182,7 @@ class SwaggerDartCodeGenerator implements Builder {
         contents, removeFileExtension(fileNameWithExtension), options);
 
     final enums = codeGenerator.generateEnums(
-        contents, removeFileExtension(fileNameWithExtension));
+        contents, removeFileExtension(fileNameWithExtension), options);
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
@@ -190,6 +190,7 @@ class SwaggerDartCodeGenerator implements Builder {
       options.buildOnlyModels,
       enums.isNotEmpty,
       options.separateModels,
+      options,
     );
 
     final requests = codeGenerator.generateRequests(
@@ -201,7 +202,7 @@ class SwaggerDartCodeGenerator implements Builder {
     final customDecoder = codeGenerator.generateCustomJsonConverter(
         removeFileExtension(fileNameWithExtension), options);
 
-    final dateToJson = codeGenerator.generateDateToJson();
+    final dateToJson = codeGenerator.generateDateToJson(options);
 
     final copyAssetId = AssetId(
         buildStep.inputId.package,
@@ -299,7 +300,7 @@ $dateToJson
     final indexAssetId =
         AssetId(inputId.package, join(options.outputFolder, _indexFileName));
 
-    final imports = codeGenerator.generateIndexes(allFiles);
+    final imports = codeGenerator.generateIndexes(allFiles, options);
 
     if (!options.buildOnlyModels) {
       await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
@@ -309,7 +310,8 @@ $dateToJson
       final mappingAssetId = AssetId(
           inputId.package, join(options.outputFolder, _mappingFileName));
 
-      final mapping = codeGenerator.generateConverterMappings(hasModels);
+      final mapping =
+          codeGenerator.generateConverterMappings(hasModels, options);
 
       await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
     }

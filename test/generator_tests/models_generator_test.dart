@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -8,15 +7,24 @@ import 'package:test/test.dart';
 import '../code_examples.dart';
 
 void main() {
-  final generator = SwaggerModelsGeneratorV3();
-  final generator2 = SwaggerModelsGeneratorV2();
+  final generator = SwaggerModelsGeneratorV3(
+    GeneratorOptions(
+      inputFolder: '',
+      outputFolder: '',
+    ),
+  );
+  final generator2 = SwaggerModelsGeneratorV2(
+    GeneratorOptions(
+      inputFolder: '',
+      outputFolder: '',
+    ),
+  );
   group('generate', () {
     const fileName = 'order_service.dart';
 
     test('Should parse object name as a field Type', () {
       final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
-      final result = generator.generate(
-          map, fileName, GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final result = generator.generate(map, fileName);
 
       expect(
           result, contains('final enums.TokensResponseTokenType? tokenType'));
@@ -24,11 +32,11 @@ void main() {
 
     test('Should generate .toLower() when caseSensitive: false', () {
       final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
-      final result = generator.generate(
-          map,
-          fileName,
-          GeneratorOptions(
-              enumsCaseSensitive: false, inputFolder: '', outputFolder: ''));
+      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        enumsCaseSensitive: false,
+      )).generate(map, fileName);
 
       expect(
           result,
@@ -38,19 +46,14 @@ void main() {
 
     test('Should NOT generate .toLower() when caseSensitive: false', () {
       final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
-      final result = generator.generate(
-          map,
-          fileName,
-          GeneratorOptions(
-              enumsCaseSensitive: true, inputFolder: '', outputFolder: ''));
+      final result = generator.generate(map, fileName);
 
       expect(result, contains('element.value == someEnumModel'));
     });
 
     test('Should parse object name as a field Type', () {
       final map = jsonDecode(modelWithParametersV2) as Map<String, dynamic>;
-      final result = generator2.generate(
-          map, fileName, GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final result = generator2.generate(map, fileName);
 
       expect(
           result,
@@ -61,17 +64,18 @@ void main() {
     test('Should parse object name as a field Type', () {
       const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
       final map = jsonDecode(modelWithParametersV3) as Map<String, dynamic>;
-      final generatorOptions = GeneratorOptions(
-        defaultValuesMap: <DefaultValueMap>[
-          DefaultValueMap(
-            typeName: 'int',
-            defaultValue: '19',
-          )
-        ],
-        inputFolder: '',
-        outputFolder: '',
-      );
-      final result = generator.generate(map, fileName, generatorOptions);
+      final result = SwaggerModelsGeneratorV3(
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          defaultValuesMap: [
+            DefaultValueMap(
+              typeName: 'int',
+              defaultValue: '19',
+            ),
+          ],
+        ),
+      ).generate(map, fileName);
 
       expect(result, contains(expectedResult));
     });
@@ -184,7 +188,7 @@ void main() {
     test('Should return validate field name', () {
       const name = 'Cat_Dog-Animals';
       const expectedResult = 'catDogAnimals';
-      final result = SwaggerModelsGenerator.generateFieldName(name);
+      final result = generator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -192,7 +196,7 @@ void main() {
     test('Should return \$forbiddenFieldName', () {
       const name = '#';
       const expectedResult = '\$forbiddenFieldName';
-      final result = SwaggerModelsGenerator.generateFieldName(name);
+      final result = generator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -200,7 +204,7 @@ void main() {
     test('Should return \$null', () {
       const name = 'null';
       const expectedResult = '\$null';
-      final result = SwaggerModelsGenerator.generateFieldName(name);
+      final result = generator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -208,7 +212,7 @@ void main() {
     test('Should return \$number', () {
       const name = '5element';
       const expectedResult = '\$5element';
-      final result = SwaggerModelsGenerator.generateFieldName(name);
+      final result = generator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
     });
@@ -220,11 +224,11 @@ void main() {
       const propertyName = 'shipDate';
       const jsonKeyExpendedResult = "@JsonKey(name: '$propertyName'";
       final result = generator.generatePropertyContentByDefault(
-          propertyEntryMap,
-          propertyName,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        propertyEntryMap,
+        propertyName,
+        [],
+        [],
+      );
 
       expect(result, contains(jsonKeyExpendedResult));
     });
@@ -232,13 +236,16 @@ void main() {
     test('Should generate includeIfNull if option is true', () {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
-      final result = generator.generatePropertyContentByDefault(
-          propertyEntryMap,
-          propertyName,
-          [],
-          [],
-          GeneratorOptions(
-              includeIfNull: false, inputFolder: '', outputFolder: ''));
+      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        includeIfNull: false,
+      )).generatePropertyContentByDefault(
+        propertyEntryMap,
+        propertyName,
+        [],
+        [],
+      );
 
       expect(result, contains(', includeIfNull: false'));
     });
@@ -247,12 +254,11 @@ void main() {
       final propertyEntryMap = <String, dynamic>{'originalRef': 'Pet'};
       const propertyName = 'shipDate';
       final result = generator.generatePropertyContentByDefault(
-          propertyEntryMap,
-          propertyName,
-          [],
-          [],
-          GeneratorOptions(
-              includeIfNull: null, inputFolder: '', outputFolder: ''));
+        propertyEntryMap,
+        propertyName,
+        [],
+        [],
+      );
 
       expect(result.contains(', includeIfNull: false'), equals(false));
     });
@@ -275,7 +281,6 @@ void main() {
         className,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -296,7 +301,6 @@ void main() {
         className,
         ['enums.Pet'],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -312,8 +316,12 @@ void main() {
       const jsonKeyExpectedResult =
           'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
       const expectedResult = 'final AnimalsDog? dog;';
-      final result = generator.generateEnumPropertyContent(key, className, [],
-          [], GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final result = generator.generateEnumPropertyContent(
+        key,
+        className,
+        [],
+        [],
+      );
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(expectedResult));
@@ -329,15 +337,15 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
-          {},
-          className,
-          map,
-          {},
-          <DefaultValueMap>[],
-          useDefaultNullForLists,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        {},
+        className,
+        map,
+        {},
+        <DefaultValueMap>[],
+        useDefaultNullForLists,
+        [],
+        [],
+      );
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -351,15 +359,15 @@ void main() {
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator2.generateModelClassContent(
-          {},
-          className,
-          map,
-          {},
-          <DefaultValueMap>[],
-          useDefaultNullForLists,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        {},
+        className,
+        map,
+        {},
+        <DefaultValueMap>[],
+        useDefaultNullForLists,
+        [],
+        [],
+      );
 
       expect(result, contains(classExpectedResult));
       expect(result, contains(factoryConstructorExpectedResult));
@@ -372,7 +380,6 @@ void main() {
       final result = generator.generateConstructorPropertiesContent(
         '',
         {},
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         [],
         [],
         [],
@@ -389,7 +396,6 @@ void main() {
       final result = generator.generateConstructorPropertiesContent(
         '',
         map,
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         [],
         [],
         [],
@@ -416,7 +422,6 @@ void main() {
         className,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -439,7 +444,6 @@ void main() {
         className,
         ['enums.Pet'],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -457,15 +461,15 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
-          map,
-          map,
-          {},
-          className,
-          <DefaultValueMap>[],
-          false,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        map,
+        map,
+        {},
+        className,
+        <DefaultValueMap>[],
+        false,
+        [],
+        [],
+      );
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -482,15 +486,15 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
-          map,
-          map,
-          {},
-          className,
-          <DefaultValueMap>[],
-          false,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        map,
+        map,
+        {},
+        className,
+        <DefaultValueMap>[],
+        false,
+        [],
+        [],
+      );
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -505,15 +509,15 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'animals')\n";
       const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
-          map,
-          map,
-          {},
-          className,
-          <DefaultValueMap>[],
-          false,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        map,
+        map,
+        {},
+        className,
+        <DefaultValueMap>[],
+        false,
+        [],
+        [],
+      );
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -528,15 +532,15 @@ void main() {
       const jsonKeyExpectedResult = "\t@JsonKey(name: '\$with')\n";
       const fieldExpectedResult = 'final Pet? \$with';
       final result = generator.generatePropertiesContent(
-          map,
-          map,
-          {},
-          className,
-          <DefaultValueMap>[],
-          false,
-          [],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        map,
+        map,
+        {},
+        className,
+        <DefaultValueMap>[],
+        false,
+        [],
+        [],
+      );
 
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
@@ -561,7 +565,6 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -584,7 +587,6 @@ void main() {
         false,
         ['Dog'],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -608,7 +610,6 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -631,7 +632,6 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -654,7 +654,6 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -677,7 +676,6 @@ void main() {
         false,
         [],
         [],
-        GeneratorOptions(inputFolder: '', outputFolder: ''),
         {},
       );
 
@@ -687,7 +685,7 @@ void main() {
 
   group('Tests for getValidatedClassName', () {
     test('Should', () {
-      final result = SwaggerModelsGenerator.getValidatedClassName('Request');
+      final result = generator.getValidatedClassName('Request');
 
       expect(result, equals('Request\$'));
     });
@@ -696,14 +694,14 @@ void main() {
   group('Tests for generateGeneralPropertyContent', () {
     test('Should', () {
       final result = generator.generateGeneralPropertyContent(
-          'name',
-          'key',
-          'className',
-          [],
-          {'\$ref': 'ClassNameName'},
-          ['enums.ClassNameName'],
-          [],
-          GeneratorOptions(inputFolder: '', outputFolder: ''));
+        'name',
+        'key',
+        'className',
+        [],
+        {'\$ref': 'ClassNameName'},
+        ['enums.ClassNameName'],
+        [],
+      );
 
       expect(result, contains('final enums.ClassNameName? name;'));
     });
@@ -713,13 +711,7 @@ void main() {
     test('Should generate empty string for V2', () {
       final map =
           jsonDecode(schemasResponsesWithResponse) as Map<String, dynamic>;
-      final result = generator2.generateResponses(
-          map,
-          'fileName',
-          GeneratorOptions(
-            inputFolder: '',
-            outputFolder: '',
-          ));
+      final result = generator2.generateResponses(map, 'fileName');
 
       expect(result, equals(''));
     });
@@ -727,8 +719,7 @@ void main() {
     test('Should generate class from responses V3', () {
       final map =
           jsonDecode(schemasResponsesWithResponse) as Map<String, dynamic>;
-      final result = generator.generateResponses(
-          map, 'fileName', GeneratorOptions(inputFolder: '', outputFolder: ''));
+      final result = generator.generateResponses(map, 'fileName');
 
       expect(result, contains('class SpaResponse'));
     });
@@ -736,13 +727,7 @@ void main() {
     test('Should generate class from responses V3 and Schemas', () {
       final map = jsonDecode(schemasResponsesWithResponseAndSchemas)
           as Map<String, dynamic>;
-      final result = generator.generateResponses(
-          map,
-          'fileName',
-          GeneratorOptions(
-            inputFolder: '',
-            outputFolder: '',
-          ));
+      final result = generator.generateResponses(map, 'fileName');
 
       expect(result, contains('class SpaResponse'));
     });
@@ -784,13 +769,7 @@ void main() {
     test('Should generate correct model from response', () {
       final map =
           jsonDecode(requestWithReturnTypeInjected) as Map<String, dynamic>;
-      final result = generator.generate(
-          map,
-          'my_service',
-          GeneratorOptions(
-            inputFolder: '',
-            outputFolder: '',
-          ));
+      final result = generator.generate(map, 'my_service');
 
       expect(result, contains('class ModelItemsGet\$Response'));
     });
