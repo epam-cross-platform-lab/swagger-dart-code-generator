@@ -54,7 +54,7 @@ abstract class SwaggerGeneratorBase {
       return '\$$result';
     }
 
-    return result.replaceFirst('V3', 'Replaced');
+    return result.replaceFirst(options.cutFromModelNames, '');
   }
 
   String generateEnumName(String className, String enumName) {

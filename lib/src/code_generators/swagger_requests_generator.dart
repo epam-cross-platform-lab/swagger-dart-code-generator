@@ -743,7 +743,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return kObject.pascalCase;
       }
 
-      return ref.getRef() + modelPostfix;
+      return getValidatedClassName(ref.getRef() + modelPostfix);
     }
 
     return null;
