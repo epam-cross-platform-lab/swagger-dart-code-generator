@@ -214,7 +214,7 @@ $enumsFromRequestBodies
 
     final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(enumName,  enumValues:enumValues,enumValuesNames:  [])}
+\t${getEnumValuesMapContent(enumName, enumValues: enumValues, enumValuesNames: [])}
       };
       ''';
 
@@ -267,10 +267,9 @@ $enumMap
     return resultStrings.join(',\n');
   }
 
-  String getEnumValuesMapContent(String enumName, {
-    required List<String> enumValues,
-    required List<String> enumValuesNames
-}) {
+  String getEnumValuesMapContent(String enumName,
+      {required List<String> enumValues,
+      required List<String> enumValuesNames}) {
     final neededStrings = <String>[];
     final fields = <String>[];
 
@@ -290,14 +289,11 @@ $enumMap
 
       fields.add(validatedValue);
       neededStrings.add(
-            '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-
+          '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
     }
 
     return neededStrings.join(',\n');
   }
-
-
 
   static String getValidatedEnumFieldName(String name) {
     if (name.isEmpty) {
@@ -358,7 +354,6 @@ $enumMap
       final enumValues =
           (map['enum'] as List<dynamic>).map((e) => e.toString()).toList();
 
-
       final enumValuesNames =
           (map[kEnumNames] ?? map[kEnumVarnames]) as List? ?? [];
 
@@ -367,18 +362,13 @@ $enumMap
         enumValuesNamesList = enumValuesNames.map((e) => e.toString()).toList();
       }
 
-
       final isInteger = kIntegerTypes.contains(map['type']);
-
 
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(enumName,   enumValues: enumValues,
-          enumValuesNames: enumValuesNamesList)}
+\t${getEnumValuesMapContent(enumName, enumValues: enumValues, enumValuesNames: enumValuesNamesList)}
       };
       ''';
-
-
 
       return """
 enum ${enumName.capitalize} {
