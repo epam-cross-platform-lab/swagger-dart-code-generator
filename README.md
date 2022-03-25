@@ -41,7 +41,7 @@ dev_dependencies:
   build_runner: ^2.1.4
   chopper_generator: ^4.0.2
   json_serializable: ^5.0.0
-  swagger_dart_code_generator: any
+  swagger_dart_code_generator: ^2.4.6
 ```
 
 Then run:
@@ -76,6 +76,8 @@ targets:
 
 | Option |Default value | Is required | Description |
 | - | - | - | - |
+| **`input_folder`** | **`-`** | **`true`** | **Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers).** |
+| **`output_folder`** | **`-`** | **`true`** | **Path to output folder (for ex. lib/generated).** |
 | `with_base_url` | `true` | `false` | If this option is false, generator will ignore base url in swagger file. |
 | `use_required_attribute_for_headers` | `true` | `false` | If this option is false, generator will not add @required attribute to headers. |
 | `with_converter` | `true` | `false` | If option is true, combination of all mappings will be generated. |
@@ -89,8 +91,8 @@ targets:
 | `include_if_null` | `null` | `false` | Sets includeIfNull JsonAnnotation feature and sets value for it. If null - not set anything. |
 | `default_values_map` | `[]` | `false` | Contains map of types and theirs default values. See [DefaultValueMap](#default-value-map-for-model-generation). |
 | `response_override_value_map` | `[]` | `false` | Contains map of responses and theirs overridden values. See [ResponseOverrideValueMap](#response-override-value-map-for-requests-generation). |
-| `input_folder` | `-` | `true` | Path to folder with .swagger files (for ex. swagger_examples, or lib/swaggers). |
-| `output_folder` | `-` | `true` | Path to output folder (for ex. lib/generated). |
+| `cutFromModelNames` | `-` | `false` | If your model names are long and contain a lot of duplicated words, for example `DbUsersModelsV3GeneralUserModel`, you can cut off duplicated part, using `cutFromModelNames : DbUsersModelsV3`. Also, you can use regex expressions in this parameter. |
+
 
 It's important to remember that, by default, [build](https://github.com/dart-lang/build) will follow [Dart's package layout conventions](https://dart.dev/tools/pub/package-layout), meaning that only some folders will be considered to parse the input files. So, if you want to reference files from a folder other than `lib/`, make sure you've included it on `sources`:
 
