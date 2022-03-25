@@ -214,7 +214,7 @@ $enumsFromRequestBodies
 
     final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(enumName, enumValues)}
+\t${getEnumValuesMapContent(enumName,  enumValues:enumValues,enumValuesNames:  [])}
       };
       ''';
 
@@ -267,24 +267,37 @@ $enumMap
     return resultStrings.join(',\n');
   }
 
-  String getEnumValuesMapContent(String enumName, List<String> enumValues) {
+  String getEnumValuesMapContent(String enumName, {
+    required List<String> enumValues,
+    required List<String> enumValuesNames
+}) {
     final neededStrings = <String>[];
     final fields = <String>[];
 
-    for (var value in enumValues) {
-      var validatedValue = getValidatedEnumFieldName(value);
+    for (int i = 0; i < enumValues.length; i++) {
+      final value = enumValues[i];
+      var validatedValue = value;
 
       while (fields.contains(validatedValue)) {
         validatedValue += '\$';
       }
 
+      if (enumValuesNames.length == enumValues.length) {
+        validatedValue = enumValuesNames[i];
+      }
+
+      validatedValue = getValidatedEnumFieldName(validatedValue);
+
       fields.add(validatedValue);
       neededStrings.add(
-          '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
+            '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
+
     }
 
     return neededStrings.join(',\n');
   }
+
+
 
   static String getValidatedEnumFieldName(String name) {
     if (name.isEmpty) {
@@ -345,7 +358,6 @@ $enumMap
       final enumValues =
           (map['enum'] as List<dynamic>).map((e) => e.toString()).toList();
 
-      final stringValues = enumValues.map((e) => e.toString()).toList();
 
       final enumValuesNames =
           (map[kEnumNames] ?? map[kEnumVarnames]) as List? ?? [];
@@ -355,17 +367,18 @@ $enumMap
         enumValuesNamesList = enumValuesNames.map((e) => e.toString()).toList();
       }
 
-      final mapValues = enumValuesNamesList.length == stringValues.length
-          ? enumValuesNamesList
-          : stringValues;
+
+      final isInteger = kIntegerTypes.contains(map['type']);
+
 
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(enumName, mapValues)}
+\t${getEnumValuesMapContent(enumName,   enumValues: enumValues,
+          enumValuesNames: enumValuesNamesList)}
       };
       ''';
 
-      final isInteger = kIntegerTypes.contains(map['type']);
+
 
       return """
 enum ${enumName.capitalize} {
