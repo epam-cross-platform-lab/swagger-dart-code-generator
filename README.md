@@ -30,15 +30,15 @@ The generated code uses the following packages in run-time:
 ```yaml
 dependencies:
   chopper: ^4.0.1
-  json_annotation: ^4.1.0
+  json_annotation: ^4.4.0
 ```
 
 Add the following to your `pubspec.yaml` file to be able to do code generation:
 ```yaml
 dev_dependencies:
-  build_runner: ^2.1.4
-  chopper_generator: ^4.0.2
-  json_serializable: ^5.0.0
+  build_runner: ^2.1.7
+  chopper_generator: ^4.0.5
+  json_serializable: ^6.1.4
   swagger_dart_code_generator: ^2.4.6
 ```
 
