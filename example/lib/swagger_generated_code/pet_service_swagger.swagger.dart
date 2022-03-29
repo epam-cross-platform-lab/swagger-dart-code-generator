@@ -22,6 +22,7 @@ part 'pet_service_swagger.swagger.g.dart';
 abstract class PetServiceSwagger extends ChopperService {
   static PetServiceSwagger create(
       {ChopperClient? client,
+      Authenticator? authenticator,
       String? baseUrl,
       Iterable<dynamic>? interceptors}) {
     if (client != null) {
@@ -32,6 +33,7 @@ abstract class PetServiceSwagger extends ChopperService {
         services: [_$PetServiceSwagger()],
         converter: $JsonSerializableConverter(),
         interceptors: interceptors ?? [],
+        authenticator: authenticator,
         baseUrl: baseUrl ?? 'http://petstore.swagger.io/v2');
     return _$PetServiceSwagger(newClient);
   }
