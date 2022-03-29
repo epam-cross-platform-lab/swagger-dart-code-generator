@@ -282,6 +282,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result, contains(jsonKeyExpendedResult));
@@ -302,6 +303,7 @@ void main() {
         ['enums.Pet'],
         [],
         {},
+        [],
       );
 
       expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
@@ -319,7 +321,10 @@ void main() {
       final result = generator.generateEnumPropertyContent(
         key,
         className,
+        key,
         [],
+        [],
+        {},
         [],
       );
 
@@ -378,11 +383,12 @@ void main() {
     test('Should return empty', () {
       const expectedResult = '';
       final result = generator.generateConstructorPropertiesContent(
-        '',
-        {},
-        [],
-        [],
-        [],
+        className: '',
+        entityMap: {},
+        defaultValues: [],
+        requiredProperties: [],
+        allEnumNames: [],
+        allEnumListNames: [],
       );
 
       expect(result, contains(expectedResult));
@@ -394,11 +400,12 @@ void main() {
       };
       const expectedResult = 'this.animal';
       final result = generator.generateConstructorPropertiesContent(
-        '',
-        map,
-        [],
-        [],
-        [],
+        className: '',
+        entityMap: map,
+        defaultValues: [],
+        requiredProperties: [],
+        allEnumNames: [],
+        allEnumListNames: [],
       );
 
       expect(result, contains(expectedResult));
@@ -423,6 +430,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -445,6 +453,7 @@ void main() {
         ['enums.Pet'],
         [],
         {},
+        [],
       );
 
       expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
@@ -467,6 +476,7 @@ void main() {
         className,
         <DefaultValueMap>[],
         false,
+        [],
         [],
         [],
       );
@@ -494,6 +504,7 @@ void main() {
         false,
         [],
         [],
+        [],
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -517,6 +528,7 @@ void main() {
         false,
         [],
         [],
+        [],
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -538,6 +550,7 @@ void main() {
         className,
         <DefaultValueMap>[],
         false,
+        [],
         [],
         [],
       );
@@ -566,6 +579,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -588,6 +602,7 @@ void main() {
         ['Dog'],
         [],
         {},
+        [],
       );
 
       expect(
@@ -611,6 +626,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result, contains('final List<TestOriginalRef>? dog;'));
@@ -633,6 +649,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result, contains('final List<TestObject>? dog;'));
@@ -655,6 +672,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result,
@@ -677,6 +695,7 @@ void main() {
         [],
         [],
         {},
+        [],
       );
 
       expect(result, contains('final List<Object>? dog;'));
@@ -700,6 +719,7 @@ void main() {
         [],
         {'\$ref': 'ClassNameName'},
         ['enums.ClassNameName'],
+        [],
         [],
       );
 
