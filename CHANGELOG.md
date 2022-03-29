@@ -1,3 +1,8 @@
+# 2.4.7
+
+* Made required properties in models not nullable ([#324](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/324))
+* Added `nullableModels` build option to made exeptions
+
 # 2.4.6
 
 * Added authentication to `create` method ([#360](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/360))

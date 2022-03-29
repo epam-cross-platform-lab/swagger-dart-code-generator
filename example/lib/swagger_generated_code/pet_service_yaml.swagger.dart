@@ -22,6 +22,7 @@ part 'pet_service_yaml.swagger.g.dart';
 abstract class PetServiceYaml extends ChopperService {
   static PetServiceYaml create(
       {ChopperClient? client,
+      Authenticator? authenticator,
       String? baseUrl,
       Iterable<dynamic>? interceptors}) {
     if (client != null) {
@@ -32,6 +33,7 @@ abstract class PetServiceYaml extends ChopperService {
         services: [_$PetServiceYaml()],
         converter: $JsonSerializableConverter(),
         interceptors: interceptors ?? [],
+        authenticator: authenticator,
         baseUrl: baseUrl ?? 'http://petstore.swagger.io/v2');
     return _$PetServiceYaml(newClient);
   }
