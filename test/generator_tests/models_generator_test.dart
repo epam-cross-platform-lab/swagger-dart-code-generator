@@ -58,7 +58,7 @@ void main() {
       expect(
           result,
           contains(
-              'final enums.ActiveOrderAndListSummaryShoppingType? shoppingType'));
+              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
     });
 
     test('Should parse object name as a field Type', () {
