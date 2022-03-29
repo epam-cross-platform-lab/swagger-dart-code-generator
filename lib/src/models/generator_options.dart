@@ -25,6 +25,7 @@ class GeneratorOptions {
     this.includePaths = const [],
     this.excludePaths = const [],
     this.inputUrls = const [],
+    this.nullableModels = const [],
     this.cutFromModelNames = '',
   });
 
@@ -43,6 +44,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: [])
   List<String> inputUrls;
+
+  @JsonKey(defaultValue: [])
+  List<String> nullableModels;
 
   @JsonKey(defaultValue: false)
   final bool separateModels;
