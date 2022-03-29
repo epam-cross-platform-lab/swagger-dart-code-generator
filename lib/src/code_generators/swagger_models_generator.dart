@@ -442,7 +442,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue$dateToJsonValue)\n";
 
-    if (options.nullableModels.contains(typeName) ||
+    if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -453,6 +453,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   String generatePropertyContentByAllOf({
     required Map<String, dynamic> propertyEntryMap,
     required String propertyKey,
+    required String className,
     required List<String> allEnumNames,
     required List<String> allEnumListNames,
     required String propertyName,
@@ -476,7 +477,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    if (options.nullableModels.contains(typeName) ||
+    if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -527,7 +528,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
 
-    if (options.nullableModels.contains(typeName) ||
+    if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -555,7 +556,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final includeIfNullString = generateIncludeIfNullString();
 
     var enumPropertyName = className.capitalize + key.capitalize;
-    if (options.nullableModels.contains(enumPropertyName) ||
+    if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       enumPropertyName = enumPropertyName.makeNullable();
     }
@@ -677,7 +678,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     var listPropertyName = 'List<$typeName>';
 
-    if (options.nullableModels.contains(listPropertyName) ||
+    if (options.nullableModels.contains(className) ||
         !requiredParameters.contains(propertyKey)) {
       listPropertyName = listPropertyName.makeNullable();
     }
@@ -744,7 +745,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       jsonKeyContent += ')\n';
     }
 
-    if (options.nullableModels.contains(typeName) ||
+    if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName += '?';
     }
@@ -864,6 +865,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           generatePropertyContentByAllOf(
             propertyEntryMap: propertyEntryMap,
             allEnumListNames: allEnumListNames,
+            className: className,
             allEnumNames: allEnumNames,
             propertyKey: propertyKey,
             propertyName: propertyName,
