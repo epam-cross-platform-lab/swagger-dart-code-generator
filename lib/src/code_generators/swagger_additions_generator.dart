@@ -52,7 +52,6 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
     final chopperImports = buildOnlyModels
         ? ''
         : '''import 'package:chopper/chopper.dart';
-${buildOnlyModels ? '' : 'import \'dart:convert\';'}
 
 import 'client_mapping.dart';
 import 'package:chopper/chopper.dart' as chopper;''';
