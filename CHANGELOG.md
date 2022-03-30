@@ -1,3 +1,6 @@
+# 2.4.8
+
+* Added import 'dart:convert'; when generate only models ([#372](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/372))
 # 2.4.7
 
 * Made required properties in models not nullable ([#324](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/324))
