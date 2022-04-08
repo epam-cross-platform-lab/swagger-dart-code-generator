@@ -53,6 +53,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'class $className {}';
     }
 
+    if (map['type'] == 'object' && map.containsKey('anyOf')) {
+      return 'typedef $className = Map<String, dynamic>;';
+    }
+
     return generateModelClassString(
       rootMap,
       className,

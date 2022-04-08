@@ -1,6 +1,14 @@
+# 2.4.9
+
+* Added generation of `allOff` models to not class, but to have ability to map it to any type
+
+```dart
+typedef ClassName = Map<String, dynamic>
+```
+
 # 2.4.8
 
-* Added import 'dart:convert'; when generate only models ([#372](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/372))
+* Added import `dart:convert`; when generate only models ([#372](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/372))
 # 2.4.7
 
 * Made required properties in models not nullable ([#324](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/324))
