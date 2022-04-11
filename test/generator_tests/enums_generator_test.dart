@@ -6,6 +6,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
+
 import '../code_examples.dart';
 
 void main() {
@@ -80,14 +81,14 @@ void main() {
 
     test('Should remove numbers at beginning if it is key word', () {
       final map = jsonDecode(requestWithEnum) as Map<String, dynamic>;
-      final result = generator.getEnumNamesFromRequests(map);
+      final result = generator.getEnumsFromRequests(map);
       expect(result[0], equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
       final map =
           jsonDecode(requestWithListOfEnumInParameter) as Map<String, dynamic>;
-      final result = generator.getEnumNamesFromRequests(map);
+      final result = generator.getEnumsFromRequests(map);
       expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });
