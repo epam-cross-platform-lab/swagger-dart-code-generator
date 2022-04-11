@@ -27,7 +27,5 @@ class SwaggerEnum {
   int get hashCode => name.hashCode ^ isInteger.hashCode;
 
   @override
-  String toString() {
-    return '{name: $name, isInteger: $isInteger}';
-  }
+  String toString() => '{name: $name, isInteger: $isInteger}';
 }
