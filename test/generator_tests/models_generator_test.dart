@@ -845,12 +845,7 @@ void main() {
       final map = jsonDecode(schemasWithEnumsFromAllOf) as Map<String, dynamic>;
       final result = generator.generateResponses(map, 'fileName');
 
-      expect(
-        result,
-        contains(
-          'final enums.Success? success',
-        ),
-      );
+      expect(result, contains('final enums.Success? success'));
     });
   });
 
