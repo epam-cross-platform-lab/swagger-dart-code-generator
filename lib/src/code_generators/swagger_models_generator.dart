@@ -1405,7 +1405,7 @@ $allHashComponents;
           } else if (property['items'] != null &&
               property['items']['enum'] != null) {
             results.add(SwaggerEnum(
-              name: propertyName,
+              name: generateEnumName(className, propertyName),
               isInteger: kIntegerTypes.contains(property['items']['type']),
             ));
           }
