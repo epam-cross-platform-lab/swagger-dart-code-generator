@@ -644,7 +644,7 @@ const String schemasWithIntegers = '''
 }
 ''';
 
-const String schemasWithAllOf = '''
+const String schemasWithEnumsFromAllOf = '''
 {
   "openapi": "3.0.1",
   "info": {

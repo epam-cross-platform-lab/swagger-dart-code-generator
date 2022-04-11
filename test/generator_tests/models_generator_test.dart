@@ -842,7 +842,7 @@ void main() {
 
   group('Tests allOf enums', () {
     test('Class properties should get enums. prefix', () {
-      final map = jsonDecode(schemasWithAllOf) as Map<String, dynamic>;
+      final map = jsonDecode(schemasWithEnumsFromAllOf) as Map<String, dynamic>;
       final result = generator.generateResponses(map, 'fileName');
 
       expect(
