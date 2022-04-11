@@ -14,4 +14,20 @@ class SwaggerEnum {
 
   /// Enums are either int or string
   final bool isInteger;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SwaggerEnum &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          isInteger == other.isInteger;
+
+  @override
+  int get hashCode => name.hashCode ^ isInteger.hashCode;
+
+  @override
+  String toString() {
+    return '{name: $name, isInteger: $isInteger}';
+  }
 }

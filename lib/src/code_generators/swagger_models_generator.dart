@@ -1302,21 +1302,22 @@ $allHashComponents;
     schemas.forEach((className, map) {
       final mapMap = map as Map<String, dynamic>;
       if (mapMap.containsKey('enum')) {
-        final isInteger = kIntegerTypes.contains(mapMap['type']);
-        results.add(SwaggerEnum(
+        _addEnum(
+          outResults: results,
           name: getValidatedClassName(className.capitalize),
-          isInteger: isInteger,
-        ));
+          map: mapMap,
+        );
         return;
       }
 
       if (mapMap['type'] == 'array' &&
           mapMap['items'] != null &&
           mapMap['items']['enum'] != null) {
-        results.add(SwaggerEnum(
+        _addEnum(
+          outResults: results,
           name: getValidatedClassName(className.capitalize),
-          isInteger: false,
-        ));
+          map: mapMap,
+        );
         return;
       }
 
@@ -1363,15 +1364,12 @@ $allHashComponents;
           return;
         }
 
-        if (propertyValue.containsKey('enum') ||
-            (propertyValue['items'] != null &&
-                propertyValue['items']['enum'] != null)) {
-          final name = getValidatedClassName(
-              generateEnumName(getValidatedClassName(className), propertyName));
-          final isInteger = kIntegerTypes
-              .contains(propertyValue['type'] ?? mapMap['items']?['type']);
-          results.add(SwaggerEnum(name: name, isInteger: isInteger));
-        }
+        _addEnum(
+          outResults: results,
+          name: getValidatedClassName(
+              generateEnumName(getValidatedClassName(className), propertyName)),
+          map: propertyValue,
+        );
       });
     });
 
@@ -1383,10 +1381,11 @@ $allHashComponents;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
-          results.add(SwaggerEnum(
+          _addEnum(
+            outResults: results,
             name: className,
-            isInteger: kIntegerTypes.contains(schema['type']),
-          ));
+            map: schema,
+          );
           return;
         }
         final properties = schema == null
@@ -1398,17 +1397,13 @@ $allHashComponents;
         }
 
         properties.forEach((propertyName, propertyValue) {
-          var property = propertyValue as Map<String, dynamic>;
+          final property = propertyValue as Map<String, dynamic>;
 
-          if (property.containsKey('enum')) {
-            results.add(SwaggerEnum.fromSchema(property));
-          } else if (property['items'] != null &&
-              property['items']['enum'] != null) {
-            results.add(SwaggerEnum(
-              name: generateEnumName(className, propertyName),
-              isInteger: kIntegerTypes.contains(property['items']['type']),
-            ));
-          }
+          _addEnum(
+            outResults: results,
+            name: generateEnumName(className, propertyName),
+            map: property,
+          );
         });
       });
     }
@@ -1421,7 +1416,11 @@ $allHashComponents;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
-          results.add(SwaggerEnum.fromSchema(schema));
+          _addEnum(
+            outResults: results,
+            name: schema['name'] as String,
+            map: schema,
+          );
           return;
         }
         final properties = schema == null
@@ -1435,14 +1434,11 @@ $allHashComponents;
         properties.forEach((propertyName, propertyValue) {
           var property = propertyValue as Map<String, dynamic>;
 
-          if (property.containsKey('enum') ||
-              (property['items'] != null &&
-                  property['items']['enum'] != null)) {
-            results.add(SwaggerEnum(
-              name: generateEnumName(className, propertyName),
-              isInteger: kIntegerTypes.contains(property['items']['type']),
-            ));
-          }
+          _addEnum(
+            outResults: results,
+            name: generateEnumName(className, propertyName),
+            map: property,
+          );
         });
       });
     }
@@ -1455,6 +1451,20 @@ $allHashComponents;
     }).toList();
 
     return resultsWithPrefix;
+  }
+
+  void _addEnum({
+    required List<SwaggerEnum> outResults,
+    required String name,
+    required Map<String, dynamic> map,
+  }) {
+    final enums = map['enum'] ?? map['items']?['enum'];
+    if (enums is List) {
+      final isInteger =
+          kIntegerTypes.contains(map['type'] ?? map['items']?['type']) ||
+              enums.firstOrNull is int;
+      outResults.add(SwaggerEnum(name: name, isInteger: isInteger));
+    }
   }
 
   Map<String, dynamic> getRequestBodiesFromRequests(Map<String, dynamic> map) {
