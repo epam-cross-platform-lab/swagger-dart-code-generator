@@ -208,7 +208,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         classes,
         options.defaultValuesMap,
         options.useDefaultNullForLists,
-        allEnums.map((e) => e.name).toList(growable: false),
+        allEnums.map((e) => e.name).toList(),
         allEnumListNames,
       );
     }).join('\n');
@@ -1368,7 +1368,8 @@ $allHashComponents;
                 propertyValue['items']['enum'] != null)) {
           final name = getValidatedClassName(
               generateEnumName(getValidatedClassName(className), propertyName));
-          final isInteger = kIntegerTypes.contains(mapMap['items']['type']);
+          final isInteger = kIntegerTypes
+              .contains(propertyValue['type'] ?? mapMap['items']?['type']);
           results.add(SwaggerEnum(name: name, isInteger: isInteger));
         }
       });
@@ -1382,7 +1383,10 @@ $allHashComponents;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
-          results.add(SwaggerEnum.fromSchema(schema));
+          results.add(SwaggerEnum(
+            name: className,
+            isInteger: kIntegerTypes.contains(schema['type']),
+          ));
           return;
         }
         final properties = schema == null
@@ -1396,11 +1400,14 @@ $allHashComponents;
         properties.forEach((propertyName, propertyValue) {
           var property = propertyValue as Map<String, dynamic>;
 
-          if (property.containsKey('enum') ||
-              (property['items'] != null &&
-                  property['items']['enum'] != null)) {
-            results.add(SwaggerEnum.fromSchema(
-                property['items'] as Map<String, dynamic>));
+          if (property.containsKey('enum')) {
+            results.add(SwaggerEnum.fromSchema(property));
+          } else if (property['items'] != null &&
+              property['items']['enum'] != null) {
+            results.add(SwaggerEnum(
+              name: propertyName,
+              isInteger: kIntegerTypes.contains(property['items']['type']),
+            ));
           }
         });
       });

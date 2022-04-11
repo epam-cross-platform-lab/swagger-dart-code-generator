@@ -82,14 +82,14 @@ void main() {
     test('Should remove numbers at beginning if it is key word', () {
       final map = jsonDecode(requestWithEnum) as Map<String, dynamic>;
       final result = generator.getEnumsFromRequests(map);
-      expect(result[0], equals('PetsPetIdItemsGetContentType'));
+      expect(result[0].name, equals('PetsPetIdItemsGetContentType'));
     });
 
     test('Should remove numbers at beginning if it is key word', () {
       final map =
           jsonDecode(requestWithListOfEnumInParameter) as Map<String, dynamic>;
       final result = generator.getEnumsFromRequests(map);
-      expect(result[0], equals('V3OrderOrderIdStatePutOrderStateRequest'));
+      expect(result[0].name, equals('V3OrderOrderIdStatePutOrderStateRequest'));
     });
   });
 
