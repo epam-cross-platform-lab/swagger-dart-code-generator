@@ -644,6 +644,50 @@ const String schemasWithIntegers = '''
 }
 ''';
 
+const String schemasWithAllOf = '''
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Some service",
+    "version": "1.0"
+  },
+  "components": {
+    "schemas": {
+      "Success": {
+        "title": "Success",
+        "enum": [
+          "one",
+          "two"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      }
+    },
+    "responses": {
+      "SpaEnumResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "success": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    }
+                  ],
+                  "description": "The type of client validation for this field"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+''';
+
 const String requestWithReturnTypeInjected = '''
 {
   "paths": {

@@ -839,6 +839,21 @@ void main() {
     });
   });
 
+
+  group('Tests allOf enums', () {
+    test('Class properties should get enums. prefix', () {
+      final map = jsonDecode(schemasWithAllOf) as Map<String, dynamic>;
+      final result = generator.generateResponses(map, 'fileName');
+
+      expect(
+        result,
+        contains(
+          'final enums.Success? success',
+        ),
+      );
+    });
+  });
+
   group('Tests for models from responses', () {
     test('Should generate correct model from response', () {
       final map =
