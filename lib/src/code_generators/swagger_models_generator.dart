@@ -470,8 +470,14 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     if (allOf.length != 1) {
       typeName = kDynamic;
     } else {
-      typeName =
-          getValidatedClassName(allOf.first['\$ref'].toString().getRef());
+      var className = allOf.first['\$ref'].toString().getRef();
+
+      final enumClassName = 'enums.$className';
+      if (allEnumNames.contains(enumClassName)) {
+        className = enumClassName;
+      }
+
+      typeName = getValidatedClassName(className);
     }
 
     final includeIfNullString = generateIncludeIfNullString();
