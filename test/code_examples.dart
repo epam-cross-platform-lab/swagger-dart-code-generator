@@ -676,52 +676,7 @@ const String schemasWithEnumsFromAllOf = '''
                       "$ref": "#/components/schemas/Success"
                     }
                   ],
-                  "description": "The type of client validation for this field",
-                  "default": "one"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-''';
-
-const String schemasWithEnumList = '''
-{
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Some service",
-    "version": "1.0"
-  },
-  "components": {
-    "schemas": {
-      "Success": {
-        "title": "Success",
-        "enum": [
-          "one",
-          "two"
-        ],
-        "type": "string",
-        "description": "An enumeration."
-      }
-    },
-    "responses": {
-      "SpaEnumResponse": {
-        "description": "Success",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "successes": {
-                  "items": {
-                    "$ref": "#/components/schemas/Success"
-                  },
-                  "description": "The type of client validation for this field",
-                  "type": "array",
-                  "default": ["one", "two"]
+                  "description": "The type of client validation for this field"
                 }
               }
             }

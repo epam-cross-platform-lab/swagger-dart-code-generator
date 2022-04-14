@@ -5,7 +5,6 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:test/test.dart';
-
 import '../code_examples.dart';
 
 void main() {
@@ -840,38 +839,13 @@ void main() {
     });
   });
 
+
   group('Tests allOf enums', () {
     test('Class properties should get enums. prefix', () {
       final map = jsonDecode(schemasWithEnumsFromAllOf) as Map<String, dynamic>;
       final result = generator.generateResponses(map, 'fileName');
 
       expect(result, contains('final enums.Success? success'));
-    });
-  });
-
-  group('Tests for enum default values', () {
-    test('Enums should have default values', () {
-      final map = jsonDecode(schemasWithEnumsFromAllOf) as Map<String, dynamic>;
-      final result = generator.generateResponses(map, 'fileName');
-
-      expect(
-        result,
-        contains(
-          '@JsonKey(name: \'success\', toJson: successToJson, fromJson: successFromJson, defaultValue: enums.Success.one)',
-        ),
-      );
-    });
-
-    test('Enum list should have default values', () {
-      final map = jsonDecode(schemasWithEnumList) as Map<String, dynamic>;
-      final result = generator.generateResponses(map, 'fileName');
-
-      expect(
-        result,
-        contains(
-          '@JsonKey(name: \'successes\', toJson: successListToJson, fromJson: successListFromJson, defaultValue: [enums.Success.one, enums.Success.two])',
-        ),
-      );
     });
   });
 
