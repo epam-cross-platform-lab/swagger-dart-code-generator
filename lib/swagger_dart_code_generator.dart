@@ -25,6 +25,7 @@ const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
 String additionalResultPath = '';
+Set<String> allFiledList = {};
 
 String normal(String path) {
   return AssetId('', path).path;
@@ -37,10 +38,9 @@ String _getAdditionalResultPath(GeneratorOptions options) {
     return filesList.first.path;
   }
 
-  final urlList = options.inputUrls;
-  if (urlList.isNotEmpty) {
-    final path =
-        normalize('${options.inputFolder}${getFileNameBase(urlList.first)}');
+  if (options.inputUrls.isNotEmpty) {
+    final path = normalize(
+        '${options.inputFolder}${getFileNameBase(options.inputUrls.first)}');
     File(path).createSync();
     return path;
   }
@@ -62,14 +62,32 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   var out = normalize(options.outputFolder);
 
-  final allFilesPaths = [
-    ...options.inputUrls,
-    ...filesList.map((e) => e.path),
-  ];
+  final filesPaths = filesList.map((e) => e.path);
+  final fileNames = filesList.map((e) => getFileNameBase(e.path));
+
+  allFiledList.addAll(filesPaths);
+  allFiledList.addAll(options.inputUrls);
 
   result[additionalResultPath] = {};
 
-  for (var url in allFilesPaths) {
+  for (var url in filesPaths) {
+    final name = removeFileExtension(getFileNameBase(url));
+    if (name == additionalResultPath) {
+      continue;
+    }
+
+    result[url] = {};
+    result[url]!.add(join(out, '$name$_outputFileExtension'));
+    result[url]!.add(join(out, '$name$_outputEnumsFileExtension'));
+    result[url]!.add(join(out, '$name$_outputModelsFileExtension'));
+    result[url]!.add(join(out, '$name$_outputResponsesFileExtension'));
+  }
+
+  for (var url in options.inputUrls) {
+    if (fileNames.contains(getFileNameBase(url))) {
+      continue;
+    }
+
     final name = removeFileExtension(getFileNameBase(url));
 
     result[additionalResultPath]!.add(join(out, '$name$_outputFileExtension'));
@@ -106,62 +124,47 @@ class SwaggerDartCodeGenerator implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    for (final url in options.inputUrls) {
-      final fileNameWithExtension = getFileNameBase(url);
+    final file = File(buildStep.inputId.path);
+    var contents = await file.readAsString();
 
-      final contents = await _download(url);
+    Map<String, dynamic> contentMap;
 
-      final filePath = join(options.inputFolder, fileNameWithExtension);
-      await File(filePath).create();
-      await File(filePath).writeAsString(contents);
+    if (buildStep.inputId.path.endsWith('.yaml')) {
+      final t = loadYaml(contents) as YamlMap;
+      contentMap = t.toMap();
+    } else {
+      contentMap = jsonDecode(contents) as Map<String, dynamic>;
     }
 
-    final filesList = Directory(normalize(options.inputFolder))
-        .listSync()
-        .where((FileSystemEntity file) =>
-            _inputFileExtensions.any((ending) => file.path.endsWith(ending)))
-        .map((e) => e.path)
-        .toList();
+    final fileNameWithExtension = getFileNameBase(buildStep.inputId.path);
 
-    await _generateAndWriteFiles(buildStep, filesList);
-  }
+    final fileNameWithoutExtension = removeFileExtension(fileNameWithExtension);
 
-  Future<void> _generateAndWriteFiles(
-      BuildStep buildStep, List<String> urls) async {
-    for (final url in urls) {
-      final file = File(url);
-      var contents = await file.readAsString();
-
-      Map<String, dynamic> contentMap;
-
-      if (url.endsWith('.yaml')) {
-        final t = loadYaml(contents) as YamlMap;
-        contentMap = t.toMap();
-      } else {
-        contentMap = jsonDecode(contents) as Map<String, dynamic>;
-      }
-
-      final fileNameWithExtension = getFileNameBase(url);
-
-      final fileNameWithoutExtension =
-          removeFileExtension(fileNameWithExtension);
-
-      await _generateAndWriteFile(
-        contents: contentMap,
-        buildStep: buildStep,
-        fileNameWithExtension: fileNameWithExtension,
-        fileNameWithoutExtension: fileNameWithoutExtension,
-      );
-    }
-
-    await _generateAdditionalFiles(
-      buildStep.inputId,
-      buildStep,
-      true,
-      urls,
+    await _generateAndWriteFile(
+      contents: contentMap,
+      buildStep: buildStep,
+      fileNameWithExtension: fileNameWithExtension,
+      fileNameWithoutExtension: fileNameWithoutExtension,
     );
 
-    return;
+    if (buildStep.inputId.path == additionalResultPath) {
+      for (final url in options.inputUrls) {
+        final fileNameWithExtension = getFileNameBase(url);
+
+        final contents = await _download(url);
+
+        final filePath = join(options.inputFolder, fileNameWithExtension);
+        await File(filePath).create();
+        await File(filePath).writeAsString(contents);
+      }
+
+      await _generateAdditionalFiles(
+        buildStep.inputId,
+        buildStep,
+        true,
+        allFiledList.toList(),
+      );
+    }
   }
 
   Future<void> _generateAndWriteFile({
