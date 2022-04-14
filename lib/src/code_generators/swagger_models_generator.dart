@@ -1182,7 +1182,7 @@ $copyWithMethod
         .map((e) => e.substring(e.indexOf('final ') + 6))
         .map((e) {
       final items = e.split(' ');
-      if (!items.first.endsWith('?')) {
+      if (!items[0].endsWith('?') && items[0] != 'dynamic') {
         items[0] += '?';
       }
 
