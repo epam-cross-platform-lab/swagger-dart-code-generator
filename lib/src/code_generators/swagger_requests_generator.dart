@@ -165,6 +165,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           ..docs.add(_getCommentsForMethod(
             methodDescription: swaggerRequest.summary,
             parameters: swaggerRequest.parameters,
+            components: swaggerRoot.components?.parameters,
           ))
           ..name = methodName
           ..annotations
@@ -307,13 +308,21 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   String _getCommentsForMethod({
     required String methodDescription,
     required List<SwaggerRequestParameter> parameters,
+    required Map<String, SwaggerRequestParameter>? components,
   }) {
-    final parametersComments = parameters
-        .map((SwaggerRequestParameter parameter) => _createSummaryParameters(
-              parameter.name,
-              parameter.description,
-              parameter.inParameter,
-            ));
+    final parametersComments =
+        parameters.map((SwaggerRequestParameter parameter) {
+      if (components != null) {
+        var key = parameter.ref.split('/').last;
+        parameter = components[key] ?? parameter;
+      }
+
+      return _createSummaryParameters(
+        parameter.name,
+        parameter.description,
+        parameter.inParameter,
+      );
+    });
 
     final formattedDescription = methodDescription.split('\n').join('\n///');
 
