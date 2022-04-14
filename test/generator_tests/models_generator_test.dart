@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
 
@@ -786,59 +785,6 @@ void main() {
       expect(result, contains('enums.SpaEnumResponseFailedValued'));
     });
   });
-
-  group('Tests for getAllEnums', () {
-    test('Should get enums with integer return types', () {
-      final map = jsonDecode(schemasWithIntegers) as Map<String, dynamic>;
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(SwaggerEnum(name: 'enums.AccountType', isInteger: true)),
-      );
-    });
-
-    test('Should get enums with integer return types in properties', () {
-      final map = jsonDecode(schemasWithIntegers) as Map<String, dynamic>;
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(
-          SwaggerEnum(name: 'enums.SpaSchemaSuccessValues', isInteger: true),
-        ),
-      );
-    });
-
-    test('Should get enums with integer return types in response', () {
-      final map = jsonDecode(schemasWithIntegers) as Map<String, dynamic>;
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(
-          SwaggerEnum(name: 'enums.SpaResponse', isInteger: true),
-        ),
-      );
-    });
-
-    test('Should get enums with integer return types in response properties',
-        () {
-      final map = jsonDecode(schemasWithIntegers) as Map<String, dynamic>;
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(
-          SwaggerEnum(
-            name: 'enums.SpaEnumResponseFailedValued',
-            isInteger: true,
-          ),
-        ),
-      );
-    });
-  });
-
   group('Tests for models from responses', () {
     test('Should generate correct model from response', () {
       final map =

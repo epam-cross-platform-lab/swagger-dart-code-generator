@@ -3,7 +3,6 @@ import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
@@ -102,8 +101,8 @@ abstract class SwaggerGeneratorBase {
     return jsonKey;
   }
 
-  List<SwaggerEnum> getEnumsFromRequests(Map<String, dynamic> map) {
-    final enums = <SwaggerEnum>[];
+  List<String> getEnumNamesFromRequests(Map<String, dynamic> map) {
+    final enumNames = <String>[];
     final swaggerRoot = SwaggerRoot.fromJson(map);
 
     //Link defined parameters with requests
@@ -130,7 +129,7 @@ abstract class SwaggerGeneratorBase {
           var name = generateRequestEnumName(
               path, requestType, swaggerRequestParameter.name);
 
-          if (enums.any((element) => element.name == name)) {
+          if (enumNames.contains(name)) {
             continue;
           }
 
@@ -139,20 +138,13 @@ abstract class SwaggerGeneratorBase {
               [];
 
           if (enumValues.isNotEmpty) {
-            enums.add(
-              SwaggerEnum(
-                name: name,
-                isInteger: kIntegerTypes.contains(
-                  swaggerRequestParameter.schema?.type,
-                ),
-              ),
-            );
+            enumNames.add(name);
           }
         }
       });
     });
 
-    return enums;
+    return enumNames;
   }
 
   SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(
