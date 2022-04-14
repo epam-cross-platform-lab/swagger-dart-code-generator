@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
-import 'package:swagger_dart_code_generator/src/exception_words.dart';
-import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
+import 'package:recase/recase.dart';
+import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/exception_words.dart';
 
 import 'constants.dart';
 
@@ -177,12 +176,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
   String generateBase(Map<String, dynamic> map, String fileName,
       Map<String, dynamic> classes, bool generateFromJsonToJsonForRequests) {
-    final allEnums = getAllEnums(map);
+    final allEnumsNames = getAllEnumNames(map);
     final allEnumListNames = getAllListEnumNames(map);
 
     final generatedEnumFromJsonToJson = generateFromJsonToJsonForRequests
-        ? generateEnumFromJsonToJsonMethods(
-            allEnums, options.enumsCaseSensitive)
+        ? genetateEnumFromJsonToJsonMethods(
+            allEnumsNames, options.enumsCaseSensitive)
         : '';
 
     final classesFromResponses = getClassesFromResponses(map);
@@ -208,7 +207,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         classes,
         options.defaultValuesMap,
         options.useDefaultNullForLists,
-        allEnums.map((e) => e.name).toList(),
+        allEnumsNames,
         allEnumListNames,
       );
     }).join('\n');
@@ -358,12 +357,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      typeName,
-      propertyEntryMap['default'],
-      false,
-    );
+        allEnumNames, allEnumListNames, typeName.toString(), false);
 
     final dateToJsonValue = generateToJsonForDate(propertyEntryMap);
 
@@ -378,13 +372,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};';
   }
 
-  String generateUnknownEnumValue(
-    List<String> allEnumNames,
-    List<String> allEnumListNames,
-    String typeName,
-    dynamic defaultValue,
-    bool isList,
-  ) {
+  String generateUnknownEnumValue(List<String> allEnumNames,
+      List<String> allEnumListNames, String typeName, bool isList) {
     typeName = getValidatedClassName(typeName);
 
     if (allEnumListNames.contains(typeName)) {
@@ -392,26 +381,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     if (allEnumNames.contains(typeName)) {
-      var defaultValueString = '';
-      if (defaultValue != null) {
-        if (isList && defaultValue is List) {
-          final defaultValues = defaultValue
-              .map((e) => '$typeName.${e.toString().camelCase}')
-              .join(', ');
-          defaultValueString = '[$defaultValues]';
-        } else {
-          final defaultValueCamelCase = defaultValue?.toString().camelCase;
-          defaultValueString = '$typeName.$defaultValueCamelCase';
-        }
-        defaultValueString = ', defaultValue: $defaultValueString';
-      }
-
       if (!isList) {
         final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
-        return ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson$defaultValueString';
+        return ', toJson: ${enumNameCamelCase}ToJson, fromJson: ${enumNameCamelCase}FromJson';
       } else {
         final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
-        return ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson$defaultValueString';
+        return ', toJson: ${enumNameCamelCase}ListToJson, fromJson: ${enumNameCamelCase}ListFromJson';
       }
     }
 
@@ -464,12 +439,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      typeName,
-      propertyEntryMap['default'],
-      false,
-    );
+        allEnumNames, allEnumListNames, typeName, false);
 
     final dateToJsonValue = generateToJsonForDate(propertyEntryMap);
 
@@ -499,20 +469,14 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     if (allOf.length != 1) {
       typeName = kDynamic;
     } else {
-      var className = allOf.first['\$ref'].toString().getRef();
-
-      final enumClassName = 'enums.$className';
-      if (allEnumNames.contains(enumClassName)) {
-        className = enumClassName;
-      }
-
-      typeName = getValidatedClassName(className);
+      typeName =
+          getValidatedClassName(allOf.first['\$ref'].toString().getRef());
     }
 
     final includeIfNullString = generateIncludeIfNullString();
 
-    final unknownEnumValue = generateUnknownEnumValue(allEnumNames,
-        allEnumListNames, typeName, propertyEntryMap['default'], false);
+    final unknownEnumValue = generateUnknownEnumValue(
+        allEnumNames, allEnumListNames, typeName, false);
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$unknownEnumValue)\n";
@@ -557,12 +521,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      typeName,
-      propertyEntryMap['default'],
-      false,
-    );
+        allEnumNames, allEnumListNames, typeName, false);
 
     if (allEnumListNames.contains(typeName)) {
       typeName = 'List<$typeName>';
@@ -595,12 +554,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     allEnumNames.add(enumName);
 
     final unknownEnumValue = generateUnknownEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      enumName,
-      propertyEntryMap['default'],
-      false,
-    ).substring(2);
+            allEnumNames, allEnumListNames, enumName, false)
+        .substring(2);
 
     final includeIfNullString = generateIncludeIfNullString();
 
@@ -712,12 +667,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     );
 
     final unknownEnumValue = generateUnknownEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      typeName,
-      propertyEntryMap['default'],
-      true,
-    );
+        allEnumNames, allEnumListNames, typeName, true);
 
     final includeIfNullString = generateIncludeIfNullString();
 
@@ -779,12 +729,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     final unknownEnumValue = generateUnknownEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      typeName,
-      val['default'],
-      false,
-    );
+        allEnumNames, allEnumListNames, typeName, false);
 
     final dateToJsonValue = generateToJsonForDate(val);
 
@@ -1032,52 +977,47 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
   }
 
-  String generateEnumFromJsonToJsonMethods(
-      List<SwaggerEnum> swaggerEnums, bool enumsCaseSensitive) {
-    return swaggerEnums
+  String genetateEnumFromJsonToJsonMethods(
+      List<String> enumNames, bool enumsCaseSensitive) {
+    return enumNames
         .map((e) => generateEnumFromJsonToJson(e, enumsCaseSensitive))
         .join('\n');
   }
 
-  String generateEnumFromJsonToJson(
-      SwaggerEnum swaggerEnum, bool enumsCaseSensitive) {
+  String generateEnumFromJsonToJson(String enumName, bool enumsCaseSensitive) {
     final neededName =
-        getValidatedClassName(swaggerEnum.name.replaceFirst('enums.', ''));
+        getValidatedClassName(enumName.replaceFirst('enums.', ''));
 
     final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
-    final type = swaggerEnum.isInteger ? 'int' : 'String';
-    final defaultValue = swaggerEnum.isInteger ? 0 : '\'\'';
 
     return '''
-$type? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}) {
+String? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}) {
   return enums.\$${neededName}Map[${neededName.camelCase}];
 }
 
 enums.$neededName ${neededName.camelCase}FromJson(Object? ${neededName.camelCase}) {
 
-${swaggerEnum.isInteger ? '''
 if(${neededName.camelCase} is int)
   {
     return enums.\$${neededName}Map.entries
-      .firstWhere((element) => element.value == ${neededName.camelCase},
-      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, $defaultValue))
+      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}.toString(),
+      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
       .key;
   }
-''' : '''
+
 if(${neededName.camelCase} is String)
   {
  return enums.\$${neededName}Map.entries
       .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString,
-      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, $defaultValue))
+      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, ''))
       .key;
+
       }
-'''}
   
     return enums.$neededName.swaggerGeneratedUnknown;
 }
 
-
-List<$type> ${neededName.camelCase}ListToJson(
+List<String> ${neededName.camelCase}ListToJson(
     List<enums.$neededName>? ${neededName.camelCase}) {
 
   if(${neededName.camelCase} == null)
@@ -1325,11 +1265,8 @@ $allHashComponents;
     return currentProperties;
   }
 
-  List<String> getAllEnumNames(Map<String, dynamic> map) =>
-      getAllEnums(map).map((e) => e.name).toList(growable: false);
-
-  List<SwaggerEnum> getAllEnums(Map<String, dynamic> map) {
-    final results = getEnumsFromRequests(map);
+  List<String> getAllEnumNames(Map<String, dynamic> map) {
+    final results = getEnumNamesFromRequests(map);
 
     final components = map['components'] as Map<String, dynamic>?;
 
@@ -1356,22 +1293,14 @@ $allHashComponents;
     schemas.forEach((className, map) {
       final mapMap = map as Map<String, dynamic>;
       if (mapMap.containsKey('enum')) {
-        _addEnum(
-          outResults: results,
-          name: getValidatedClassName(className.capitalize),
-          map: mapMap,
-        );
+        results.add(getValidatedClassName(className.capitalize));
         return;
       }
 
       if (mapMap['type'] == 'array' &&
           mapMap['items'] != null &&
           mapMap['items']['enum'] != null) {
-        _addEnum(
-          outResults: results,
-          name: getValidatedClassName(className.capitalize),
-          map: mapMap,
-        );
+        results.add(getValidatedClassName(className.capitalize));
         return;
       }
 
@@ -1418,12 +1347,12 @@ $allHashComponents;
           return;
         }
 
-        _addEnum(
-          outResults: results,
-          name: getValidatedClassName(
-              generateEnumName(getValidatedClassName(className), propertyName)),
-          map: propertyValue,
-        );
+        if (propertyValue.containsKey('enum') ||
+            (propertyValue['items'] != null &&
+                propertyValue['items']['enum'] != null)) {
+          results.add(getValidatedClassName(generateEnumName(
+              getValidatedClassName(className), propertyName)));
+        }
       });
     });
 
@@ -1435,46 +1364,7 @@ $allHashComponents;
         final schema = firstContent == null ? null : firstContent['schema'];
         if (schema != null &&
             (schema as Map<String, dynamic>).containsKey('enum')) {
-          _addEnum(
-            outResults: results,
-            name: className,
-            map: schema,
-          );
-          return;
-        }
-        final properties = schema == null
-            ? null
-            : schema['properties'] as Map<String, dynamic>?;
-
-        if (properties == null) {
-          return;
-        }
-
-        properties.forEach((propertyName, propertyValue) {
-          final property = propertyValue as Map<String, dynamic>;
-
-          _addEnum(
-            outResults: results,
-            name: generateEnumName(className, propertyName),
-            map: property,
-          );
-        });
-      });
-    }
-
-    if (requestBodies.isNotEmpty) {
-      requestBodies.forEach((className, map) {
-        final response = requestBodies[className];
-        final content = response['content'] as Map<String, dynamic>;
-        final firstContent = content.entries.firstOrNull?.value;
-        final schema = firstContent == null ? null : firstContent['schema'];
-        if (schema != null &&
-            (schema as Map<String, dynamic>).containsKey('enum')) {
-          _addEnum(
-            outResults: results,
-            name: schema['name'] as String,
-            map: schema,
-          );
+          results.add(className.capitalize);
           return;
         }
         final properties = schema == null
@@ -1488,37 +1378,51 @@ $allHashComponents;
         properties.forEach((propertyName, propertyValue) {
           var property = propertyValue as Map<String, dynamic>;
 
-          _addEnum(
-            outResults: results,
-            name: generateEnumName(className, propertyName),
-            map: property,
-          );
+          if (property.containsKey('enum') ||
+              (property['items'] != null &&
+                  property['items']['enum'] != null)) {
+            results.add(generateEnumName(className, propertyName));
+          }
+        });
+      });
+    }
+
+    if (requestBodies.isNotEmpty) {
+      requestBodies.forEach((className, map) {
+        final response = requestBodies[className];
+        final content = response['content'] as Map<String, dynamic>;
+        final firstContent = content.entries.firstOrNull?.value;
+        final schema = firstContent == null ? null : firstContent['schema'];
+        if (schema != null &&
+            (schema as Map<String, dynamic>).containsKey('enum')) {
+          results.add(className.capitalize);
+          return;
+        }
+        final properties = schema == null
+            ? null
+            : schema['properties'] as Map<String, dynamic>?;
+
+        if (properties == null) {
+          return;
+        }
+
+        properties.forEach((propertyName, propertyValue) {
+          var property = propertyValue as Map<String, dynamic>;
+
+          if (property.containsKey('enum') ||
+              (property['items'] != null &&
+                  property['items']['enum'] != null)) {
+            results.add(generateEnumName(className, propertyName));
+          }
         });
       });
     }
 
     final resultsWithPrefix = results.map((element) {
-      return SwaggerEnum(
-        name: 'enums.${element.name}',
-        isInteger: element.isInteger,
-      );
+      return 'enums.$element';
     }).toList();
 
     return resultsWithPrefix;
-  }
-
-  void _addEnum({
-    required List<SwaggerEnum> outResults,
-    required String name,
-    required Map<String, dynamic> map,
-  }) {
-    final enums = map['enum'] ?? map['items']?['enum'];
-    if (enums is List) {
-      final isInteger =
-          kIntegerTypes.contains(map['type'] ?? map['items']?['type']) ||
-              enums.firstOrNull is int;
-      outResults.add(SwaggerEnum(name: name, isInteger: isInteger));
-    }
   }
 
   Map<String, dynamic> getRequestBodiesFromRequests(Map<String, dynamic> map) {

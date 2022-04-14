@@ -23,7 +23,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
 
   @override
   List<String> getAllListEnumNames(Map<String, dynamic> map) {
-    final results = getEnumsFromRequests(map).map((e) => e.name).toList();
+    final results = getEnumNamesFromRequests(map);
 
     final definitions = map['definitions'] as Map<String, dynamic>?;
 

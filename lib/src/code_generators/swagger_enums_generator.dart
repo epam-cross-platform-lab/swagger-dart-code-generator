@@ -214,12 +214,7 @@ $enumsFromRequestBodies
 
     final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(
-      enumName,
-      enumValues: enumValues,
-      enumValuesNames: [],
-      isInteger: isInteger,
-    )}
+\t${getEnumValuesMapContent(enumName, enumValues: enumValues, enumValuesNames: [])}
       };
       ''';
 
@@ -272,12 +267,9 @@ $enumMap
     return resultStrings.join(',\n');
   }
 
-  String getEnumValuesMapContent(
-    String enumName, {
-    required List<String> enumValues,
-    required List<String> enumValuesNames,
-    required bool isInteger,
-  }) {
+  String getEnumValuesMapContent(String enumName,
+      {required List<String> enumValues,
+      required List<String> enumValuesNames}) {
     final neededStrings = <String>[];
     final fields = <String>[];
 
@@ -296,13 +288,8 @@ $enumMap
       validatedValue = getValidatedEnumFieldName(validatedValue);
 
       fields.add(validatedValue);
-      if (isInteger) {
-        neededStrings.add(
-            '\t$enumName.$validatedValue: ${value.replaceAll('\$', '\\\$')}');
-      } else {
-        neededStrings.add(
-            '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-      }
+      neededStrings.add(
+          '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
     }
 
     return neededStrings.join(',\n');
@@ -379,12 +366,7 @@ $enumMap
 
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(
-        enumName,
-        enumValues: enumValues,
-        enumValuesNames: enumValuesNamesList,
-        isInteger: isInteger,
-      )}
+\t${getEnumValuesMapContent(enumName, enumValues: enumValues, enumValuesNames: enumValuesNamesList)}
       };
       ''';
 
