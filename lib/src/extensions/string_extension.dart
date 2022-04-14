@@ -1,4 +1,5 @@
 import 'package:recase/recase.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 
 extension CapitalizeExtension on String {
@@ -45,7 +46,7 @@ extension TypeExtension on String {
 
   String asParameterType() {
     if (isEmpty) {
-      return 'dynamic';
+      return kDynamic;
     }
 
     final result =
