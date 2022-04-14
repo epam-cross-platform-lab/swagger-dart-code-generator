@@ -471,6 +471,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     } else {
       typeName =
           getValidatedClassName(allOf.first['\$ref'].toString().getRef());
+
+      if (allEnumNames.contains('enums.$typeName')) {
+        typeName = 'enums.$typeName';
+      }
     }
 
     final includeIfNullString = generateIncludeIfNullString();
