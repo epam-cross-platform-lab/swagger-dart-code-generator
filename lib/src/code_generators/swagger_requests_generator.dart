@@ -165,6 +165,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           ..docs.add(_getCommentsForMethod(
             methodDescription: swaggerRequest.summary,
             parameters: swaggerRequest.parameters,
+            componentsParameters: swaggerRoot.components?.parameters ?? {},
           ))
           ..name = methodName
           ..annotations
@@ -307,12 +308,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   String _getCommentsForMethod({
     required String methodDescription,
     required List<SwaggerRequestParameter> parameters,
+    required Map<String, SwaggerRequestParameter> componentsParameters,
   }) {
     final parametersComments = parameters
         .map((SwaggerRequestParameter parameter) => _createSummaryParameters(
-              parameter.name,
-              parameter.description,
-              parameter.inParameter,
+              parameter,
+              componentsParameters,
             ));
 
     final formattedDescription = methodDescription.split('\n').join('\n///');
@@ -323,21 +324,24 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }
 
   String _createSummaryParameters(
-    String parameterName,
-    String parameterDescription,
-    String inParameter,
+    SwaggerRequestParameter parameter,
+    Map<String, SwaggerRequestParameter> componentsParameters,
   ) {
-    if (inParameter == kHeader && options.ignoreHeaders) {
+    final neededParameter =
+        componentsParameters[parameter.ref.getUnformattedRef()] ?? parameter;
+
+    if (neededParameter.inParameter == kHeader && options.ignoreHeaders) {
       return '';
     }
-    if (parameterDescription.isNotEmpty) {
-      parameterDescription =
-          parameterDescription.replaceAll(RegExp(r'\n|\r|\t'), ' ');
-    } else {
-      parameterDescription = '';
-    }
 
-    return '///@param $parameterName $parameterDescription';
+    final description = [
+      neededParameter.description,
+      neededParameter.schema?.description
+    ]
+        .firstWhere((element) => element?.isNotEmpty == true, orElse: () => '')!
+        .replaceAll(RegExp(r'\n|\r|\t'), ' ');
+
+    return '///@param ${neededParameter.name} $description';
   }
 
   Expression _getParameterAnnotation(SwaggerRequestParameter parameter) {

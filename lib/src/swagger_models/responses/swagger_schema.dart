@@ -16,6 +16,7 @@ class SwaggerSchema {
     required this.schema,
     required this.oneOf,
     required this.anyOf,
+    required this.description,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -32,6 +33,9 @@ class SwaggerSchema {
 
   @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
+
+  @JsonKey(name: 'description', defaultValue: '')
+  String description;
 
   @JsonKey(name: 'enum', defaultValue: [])
   List<Object?> enumValuesObj;
