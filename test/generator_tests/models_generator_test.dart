@@ -5,6 +5,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_model
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:test/test.dart';
+
 import '../code_examples.dart';
 
 void main() {
@@ -794,7 +795,11 @@ void main() {
 
       expect(
         result,
-        contains(SwaggerEnum(name: 'enums.AccountType', isInteger: true)),
+        contains(SwaggerEnum(
+          name: 'enums.AccountType',
+          isInteger: true,
+          defaultValue: null,
+        )),
       );
     });
 
@@ -805,7 +810,11 @@ void main() {
       expect(
         result,
         contains(
-          SwaggerEnum(name: 'enums.SpaSchemaSuccessValues', isInteger: true),
+          SwaggerEnum(
+            name: 'enums.SpaSchemaSuccessValues',
+            isInteger: true,
+            defaultValue: 1,
+          ),
         ),
       );
     });
@@ -817,7 +826,11 @@ void main() {
       expect(
         result,
         contains(
-          SwaggerEnum(name: 'enums.SpaResponse', isInteger: true),
+          SwaggerEnum(
+            name: 'enums.SpaResponse',
+            isInteger: true,
+            defaultValue: null,
+          ),
         ),
       );
     });
@@ -833,12 +846,12 @@ void main() {
           SwaggerEnum(
             name: 'enums.SpaEnumResponseFailedValued',
             isInteger: true,
+            defaultValue: null,
           ),
         ),
       );
     });
   });
-
 
   group('Tests allOf enums', () {
     test('Class properties should get enums. prefix', () {
@@ -846,6 +859,57 @@ void main() {
       final result = generator.generateResponses(map, 'fileName');
 
       expect(result, contains('final enums.Success? success'));
+    });
+
+    test('fromJson should have default value', () {
+      final map = jsonDecode(schemasWithEnumsFromAllOf) as Map<String, dynamic>;
+      final result = generator.generateResponses(map, 'fileName');
+
+      expect(
+        result,
+        contains(
+          '@JsonKey(name: \'success\', toJson: successToJson, fromJson: successSuccessFromJson)',
+        ),
+      );
+      expect(
+        result,
+        contains(
+          'enums.Success successSuccessFromJson(Object? value) => successFromJson(value, enums.Success.one)',
+        ),
+      );
+    });
+  });
+
+  group('Tests enums ref', () {
+    test('fromJson should use use the standard function', () {
+      final map = jsonDecode(schemasWithEnumsArrayRef) as Map<String, dynamic>;
+      final result = generator.generateResponses(map, 'fileName');
+
+      expect(
+        result,
+        contains(
+          '@JsonKey(name: \'success\', toJson: successListToJson, fromJson: successListFromJson)',
+        ),
+      );
+    });
+
+    test('fromJson should use use a custom default value function', () {
+      final map = jsonDecode(schemasWithEnumsArrayRef) as Map<String, dynamic>;
+      final result = generator.generateResponses(map, 'fileName');
+
+      expect(
+        result,
+        contains(
+          '@JsonKey(name: \'successOther\', toJson: successListToJson, fromJson: successSuccessOtherListFromJson)',
+        ),
+      );
+      expect(
+        result,
+        contains(
+          'static List<enums.Success> successSuccessOtherListFromJson(List? value) '
+          '=> successListFromJson(value, [enums.Success.one, enums.Success.two])',
+        ),
+      );
     });
   });
 
