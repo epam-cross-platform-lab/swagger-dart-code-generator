@@ -25,7 +25,7 @@ targets:
           build_only_models: false
           separate_models: false
           enums_case_sensitive: false
-          cut_from_model_names: "V3"
+          cut_from_model_names: "ModelRenameV3"
           nullable_models:
             - "Pet"
             - "Dog"
