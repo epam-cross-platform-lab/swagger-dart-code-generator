@@ -285,15 +285,15 @@ $enumMap
       final value = enumValues[i];
       var validatedValue = value;
 
-      while (fields.contains(validatedValue)) {
-        validatedValue += '\$';
-      }
-
       if (enumValuesNames.length == enumValues.length) {
         validatedValue = enumValuesNames[i];
       }
 
       validatedValue = getValidatedEnumFieldName(validatedValue);
+
+      while (fields.contains(validatedValue)) {
+        validatedValue += '\$';
+      }
 
       fields.add(validatedValue);
       if (isInteger) {
