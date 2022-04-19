@@ -1281,7 +1281,7 @@ $copyWithMethod
       'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       var type = e.group(1)!;
-      if (!type.endsWith('?')) {
+      if (!type.endsWith('?') && type != kDynamic) {
         type += '?';
       }
       return '$type ${e.group(2)!}';
