@@ -145,6 +145,7 @@ abstract class SwaggerGeneratorBase {
                 isInteger: kIntegerTypes.contains(
                   swaggerRequestParameter.schema?.type,
                 ),
+                defaultValue: swaggerRequestParameter.schema?.defaultValue,
               ),
             );
           }
