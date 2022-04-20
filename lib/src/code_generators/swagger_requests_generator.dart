@@ -231,7 +231,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   Method _getPrivateMethod(Method method) {
     final parameters = method.optionalParameters.map((p) {
       if (p.type!.symbol!.startsWith('enums.')) {
-        return p.copyWith(type: Reference('String?'));
+        return p.copyWith(type: Reference('dynamic'));
       }
 
       return p;

@@ -1116,7 +1116,10 @@ if(${neededName.camelCase} is String)
       }
 '''}
   
-    return defaultValue ?? $defaultEnumValue;
+    return defaultValue ??
+      enums.\$${neededName}Map.entries
+          .firstWhere((element) => element.value == defaultValue)
+          .key;
 }
 
 
