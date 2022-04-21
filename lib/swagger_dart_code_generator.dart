@@ -62,7 +62,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   var out = normalize(options.outputFolder);
 
-  final filesPaths = filesList.map((e) => e.path);
+  final filesPaths = filesList.map((e) => e.path.replaceAll('\\', '/'));
   final fileNames = filesList.map((e) => getFileNameBase(e.path));
 
   allFiledList.addAll(filesPaths);
