@@ -1,3 +1,8 @@
+# 2.4.10
+
+* Fixed generation of requrst properties annotations ([#384](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/384))
+* Various fixes and improvements
+
 # 2.4.9
 
 * Added generation of `allOff` models to not class, but to have ability to map it to any type
