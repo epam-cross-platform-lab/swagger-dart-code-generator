@@ -2,6 +2,7 @@
 
 * Fixed generation of requrst properties annotations ([#384](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/384))
 * Various fixes and improvements
+* Refactored generator caching flow
 
 # 2.4.9
 
