@@ -2,9 +2,9 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
+import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
-import 'dart:convert';
 
 import 'client_mapping.dart';
 import 'package:chopper/chopper.dart' as chopper;
@@ -78,7 +78,7 @@ abstract class PetServiceSwagger extends ChopperService {
   ///@param status Status values that need to be considered for filter
   @Get(path: '/pet/findByStatus')
   Future<chopper.Response<List<Pet>>> _petFindByStatusGet(
-      {@Query('status') required String? status});
+      {@Query('status') required dynamic status});
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
@@ -339,21 +339,18 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false)
+  @JsonKey(name: 'id')
   final num? id;
-  @JsonKey(name: 'petId', includeIfNull: false)
+  @JsonKey(name: 'petId')
   final num? petId;
-  @JsonKey(name: 'quantity', includeIfNull: false)
+  @JsonKey(name: 'quantity')
   final int? quantity;
-  @JsonKey(name: 'shipDate', includeIfNull: false)
+  @JsonKey(name: 'shipDate')
   final DateTime? shipDate;
   @JsonKey(
-      name: 'status',
-      includeIfNull: false,
-      toJson: orderStatusToJson,
-      fromJson: orderStatusFromJson)
+      name: 'status', toJson: orderStatusToJson, fromJson: orderStatusFromJson)
   final enums.OrderStatus? status;
-  @JsonKey(name: 'complete', includeIfNull: false, defaultValue: false)
+  @JsonKey(name: 'complete', defaultValue: false)
   final bool? complete;
   static const fromJsonFactory = _$OrderFromJson;
   static const toJsonFactory = _$OrderToJson;
@@ -422,9 +419,9 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false)
+  @JsonKey(name: 'id')
   final num? id;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'name')
   final String? name;
   static const fromJsonFactory = _$CategoryFromJson;
   static const toJsonFactory = _$CategoryToJson;
@@ -471,21 +468,21 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false)
+  @JsonKey(name: 'id')
   final num? id;
-  @JsonKey(name: 'username', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'username')
   final String? username;
-  @JsonKey(name: 'firstName', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'firstName')
   final String? firstName;
-  @JsonKey(name: 'lastName', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'lastName')
   final String? lastName;
-  @JsonKey(name: 'email', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'password', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'password')
   final String? password;
-  @JsonKey(name: 'phone', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'phone')
   final String? phone;
-  @JsonKey(name: 'userStatus', includeIfNull: false)
+  @JsonKey(name: 'userStatus')
   final int? userStatus;
   static const fromJsonFactory = _$UserFromJson;
   static const toJsonFactory = _$UserToJson;
@@ -565,9 +562,9 @@ class Tag {
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false)
+  @JsonKey(name: 'id')
   final num? id;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'name')
   final String? name;
   static const fromJsonFactory = _$TagFromJson;
   static const toJsonFactory = _$TagToJson;
@@ -604,29 +601,25 @@ class Pet {
   Pet({
     this.id,
     this.category,
-    this.name,
-    this.photoUrls,
+    required this.name,
+    required this.photoUrls,
     this.tags,
     this.status,
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
 
-  @JsonKey(name: 'id', includeIfNull: false)
+  @JsonKey(name: 'id')
   final num? id;
-  @JsonKey(name: 'category', includeIfNull: false)
+  @JsonKey(name: 'category')
   final Category? category;
-  @JsonKey(name: 'name', includeIfNull: false, defaultValue: '')
-  final String? name;
-  @JsonKey(name: 'photoUrls', includeIfNull: false, defaultValue: <String>[])
-  final List<String>? photoUrls;
-  @JsonKey(name: 'tags', includeIfNull: false, defaultValue: <Tag>[])
+  @JsonKey(name: 'name')
+  final String name;
+  @JsonKey(name: 'photoUrls', defaultValue: <String>[])
+  final List<String> photoUrls;
+  @JsonKey(name: 'tags', defaultValue: <Tag>[])
   final List<Tag>? tags;
-  @JsonKey(
-      name: 'status',
-      includeIfNull: false,
-      toJson: petStatusToJson,
-      fromJson: petStatusFromJson)
+  @JsonKey(name: 'status', toJson: petStatusToJson, fromJson: petStatusFromJson)
   final enums.PetStatus? status;
   static const fromJsonFactory = _$PetFromJson;
   static const toJsonFactory = _$PetToJson;
@@ -695,11 +688,11 @@ class ApiResponse {
   factory ApiResponse.fromJson(Map<String, dynamic> json) =>
       _$ApiResponseFromJson(json);
 
-  @JsonKey(name: 'code', includeIfNull: false)
+  @JsonKey(name: 'code')
   final int? code;
-  @JsonKey(name: 'type', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'type')
   final String? type;
-  @JsonKey(name: 'message', includeIfNull: false, defaultValue: '')
+  @JsonKey(name: 'message')
   final String? message;
   static const fromJsonFactory = _$ApiResponseFromJson;
   static const toJsonFactory = _$ApiResponseToJson;
@@ -743,18 +736,9 @@ String? petFindByStatusGetStatusToJson(
 }
 
 enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
-    Object? petFindByStatusGetStatus) {
-  if (petFindByStatusGetStatus is int) {
-    return enums.$PetFindByStatusGetStatusMap.entries
-        .firstWhere(
-            (element) =>
-                element.value.toLowerCase() ==
-                petFindByStatusGetStatus.toString(),
-            orElse: () => const MapEntry(
-                enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown, ''))
-        .key;
-  }
-
+  Object? petFindByStatusGetStatus, [
+  enums.PetFindByStatusGetStatus? defaultValue,
+]) {
   if (petFindByStatusGetStatus is String) {
     return enums.$PetFindByStatusGetStatusMap.entries
         .firstWhere(
@@ -766,7 +750,13 @@ enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
         .key;
   }
 
-  return enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
+  final pasredResult = enums.$PetFindByStatusGetStatusMap.entries
+      .firstWhereOrNull((element) => element.value == defaultValue)
+      ?.key;
+
+  return pasredResult ??
+      defaultValue ??
+      enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
 }
 
 List<String> petFindByStatusGetStatusListToJson(
@@ -781,9 +771,11 @@ List<String> petFindByStatusGetStatusListToJson(
 }
 
 List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatusListFromJson(
-    List? petFindByStatusGetStatus) {
+  List? petFindByStatusGetStatus, [
+  List<enums.PetFindByStatusGetStatus>? defaultValue,
+]) {
   if (petFindByStatusGetStatus == null) {
-    return [];
+    return defaultValue ?? [];
   }
 
   return petFindByStatusGetStatus
@@ -795,16 +787,10 @@ String? orderStatusToJson(enums.OrderStatus? orderStatus) {
   return enums.$OrderStatusMap[orderStatus];
 }
 
-enums.OrderStatus orderStatusFromJson(Object? orderStatus) {
-  if (orderStatus is int) {
-    return enums.$OrderStatusMap.entries
-        .firstWhere(
-            (element) => element.value.toLowerCase() == orderStatus.toString(),
-            orElse: () =>
-                const MapEntry(enums.OrderStatus.swaggerGeneratedUnknown, ''))
-        .key;
-  }
-
+enums.OrderStatus orderStatusFromJson(
+  Object? orderStatus, [
+  enums.OrderStatus? defaultValue,
+]) {
   if (orderStatus is String) {
     return enums.$OrderStatusMap.entries
         .firstWhere(
@@ -815,7 +801,13 @@ enums.OrderStatus orderStatusFromJson(Object? orderStatus) {
         .key;
   }
 
-  return enums.OrderStatus.swaggerGeneratedUnknown;
+  final pasredResult = enums.$OrderStatusMap.entries
+      .firstWhereOrNull((element) => element.value == defaultValue)
+      ?.key;
+
+  return pasredResult ??
+      defaultValue ??
+      enums.OrderStatus.swaggerGeneratedUnknown;
 }
 
 List<String> orderStatusListToJson(List<enums.OrderStatus>? orderStatus) {
@@ -826,9 +818,12 @@ List<String> orderStatusListToJson(List<enums.OrderStatus>? orderStatus) {
   return orderStatus.map((e) => enums.$OrderStatusMap[e]!).toList();
 }
 
-List<enums.OrderStatus> orderStatusListFromJson(List? orderStatus) {
+List<enums.OrderStatus> orderStatusListFromJson(
+  List? orderStatus, [
+  List<enums.OrderStatus>? defaultValue,
+]) {
   if (orderStatus == null) {
-    return [];
+    return defaultValue ?? [];
   }
 
   return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
@@ -838,16 +833,10 @@ String? petStatusToJson(enums.PetStatus? petStatus) {
   return enums.$PetStatusMap[petStatus];
 }
 
-enums.PetStatus petStatusFromJson(Object? petStatus) {
-  if (petStatus is int) {
-    return enums.$PetStatusMap.entries
-        .firstWhere(
-            (element) => element.value.toLowerCase() == petStatus.toString(),
-            orElse: () =>
-                const MapEntry(enums.PetStatus.swaggerGeneratedUnknown, ''))
-        .key;
-  }
-
+enums.PetStatus petStatusFromJson(
+  Object? petStatus, [
+  enums.PetStatus? defaultValue,
+]) {
   if (petStatus is String) {
     return enums.$PetStatusMap.entries
         .firstWhere(
@@ -857,7 +846,13 @@ enums.PetStatus petStatusFromJson(Object? petStatus) {
         .key;
   }
 
-  return enums.PetStatus.swaggerGeneratedUnknown;
+  final pasredResult = enums.$PetStatusMap.entries
+      .firstWhereOrNull((element) => element.value == defaultValue)
+      ?.key;
+
+  return pasredResult ??
+      defaultValue ??
+      enums.PetStatus.swaggerGeneratedUnknown;
 }
 
 List<String> petStatusListToJson(List<enums.PetStatus>? petStatus) {
@@ -868,9 +863,12 @@ List<String> petStatusListToJson(List<enums.PetStatus>? petStatus) {
   return petStatus.map((e) => enums.$PetStatusMap[e]!).toList();
 }
 
-List<enums.PetStatus> petStatusListFromJson(List? petStatus) {
+List<enums.PetStatus> petStatusListFromJson(
+  List? petStatus, [
+  List<enums.PetStatus>? defaultValue,
+]) {
   if (petStatus == null) {
-    return [];
+    return defaultValue ?? [];
   }
 
   return petStatus.map((e) => petStatusFromJson(e.toString())).toList();

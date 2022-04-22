@@ -1,4 +1,4 @@
-//Generated code
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'pet_service_swagger.swagger.dart';
 
@@ -33,7 +33,7 @@ class _$PetServiceSwagger extends PetServiceSwagger {
   }
 
   @override
-  Future<Response<List<Pet>>> _petFindByStatusGet({required String? status}) {
+  Future<Response<List<Pet>>> _petFindByStatusGet({required dynamic status}) {
     final $url = '/pet/findByStatus';
     final $params = <String, dynamic>{'status': status};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);

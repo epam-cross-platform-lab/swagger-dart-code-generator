@@ -1114,10 +1114,13 @@ if(${neededName.camelCase} is String)
       }
 '''}
   
-    return defaultValue ??
-      enums.\$${neededName}Map.entries
-          .firstWhere((element) => element.value == defaultValue, orElse: () => MapEntry(enums.$neededName.swaggerGeneratedUnknown, 0))
-          .key;
+    final pasredResult = enums.\$${neededName}Map.entries
+      .firstWhereOrNull((element) => element.value == defaultValue)
+      ?.key;
+
+  return pasredResult ??
+      defaultValue ??
+      enums.$neededName.swaggerGeneratedUnknown;
 }
 
 
