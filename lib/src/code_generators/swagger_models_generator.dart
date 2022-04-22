@@ -1116,7 +1116,7 @@ if(${neededName.camelCase} is String)
   
     return defaultValue ??
       enums.\$${neededName}Map.entries
-          .firstWhere((element) => element.value == defaultValue, orElse: () => MapEntry(enums.$neededName.swaggerGeneratedUnknown, 0)
+          .firstWhere((element) => element.value == defaultValue, orElse: () => MapEntry(enums.$neededName.swaggerGeneratedUnknown, 0))
           .key;
 }
 
