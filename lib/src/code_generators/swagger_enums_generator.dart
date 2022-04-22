@@ -359,6 +359,16 @@ $enumMap
     return gemeratedEnumsContent;
   }
 
+  bool isIntegerEnum(Map<String, dynamic> map) {
+    if (kIntegerTypes.contains(map['type'])) {
+      return true;
+    }
+
+    final enumValues = map['enum'] as List? ?? [];
+
+    return enumValues.isNotEmpty && enumValues.first is int;
+  }
+
   String generateEnumContentIfPossible(
       Map<String, dynamic> map, String enumName) {
     enumName = getValidatedClassName(enumName);
@@ -375,7 +385,7 @@ $enumMap
         enumValuesNamesList = enumValuesNames.map((e) => e.toString()).toList();
       }
 
-      final isInteger = kIntegerTypes.contains(map['type']);
+      final isInteger = isIntegerEnum(map);
 
       final enumMap = '''
 \n\tconst \$${enumName}Map = {

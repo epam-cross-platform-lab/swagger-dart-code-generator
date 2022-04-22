@@ -1085,8 +1085,6 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
     final type = swaggerEnum.isInteger ? 'int' : 'String';
     final defaultTypeValue = swaggerEnum.isInteger ? 0 : '\'\'';
-    final defaultEnumValue = swaggerEnum.defaultValue?.toString() ??
-        'enums.$neededName.swaggerGeneratedUnknown';
 
     return '''
 $type? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}) {
@@ -1116,7 +1114,13 @@ if(${neededName.camelCase} is String)
       }
 '''}
   
-    return defaultValue ?? $defaultEnumValue;
+    final pasredResult = enums.\$${neededName}Map.entries
+      .firstWhereOrNull((element) => element.value == defaultValue)
+      ?.key;
+
+  return pasredResult ??
+      defaultValue ??
+      enums.$neededName.swaggerGeneratedUnknown;
 }
 
 
