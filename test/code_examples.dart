@@ -517,11 +517,10 @@ const String schemasWithEnumsInProperties = '''
             "description": "Flag indicating showPage availability"
           },
           "successValues": {
-            "items": {
-              "enum": [
-                "one, two"
-              ]
-            }
+            "enum": [
+              "one",
+              "two"
+            ]
           }
         }
       }
@@ -547,12 +546,10 @@ const String schemasWithEnumsInProperties = '''
             "schema": {
               "properties": {
                 "failedValued": {
-                  "items": {
-                    "enum": [
-                      "one",
-                      "two"
-                    ]
-                  }
+                  "enum": [
+                    "one",
+                    "two"
+                  ]
                 }
               }
             }
