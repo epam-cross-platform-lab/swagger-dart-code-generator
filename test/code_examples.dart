@@ -596,13 +596,11 @@ const String schemasWithIntegers = '''
             "description": "Flag indicating showPage availability"
           },
           "successValues": {
-            "items": {
-              "enum": [
-                1, 2
-              ],
-              "type": "integer",
-              "default": 1
-            }
+            "enum": [
+              1, 2
+            ],
+            "type": "integer",
+            "default": 1
           }
         }
       }
@@ -628,12 +626,10 @@ const String schemasWithIntegers = '''
             "schema": {
               "properties": {
                 "failedValued": {
-                  "items": {
-                    "enum": [
-                      1, 2
-                    ],
-                    "type": "integer"
-                  }
+                  "enum": [
+                    1, 2
+                  ],
+                  "type": "integer"
                 }
               }
             }
