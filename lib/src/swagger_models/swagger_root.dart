@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
@@ -13,6 +15,7 @@ part 'swagger_root.g2.dart';
 @JsonSerializable()
 class SwaggerRoot {
   SwaggerRoot({
+    required this.openapiVersion,
     required this.basePath,
     required this.components,
     required this.info,
@@ -24,6 +27,9 @@ class SwaggerRoot {
     required this.definitions,
     required this.securityDefinitions,
   });
+
+  @JsonKey(name: 'openapi')
+  String? openapiVersion;
 
   @JsonKey(name: 'info')
   SwaggerInfo? info;
@@ -57,8 +63,13 @@ class SwaggerRoot {
 
   Map<String, dynamic> toJson() => _$SwaggerRootToJson(this);
 
+  factory SwaggerRoot.parse(String encodedJson) =>
+      SwaggerRoot.fromJson(jsonDecode(encodedJson) as Map<String, dynamic>);
+
   factory SwaggerRoot.fromJson(Map<String, dynamic> json) =>
       _$SwaggerRootFromJson(json);
+
+  static final SwaggerRoot empty = SwaggerRoot.fromJson({});
 }
 
 Map<String, SwaggerRequestParameter> _mapSecurityDefinitions(

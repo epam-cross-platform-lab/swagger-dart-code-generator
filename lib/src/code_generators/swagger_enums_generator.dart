@@ -21,15 +21,15 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
 
   SwaggerEnumsGenerator(this._options);
 
-  String generate(Map<String, dynamic> map, String fileName);
+  String generate(SwaggerRoot root, String fileName);
 
   String generateFromMap(
-      Map<String, dynamic> map,
+      SwaggerRoot root,
       String fileName,
       Map<String, dynamic> definitions,
       Map<String, dynamic> responses,
       Map<String, dynamic> requestBodies) {
-    final enumsFromRequests = generateEnumsContentFromRequests(map, fileName);
+    final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
 
     final enumsFromResponses = generateEnumsFromResponses(responses);
 
@@ -131,10 +131,9 @@ $enumsFromRequestBodies
   }
 
   String generateEnumsContentFromRequests(
-      Map<String, dynamic> map, String fileName) {
+      SwaggerRoot swaggerRoot, String fileName) {
     final enumNames = <String>[];
     final result = StringBuffer();
-    final swaggerRoot = SwaggerRoot.fromJson(map);
 
     final definedParameters = <String, SwaggerRequestParameter>{};
     definedParameters.addAll(swaggerRoot.parameters);

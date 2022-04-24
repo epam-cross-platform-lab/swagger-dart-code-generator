@@ -5,18 +5,20 @@ part 'swagger_schema.g2.dart';
 @JsonSerializable()
 class SwaggerSchema {
   SwaggerSchema({
-    required this.type,
-    required this.originalRef,
-    required this.enumValuesObj,
-    required this.properties,
-    required this.items,
-    required this.ref,
-    required this.defaultValue,
-    required this.format,
-    required this.schema,
-    required this.oneOf,
-    required this.anyOf,
-    required this.description,
+    this.type = '',
+    this.originalRef = '',
+    this.enumValuesObj = const [],
+    this.properties = const {},
+    this.items,
+    this.ref = '',
+    this.defaultValue,
+    this.format = '',
+    this.schema,
+    this.oneOf = const [],
+    this.anyOf = const [],
+    this.allOf = const [],
+    this.required = const [],
+    this.description = '',
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -43,6 +45,13 @@ class SwaggerSchema {
   List<String> get enumValues =>
       enumValuesObj.map((e) => e.toString()).toList();
 
+  bool get isEnum => enumValuesObj.isNotEmpty;
+
+  bool get isListEnum => type == 'array' && items != null && items!.isEnum;
+
+  @JsonKey(name: 'required', defaultValue: [])
+  List<String> required;
+
   @JsonKey(name: 'items')
   SwaggerSchema? items;
 
@@ -57,6 +66,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'anyOf', defaultValue: [])
   List<SwaggerSchema> anyOf;
+
+  @JsonKey(name: 'allOf', defaultValue: [])
+  List<SwaggerSchema> allOf;
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerSchemaFromJson(json);

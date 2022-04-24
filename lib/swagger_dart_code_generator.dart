@@ -5,6 +5,7 @@ import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.
 import 'package:swagger_dart_code_generator/src/extensions/yaml_extensions.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_code_generator.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:universal_io/io.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:path/path.dart' show join, normalize;
@@ -136,12 +137,13 @@ class SwaggerDartCodeGenerator implements Builder {
       contentMap = jsonDecode(contents) as Map<String, dynamic>;
     }
 
-    final fileNameWithExtension = getFileNameBase(buildStep.inputId.path);
+    final SwaggerRoot parsed = SwaggerRoot.fromJson(contentMap);
 
+    final fileNameWithExtension = getFileNameBase(buildStep.inputId.path);
     final fileNameWithoutExtension = removeFileExtension(fileNameWithExtension);
 
     await _generateAndWriteFile(
-      contents: contentMap,
+      contents: parsed,
       buildStep: buildStep,
       fileNameWithExtension: fileNameWithExtension,
       fileNameWithoutExtension: fileNameWithoutExtension,
@@ -168,7 +170,7 @@ class SwaggerDartCodeGenerator implements Builder {
   }
 
   Future<void> _generateAndWriteFile({
-    required Map<String, dynamic> contents,
+    required SwaggerRoot contents,
     required String fileNameWithoutExtension,
     required String fileNameWithExtension,
     required BuildStep buildStep,

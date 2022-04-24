@@ -102,9 +102,8 @@ abstract class SwaggerGeneratorBase {
     return jsonKey;
   }
 
-  List<SwaggerEnum> getEnumsFromRequests(Map<String, dynamic> map) {
+  List<SwaggerEnum> getEnumsFromRequests(SwaggerRoot swaggerRoot) {
     final enums = <SwaggerEnum>[];
-    final swaggerRoot = SwaggerRoot.fromJson(map);
 
     //Link defined parameters with requests
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {

@@ -23,12 +23,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   SwaggerRequestsGenerator(this._options);
 
   String generate({
-    required Map<String, dynamic> map,
+    required SwaggerRoot swaggerRoot,
     required String className,
     required String fileName,
   }) {
-    final swaggerRoot = SwaggerRoot.fromJson(map);
-
     final service = _generateService(
       swaggerRoot,
       className,

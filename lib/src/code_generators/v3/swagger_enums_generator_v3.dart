@@ -1,33 +1,25 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
 class SwaggerEnumsGeneratorV3 extends SwaggerEnumsGenerator {
   SwaggerEnumsGeneratorV3(GeneratorOptions options) : super(options);
 
   @override
-  String generate(
-    Map<String, dynamic> map,
-    String fileName,
-  ) {
-    final components = map['components'] as Map<String, dynamic>?;
-    final schemas = components == null
-        ? null
-        : components['schemas'] as Map<String, dynamic>?;
+  String generate(SwaggerRoot root, String fileName) {
+    final components = root.components;
+    final schemas = components?.schemas;
 
-    final responses = components == null
-        ? null
-        : components['responses'] as Map<String, dynamic>?;
+    final responses = components?.responses;
 
-    final requestBodies = components == null
-        ? <String, dynamic>{}
-        : components['requestBodies'] as Map<String, dynamic>? ?? {};
+    final requestBodies = components?.requestBodies ?? {};
 
     requestBodies.addAll(
-        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(map));
+        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
 
     return generateFromMap(
-      map,
+      root,
       fileName,
       schemas ?? {},
       responses ?? {},
