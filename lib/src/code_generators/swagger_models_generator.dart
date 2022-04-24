@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
@@ -140,25 +138,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     });
 
     return results;
-  }
-
-  static Map<String, dynamic> getClassesFromSchemasResponses(String dartCode) {
-    final swagger = jsonDecode(dartCode);
-
-    final results = <String, dynamic>{};
-
-    final components = swagger['components'] as Map<String, dynamic>?;
-    if (components == null) {
-      return results;
-    }
-
-    final responses = components['responses'] as Map<String, dynamic>?;
-
-    if (responses == null) {
-      return results;
-    }
-
-    return responses;
   }
 
   String generateBase(
@@ -781,7 +760,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var typeName = '';
 
-    if (val.hasAdditionalProperties) {
+    if (val.hasAdditionalProperties && val.type == 'object') {
       typeName = kMapStringDynamic;
     } else if (val.hasRef) {
       typeName = val.ref.split('/').last.pascalCase + options.modelPostfix;
