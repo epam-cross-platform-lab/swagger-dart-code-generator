@@ -1449,13 +1449,15 @@ $allHashComponents;
     required SwaggerSchema schema,
   }) {
     final enums = schema.enumValuesObj;
-    final isInteger =
-        kIntegerTypes.contains(schema.type) || enums.firstOrNull is int;
-    outResults.add(SwaggerEnum(
-      name: name,
-      isInteger: isInteger,
-      defaultValue: schema.defaultValue ?? schema.items?.defaultValue,
-    ));
+    if (enums.isNotEmpty) {
+      final isInteger =
+          kIntegerTypes.contains(schema.type) || enums.firstOrNull is int;
+      outResults.add(SwaggerEnum(
+        name: name,
+        isInteger: isInteger,
+        defaultValue: schema.defaultValue ?? schema.items?.defaultValue,
+      ));
+    }
   }
 
   Map<String, SwaggerSchema> getRequestBodiesFromRequests(SwaggerRoot root) {
