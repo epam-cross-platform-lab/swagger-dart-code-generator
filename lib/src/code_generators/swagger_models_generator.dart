@@ -781,8 +781,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var typeName = '';
 
-    // if (val.containsKey(kAdditionalProperties)) {
-    if (false) {
+    if (val.hasAdditionalProperties) {
       typeName = kMapStringDynamic;
     } else if (val.hasRef) {
       typeName = val.ref.split('/').last.pascalCase + options.modelPostfix;

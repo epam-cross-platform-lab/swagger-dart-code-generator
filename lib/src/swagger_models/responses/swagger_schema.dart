@@ -22,6 +22,7 @@ class SwaggerSchema {
     this.description = '',
     this.enumNames,
     this.isNullable,
+    this.hasAdditionalProperties = false,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -80,6 +81,12 @@ class SwaggerSchema {
   @JsonKey(name: 'nullable')
   bool? isNullable;
 
+  @JsonKey(
+      name: 'additionalProperties',
+      defaultValue: false,
+      fromJson: _additionalsFromJson)
+  bool hasAdditionalProperties;
+
   List<String>? enumNames;
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
@@ -93,3 +100,5 @@ class SwaggerSchema {
         if (enumNames != null) kEnumNames: enumNames,
       };
 }
+
+bool _additionalsFromJson(dynamic value) => value != false;

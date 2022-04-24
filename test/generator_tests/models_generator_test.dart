@@ -904,4 +904,13 @@ void main() {
       expect(result, contains('class ModelItemsGet\$Response'));
     });
   });
+
+  group('Tests for additionalProperties', () {
+    test('Should generate dynamic map type', () {
+      final map = SwaggerRoot.parse(objectWithadditionalProperties);
+      final result = generator.generate(map, 'test');
+
+      expect(result, contains('final Map<String,dynamic>? metadata'));
+    });
+  });
 }

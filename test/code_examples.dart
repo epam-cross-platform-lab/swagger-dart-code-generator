@@ -812,3 +812,25 @@ const requestWithEnum = '''
   }
 }
 ''';
+
+const objectWithadditionalProperties = '''
+{
+  "components" : {
+    "schemas" : {
+      "FooDto": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
+''';
