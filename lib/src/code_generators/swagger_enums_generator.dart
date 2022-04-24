@@ -31,11 +31,8 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
       Map<String, SwaggerSchema> responses,
       Map<String, SwaggerSchema> requestBodies) {
     final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
-
-    final enumsFromResponses = generateEnumsFromResponses(responses);
-
-    final enumsFromRequestBodies =
-        generateEnumsFromRequestBodies(requestBodies);
+    final enumsFromResponses = generateEnumsFromSchemaMap(responses);
+    final enumsFromRequestBodies = generateEnumsFromSchemaMap(requestBodies);
 
     if (definitions.isEmpty) {
       return '$enumsFromRequests$enumsFromResponses$enumsFromRequestBodies';
@@ -71,14 +68,14 @@ $enumsFromRequestBodies
 ''';
   }
 
-  String generateEnumsFromResponses(Map<String, SwaggerSchema> responses) {
-    if (responses.isEmpty) {
+  String generateEnumsFromSchemaMap(Map<String, SwaggerSchema> map) {
+    if (map.isEmpty) {
       return '';
     }
 
-    final enumsFromResponses = responses.keys
+    final enumsFromSchemas = map.keys
         .map((String className) {
-          final schema = responses[className];
+          final schema = map[className];
 
           if (schema == null) {
             return '';
@@ -93,33 +90,7 @@ $enumsFromRequestBodies
         .where((element) => element.isNotEmpty)
         .join('\n');
 
-    return enumsFromResponses;
-  }
-
-  String generateEnumsFromRequestBodies(
-      Map<String, SwaggerSchema> requestBodies) {
-    if (requestBodies.isEmpty) {
-      return '';
-    }
-
-    final enumsFromRequestBodies = requestBodies.keys
-        .map((String className) {
-          final schema = requestBodies[className];
-
-          if (schema == null) {
-            return '';
-          }
-
-          return generateEnumsFromClasses(
-            getValidatedClassName(className.pascalCase),
-            schema,
-            {},
-          );
-        })
-        .where((element) => element.isNotEmpty)
-        .join('\n');
-
-    return enumsFromRequestBodies;
+    return enumsFromSchemas;
   }
 
   String generateEnumsContentFromRequests(

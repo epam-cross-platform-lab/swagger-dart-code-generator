@@ -54,7 +54,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'class $className {}';
     }
 
-    if (map.type == 'object' && map.allOf.isNotEmpty) {
+    if (map.type == kObject && map.allOf.isNotEmpty) {
       return 'typedef $className = Map<String, dynamic>;';
     }
 
@@ -129,7 +129,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         if (neededResponse != null &&
             neededResponse.schema != null &&
-            neededResponse.schema!.type == 'object' &&
+            neededResponse.schema!.type == kObject &&
             neededResponse.schema!.properties.isNotEmpty) {
           final pathText = key.split('/').map((e) => e.pascalCase).join();
           final requestText = operation.pascalCase;
@@ -431,7 +431,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final type = map.type.toLowerCase();
     final format = map.format.toLowerCase();
 
-    final isDate = type == 'string' && format == 'date';
+    final isDate = type == kString && format == 'date';
 
     if (isDate) {
       return ', toJson: _dateToJson';
@@ -1025,7 +1025,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   }
 
   static String _mapBasicTypeToDartType(String basicType, String format) {
-    if (basicType.toLowerCase() == 'string' &&
+    if (basicType.toLowerCase() == kString &&
         (format == 'date-time' || format == 'datetime')) {
       return 'DateTime';
     }
@@ -1479,7 +1479,7 @@ $allHashComponents;
         if (content != null) {
           final schema = content.schema;
           if (schema != null) {
-            if (schema.type == 'object' && schema.properties.isNotEmpty) {
+            if (schema.type == kObject && schema.properties.isNotEmpty) {
               final className =
                   '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
 
