@@ -50,7 +50,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
-    if (map.ref.isNotEmpty) {
+    if (map.hasRef) {
       return 'class $className {}';
     }
 
@@ -267,7 +267,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
     }
 
-    if (parameter.ref.isNotEmpty) {
+    if (parameter.hasRef) {
       return parameter.ref.split('/').last.pascalCase;
     }
 
@@ -332,9 +332,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     List<String> allEnumListNames,
   ) {
     var typeName = '';
-    final originalRef = propertyEntryMap.originalRef;
 
-    if (originalRef.isNotEmpty) {
+    if (propertyEntryMap.hasOriginalRef) {
       typeName = getValidatedClassName(propertyEntryMap.originalRef);
     }
 
@@ -656,9 +655,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       }
 
       if (typeName.isEmpty) {
-        final ref = items.ref;
-        if (ref.isNotEmpty) {
-          typeName = ref.split('/').last;
+        if (items.hasRef) {
+          typeName = items.ref.split('/').last;
 
           if (!allEnumListNames.contains(typeName) &&
               !allEnumNames.contains('enums.' + typeName) &&
@@ -781,7 +779,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     // if (val.containsKey(kAdditionalProperties)) {
     if (false) {
       typeName = kMapStringDynamic;
-    } else if (val.ref.isNotEmpty) {
+    } else if (val.hasRef) {
       typeName = val.ref.split('/').last.pascalCase + options.modelPostfix;
     } else {
       typeName = getParameterTypeName(
@@ -951,7 +949,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
             requiredProperties: requiredProperties,
           ),
         );
-      } else if (propertyEntry.ref.isNotEmpty) {
+      } else if (propertyEntry.hasRef) {
         results.add(generatePropertyContentByRef(
           propertyEntry,
           propertyName,
@@ -1317,7 +1315,7 @@ $allHashComponents;
 
     final currentProperties = newModelMap.properties;
 
-    final allOfRef = allOf.firstWhereOrNull((m) => m.ref.isNotEmpty);
+    final allOfRef = allOf.firstWhereOrNull((m) => m.hasRef);
 
     if (allOfRef != null) {
       final refString = allOfRef.ref;
@@ -1385,7 +1383,7 @@ $allHashComponents;
           properties = schema.properties;
         }
 
-        var allOfRef = allOf.firstWhereOrNull((e) => e.ref.isNotEmpty);
+        var allOfRef = allOf.firstWhereOrNull((e) => e.hasRef);
 
         if (allOfRef != null) {
           final ref = allOfRef.ref;

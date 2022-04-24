@@ -35,8 +35,12 @@ class SwaggerSchema {
   @JsonKey(name: 'originalRef', defaultValue: '')
   String originalRef;
 
+  bool get hasOriginalRef => originalRef.isNotEmpty;
+
   @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
+
+  bool get hasRef => ref.isNotEmpty;
 
   @JsonKey(name: 'description', defaultValue: '')
   String description;

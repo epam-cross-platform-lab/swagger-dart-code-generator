@@ -421,9 +421,7 @@ $enumMap
         properties = map.properties;
       }
 
-      var allOfRef = allOf.firstWhereOrNull(
-        (e) => e.ref.isNotEmpty,
-      );
+      var allOfRef = allOf.firstWhereOrNull((e) => e.hasRef);
 
       if (allOfRef != null) {
         final ref = allOfRef.ref;

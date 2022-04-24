@@ -414,19 +414,19 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     } else if (parameter.items?.type.isNotEmpty == true) {
       return _mapParameterName(parameter.items!.type, format, modelPostfix)
           .asList();
-    } else if (parameter.items?.ref.isNotEmpty == true) {
+    } else if (parameter.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.items!.ref.getRef().asEnum();
       }
       return _mapParameterName(
               parameter.items!.ref.getRef(), format, modelPostfix)
           .asList();
-    } else if (parameter.schema?.items?.ref.isNotEmpty == true) {
+    } else if (parameter.schema?.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.schema!.items!.ref.getRef().asEnum();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
-    } else if (parameter.schema?.ref.isNotEmpty == true) {
+    } else if (parameter.schema?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.schema!.ref.getRef().asEnum();
       }
@@ -520,14 +520,14 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     if (requestBody != null) {
       var typeName = '';
 
-      final ref = requestBody.ref;
-      if (ref.isNotEmpty) {
+      if (requestBody.hasRef) {
+        final ref = requestBody.ref;
         typeName = ref.getRef();
 
         final requestBodyRef =
             root.components?.requestBodies[ref.getRef()]?.ref ?? '';
 
-        if (requestBodyRef.isNotEmpty == true) {
+        if (requestBodyRef.isNotEmpty) {
           typeName = requestBodyRef.getRef();
         }
 
@@ -634,7 +634,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return kBasicTypesMap[schema.type] ?? schema.type;
     }
 
-    if (schema.ref.isNotEmpty) {
+    if (schema.hasRef) {
       if (_isEnumRef(schema.ref, root)) {
         return schema.ref.getRef().asEnum();
       }
@@ -763,7 +763,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
   String? _getReturnTypeFromOriginalRef(
       SwaggerResponse swaggerResponse, String modelPostfix) {
-    if (swaggerResponse.schema?.originalRef.isNotEmpty == true) {
+    if (swaggerResponse.schema?.hasOriginalRef == true) {
       return swaggerResponse.schema!.originalRef + modelPostfix;
     }
 
@@ -781,8 +781,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return null;
     }
 
-    final ref = content.ref;
-    if (ref.isNotEmpty) {
+    if (content.hasRef) {
+      final ref = content.ref;
       final type = ref.getRef().withPostfix(modelPostfix);
       return kBasicTypesMap[type] ?? type;
     }

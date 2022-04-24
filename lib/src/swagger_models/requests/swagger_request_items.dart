@@ -19,6 +19,8 @@ class SwaggerRequestItems {
   @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
 
+  bool get hasRef => ref.isNotEmpty;
+
   Map<String, dynamic> toJson() => _$SwaggerRequestItemsToJson(this);
 
   factory SwaggerRequestItems.fromJson(Map<String, dynamic> json) =>

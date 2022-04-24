@@ -73,6 +73,8 @@ class Content {
   @JsonKey(name: 'ref', defaultValue: '')
   final String ref;
 
+  bool get hasRef => ref.isNotEmpty;
+
   Map<String, dynamic> toJson() => _$ContentToJson(this);
 
   factory Content.fromJson(Map<String, dynamic> json) =>

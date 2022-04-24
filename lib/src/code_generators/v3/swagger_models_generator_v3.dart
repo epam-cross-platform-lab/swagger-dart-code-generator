@@ -100,7 +100,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   String getExtendsString(SwaggerSchema schema) {
     final allOf = schema.allOf;
     if (allOf.isNotEmpty) {
-      final refItem = allOf.firstWhere((m) => m.ref.isNotEmpty);
+      final refItem = allOf.firstWhere((m) => m.hasRef);
 
       final ref = refItem.ref.split('/').last;
 

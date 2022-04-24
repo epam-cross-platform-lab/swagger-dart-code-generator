@@ -61,6 +61,8 @@ class RequestBody {
   @JsonKey(name: '\$ref', defaultValue: '')
   String ref;
 
+  bool get hasRef => ref.isNotEmpty;
+
   RequestBody({
     this.content,
     this.ref = '',
