@@ -45,6 +45,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       enumNames: (json['x-enumNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      isNullable: json['nullable'] as bool?,
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
@@ -63,5 +64,6 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'oneOf': instance.oneOf,
       'anyOf': instance.anyOf,
       'allOf': instance.allOf,
+      'nullable': instance.isNullable,
       'x-enumNames': instance.enumNames,
     };

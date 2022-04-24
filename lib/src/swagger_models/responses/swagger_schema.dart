@@ -21,6 +21,7 @@ class SwaggerSchema {
     this.required = const [],
     this.description = '',
     this.enumNames,
+    this.isNullable,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -76,8 +77,11 @@ class SwaggerSchema {
   @JsonKey(name: 'allOf', defaultValue: [])
   List<SwaggerSchema> allOf;
 
+  @JsonKey(name: 'nullable')
+  bool? isNullable;
+
   @JsonKey(name: kEnumNames)
-  @JsonKey(name: kEnumVarnames)
+  @JsonKey(name: kEnumVarnames) // TODO
   List<String>? enumNames;
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
