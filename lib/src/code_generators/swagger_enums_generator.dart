@@ -6,6 +6,7 @@ import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:collection/collection.dart';
@@ -26,9 +27,9 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
   String generateFromMap(
       SwaggerRoot root,
       String fileName,
-      Map<String, dynamic> definitions,
-      Map<String, dynamic> responses,
-      Map<String, dynamic> requestBodies) {
+      Map<String, SwaggerSchema> definitions,
+      Map<String, SwaggerSchema> responses,
+      Map<String, SwaggerSchema> requestBodies) {
     final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
 
     final enumsFromResponses = generateEnumsFromResponses(responses);
@@ -44,7 +45,7 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
         .map((String className) {
           return generateEnumsFromClasses(
             getValidatedClassName(className.pascalCase),
-            definitions[className] as Map<String, dynamic>,
+            definitions[className]!,
             definitions,
           );
         })
@@ -70,19 +71,14 @@ $enumsFromRequestBodies
 ''';
   }
 
-  String generateEnumsFromResponses(Map<String, dynamic> responses) {
+  String generateEnumsFromResponses(Map<String, SwaggerSchema> responses) {
     if (responses.isEmpty) {
       return '';
     }
 
     final enumsFromResponses = responses.keys
         .map((String className) {
-          final response = responses[className];
-          final content = response['content'] as Map<String, dynamic>?;
-          final firstContent = content != null && content.entries.isNotEmpty
-              ? content.entries.first.value
-              : null;
-          final schema = firstContent == null ? null : firstContent['schema'];
+          final schema = responses[className];
 
           if (schema == null) {
             return '';
@@ -90,7 +86,7 @@ $enumsFromRequestBodies
 
           return generateEnumsFromClasses(
             getValidatedClassName(className.pascalCase),
-            schema as Map<String, dynamic>,
+            schema,
             {},
           );
         })
@@ -100,19 +96,15 @@ $enumsFromRequestBodies
     return enumsFromResponses;
   }
 
-  String generateEnumsFromRequestBodies(Map<String, dynamic> requestBodies) {
+  String generateEnumsFromRequestBodies(
+      Map<String, SwaggerSchema> requestBodies) {
     if (requestBodies.isEmpty) {
       return '';
     }
 
     final enumsFromRequestBodies = requestBodies.keys
         .map((String className) {
-          final response = requestBodies[className];
-          final content = response['content'] as Map<String, dynamic>?;
-          final firstContent = content != null && content.entries.isNotEmpty
-              ? content.entries.first.value
-              : null;
-          final schema = firstContent == null ? null : firstContent['schema'];
+          final schema = requestBodies[className];
 
           if (schema == null) {
             return '';
@@ -120,7 +112,7 @@ $enumsFromRequestBodies
 
           return generateEnumsFromClasses(
             getValidatedClassName(className.pascalCase),
-            schema as Map<String, dynamic>,
+            schema,
             {},
           );
         })
@@ -331,7 +323,7 @@ $enumMap
   }
 
   String generateEnumsContentFromModelProperties(
-      Map<String, dynamic> map, String className) {
+      Map<String, SwaggerSchema> map, String className) {
     if (map.isEmpty) {
       return '';
     }
@@ -340,14 +332,9 @@ $enumMap
         .map((String key) {
           final enumValues = map[key];
 
-          final enumValuesMap = enumValues is Map<String, dynamic>
-              ? enumValues
-              : <String, dynamic>{};
-          map[key];
-
-          if (enumValuesMap.containsKey('type')) {
+          if (enumValues != null && enumValues.type.isNotEmpty) {
             return generateEnumContentIfPossible(
-                enumValuesMap, generateEnumName(className, key));
+                enumValues, generateEnumName(className, key));
           }
 
           return '';
@@ -358,31 +345,23 @@ $enumMap
     return gemeratedEnumsContent;
   }
 
-  bool isIntegerEnum(Map<String, dynamic> map) {
-    if (kIntegerTypes.contains(map['type'])) {
+  bool isIntegerEnum(SwaggerSchema map) {
+    if (kIntegerTypes.contains(map.type)) {
       return true;
     }
 
-    final enumValues = map['enum'] as List? ?? [];
+    final enumValues = map.enumValuesObj;
 
     return enumValues.isNotEmpty && enumValues.first is int;
   }
 
-  String generateEnumContentIfPossible(
-      Map<String, dynamic> map, String enumName) {
+  String generateEnumContentIfPossible(SwaggerSchema map, String enumName) {
     enumName = getValidatedClassName(enumName);
 
-    if (map['enum'] != null) {
-      final enumValues =
-          (map['enum'] as List<dynamic>).map((e) => e.toString()).toList();
+    if (map.isEnum) {
+      final enumValues = map.enumValues;
 
-      final enumValuesNames =
-          (map[kEnumNames] ?? map[kEnumVarnames]) as List? ?? [];
-
-      var enumValuesNamesList = <String>[];
-      if (enumValues.isNotEmpty) {
-        enumValuesNamesList = enumValuesNames.map((e) => e.toString()).toList();
-      }
+      final enumValuesNames = map.enumNames ?? [];
 
       final isInteger = isIntegerEnum(map);
 
@@ -391,7 +370,7 @@ $enumMap
 \t${getEnumValuesMapContent(
         enumName,
         enumValues: enumValues,
-        enumValuesNames: enumValuesNamesList,
+        enumValuesNames: enumValuesNames,
         isInteger: isInteger,
       )}
       };
@@ -402,16 +381,15 @@ enum ${enumName.capitalize} {
 \t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
 ${getEnumValuesContent(
         enumValues: enumValues,
-        enumValuesNames: enumValuesNamesList,
+        enumValuesNames: enumValuesNames,
         isInteger: isInteger,
       )}
 }
 
 $enumMap
 """;
-    } else if (map['items'] != null) {
-      return generateEnumContentIfPossible(
-          map['items'] as Map<String, dynamic>, enumName);
+    } else if (map.items != null) {
+      return generateEnumContentIfPossible(map.items!, enumName);
     } else {
       return '';
     }
@@ -419,50 +397,45 @@ $enumMap
 
   String generateEnumsFromClasses(
     String className,
-    Map<String, dynamic> map,
-    Map<String, dynamic> schemas,
+    SwaggerSchema map,
+    Map<String, SwaggerSchema> schemas,
   ) {
-    if (map['enum'] != null) {
+    if (map.isEnum) {
       return generateEnumContentIfPossible(map, className);
     }
 
-    if (map['items'] != null && map['items']['enum'] != null) {
-      return generateEnumContentIfPossible(
-          map['items'] as Map<String, dynamic>, className);
+    if (map.items != null && map.items!.isEnum) {
+      return generateEnumContentIfPossible(map.items!, className);
     }
-    Map<String, dynamic> properties;
+    Map<String, SwaggerSchema> properties;
 
-    if (map.containsKey('allOf')) {
-      final allOf = map['allOf'] as List<dynamic>;
+    if (map.allOf.isNotEmpty) {
+      final allOf = map.allOf;
       var propertiesContainer = allOf.firstWhereOrNull(
-            (e) => (e as Map<String, dynamic>).containsKey('properties'),
-          ) as Map<String, dynamic>? ??
-          {};
+        (e) => e.properties.isNotEmpty,
+      );
 
-      if (propertiesContainer.isNotEmpty) {
-        properties =
-            propertiesContainer['properties'] as Map<String, dynamic>? ?? {};
+      if (propertiesContainer != null) {
+        properties = propertiesContainer.properties;
       } else {
-        properties = map['properties'] as Map<String, dynamic>? ?? {};
+        properties = map.properties;
       }
 
       var allOfRef = allOf.firstWhereOrNull(
-        (e) => (e as Map<String, dynamic>).containsKey('\$ref'),
-      ) as Map<String, dynamic>?;
+        (e) => e.ref.isNotEmpty,
+      );
 
       if (allOfRef != null) {
-        final ref = allOfRef['\$ref'] as String;
+        final ref = allOfRef.ref;
 
-        final allOfModel =
-            schemas[ref.getUnformattedRef()] as Map<String, dynamic>? ?? {};
+        final allOfModel = schemas[ref.getUnformattedRef()];
 
-        final allOfModelProperties =
-            allOfModel['properties'] as Map<String, dynamic>? ?? {};
+        final allOfModelProperties = allOfModel?.properties ?? {};
 
         properties.addAll(allOfModelProperties);
       }
     } else {
-      properties = map['properties'] as Map<String, dynamic>? ?? {};
+      properties = map.properties;
     }
 
     if (properties.isEmpty) {

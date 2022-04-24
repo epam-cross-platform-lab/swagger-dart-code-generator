@@ -3,6 +3,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_ge
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:test/test.dart';
 import '../code_examples.dart';
@@ -97,11 +98,11 @@ void main() {
       ),
     );
     test('Should generate enum', () {
-      final map = <String, dynamic>{
+      final map = SwaggerSchema.fromJson({
         'items': {
           'enum': ['Item1', 'Item2']
         }
-      };
+      });
       const enumName = 'TestName';
       final result = generator.generateEnumContentIfPossible(map, enumName);
 

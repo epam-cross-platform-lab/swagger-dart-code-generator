@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 
 part 'swagger_schema.g2.dart';
 
@@ -19,6 +20,7 @@ class SwaggerSchema {
     this.allOf = const [],
     this.required = const [],
     this.description = '',
+    this.enumNames,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -69,6 +71,10 @@ class SwaggerSchema {
 
   @JsonKey(name: 'allOf', defaultValue: [])
   List<SwaggerSchema> allOf;
+
+  @JsonKey(name: kEnumNames)
+  @JsonKey(name: kEnumVarnames)
+  List<String>? enumNames;
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerSchemaFromJson(json);
