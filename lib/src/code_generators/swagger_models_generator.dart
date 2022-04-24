@@ -29,37 +29,37 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   String generateModelClassContent(
     SwaggerRoot root,
     String className,
-    SwaggerSchema map,
+    SwaggerSchema schema,
     Map<String, SwaggerSchema> schemas,
     List<DefaultValueMap> defaultValues,
     bool useDefaultNullForLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
   ) {
-    if (map.isEnum) {
+    if (schema.isEnum) {
       return '';
     }
 
-    if (kBasicTypes.contains(map.type.toLowerCase())) {
+    if (kBasicTypes.contains(schema.type.toLowerCase())) {
       return '';
     }
 
-    if (map.isListEnum) {
+    if (schema.isListEnum) {
       return '';
     }
 
-    if (map.hasRef) {
+    if (schema.hasRef) {
       return 'class $className {}';
     }
 
-    if (map.type == kObject && map.allOf.isNotEmpty) {
+    if (schema.type == kObject && schema.allOf.isNotEmpty) {
       return 'typedef $className = Map<String, dynamic>;';
     }
 
     return generateModelClassString(
       root,
       className,
-      map,
+      schema,
       schemas,
       defaultValues,
       useDefaultNullForLists,

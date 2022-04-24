@@ -326,15 +326,15 @@ $enumMap
     return enumValues.isNotEmpty && enumValues.first is int;
   }
 
-  String generateEnumContentIfPossible(SwaggerSchema map, String enumName) {
+  String generateEnumContentIfPossible(SwaggerSchema schema, String enumName) {
     enumName = getValidatedClassName(enumName);
 
-    if (map.isEnum) {
-      final enumValues = map.enumValues;
+    if (schema.isEnum) {
+      final enumValues = schema.enumValues;
 
-      final enumValuesNames = map.enumNames ?? [];
+      final enumValuesNames = schema.enumNames ?? [];
 
-      final isInteger = isIntegerEnum(map);
+      final isInteger = isIntegerEnum(schema);
 
       final enumMap = '''
 \n\tconst \$${enumName}Map = {
@@ -359,8 +359,8 @@ ${getEnumValuesContent(
 
 $enumMap
 """;
-    } else if (map.items != null) {
-      return generateEnumContentIfPossible(map.items!, enumName);
+    } else if (schema.items != null) {
+      return generateEnumContentIfPossible(schema.items!, enumName);
     } else {
       return '';
     }
@@ -368,20 +368,20 @@ $enumMap
 
   String generateEnumsFromClasses(
     String className,
-    SwaggerSchema map,
+    SwaggerSchema schema,
     Map<String, SwaggerSchema> schemas,
   ) {
-    if (map.isEnum) {
-      return generateEnumContentIfPossible(map, className);
+    if (schema.isEnum) {
+      return generateEnumContentIfPossible(schema, className);
     }
 
-    if (map.items != null && map.items!.isEnum) {
-      return generateEnumContentIfPossible(map.items!, className);
+    if (schema.items != null && schema.items!.isEnum) {
+      return generateEnumContentIfPossible(schema.items!, className);
     }
     Map<String, SwaggerSchema> properties;
 
-    if (map.allOf.isNotEmpty) {
-      final allOf = map.allOf;
+    if (schema.allOf.isNotEmpty) {
+      final allOf = schema.allOf;
       var propertiesContainer = allOf.firstWhereOrNull(
         (e) => e.properties.isNotEmpty,
       );
@@ -389,7 +389,7 @@ $enumMap
       if (propertiesContainer != null) {
         properties = propertiesContainer.properties;
       } else {
-        properties = map.properties;
+        properties = schema.properties;
       }
 
       var allOfRef = allOf.firstWhereOrNull((e) => e.hasRef);
@@ -404,7 +404,7 @@ $enumMap
         properties.addAll(allOfModelProperties);
       }
     } else {
-      properties = map.properties;
+      properties = schema.properties;
     }
 
     if (properties.isEmpty) {
