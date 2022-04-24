@@ -80,12 +80,16 @@ class SwaggerSchema {
   @JsonKey(name: 'nullable')
   bool? isNullable;
 
-  @JsonKey(name: kEnumNames)
-  @JsonKey(name: kEnumVarnames) // TODO
   List<String>? enumNames;
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
-      _$SwaggerSchemaFromJson(json);
+      _$SwaggerSchemaFromJson(json)
+        ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
+            ?.map((e) => e as String)
+            .toList();
 
-  Map<String, dynamic> toJson() => _$SwaggerSchemaToJson(this);
+  Map<String, dynamic> toJson() => {
+        ..._$SwaggerSchemaToJson(this),
+        if (enumNames != null) kEnumNames: enumNames,
+      };
 }
