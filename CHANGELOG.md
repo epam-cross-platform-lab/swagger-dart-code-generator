@@ -1,3 +1,8 @@
+# 2.5.0
+
+* Fixed generation of lists of objects in schemas ([#398](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/398))
+* Duplicated issue ([#397](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/397))
+
 # 2.4.10
 
 * Fixed generation of requrst properties annotations ([#384](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/384))
