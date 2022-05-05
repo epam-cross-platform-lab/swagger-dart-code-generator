@@ -56,36 +56,35 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'typedef $className = Map<String, dynamic>;';
     }
 
-    if (map['type'] == 'array') {
-      final items = map['items'] as Map<String, dynamic>? ?? {};
+    if (schema.type == 'array') {
+      final items = schema.items;
 
-      if (items.containsKey('\$ref')) {
-        final ref = items['\$ref'] as String;
+      if (items != null) {
+        if (items.hasRef) {
+          final ref = items.ref;
 
-        final itemSchema =
-            schemas[ref.getUnformattedRef()] as Map<String, dynamic>? ?? {};
+          final itemSchema = schemas[ref.getUnformattedRef()];
 
-        if (kBasicTypes.contains(itemSchema['type'])) {
-          return 'typedef $className = List<${kBasicTypesMap[itemSchema['type']]}>;';
+          if (itemSchema != null && kBasicTypes.contains(itemSchema.type)) {
+            return 'typedef $className = List<${kBasicTypesMap[itemSchema.type]}>;';
+          }
+
+          final itemType = getValidatedClassName(ref.getUnformattedRef());
+          return 'typedef $className = List<$itemType>;';
         }
 
-        final itemType = getValidatedClassName(ref.getUnformattedRef());
-        return 'typedef $className = List<$itemType>;';
-      }
+        final itemsType = items.type;
 
-      final itemsType = items['type'] as String? ?? '';
+        if (kBasicTypes.contains(itemsType)) {
+          return 'typedef $className = List<${kBasicTypesMap[itemsType]}>;';
+        }
 
-      if (kBasicTypes.contains(itemsType)) {
-        return 'typedef $className = List<${kBasicTypesMap[itemsType]}>;';
-      }
-
-      if (items.containsKey('properties')) {
         final itemClassName = '$className\$Item';
 
         final resultClass = generateModelClassString(
-          rootMap,
+          root,
           itemClassName,
-          map['items'] as Map<String, dynamic>,
+          items,
           schemas,
           defaultValues,
           useDefaultNullForLists,
@@ -675,7 +674,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (className.endsWith('\$Item')) {
       return kObject.pascalCase;
     }
-    
+
     final items = prop.items;
 
     var typeName = '';

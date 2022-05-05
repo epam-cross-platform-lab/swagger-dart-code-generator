@@ -21,7 +21,7 @@ class SwaggerSchema {
     this.required = const [],
     this.description = '',
     this.enumNames,
-    this.isNullable,
+    this.isNullable = false,
     this.hasAdditionalProperties = false,
   });
 
@@ -80,9 +80,6 @@ class SwaggerSchema {
 
   @JsonKey(name: 'allOf', defaultValue: [])
   List<SwaggerSchema> allOf;
-
-  @JsonKey(name: 'nullable')
-  bool? isNullable;
 
   @JsonKey(
       name: 'additionalProperties',
