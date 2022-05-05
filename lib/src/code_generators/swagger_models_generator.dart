@@ -499,6 +499,21 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return '';
   }
 
+  String nullable(
+    String typeName,
+    String className,
+    Iterable<String> requiredProperties,
+    String propertyKey,
+    Map<String, dynamic> propertyEntryMap,
+  ) {
+    if (options.nullableModels.contains(className) ||
+        !requiredProperties.contains(propertyKey) ||
+        propertyEntryMap['nullable'] == true) {
+      return typeName.makeNullable();
+    }
+    return typeName;
+  }
+
   String generatePropertyContentBySchema(
     Map<String, dynamic> propertyEntryMap,
     String propertyName,
@@ -545,10 +560,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
-    if (options.nullableModels.contains(className) ||
-        !requiredProperties.contains(propertyKey)) {
-      typeName = typeName.makeNullable();
-    }
+    typeName = nullable(
+        typeName, className, requiredProperties, propertyKey, propertyEntryMap);
 
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
@@ -592,10 +605,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if (options.nullableModels.contains(className) ||
-        !requiredProperties.contains(propertyKey)) {
-      typeName = typeName.makeNullable();
-    }
+    typeName = nullable(
+        typeName, className, requiredProperties, propertyKey, propertyEntryMap);
 
     return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
@@ -649,10 +660,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if (options.nullableModels.contains(className) ||
-        !requiredProperties.contains(propertyKey)) {
-      typeName = typeName.makeNullable();
-    }
+    typeName = nullable(
+        typeName, className, requiredProperties, propertyKey, propertyEntryMap);
 
     return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
@@ -682,10 +691,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final includeIfNullString = generateIncludeIfNullString();
 
     var enumPropertyName = className.capitalize + key.capitalize;
-    if (options.nullableModels.contains(className) ||
-        !requiredProperties.contains(propertyKey)) {
-      enumPropertyName = enumPropertyName.makeNullable();
-    }
+    enumPropertyName = nullable(enumPropertyName, className, requiredProperties,
+        propertyKey, propertyEntryMap);
 
     return '''
   @JsonKey(${unknownEnumValue.jsonKey.substring(2)}$includeIfNullString)
@@ -816,10 +823,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var listPropertyName = 'List<$typeName>';
 
-    if (options.nullableModels.contains(className) ||
-        !requiredParameters.contains(propertyKey)) {
-      listPropertyName = listPropertyName.makeNullable();
-    }
+    listPropertyName = nullable(listPropertyName, className, requiredParameters,
+        propertyKey, propertyEntryMap);
 
     return '$jsonKeyContent  final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
@@ -889,10 +894,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       jsonKeyContent += ')\n';
     }
 
-    if (options.nullableModels.contains(className) ||
-        !requiredProperties.contains(propertyKey)) {
-      typeName += '?';
-    }
+    typeName =
+        nullable(typeName, className, requiredProperties, propertyKey, val);
 
     return '\t$jsonKeyContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
