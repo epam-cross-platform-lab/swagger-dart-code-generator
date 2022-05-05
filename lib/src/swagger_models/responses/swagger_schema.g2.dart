@@ -22,6 +22,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       ref: json[r'$ref'] as String? ?? '',
       defaultValue: json['default'],
       format: json['format'] as String? ?? '',
+      isNullable: json['nullable'] as bool? ?? false,
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
@@ -63,6 +64,7 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'required': instance.required,
       'items': instance.items,
       'properties': instance.properties,
+      'nullable': instance.isNullable,
       'schema': instance.schema,
       'oneOf': instance.oneOf,
       'anyOf': instance.anyOf,

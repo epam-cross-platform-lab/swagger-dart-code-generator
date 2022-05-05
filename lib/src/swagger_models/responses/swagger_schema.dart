@@ -66,6 +66,9 @@ class SwaggerSchema {
   @JsonKey(name: 'properties', defaultValue: {})
   Map<String, SwaggerSchema> properties;
 
+  @JsonKey(name: 'nullable', defaultValue: false)
+  bool isNullable;
+
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
 

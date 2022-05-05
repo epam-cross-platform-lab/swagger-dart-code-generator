@@ -56,6 +56,49 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'typedef $className = Map<String, dynamic>;';
     }
 
+    if (map['type'] == 'array') {
+      final items = map['items'] as Map<String, dynamic>? ?? {};
+
+      if (items.containsKey('\$ref')) {
+        final ref = items['\$ref'] as String;
+
+        final itemSchema =
+            schemas[ref.getUnformattedRef()] as Map<String, dynamic>? ?? {};
+
+        if (kBasicTypes.contains(itemSchema['type'])) {
+          return 'typedef $className = List<${kBasicTypesMap[itemSchema['type']]}>;';
+        }
+
+        final itemType = getValidatedClassName(ref.getUnformattedRef());
+        return 'typedef $className = List<$itemType>;';
+      }
+
+      final itemsType = items['type'] as String? ?? '';
+
+      if (kBasicTypes.contains(itemsType)) {
+        return 'typedef $className = List<${kBasicTypesMap[itemsType]}>;';
+      }
+
+      if (items.containsKey('properties')) {
+        final itemClassName = '$className\$Item';
+
+        final resultClass = generateModelClassString(
+          rootMap,
+          itemClassName,
+          map['items'] as Map<String, dynamic>,
+          schemas,
+          defaultValues,
+          useDefaultNullForLists,
+          allEnumNames,
+          allEnumListNames,
+        );
+
+        return 'typedef $className = List<$itemClassName>; $resultClass';
+      }
+
+      return 'typedef $className = List<Object>;';
+    }
+
     return generateModelClassString(
       root,
       className,
@@ -629,6 +672,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     required String propertyName,
     required String className,
   }) {
+    if (className.endsWith('\$Item')) {
+      return kObject.pascalCase;
+    }
+    
     final items = prop.items;
 
     var typeName = '';
