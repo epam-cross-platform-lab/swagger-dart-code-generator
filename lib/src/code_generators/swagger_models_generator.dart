@@ -35,6 +35,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     bool useDefaultNullForLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
+    Map<String, SwaggerSchema> allClasses,
   ) {
     if (schema.isEnum) {
       return '';
@@ -90,6 +91,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           useDefaultNullForLists,
           allEnumNames,
           allEnumListNames,
+          allClasses,
         );
 
         return 'typedef $className = List<$itemClassName>; $resultClass';
@@ -107,6 +109,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       useDefaultNullForLists,
       allEnumNames,
       allEnumListNames,
+      allClasses,
     );
   }
 
@@ -211,6 +214,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         return '';
       }
 
+      final allClasses = {
+        ...root.definitions,
+        ...root.components?.responses ?? {},
+        ...root.components?.schemas ?? {},
+      };
+
       return generateModelClassContent(
         root,
         className.pascalCase,
@@ -220,6 +229,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         options.useDefaultNullForLists,
         allEnums.map((e) => e.name).toList(),
         allEnumListNames,
+        allClasses,
       );
     }).join('\n');
 
@@ -582,10 +592,14 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     List<String> allEnumListNames,
     Map<String, String> basicTypesMap,
     List<String> requiredProperties,
+    Map<String, SwaggerSchema> allClasses,
   ) {
     final parameterName = prop.ref.split('/').last;
+
     String typeName;
-    if (basicTypesMap.containsKey(parameterName)) {
+    if (kBasicTypes.contains(allClasses[parameterName]?.type)) {
+      typeName = kBasicTypesMap[allClasses[parameterName]?.type]!;
+    } else if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName]!;
     } else {
       typeName = getValidatedClassName(getParameterTypeName(
@@ -928,6 +942,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     List<String> allEnumNames,
     List<String> allEnumListNames,
     List<String> requiredProperties,
+    Map<String, SwaggerSchema> allClasses,
   ) {
     if (propertiesMap.isEmpty) {
       return '';
@@ -986,6 +1001,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           allEnumListNames,
           basicTypesMap,
           requiredProperties,
+          allClasses,
         ));
       } else if (prop.schema != null) {
         results.add(generatePropertyContentBySchema(
@@ -1194,6 +1210,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     bool useDefaultNullForLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
+    Map<String, SwaggerSchema> allClasses,
   ) {
     final properties = getModelProperties(schema, schemas);
     final requiredProperties = schema.required;
@@ -1217,6 +1234,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       allEnumNames,
       allEnumListNames,
       requiredProperties,
+      allClasses,
     );
 
     final validatedClassName =
@@ -1473,7 +1491,12 @@ $allHashComponents;
     required String name,
     required SwaggerSchema schema,
   }) {
-    final enums = schema.enumValuesObj;
+    var enums = schema.enumValuesObj;
+
+    if (enums.isEmpty) {
+      enums = schema.items?.enumValuesObj ?? [];
+    }
+
     if (enums.isNotEmpty) {
       final isInteger =
           kIntegerTypes.contains(schema.type) || enums.firstOrNull is int;
@@ -1482,7 +1505,7 @@ $allHashComponents;
         isInteger: isInteger,
         defaultValue: schema.defaultValue ?? schema.items?.defaultValue,
       ));
-    }
+    } else if (schema.type == kArray) {}
   }
 
   Map<String, SwaggerSchema> getRequestBodiesFromRequests(SwaggerRoot root) {
