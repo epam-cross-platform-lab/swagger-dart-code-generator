@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:test/test.dart';
 
 import 'test_data.dart';
 
 void main() {
   group('Additions generator tests', () {
-    final map = jsonDecode(carsService) as Map<String, dynamic>;
+    final root = SwaggerRoot.parse(carsService);
 
     test('Should generate CarsApi', () {
       final result = SwaggerRequestsGenerator(GeneratorOptions(
@@ -23,7 +22,7 @@ void main() {
           )
         ],
       )).generate(
-        map: map,
+        swaggerRoot: root,
         className: 'CarsService',
         fileName: 'cars_service',
       );
@@ -40,7 +39,7 @@ void main() {
           includePaths: [
             'car'
           ])).generate(
-        map: map,
+        swaggerRoot: root,
         className: 'CarsService',
         fileName: 'cars_service',
       );

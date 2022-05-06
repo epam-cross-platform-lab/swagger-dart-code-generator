@@ -22,7 +22,6 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       ref: json[r'$ref'] as String? ?? '',
       defaultValue: json['default'],
       format: json['format'] as String? ?? '',
-      isNullable: json['nullable'] as bool? ?? false,
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
@@ -34,7 +33,22 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      allOf: (json['allOf'] as List<dynamic>?)
+              ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      required: (json['required'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
       description: json['description'] as String? ?? '',
+      enumNames: (json['enumNames'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      isNullable: json['nullable'] as bool? ?? false,
+      hasAdditionalProperties: json['additionalProperties'] == null
+          ? false
+          : _additionalsFromJson(json['additionalProperties']),
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
@@ -46,10 +60,14 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       r'$ref': instance.ref,
       'description': instance.description,
       'enum': instance.enumValuesObj,
+      'required': instance.required,
       'items': instance.items,
       'properties': instance.properties,
       'nullable': instance.isNullable,
       'schema': instance.schema,
       'oneOf': instance.oneOf,
       'anyOf': instance.anyOf,
+      'allOf': instance.allOf,
+      'additionalProperties': instance.hasAdditionalProperties,
+      'enumNames': instance.enumNames,
     };

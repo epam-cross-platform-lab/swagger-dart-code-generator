@@ -517,11 +517,10 @@ const String schemasWithEnumsInProperties = '''
             "description": "Flag indicating showPage availability"
           },
           "successValues": {
-            "items": {
-              "enum": [
-                "one, two"
-              ]
-            }
+            "enum": [
+              "one",
+              "two"
+            ]
           }
         }
       }
@@ -547,12 +546,10 @@ const String schemasWithEnumsInProperties = '''
             "schema": {
               "properties": {
                 "failedValued": {
-                  "items": {
-                    "enum": [
-                      "one",
-                      "two"
-                    ]
-                  }
+                  "enum": [
+                    "one",
+                    "two"
+                  ]
                 }
               }
             }
@@ -596,13 +593,11 @@ const String schemasWithIntegers = '''
             "description": "Flag indicating showPage availability"
           },
           "successValues": {
-            "items": {
-              "enum": [
-                1, 2
-              ],
-              "type": "integer",
-              "default": 1
-            }
+            "enum": [
+              1, 2
+            ],
+            "type": "integer",
+            "default": 1
           }
         }
       }
@@ -628,12 +623,10 @@ const String schemasWithIntegers = '''
             "schema": {
               "properties": {
                 "failedValued": {
-                  "items": {
-                    "enum": [
-                      1, 2
-                    ],
-                    "type": "integer"
-                  }
+                  "enum": [
+                    1, 2
+                  ],
+                  "type": "integer"
                 }
               }
             }
@@ -814,6 +807,28 @@ const requestWithEnum = '''
             }
           }
         }
+      }
+    }
+  }
+}
+''';
+
+const objectWithadditionalProperties = '''
+{
+  "components" : {
+    "schemas" : {
+      "FooDto": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     }
   }

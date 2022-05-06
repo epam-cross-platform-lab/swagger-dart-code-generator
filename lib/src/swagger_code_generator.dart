@@ -7,6 +7,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_model
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
 class SwaggerCodeGenerator {
   Map<int, SwaggerEnumsGenerator> _getEnumsMap(GeneratorOptions options) {
@@ -23,8 +24,8 @@ class SwaggerCodeGenerator {
     };
   }
 
-  int _getApiVersion(Map map) {
-    final openApi = map['openapi'] as String?;
+  int _getApiVersion(SwaggerRoot root) {
+    final openApi = root.openapiVersion;
     return openApi != null ? 3 : 2;
   }
 
@@ -51,36 +52,36 @@ class SwaggerCodeGenerator {
           separateModels);
 
   String generateResponses(
-    Map<String, dynamic> map,
+    SwaggerRoot root,
     String fileName,
     GeneratorOptions options,
   ) =>
-      _getSwaggerModelsGenerator(map, options).generateResponses(map, fileName);
+      _getSwaggerModelsGenerator(root, options)
+          .generateResponses(root, fileName);
 
   String generateRequestBodies(
-    Map<String, dynamic> map,
+    SwaggerRoot root,
     String fileName,
     GeneratorOptions options,
   ) =>
-      _getSwaggerModelsGenerator(map, options)
-          .generateRequestBodies(map, fileName);
+      _getSwaggerModelsGenerator(root, options)
+          .generateRequestBodies(root, fileName);
 
   String generateEnums(
-    Map<String, dynamic> map,
+    SwaggerRoot root,
     String fileName,
     GeneratorOptions options,
   ) =>
-      _getSwaggerEnumsGenerator(map, options).generate(map, fileName);
+      _getSwaggerEnumsGenerator(root, options).generate(root, fileName);
 
-  String generateModels(Map<String, dynamic> dartCode, String fileName,
+  String generateModels(
+          SwaggerRoot root, String fileName, GeneratorOptions options) =>
+      _getSwaggerModelsGenerator(root, options).generate(root, fileName);
+
+  String generateRequests(SwaggerRoot root, String className, String fileName,
           GeneratorOptions options) =>
-      _getSwaggerModelsGenerator(dartCode, options)
-          .generate(dartCode, fileName);
-
-  String generateRequests(Map<String, dynamic> map, String className,
-          String fileName, GeneratorOptions options) =>
-      _getSwaggerRequestsGenerator(map, options).generate(
-        map: map,
+      _getSwaggerRequestsGenerator(root, options).generate(
+        swaggerRoot: root,
         className: className,
         fileName: fileName,
       );
@@ -98,19 +99,19 @@ class SwaggerCodeGenerator {
       SwaggerAdditionsGenerator(options);
 
   SwaggerEnumsGenerator _getSwaggerEnumsGenerator(
-    Map root,
+    SwaggerRoot root,
     GeneratorOptions options,
   ) =>
       _getEnumsMap(options)[_getApiVersion(root)]!;
 
   SwaggerModelsGenerator _getSwaggerModelsGenerator(
-    Map root,
+    SwaggerRoot root,
     GeneratorOptions options,
   ) =>
       _getModelsMap(options)[_getApiVersion(root)]!;
 
   SwaggerRequestsGenerator _getSwaggerRequestsGenerator(
-    Map root,
+    SwaggerRoot root,
     GeneratorOptions options,
   ) =>
       SwaggerRequestsGenerator(options);

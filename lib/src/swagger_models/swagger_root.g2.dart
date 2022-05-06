@@ -7,6 +7,7 @@ part of 'swagger_root.dart';
 // **************************************************************************
 
 SwaggerRoot _$SwaggerRootFromJson(Map<String, dynamic> json) => SwaggerRoot(
+      openapiVersion: json['openapi'] as String?,
       basePath: json['basePath'] as String? ?? '',
       components: json['components'] == null
           ? null
@@ -41,6 +42,7 @@ SwaggerRoot _$SwaggerRootFromJson(Map<String, dynamic> json) => SwaggerRoot(
 
 Map<String, dynamic> _$SwaggerRootToJson(SwaggerRoot instance) =>
     <String, dynamic>{
+      'openapi': instance.openapiVersion,
       'info': instance.info,
       'host': instance.host,
       'basePath': instance.basePath,
