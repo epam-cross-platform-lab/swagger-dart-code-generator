@@ -1021,6 +1021,7 @@ extension on SwaggerResponse {
     final allRefs = [
       content?.ref,
       content?.schema?.ref,
+      content?.schema?.items?.ref,
       schema?.ref,
       schema?.items?.ref,
       ref
