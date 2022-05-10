@@ -224,6 +224,20 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       }
     }
 
+    if (request.requestBody != null) {
+      final refs = [
+        request.requestBody?.ref,
+        request.requestBody?.content?.schema?.ref
+      ];
+
+      final ref =
+          refs.firstWhereOrNull((element) => element?.isNotEmpty == true) ?? '';
+
+      if (ref.isNotEmpty) {
+        results.add(ref.getRef());
+      }
+    }
+
     //Models from response
     final successResponse = getSuccessedResponse(responses: request.responses);
     final responseRef = successResponse?.anyRef ?? '';
@@ -246,11 +260,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             results.add(itemClassName);
           }
         }
-      }
-    } else {
-      final neededResponse = response.removeListOrStream();
-      if (!kBasicTypes.contains(neededResponse)) {
-        results.add(getValidatedClassName(neededResponse));
+      } else {
+        final neededResponse = response.removeListOrStream();
+        if (!kBasicTypes.contains(neededResponse)) {
+          results.add(getValidatedClassName(neededResponse));
+        }
       }
     }
 
