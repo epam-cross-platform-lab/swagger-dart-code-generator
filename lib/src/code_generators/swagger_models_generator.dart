@@ -597,9 +597,14 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final parameterName = prop.ref.split('/').last;
 
     String typeName;
-    if (kBasicTypes.contains(allClasses[parameterName]?.type) &&
+    final refSchema = allClasses[parameterName];
+    if (kBasicTypes.contains(refSchema?.type) &&
         allClasses[parameterName]?.isEnum != true) {
-      typeName = kBasicTypesMap[allClasses[parameterName]?.type]!;
+      if (refSchema?.format == 'datetime') {
+        typeName = 'DateTime';
+      } else {
+        typeName = kBasicTypesMap[refSchema?.type]!;
+      }
     } else if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName]!;
     } else {
