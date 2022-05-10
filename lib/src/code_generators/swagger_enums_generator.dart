@@ -375,7 +375,22 @@ $enumMap
       return generateEnumContentIfPossible(schema, className);
     }
 
-    if (schema.items != null && schema.items!.isEnum) {
+    if (schema.items != null) {
+      if (schema.items!.isEnum) {
+        return generateEnumContentIfPossible(schema.items!, className);
+      }
+
+      if (schema.items?.properties.isNotEmpty == true) {
+        var result = '';
+
+        schema.items?.properties.forEach((key, value) {
+          result +=
+              generateEnumContentIfPossible(value, '$className\$Item$key');
+        });
+
+        return result;
+      }
+
       return generateEnumContentIfPossible(schema.items!, className);
     }
     Map<String, SwaggerSchema> properties;

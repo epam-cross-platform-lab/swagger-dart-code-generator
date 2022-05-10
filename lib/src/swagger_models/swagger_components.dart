@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -39,8 +40,14 @@ Map<String, SwaggerSchema> _mapResponses(Map<String, dynamic>? json) {
   }
 
   json.forEach((key, value) {
-    final content =
-        (value as Map<String, dynamic>)['content'] as Map<String, dynamic>?;
+    final map = value as Map<String, dynamic>? ?? {};
+    if (kBasicTypes.contains(value?['type'])) {
+      results[key] = SwaggerSchema(
+        type: value!['type'].toString(),
+      );
+    }
+
+    final content = map['content'] as Map<String, dynamic>?;
 
     Map<String, dynamic>? appJson;
 

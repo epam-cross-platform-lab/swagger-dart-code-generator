@@ -57,7 +57,7 @@ class SwaggerSchema {
 
   bool get isListEnum => type == 'array' && items != null && items!.isEnum;
 
-  @JsonKey(name: 'required', defaultValue: [])
+  @JsonKey(name: 'required', fromJson: _requiredFromJson)
   List<String> required;
 
   @JsonKey(name: 'items')
@@ -102,3 +102,11 @@ class SwaggerSchema {
 }
 
 bool _additionalsFromJson(dynamic value) => value != false;
+
+List<String> _requiredFromJson(dynamic value) {
+  if (value is List) {
+    return value.map((e) => e as String).toList();
+  }
+
+  return [];
+}

@@ -37,10 +37,9 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      required: (json['required'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
+      required: json['required'] == null
+          ? const []
+          : _requiredFromJson(json['required']),
       description: json['description'] as String? ?? '',
       enumNames: (json['enumNames'] as List<dynamic>?)
           ?.map((e) => e as String)

@@ -224,6 +224,35 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       }
     }
 
+    if (request.requestBody != null) {
+      final refs = [
+        request.requestBody?.ref,
+        request.requestBody?.content?.schema?.ref
+      ];
+
+      final ref =
+          refs.firstWhereOrNull((element) => element?.isNotEmpty == true) ?? '';
+
+      final schema = root.allSchemas[ref.getUnformattedRef()];
+
+      if (schema?.type == kArray) {
+        if (schema?.items?.ref.isNotEmpty == true) {
+          final ref = schema!.items!.ref;
+          final itemType = getValidatedClassName(ref.getUnformattedRef());
+          results.add(itemType);
+        } else {
+          final itemsType = schema?.items?.type;
+
+          if (!kBasicTypes.contains(itemsType) &&
+              schema?.items?.properties != null) {
+            final itemClassName = '$response\$Item';
+
+            results.add(itemClassName);
+          }
+        }
+      }
+    }
+
     //Models from response
     final successResponse = getSuccessedResponse(responses: request.responses);
     final responseRef = successResponse?.anyRef ?? '';
@@ -246,11 +275,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             results.add(itemClassName);
           }
         }
-      }
-    } else {
-      final neededResponse = response.removeListOrStream();
-      if (!kBasicTypes.contains(neededResponse)) {
-        results.add(getValidatedClassName(neededResponse));
+      } else if (schema?.allOf.isNotEmpty != true) {
+        final neededResponse = response.removeListOrStream();
+        if (!kBasicTypes.contains(neededResponse)) {
+          results.add(getValidatedClassName(neededResponse));
+        }
       }
     }
 
@@ -992,6 +1021,7 @@ extension on SwaggerResponse {
     final allRefs = [
       content?.ref,
       content?.schema?.ref,
+      content?.schema?.items?.ref,
       schema?.ref,
       schema?.items?.ref,
       ref

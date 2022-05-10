@@ -26,6 +26,7 @@ void main() {
 
     test('Should parse object name as a field Type', () {
       final map = SwaggerRoot.parse(modelWithParametersV3);
+
       final result = generator.generate(map, fileName);
 
       expect(
@@ -282,6 +283,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result, contains(jsonKeyExpendedResult));
@@ -303,6 +305,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
@@ -349,6 +352,7 @@ void main() {
         useDefaultNullForLists,
         [],
         [],
+        {},
       );
 
       expect(result, contains(classExpectedResult));
@@ -371,6 +375,7 @@ void main() {
         useDefaultNullForLists,
         [],
         [],
+        {},
       );
 
       expect(result, contains(classExpectedResult));
@@ -474,6 +479,7 @@ void main() {
         [],
         [],
         [],
+        {},
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -500,6 +506,7 @@ void main() {
         [],
         [],
         [],
+        {},
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -524,6 +531,7 @@ void main() {
         [],
         [],
         [],
+        {},
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -548,6 +556,7 @@ void main() {
         [],
         [],
         [],
+        {},
       );
 
       expect(result, contains(jsonKeyExpectedResult));
