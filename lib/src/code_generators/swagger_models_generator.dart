@@ -690,6 +690,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     required Map<String, String> basicTypesMap,
     required String propertyName,
     required String className,
+    required Map<String, SwaggerSchema> allClasses,
   }) {
     if (className.endsWith('\$Item')) {
       return kObject.pascalCase;
@@ -710,7 +711,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         if (items.hasRef) {
           typeName = items.ref.split('/').last;
 
-          if (!allEnumListNames.contains(typeName) &&
+          final schema = allClasses[items.ref.getUnformattedRef()];
+
+          if (schema?.anyOf.isNotEmpty == true) {
+            typeName = kObject;
+          } else if (!allEnumListNames.contains(typeName) &&
               !allEnumNames.contains('enums.' + typeName) &&
               !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
@@ -738,6 +743,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
             allEnumNames: allEnumNames,
             basicTypesMap: basicTypesMap,
             className: className,
+            allClasses: allClasses,
             prop: items,
             propertyName: propertyName,
           ).asList();
@@ -772,12 +778,14 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     List<String> allEnumListNames,
     Map<String, String> basicTypesMap,
     List<String> requiredParameters,
+    Map<String, SwaggerSchema> allClasses,
   ) {
     final typeName = _generateListPropertyTypeName(
       allEnumListNames: allEnumListNames,
       allEnumNames: allEnumNames,
       basicTypesMap: basicTypesMap,
       className: className,
+      allClasses: allClasses,
       prop: prop,
       propertyName: propertyName,
     );
@@ -891,6 +899,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     List<String> allEnumListNames,
     Map<String, String> basicTypesMap,
     List<String> requiredProperties,
+    Map<String, SwaggerSchema> allClasses,
   ) {
     switch (prop.type) {
       case 'array':
@@ -904,6 +913,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           allEnumListNames,
           basicTypesMap,
           requiredProperties,
+          allClasses,
         );
       case 'enum':
         return generateEnumPropertyContent(
@@ -984,6 +994,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           allEnumListNames,
           basicTypesMap,
           requiredProperties,
+          allClasses,
         ));
       } else if (prop.allOf.isNotEmpty) {
         results.add(

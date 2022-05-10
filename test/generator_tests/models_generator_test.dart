@@ -584,6 +584,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result, contains(jsonKeyExpectedResult));
@@ -605,6 +606,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(
@@ -628,6 +630,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result, contains('final List<TestOriginalRef>? dog;'));
@@ -650,6 +653,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result, contains('final List<TestObject>? dog;'));
@@ -673,6 +677,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result,
@@ -696,6 +701,7 @@ void main() {
         [],
         {},
         [],
+        {},
       );
 
       expect(result, contains('final List<Object>? dog;'));
