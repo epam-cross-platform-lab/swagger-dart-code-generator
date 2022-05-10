@@ -54,14 +54,7 @@ Map<String, SwaggerSchema> _mapResponses(Map<String, dynamic>? json) {
     if (content?.length == 1) {
       appJson = content?.values.first as Map<String, dynamic>?;
     } else {
-      final result = content?.entries
-          .firstWhere(
-            (element) => element.key.startsWith('application/json'),
-            orElse: () => MapEntry('', ''),
-          )
-          .value;
-
-      appJson = result as Map<String, dynamic>?;
+      appJson = content?['application/json'] as Map<String, dynamic>?;
     }
 
     if (appJson != null && appJson['schema'] != null) {
