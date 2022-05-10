@@ -105,7 +105,7 @@ bool _additionalsFromJson(dynamic value) => value != false;
 
 List<String> _requiredFromJson(dynamic value) {
   if (value is List) {
-    value.map((e) => e as String).toList();
+    return value.map((e) => e as String).toList();
   }
 
   return [];
