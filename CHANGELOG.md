@@ -1,3 +1,7 @@
+# 2.5.0+2
+
+* Code format
+
 # 2.5.0+1
 
 * Fixed generation of lists of objects in schemas ([#398](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/398))
