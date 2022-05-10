@@ -1445,6 +1445,9 @@ $allHashComponents;
 
           properties.addAll(allOfModelProperties);
         }
+      } else if (schema.type == kArray) {
+        className += '\$Item';
+        properties = schema.items?.properties ?? {};
       } else {
         properties = schema.properties;
       }
