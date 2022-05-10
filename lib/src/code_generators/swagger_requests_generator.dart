@@ -233,8 +233,23 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final ref =
           refs.firstWhereOrNull((element) => element?.isNotEmpty == true) ?? '';
 
-      if (ref.isNotEmpty) {
-        results.add(ref.getRef());
+      final schema = root.allSchemas[ref.getUnformattedRef()];
+
+      if (schema?.type == kArray) {
+        if (schema?.items?.ref.isNotEmpty == true) {
+          final ref = schema!.items!.ref;
+          final itemType = getValidatedClassName(ref.getUnformattedRef());
+          results.add(itemType);
+        } else {
+          final itemsType = schema?.items?.type;
+
+          if (!kBasicTypes.contains(itemsType) &&
+              schema?.items?.properties != null) {
+            final itemClassName = '$response\$Item';
+
+            results.add(itemClassName);
+          }
+        }
       }
     }
 
