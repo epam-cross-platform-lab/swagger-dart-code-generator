@@ -350,7 +350,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final toStringPart = p.annotations
                 .any((p0) => p0.code.toString().contains('symbol=Body'))
             ? ''
-            : '.toString()';
+            : '?.toString()';
 
         return '${p.name} : enums.\$${enumName}Map[${p.name}]$toStringPart';
       }
