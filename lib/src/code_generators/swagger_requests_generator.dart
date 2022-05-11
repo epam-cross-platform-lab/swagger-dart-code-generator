@@ -298,7 +298,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   Method _getPrivateMethod(Method method) {
     final parameters = method.optionalParameters.map((p) {
       if (p.type!.symbol!.startsWith('enums.')) {
-        return p.copyWith(type: Reference('dynamic'));
+        if (p.annotations
+            .any((p0) => p0.code.toString().contains('symbol=Body'))) {
+          return p.copyWith(type: Reference('dynamic'));
+        } else {
+          return p.copyWith(type: Reference('String?'));
+        }
       }
 
       return p;
@@ -342,7 +347,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final enumName =
             p.type!.symbol!.replaceFirst('enums.', '').replaceAll('?', '');
 
-        return '${p.name} : enums.\$${enumName}Map[${p.name}]';
+        final toStringPart = p.annotations
+                .any((p0) => p0.code.toString().contains('symbol=Body'))
+            ? ''
+            : '?.toString()';
+
+        return '${p.name} : enums.\$${enumName}Map[${p.name}]$toStringPart';
       }
       return '${p.name} : ${p.name}';
     }).join(', ');
