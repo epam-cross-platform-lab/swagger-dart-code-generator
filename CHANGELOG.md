@@ -1,3 +1,7 @@
+# 2.5.1
+
+* Changed generation of dynamics enums to string enums in requests
+
 # 2.5.0+2
 
 * Code format
