@@ -57,6 +57,10 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               .toList() ??
           [],
       cutFromModelNames: json['cut_from_model_names'] as String? ?? '',
+      additionalHeaders: (json['additional_headers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -64,6 +68,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'use_path_for_request_names': instance.usePathForRequestNames,
       'with_base_url': instance.withBaseUrl,
       'with_converter': instance.withConverter,
+      'additional_headers': instance.additionalHeaders,
       'input_urls': instance.inputUrls,
       'nullable_models': instance.nullableModels,
       'separate_models': instance.separateModels,
