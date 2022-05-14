@@ -1,3 +1,7 @@
+# 2.5.2
+
+* Added new build option `additionalHeaders`. It allows to add some headers for ALL service requests
+
 # 2.5.1
 
 * Changed generation of dynamics enums to string enums in requests
