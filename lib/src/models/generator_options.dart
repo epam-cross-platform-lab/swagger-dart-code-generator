@@ -27,6 +27,7 @@ class GeneratorOptions {
     this.inputUrls = const [],
     this.nullableModels = const [],
     this.cutFromModelNames = '',
+    this.additionalHeaders = const [],
   });
 
   /// Build options from a JSON map.
@@ -41,6 +42,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
+
+  @JsonKey(defaultValue: [])
+  final List<String> additionalHeaders;
 
   @JsonKey(defaultValue: [])
   List<String> inputUrls;

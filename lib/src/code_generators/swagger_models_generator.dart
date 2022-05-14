@@ -57,6 +57,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'typedef $className = Map<String, dynamic>;';
     }
 
+    if (schema.type == kObject && schema.anyOf.isNotEmpty) {
+      return 'typedef $className = Map<String, dynamic>;';
+    }
+
     if (schema.type == 'array') {
       final items = schema.items;
 
@@ -711,11 +715,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         if (items.hasRef) {
           typeName = items.ref.split('/').last;
 
-          final schema = allClasses[items.ref.getUnformattedRef()];
-
-          if (schema?.anyOf.isNotEmpty == true) {
-            typeName = kObject;
-          } else if (!allEnumListNames.contains(typeName) &&
+          if (!allEnumListNames.contains(typeName) &&
               !allEnumNames.contains('enums.' + typeName) &&
               !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
@@ -1147,8 +1147,8 @@ if(${neededName.camelCase} is String)
       .key;
       }
 '''}
-  
-    final pasredResult = enums.\$${neededName}Map.entries
+ 
+    final pasredResult = defaultValue == null ? null : enums.\$${neededName}Map.entries
       .firstWhereOrNull((element) => element.value == defaultValue)
       ?.key;
 

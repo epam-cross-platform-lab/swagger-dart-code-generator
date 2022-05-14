@@ -23,6 +23,8 @@ targets:
           use_path_for_request_names: true
           use_default_null_for_lists: false
           build_only_models: false
+          additional_headers:
+            - "Cache-Control"
           separate_models: false
           enums_case_sensitive: false
           cut_from_model_names: "ModelRenameV3"
