@@ -1147,8 +1147,8 @@ if(${neededName.camelCase} is String)
       .key;
       }
 '''}
-  
-    final pasredResult = enums.\$${neededName}Map.entries
+ 
+    final pasredResult = defaultValue == null ? null : enums.\$${neededName}Map.entries
       .firstWhereOrNull((element) => element.value == defaultValue)
       ?.key;
 
