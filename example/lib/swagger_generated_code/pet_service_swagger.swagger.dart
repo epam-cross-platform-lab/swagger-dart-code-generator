@@ -750,11 +750,11 @@ enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
         .key;
   }
 
-  final pasredResult = enums.$PetFindByStatusGetStatusMap.entries
+  final parsedResult = enums.$PetFindByStatusGetStatusMap.entries
       .firstWhereOrNull((element) => element.value == defaultValue)
       ?.key;
 
-  return pasredResult ??
+  return parsedResult ??
       defaultValue ??
       enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
 }
@@ -801,11 +801,11 @@ enums.OrderStatus orderStatusFromJson(
         .key;
   }
 
-  final pasredResult = enums.$OrderStatusMap.entries
+  final parsedResult = enums.$OrderStatusMap.entries
       .firstWhereOrNull((element) => element.value == defaultValue)
       ?.key;
 
-  return pasredResult ??
+  return parsedResult ??
       defaultValue ??
       enums.OrderStatus.swaggerGeneratedUnknown;
 }
@@ -846,11 +846,11 @@ enums.PetStatus petStatusFromJson(
         .key;
   }
 
-  final pasredResult = enums.$PetStatusMap.entries
+  final parsedResult = enums.$PetStatusMap.entries
       .firstWhereOrNull((element) => element.value == defaultValue)
       ?.key;
 
-  return pasredResult ??
+  return parsedResult ??
       defaultValue ??
       enums.PetStatus.swaggerGeneratedUnknown;
 }
