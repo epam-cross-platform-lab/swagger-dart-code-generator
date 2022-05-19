@@ -137,6 +137,14 @@ class \$CustomJsonDecoder {
   final Map<Type, \$JsonFactory> factories;
 
   dynamic decode<T>(dynamic entity) {
+    if (isTypeOf<T, Map>()) {
+      return entity;
+    }
+
+    if(isTypeOf<T, Iterable>()) {
+      return entity;
+    }
+    
     if (entity is Iterable) {
       return _decodeList<T>(entity);
     }
