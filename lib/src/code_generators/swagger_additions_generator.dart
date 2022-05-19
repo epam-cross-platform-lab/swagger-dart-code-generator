@@ -142,15 +142,15 @@ class \$CustomJsonDecoder {
       return _decodeList<T>(entity);
     }
 
+    if (entity is T) {
+      return entity;
+    }
+
     if (isTypeOf<T, Map>()) {
       return entity;
     }
 
      if(isTypeOf<T, Iterable>()) {
-      return entity;
-    }
-
-    if (entity is T) {
       return entity;
     }
 
