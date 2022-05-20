@@ -275,7 +275,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             results.add(itemClassName);
           }
         }
-      } else if (schema?.allOf.isNotEmpty != true) {
+      } else {
         final neededResponse = response.removeListOrStream();
         if (!kBasicTypes.contains(neededResponse)) {
           results.add(getValidatedClassName(neededResponse));

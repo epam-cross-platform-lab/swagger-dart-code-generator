@@ -53,10 +53,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'class $className {}';
     }
 
-    if (schema.allOf.isNotEmpty) {
-      return 'typedef $className = Map<String, dynamic>;';
-    }
-
     if (schema.type == kObject && schema.anyOf.isNotEmpty) {
       return 'typedef $className = Map<String, dynamic>;';
     }
