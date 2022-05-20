@@ -1,3 +1,7 @@
+# 2.5.4
+
+* Fixed generation of models with allOf ([#410](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/410))
+
 # 2.5.2
 
 * Added new build option `additionalHeaders`. It allows to add some headers for ALL service requests
