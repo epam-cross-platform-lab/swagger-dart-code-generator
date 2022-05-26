@@ -1,3 +1,8 @@
+# 2.5.5
+
+* Fixed cases when enums has integer values in models
+* Fixed cases with enums in request bodies
+
 # 2.5.4
 
 * Fixed generation of models with allOf ([#410](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/410))
