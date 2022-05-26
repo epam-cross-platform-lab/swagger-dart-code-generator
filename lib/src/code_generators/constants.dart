@@ -14,7 +14,6 @@ const kBasicTypes = [
   'string',
   'int',
   'integer',
-  'number',
   'double',
   'float',
   'bool',
@@ -23,6 +22,11 @@ const kBasicTypes = [
   'Object',
   'String',
   kMap,
+];
+
+const kBasicSwaggerTypes = [
+  ...kBasicTypes,
+  'number',
 ];
 
 const kMap = 'Map';
