@@ -14,6 +14,7 @@ const kBasicTypes = [
   'string',
   'int',
   'integer',
+  'number',
   'double',
   'float',
   'bool',
