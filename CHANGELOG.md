@@ -1,3 +1,7 @@
+# 2.5.6
+
+* Fixed generation of basic types in responses by ref
+
 # 2.5.5
 
 * Fixed cases when enums has integer values in models
