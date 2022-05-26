@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -441,7 +442,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         } else {
           valueType = 'Object';
           returnType = validatedTypeName;
-          final defaultValueCamelCase = defaultValue?.toString().camelCase;
+          final defaultValueCamelCase =
+              SwaggerEnumsGenerator.getValidatedEnumFieldName(
+                  defaultValue?.toString() ?? '');
           defaultValueString = '$validatedTypeName.$defaultValueCamelCase';
         }
         fromJson = '''

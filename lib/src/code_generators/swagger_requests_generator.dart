@@ -306,6 +306,19 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         }
       }
 
+      if (p.type!.symbol!.startsWith('List')) {
+        final listType = p.type!.symbol!.removeListOrStream();
+
+        if (listType.startsWith('enums.')) {
+          if (p.annotations
+              .any((p0) => p0.code.toString().contains('symbol=Body'))) {
+            return p.copyWith(type: Reference('dynamic'));
+          } else {
+            return p.copyWith(type: Reference('List<String?>'));
+          }
+        }
+      }
+
       return p;
     });
 
@@ -485,6 +498,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final format = parameter.schema?.format ?? '';
 
     if (parameter.inParameter == kHeader) {
+      return _mapParameterName(kString, format, '');
+    } else if (parameter.inParameter == kPath) {
       return _mapParameterName(kString, format, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
