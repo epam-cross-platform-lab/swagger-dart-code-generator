@@ -77,6 +77,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         final itemsType = items.type;
 
+        if (itemsType != kObject) {
+          return 'typedef $className = List<Object>;';
+        }
+
         if (kBasicTypes.contains(itemsType)) {
           return 'typedef $className = List<${kBasicTypesMap[itemsType]}>;';
         }
