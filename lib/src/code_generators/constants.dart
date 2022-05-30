@@ -52,6 +52,7 @@ const kResponses = '/responses/';
 const kPath = 'path';
 const kOptionalBody = 'optionalBody';
 const kFormData = 'formData';
+const kMultipart = 'multipart';
 
 const kDefaultBodyParameter = 'Object';
 const kField = 'Field';
@@ -81,6 +82,7 @@ const kCookie = 'cookie';
 const kArray = 'array';
 const kEnum = 'enum';
 const kBody = 'body';
+const kPartFile = 'partFile';
 
 const kDynamic = 'dynamic';
 
