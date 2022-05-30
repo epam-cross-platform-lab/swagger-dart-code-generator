@@ -1,3 +1,7 @@
+# 2.5.7
+
+* Fixed some issues in swagger examples
+
 # 2.5.6
 
 * Fixed generation of basic types in responses by ref
