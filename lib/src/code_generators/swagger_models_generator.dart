@@ -77,6 +77,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         final itemsType = items.type;
 
+        if (itemsType != kObject) {
+          return 'typedef $className = List<Object>;';
+        }
+
         if (kBasicTypes.contains(itemsType)) {
           return 'typedef $className = List<${kBasicTypesMap[itemsType]}>;';
         }
@@ -601,7 +605,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     String typeName;
     final refSchema = allClasses[parameterName];
-    if (kBasicTypes.contains(refSchema?.type) &&
+    if (kBasicSwaggerTypes.contains(refSchema?.type) &&
         allClasses[parameterName]?.isEnum != true) {
       if (refSchema?.format == 'datetime') {
         typeName = 'DateTime';
