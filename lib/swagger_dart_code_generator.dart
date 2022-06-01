@@ -22,6 +22,7 @@ const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
 const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
+const String _outputSocketsFileExtension = '.sockets.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
@@ -82,6 +83,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     result[url]!.add(join(out, '$name$_outputEnumsFileExtension'));
     result[url]!.add(join(out, '$name$_outputModelsFileExtension'));
     result[url]!.add(join(out, '$name$_outputResponsesFileExtension'));
+    result[url]!.add(join(out, '$name$_outputSocketsFileExtension'));
   }
 
   for (var url in options.inputUrls) {
@@ -98,6 +100,8 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputModelsFileExtension'));
     result[additionalResultPath]!
         .add(join(out, '$name$_outputResponsesFileExtension'));
+    result[additionalResultPath]!
+        .add(join(out, '$name$_outputSocketsFileExtension'));
   }
 
   ///Register additional outputs in first input
@@ -189,6 +193,9 @@ class SwaggerDartCodeGenerator implements Builder {
     final enums = codeGenerator.generateEnums(
         contents, removeFileExtension(fileNameWithExtension), options);
 
+    final sockets = codeGenerator.generateSockets(
+        contents, removeFileExtension(fileNameWithExtension), options);
+
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
       models.isNotEmpty,
@@ -237,6 +244,18 @@ class SwaggerDartCodeGenerator implements Builder {
               '$fileNameWithoutExtension$_outputEnumsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
+    }
+
+    if (sockets.isNotEmpty) {
+      ///Write sockets
+      final formatterSockets = _tryFormatCode(sockets);
+
+      final socketsAssetId = AssetId(
+          buildStep.inputId.package,
+          join(options.outputFolder,
+              '$fileNameWithoutExtension$_outputSocketsFileExtension'));
+
+      await buildStep.writeAsString(socketsAssetId, formatterSockets);
     }
 
     if (options.separateModels) {
