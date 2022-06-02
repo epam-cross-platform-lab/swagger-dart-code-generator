@@ -512,8 +512,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     if (parameter.inParameter == kHeader) {
       return _mapParameterName(kString, format, '');
-    } else if (parameter.inParameter == kPath) {
-      return _mapParameterName(kString, format, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
       return _getEnumParameterTypeName(
@@ -554,11 +552,15 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return _mapParameterName(parameter.schema!.anyOf.first.type, format, '');
     }
 
-    var neededType = parameter.type.isNotEmpty
-        ? parameter.type
-        : parameter.schema?.type ?? kObject.pascalCase;
+    if (parameter.type.isNotEmpty) {
+      return _mapParameterName(parameter.type, format, modelPostfix);
+    }
 
-    return _mapParameterName(neededType, format, modelPostfix);
+    if (parameter.schema?.type.isNotEmpty == true) {
+      return _mapParameterName(parameter.schema!.type, format, modelPostfix);
+    }
+
+    return kObject.pascalCase;
   }
 
   String _mapParameterName(String name, String format, String modelPostfix) {
