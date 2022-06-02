@@ -79,6 +79,10 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
     return null;
   }
 
+  if (map.containsKey('multipart/form-data')) {
+    return RequestContent(isMultipart: true);
+  }
+
   final content = map.values.first as Map<String, dynamic>;
 
   return RequestContent.fromJson(content);
@@ -87,11 +91,14 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
 @JsonSerializable()
 class RequestContent {
   RequestContent({
+    this.isMultipart,
     this.schema,
   });
 
   @JsonKey(name: 'schema')
   final SwaggerSchema? schema;
+
+  final bool? isMultipart;
 
   Map<String, dynamic> toJson() => _$RequestContentToJson(this);
 

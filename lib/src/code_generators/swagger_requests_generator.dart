@@ -158,6 +158,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                 swaggerRequest.parameters.none((p) => p.inParameter == kBody) &&
                 swaggerRequest.requestBody == null;
 
+        final isMultipart = parameters.any((p) {
+          return p.annotations
+              .any((p0) => p0.call([]).toString().contains('symbol=PartFile'));
+        });
+
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
           ..docs.add(_getCommentsForMethod(
@@ -166,8 +171,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             componentsParameters: swaggerRoot.components?.parameters ?? {},
           ))
           ..name = methodName
-          ..annotations
-              .add(_getMethodAnnotation(requestType, path, hasOptionalBody))
+          ..annotations.addAll(_getMethodAnnotation(
+              requestType, path, hasOptionalBody, isMultipart))
           ..returns = Reference(returns));
 
         final allModels = _getAllMethodModels(
@@ -381,18 +386,26 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         '$allModelsString\nreturn _$publicMethodName($parametersListString);');
   }
 
-  Expression _getMethodAnnotation(
+  List<Expression> _getMethodAnnotation(
     String requestType,
     String path,
     bool hasOptionalBody,
+    bool isMultipart,
   ) {
-    return refer(requestType.pascalCase).call(
-      [],
-      {
-        kPath: literalString(path),
-        if (hasOptionalBody) 'optionalBody': refer(true.toString())
-      },
-    );
+    return [
+      refer(requestType.pascalCase).call(
+        [],
+        {
+          kPath: literalString(path),
+          if (hasOptionalBody) 'optionalBody': refer(true.toString()),
+        },
+      ),
+      if (isMultipart)
+        refer(kMultipart.pascalCase).call(
+          [],
+          {},
+        ),
+    ];
   }
 
   String _getCommentsForMethod({
@@ -499,8 +512,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     if (parameter.inParameter == kHeader) {
       return _mapParameterName(kString, format, '');
-    } else if (parameter.inParameter == kPath) {
-      return _mapParameterName(kString, format, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
       return _getEnumParameterTypeName(
@@ -541,11 +552,15 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return _mapParameterName(parameter.schema!.anyOf.first.type, format, '');
     }
 
-    var neededType = parameter.type.isNotEmpty
-        ? parameter.type
-        : parameter.schema?.type ?? kObject.pascalCase;
+    if (parameter.type.isNotEmpty) {
+      return _mapParameterName(parameter.type, format, modelPostfix);
+    }
 
-    return _mapParameterName(neededType, format, modelPostfix);
+    if (parameter.schema?.type.isNotEmpty == true) {
+      return _mapParameterName(parameter.schema!.type, format, modelPostfix);
+    }
+
+    return kObject.pascalCase;
   }
 
   String _mapParameterName(String name, String format, String modelPostfix) {
@@ -620,6 +635,26 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final requestBody = swaggerRequest.requestBody;
 
     if (requestBody != null) {
+      if (requestBody.content?.isMultipart == true) {
+        result.add(
+          Parameter(
+            (p) => p
+              ..name = kPartFile
+              ..named = true
+              ..required = true
+              ..type = Reference(
+                'List<int>',
+              )
+              ..named = true
+              ..annotations.add(
+                refer(kPartFile.pascalCase).call([]),
+              ),
+          ),
+        );
+
+        return result.distinctParameters();
+      }
+
       var typeName = '';
 
       if (requestBody.hasRef) {
