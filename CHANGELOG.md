@@ -1,3 +1,8 @@
+# 2.5.8
+
+* Fixed generation of `path` parameters ([#415](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/415))
+* Implemented generation of `FormData` ([#385](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/385))
+
 # 2.5.7
 
 * Fixed some issues in swagger examples
