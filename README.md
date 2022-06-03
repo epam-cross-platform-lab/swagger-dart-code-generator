@@ -85,7 +85,7 @@ targets:
 | `enums_case_sensitive` | `true` | `false` | If value is false, 'enumValue' will be defined like Enum.enumValue even it's json key equals 'ENUMVALUE' |
 | `include_paths` | `[]` | `false` | List<String> of Regex If not empty - includes only paths matching reges |
 | `exclude_paths` | `[]` | `false` | List<String> of Regex If not empty -exclude paths matching reges |
-| `use_default_null_for_lists` | `false` | `false` | If option is true, default value for lists will be null, otherwise - [] |
+| `classes_with_nullabe_lists` | `false` | [] | List of regex strings. If classname matches any of regex - list properties will have default value `null`. Otherwice it will be empty list. Check [example](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/blob/master/example/build.yaml) for more details |
 | `build_only_models` | `false` | `false` | If option is true, chopper classes will not be generated. |
 | `separate_models` | `false` | `false` | If option true, generates models into separate file. |
 | `include_if_null` | `null` | `false` | Sets includeIfNull JsonAnnotation feature and sets value for it. If null - not set anything. |
