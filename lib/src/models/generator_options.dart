@@ -10,7 +10,7 @@ class GeneratorOptions {
     this.withConverter = true,
     this.ignoreHeaders = false,
     this.separateModels = false,
-    this.useDefaultNullForLists = false,
+    this.classesWithNullabeLists = const [],
     this.buildOnlyModels = false,
     this.defaultValuesMap = const <DefaultValueMap>[],
     this.defaultHeaderValuesMap = const <DefaultHeaderValueMap>[],
@@ -73,8 +73,8 @@ class GeneratorOptions {
   @JsonKey(defaultValue: '')
   final String outputFolder;
 
-  @JsonKey(defaultValue: false)
-  final bool useDefaultNullForLists;
+  @JsonKey(defaultValue: [])
+  final List<String> classesWithNullabeLists;
 
   @JsonKey(defaultValue: '')
   final String cutFromModelNames;

@@ -11,8 +11,11 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       withConverter: json['with_converter'] as bool? ?? true,
       ignoreHeaders: json['ignore_headers'] as bool? ?? false,
       separateModels: json['separate_models'] as bool? ?? false,
-      useDefaultNullForLists:
-          json['use_default_null_for_lists'] as bool? ?? false,
+      classesWithNullabeLists:
+          (json['classes_with_nullabe_lists'] as List<dynamic>?)
+                  ?.map((e) => e as String)
+                  .toList() ??
+              [],
       buildOnlyModels: json['build_only_models'] as bool? ?? false,
       defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
               ?.map((e) =>
@@ -79,7 +82,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'include_if_null': instance.includeIfNull,
       'input_folder': instance.inputFolder,
       'output_folder': instance.outputFolder,
-      'use_default_null_for_lists': instance.useDefaultNullForLists,
+      'classes_with_nullabe_lists': instance.classesWithNullabeLists,
       'cut_from_model_names': instance.cutFromModelNames,
       'build_only_models': instance.buildOnlyModels,
       'model_postfix': instance.modelPostfix,

@@ -339,7 +339,6 @@ void main() {
     test('Should return model class content', () {
       final map = SwaggerSchema.fromJson({});
       const className = 'Animals';
-      const useDefaultNullForLists = false;
       const classExpectedResult = 'class Animals {';
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
@@ -349,7 +348,7 @@ void main() {
         map,
         {},
         <DefaultValueMap>[],
-        useDefaultNullForLists,
+        [],
         [],
         [],
         {},
@@ -362,7 +361,6 @@ void main() {
     test('Should return model class content', () {
       final map = SwaggerSchema.fromJson({});
       const className = 'Animals';
-      const useDefaultNullForLists = false;
       const classExpectedResult = 'class Animals {';
       const factoryConstructorExpectedResult =
           '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
@@ -372,7 +370,7 @@ void main() {
         map,
         {},
         <DefaultValueMap>[],
-        useDefaultNullForLists,
+        [],
         [],
         [],
         {},
@@ -475,7 +473,7 @@ void main() {
         {},
         className,
         <DefaultValueMap>[],
-        false,
+        [],
         [],
         [],
         [],
@@ -502,7 +500,7 @@ void main() {
         {},
         className,
         <DefaultValueMap>[],
-        false,
+        [],
         [],
         [],
         [],
@@ -527,7 +525,7 @@ void main() {
         {},
         className,
         <DefaultValueMap>[],
-        false,
+        [],
         [],
         [],
         [],
@@ -552,7 +550,7 @@ void main() {
         {},
         className,
         <DefaultValueMap>[],
-        false,
+        [],
         [],
         [],
         [],
@@ -579,7 +577,7 @@ void main() {
         propertyKey,
         className,
         map,
-        false,
+        [],
         [],
         [],
         {},
@@ -601,7 +599,7 @@ void main() {
         propertyKey,
         className,
         map,
-        false,
+        [],
         ['Dog'],
         [],
         {},
@@ -625,7 +623,7 @@ void main() {
         propertyKey,
         className,
         map,
-        false,
+        [],
         [],
         [],
         {},
@@ -648,7 +646,7 @@ void main() {
         propertyKey,
         className,
         map,
-        false,
+        [],
         [],
         [],
         {},
@@ -672,7 +670,7 @@ void main() {
         propertyKey,
         className,
         <DefaultValueMap>[],
-        false,
+        [],
         [],
         [],
         {},
@@ -696,7 +694,7 @@ void main() {
         propertyKey,
         className,
         <DefaultValueMap>[],
-        false,
+        [],
         [],
         [],
         {},

@@ -1,3 +1,8 @@
+# 2.5.9
+
+* ***Breaking*** Removed  `use_default_null_for_lists` option
+* Added new option: `classes_with_nullabe_lists` option to have avility to customise nullable lists on separate class. Use `.*` regex
+
 # 2.5.8
 
 * Fixed generation of `path` parameters ([#415](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/415))

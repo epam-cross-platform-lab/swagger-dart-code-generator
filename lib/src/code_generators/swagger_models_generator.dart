@@ -33,7 +33,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     SwaggerSchema schema,
     Map<String, SwaggerSchema> schemas,
     List<DefaultValueMap> defaultValues,
-    bool useDefaultNullForLists,
+    List<String> classesWithNullableLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
@@ -93,7 +93,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           items,
           schemas,
           defaultValues,
-          useDefaultNullForLists,
+          classesWithNullableLists,
           allEnumNames,
           allEnumListNames,
           allClasses,
@@ -111,7 +111,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       schema,
       schemas,
       defaultValues,
-      useDefaultNullForLists,
+      classesWithNullableLists,
       allEnumNames,
       allEnumListNames,
       allClasses,
@@ -231,7 +231,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         classes[className]!,
         classes,
         options.defaultValuesMap,
-        options.useDefaultNullForLists,
+        options.classesWithNullabeLists,
         allEnums.map((e) => e.name).toList(),
         allEnumListNames,
         allClasses,
@@ -776,7 +776,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     String propertyKey,
     String className,
     SwaggerSchema prop,
-    bool useDefaultNullForLists,
+    List<String> classesWithNullableLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, String> basicTypesMap,
@@ -806,8 +806,13 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     String jsonKeyContent;
     if (unknownEnumValue.jsonKey.isEmpty) {
-      jsonKeyContent =
-          "@JsonKey(name: '$propertyKey'$includeIfNullString${useDefaultNullForLists ? '' : ', defaultValue: <$typeName>[]'})\n";
+      if (options.classesWithNullabeLists
+          .any((element) => RegExp(element).hasMatch(className))) {
+        jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString)\n";
+      } else {
+        jsonKeyContent =
+            "@JsonKey(name: '$propertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
+      }
     } else {
       jsonKeyContent =
           "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
@@ -897,7 +902,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     String propertyKey,
     String className,
     List<DefaultValueMap> defaultValues,
-    bool useDefaultNullForLists,
+    List<String> classesWithNullableLists,
     List<String> allEnumsNames,
     List<String> allEnumListNames,
     Map<String, String> basicTypesMap,
@@ -911,7 +916,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           propertyKey,
           className,
           prop,
-          useDefaultNullForLists,
+          classesWithNullableLists,
           allEnumsNames,
           allEnumListNames,
           basicTypesMap,
@@ -957,7 +962,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     Map<String, SwaggerSchema> schemas,
     String className,
     List<DefaultValueMap> defaultValues,
-    bool useDefaultNullForLists,
+    List<String> classesWithNullableLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
     List<String> requiredProperties,
@@ -992,7 +997,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           propertyKey,
           className,
           defaultValues,
-          useDefaultNullForLists,
+          classesWithNullableLists,
           allEnumNames,
           allEnumListNames,
           basicTypesMap,
@@ -1227,7 +1232,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     SwaggerSchema schema,
     Map<String, SwaggerSchema> schemas,
     List<DefaultValueMap> defaultValues,
-    bool useDefaultNullForLists,
+    List<String> classesWithNullableLists,
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
@@ -1250,7 +1255,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       schemas,
       className,
       defaultValues,
-      useDefaultNullForLists,
+      classesWithNullableLists,
       allEnumNames,
       allEnumListNames,
       requiredProperties,
