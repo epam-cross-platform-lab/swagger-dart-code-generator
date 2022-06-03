@@ -1,4 +1,4 @@
-# 2.5.9
+# 2.6.0
 
 * ***Breaking*** Removed  `use_default_null_for_lists` option
 * Added new option: `classes_with_nullabe_lists` option to have avility to customise nullable lists on separate class. Use `.*` regex
