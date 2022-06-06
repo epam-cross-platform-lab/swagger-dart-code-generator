@@ -185,6 +185,44 @@ const carsService = '''
                 }
             }
         },
+        "/cars/multipart": {
+            "post": {
+                "summary": "Sends multipart with multiple parts",
+                "requestBody": {
+                    "description": "Car model as file",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "filename": {
+                                        "type": "string"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": ["filename", "file"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car successfully uploaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/cars/optionalBody": {
             "post": {
                 "summary": "Its needed to test optionalBody",

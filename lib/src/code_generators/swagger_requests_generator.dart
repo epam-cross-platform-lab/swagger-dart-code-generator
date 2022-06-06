@@ -636,21 +636,41 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     if (requestBody != null) {
       if (requestBody.content?.isMultipart == true) {
-        result.add(
-          Parameter(
-            (p) => p
-              ..name = kPartFile
-              ..named = true
-              ..required = true
-              ..type = Reference(
-                'List<int>',
-              )
-              ..named = true
-              ..annotations.add(
-                refer(kPartFile.pascalCase).call([]),
+        final schema = requestBody.content?.schema;
+        schema?.properties.forEach((key, value) {
+          if (value.type == 'string' && value.format == 'binary') {
+            result.add(
+              Parameter(
+                (p) => p
+                  ..name = key
+                  ..named = true
+                  ..required = schema.required.contains(key)
+                  ..type = Reference(
+                    'List<int>',
+                  )
+                  ..named = true
+                  ..annotations.add(
+                    refer(kPartFile.pascalCase).call([]),
+                  ),
               ),
-          ),
-        );
+            );
+          } else {
+            result.add(
+              Parameter(
+                (p) => p
+                  ..name = key
+                  ..named = true
+                  ..required = schema.required.contains(key)
+                  ..type = Reference(
+                      _mapParameterName(value.type, value.format, modelPostfix))
+                  ..named = true
+                  ..annotations.add(
+                    refer(kPart.pascalCase).call([]),
+                  ),
+              ),
+            );
+          }
+        });
 
         return result.distinctParameters();
       }

@@ -83,6 +83,7 @@ const kArray = 'array';
 const kEnum = 'enum';
 const kBody = 'body';
 const kPartFile = 'partFile';
+const kPart = 'part';
 
 const kDynamic = 'dynamic';
 
