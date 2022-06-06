@@ -38,6 +38,12 @@ extension TypeExtension on String {
 
   String asEnum() => 'enums.$this';
 
+  String asFuture() => 'Future<$this>';
+
+  String asFutureGenerics() => 'Future<T>';
+
+  String asGenerics() => '$this<T>';
+
   String asFutureResponse() => 'Future<chopper.Response<$this>>';
 
   String asParameterName() {

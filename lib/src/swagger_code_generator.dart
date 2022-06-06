@@ -5,8 +5,10 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_sockets_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_sockets_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_sockets_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
@@ -27,8 +29,8 @@ class SwaggerCodeGenerator {
 
   Map<int, SwaggerSocketsGenerator> _getSocketsMap(GeneratorOptions options) {
     return <int, SwaggerSocketsGenerator>{
-      2: SwaggerSocketsGenerator(options),
-      3: SwaggerSocketsGenerator(options)
+      2: SwaggerSocketsGeneratorV2(options),
+      3: SwaggerSocketsGeneratorV3(options)
     };
   }
 
