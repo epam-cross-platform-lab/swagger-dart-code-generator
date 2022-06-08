@@ -170,11 +170,11 @@ ${socketClass.accept(DartEmitter()).toString()}
     final socketData = _getSocketData(parameters);
 
     final secondGeneric = socketData.isEmpty ? 'Type' : kMapStringDynamic;
-    final secondParameter = socketData.isEmpty ? '' : ', \$_data';
+    final secondParameter = socketData.isEmpty ? '' : ', _data';
 
     return '''
 $socketData  
-return _service.send<$returnType,$secondGeneric>('\$_basePath$path$secondParameter');    
+return _service.send<$returnType,$secondGeneric>('\$_basePath$path'$secondParameter);    
     ''';
   }
 
@@ -194,6 +194,8 @@ return _service.send<$returnType,$secondGeneric>('\$_basePath$path$secondParamet
 
   String _generateSocketsImports(String fileName) {
     return '''
+// ignore_for_file: type=lint
+    
 import 'dart:async';
 
 import '$fileName.swagger.dart';

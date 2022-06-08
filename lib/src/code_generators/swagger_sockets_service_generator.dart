@@ -163,7 +163,7 @@ return $className.create(_socket);
 
   String _getNamedConstructorBody() {
     return '''
-_socket.stream.listen(_handleResponse, onError: _handleConnectionError);
+_socket.stream.listen((_){});
     ''';
   }
 
@@ -187,6 +187,8 @@ return _requests[id]!.future.then(_decodeValue<T>);
 
   String _generateImports(String fileName) {
     return '''
+// ignore_for_file: type=lint    
+    
 import 'dart:async';
 import 'dart:convert';
 
