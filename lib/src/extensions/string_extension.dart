@@ -40,7 +40,7 @@ extension TypeExtension on String {
 
   String asFuture() => 'Future<$this>';
 
-  String asFutureGenerics() => 'Future<T>';
+  String asDoubleGeneric() => '$this<T, V>';
 
   String asGenerics() => '$this<T>';
 

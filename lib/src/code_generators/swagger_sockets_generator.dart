@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/extensions/file_name_extensions.dart';
-import 'package:swagger_dart_code_generator/src/extensions/method_extensions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -53,6 +52,20 @@ ${socketClass.accept(DartEmitter()).toString()}
     return Class((c) => c
       ..name = className
       ..docs.add(kServiceHeader)
+      ..fields.add(Field(
+        (f) => f
+          ..static = true
+          ..modifier = FieldModifier.constant
+          ..name = '_basePath'
+          ..assignment = Code("'${swaggerRoot.basePath}'"),
+      ))
+      ..fields.add(Field(
+        (f) => f
+          ..name = '_service'
+          ..type = Reference('${className}SocketsService')
+          ..assignment = Code('${className}SocketsService()')
+          ..modifier = FieldModifier.final$,
+      ))
       ..methods.addAll([...allMethodsContent]));
   }
 
@@ -79,7 +92,11 @@ ${socketClass.accept(DartEmitter()).toString()}
           return;
         }
 
-        final tempMethodName = getMethodName(path);
+        final tempMethodName = _getRequestMethodName(
+          requestType: requestType,
+          swaggerRequest: swaggerRequest,
+          path: path,
+        );
 
         final parameters = _getAllParameters(
           swaggerRequest: swaggerRequest,
@@ -102,17 +119,23 @@ ${socketClass.accept(DartEmitter()).toString()}
               .map((key, value) => MapEntry(value.url, value)),
         );
 
-        final returns = returnTypeName.isEmpty
-            ? returnTypeName.asFutureGenerics()
+        final isBasicType = kBasicTypesMap.containsKey(returnTypeName);
+
+        final returns = returnTypeName.isEmpty || isBasicType
+            ? kFutureGeneric
             : returnTypeName.asFuture();
 
-        final methodName = returnTypeName.isEmpty
+        final methodName = returnTypeName.isEmpty || isBasicType
             ? tempMethodName.asGenerics()
             : tempMethodName;
+
+        final methodCode =
+            _generateSocketMethodCode(returnTypeName, path, parameters);
 
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
           ..name = methodName
+          ..body = Code(methodCode)
           ..returns = Reference(returns));
 
         final socketMethod = _getSocketMethod(method);
@@ -124,32 +147,73 @@ ${socketClass.accept(DartEmitter()).toString()}
   }
 
   Method _getSocketMethod(Method method) {
-    final parameters =
-        method.optionalParameters.map((p) => p.copyWith(annotations: []));
+    final parameters = method.optionalParameters.map((p) => p.copyWith(
+        annotations: [], type: Reference(p.type?.symbol?.split('.').last)));
 
     return Method(
       (m) => m
         ..optionalParameters.addAll(parameters)
         ..name = method.name
-        ..body = Code('')
+        ..body = method.body
         ..docs.add('\n')
         ..returns = method.returns,
     );
   }
 
-  String _generateSocketsImports(
-    String fileName,
-  ) {
-    final result = StringBuffer();
+  String _generateSocketMethodCode(
+      String returnName, String path, List<Parameter> parameters) {
+    final returnType =
+        returnName.isEmpty || kBasicTypesMap.containsKey(returnName)
+            ? kGeneric
+            : returnName;
 
-    final fileImports = '''
+    final socketData = _getSocketData(parameters);
+
+    final secondGeneric = socketData.isEmpty ? 'Type' : kMapStringDynamic;
+    final secondParameter = socketData.isEmpty ? '' : ', \$_data';
+
+    return '''
+$socketData  
+return _service.send<$returnType,$secondGeneric>('\$_basePath$path$secondParameter');    
+    ''';
+  }
+
+  String _getSocketData(List<Parameter> parameters) {
+    final Map<String, dynamic> data = {};
+
+    for (final param in parameters) {
+      data.putIfAbsent("'${param.name}'", () => param.name);
+    }
+
+    if (data.isEmpty) {
+      return '';
+    }
+
+    return '$kFinal $kMapStringDynamic _data = $data;';
+  }
+
+  String _generateSocketsImports(String fileName) {
+    return '''
 import 'dart:async';
 
 import '$fileName.swagger.dart';
+import '$fileName.sockets.service.swagger.dart';
     ''';
+  }
 
-    result.write(fileImports);
-    return result.toString();
+  String _getRequestMethodName({
+    required SwaggerRequest swaggerRequest,
+    required String path,
+    required String requestType,
+  }) {
+    String methodName;
+    if (options.usePathForRequestNames || swaggerRequest.operationId.isEmpty) {
+      methodName = generateRequestName(path, requestType);
+    } else {
+      methodName = swaggerRequest.operationId;
+    }
+
+    return methodName;
   }
 
   List<Parameter> _getAllParameters({
@@ -169,18 +233,10 @@ import '$fileName.swagger.dart';
         .map((e) => root.securityDefinitions[e])
         .whereNotNull();
 
-    final additionalHeaders =
-        options.additionalHeaders.map((e) => SwaggerRequestParameter(
-              inParameter: 'header',
-              name: e,
-              type: 'String',
-            ));
-
     final parameters = [
       ...swaggerRequest.parameters,
       ...swaggerPath.parameters,
       ...securityParameters,
-      ...additionalHeaders,
     ].map((par) => definedParameters[par.ref.split('/').last] ?? par).toList();
 
     final result = parameters

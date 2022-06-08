@@ -12,6 +12,8 @@ import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_socke
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
+import 'code_generators/swagger_sockets_service_generator.dart';
+
 class SwaggerCodeGenerator {
   Map<int, SwaggerEnumsGenerator> _getEnumsMap(GeneratorOptions options) {
     return <int, SwaggerEnumsGenerator>{
@@ -91,6 +93,14 @@ class SwaggerCodeGenerator {
   ) =>
       _getSwaggerSocketsGenerator(root, options).generate(root, fileName);
 
+  String generateSocketsService(
+    SwaggerRoot root,
+    String fileName,
+    GeneratorOptions options,
+  ) =>
+      _getSwaggerSocketsServiceGenerator(root, options)
+          .generate(root, fileName);
+
   String generateModels(
           SwaggerRoot root, String fileName, GeneratorOptions options) =>
       _getSwaggerModelsGenerator(root, options).generate(root, fileName);
@@ -126,6 +136,12 @@ class SwaggerCodeGenerator {
     GeneratorOptions options,
   ) =>
       _getSocketsMap(options)[_getApiVersion(root)]!;
+
+  SwaggerSocketsServiceGenerator _getSwaggerSocketsServiceGenerator(
+    SwaggerRoot root,
+    GeneratorOptions options,
+  ) =>
+      SwaggerSocketsServiceGenerator(options);
 
   SwaggerModelsGenerator _getSwaggerModelsGenerator(
     SwaggerRoot root,
