@@ -167,10 +167,40 @@ ${socketClass.accept(DartEmitter()).toString()}
             ? kGeneric
             : returnName;
 
-    final socketData = _getSocketData(parameters);
+    final Map<String, dynamic> data = {};
 
-    final secondGeneric = socketData.isEmpty ? 'Type' : kMapStringDynamic;
-    final secondParameter = socketData.isEmpty ? '' : ', _data';
+    String notBasicReturnType = '';
+    String notBasicParamName = '';
+
+    if (parameters.length > 1) {
+      for (final param in parameters) {
+        data.putIfAbsent("'${param.name}'", () => param.name);
+      }
+    } else if (parameters.length == 1) {
+      for (final param in parameters) {
+        final String paramType = param.type?.symbol ?? '';
+        if (kBasicTypes.contains(paramType.removeNullable())) {
+          data.putIfAbsent("'${param.name}'", () => param.name);
+        } else {
+          notBasicReturnType = paramType.split('.').last.removeNullable();
+          notBasicParamName = param.name;
+        }
+      }
+    }
+
+    final socketData = _getSocketData(data);
+
+    final secondGeneric = notBasicReturnType.isNotEmpty
+        ? notBasicReturnType
+        : socketData.isEmpty
+            ? kType
+            : kMapStringDynamic;
+
+    final secondParameter = notBasicParamName.isNotEmpty
+        ? ', $notBasicParamName'
+        : socketData.isEmpty
+            ? ''
+            : ', _data';
 
     return '''
 $socketData  
@@ -178,18 +208,12 @@ return _service.send<$returnType,$secondGeneric>('\$_basePath$path'$secondParame
     ''';
   }
 
-  String _getSocketData(List<Parameter> parameters) {
-    final Map<String, dynamic> data = {};
-
-    for (final param in parameters) {
-      data.putIfAbsent("'${param.name}'", () => param.name);
-    }
-
-    if (data.isEmpty) {
+  String _getSocketData(Map<String, dynamic> map) {
+    if (map.isEmpty) {
       return '';
     }
 
-    return '$kFinal $kMapStringDynamic _data = $data;';
+    return '$kFinal $kMapStringDynamic _data = $map;';
   }
 
   String _generateSocketsImports(String fileName) {

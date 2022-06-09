@@ -25,6 +25,8 @@ extension TypeExtension on String {
     return '$this?';
   }
 
+  String removeNullable() => replaceAll('?', '');
+
   String getRef() => split('/').last.pascalCase;
 
   String getUnformattedRef() => split('/').last;

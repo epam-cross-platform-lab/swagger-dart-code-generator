@@ -105,39 +105,6 @@ ${socketsServiceClass.accept(DartEmitter()).toString()}
       ))
       ..add(Method(
         (m) => m
-          ..name = '_handleConnectionError'
-          ..returns = Reference('void')
-          ..docs.add('\n')
-          ..requiredParameters.addAll([
-            Parameter(
-              (p) => p
-                ..type = Reference('String')
-                ..name = 'id',
-            ),
-            Parameter(
-              (p) => p
-                ..type = Reference('StackTrace')
-                ..name = 'stacktrace',
-            ),
-          ])
-          ..body = Code(''),
-      ))
-      ..add(Method(
-        (m) => m
-          ..name = '_handleResponse'
-          ..returns = Reference('void')
-          ..docs.add('\n')
-          ..requiredParameters.add(
-            Parameter(
-              (p) => p
-                ..type = Reference('dynamic')
-                ..name = 'data',
-            ),
-          )
-          ..body = Code(''),
-      ))
-      ..add(Method(
-        (m) => m
           ..name = '_decodeValue<T>'
           ..returns = Reference('T')
           ..docs.add('\n')

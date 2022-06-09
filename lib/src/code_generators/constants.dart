@@ -30,6 +30,7 @@ const kBasicSwaggerTypes = [
 ];
 
 const kMap = 'Map';
+const kType = 'Type';
 const kFinal = 'final';
 const kMapStringDynamic = 'Map<String,dynamic>';
 const kRequired = 'required';
