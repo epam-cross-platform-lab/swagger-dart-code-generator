@@ -50,7 +50,7 @@ ${socketClass.accept(DartEmitter()).toString()}
     final className = getClassNameFromFileName(fileName);
 
     return Class((c) => c
-      ..name = className
+      ..name = '${className}Sockets'
       ..docs.add(kServiceHeader)
       ..fields.add(Field(
         (f) => f
