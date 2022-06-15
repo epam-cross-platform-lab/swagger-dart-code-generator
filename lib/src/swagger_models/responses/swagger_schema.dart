@@ -23,6 +23,7 @@ class SwaggerSchema {
     this.enumNames,
     this.isNullable = false,
     this.hasAdditionalProperties = false,
+    this.discriminator = const {}
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -65,6 +66,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'properties', defaultValue: {})
   Map<String, SwaggerSchema> properties;
+
+  @JsonKey(name: 'discriminator', defaultValue: {})
+  Map<String, Object> discriminator;
 
   @JsonKey(name: 'nullable', defaultValue: false)
   bool isNullable;
