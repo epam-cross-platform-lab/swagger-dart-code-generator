@@ -1238,7 +1238,8 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     Map<String, SwaggerSchema> allClasses,
   ) {
     final properties = getModelProperties(schema, schemas);
-    final requiredProperties = schema.required;
+    final requiredProperties = _getRequired(schema, schemas);
+    final parent = _getParent(schema, schemas);
 
     final generatedConstructorProperties = generateConstructorPropertiesContent(
       className: className,
@@ -1274,9 +1275,11 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final equalsOverride =
         generateEqualsOverride(generatedProperties, validatedClassName);
 
+    final parentContent = parent != null ? 'implements $parent ' : '';
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
-class $validatedClassName {
+class $validatedClassName $parentContent{
 \t$validatedClassName($generatedConstructorProperties);\n
 \tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
 $generatedProperties
@@ -1295,6 +1298,69 @@ $copyWithMethod
 ''';
 
     return generatedClass;
+  }
+
+  List<String> _getRequired(
+      SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+    final required = <String>{};
+    for (var interface in _getInterfaces(schema)) {
+      if (interface.hasRef) {
+        final parentName = interface.ref.split('/').last.pascalCase;
+        final parentSchema = schemas[parentName];
+        required.addAll(
+            parentSchema != null ? _getRequired(parentSchema, schemas) : []);
+      }
+      required.addAll(interface.required);
+    }
+    required.addAll(schema.required);
+    return required.toList();
+  }
+
+  List<SwaggerSchema> _getInterfaces(SwaggerSchema schema) {
+    if (schema.allOf.isNotEmpty) {
+      return schema.allOf;
+    } else if (schema.anyOf.isNotEmpty) {
+      return schema.anyOf;
+    } else if (schema.oneOf.isNotEmpty) {
+      return schema.oneOf;
+    }
+    return [];
+  }
+
+  bool _hasOrInheritsDiscriminator(SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+    if (schema.discriminator.isNotEmpty && schema.discriminator.containsKey('propertyName')) {
+      return true;
+    }
+    else if (schema.hasRef) {
+      final parentName = schema.ref.split('/').last.pascalCase;
+      final s = schemas[parentName];
+      if (s != null) {
+        return _hasOrInheritsDiscriminator(s, schemas);
+      }
+    }
+    return false;
+  }
+
+  String? _getParent(SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+    final interfaces = _getInterfaces(schema);
+
+    if (interfaces.isNotEmpty) {
+      for (final schema in interfaces) {
+        // get the actual schema
+        if (schema.hasRef) {
+          final parentName = schema.ref.split('/').last.pascalCase;
+          final s = schemas[parentName];
+          if (s == null) {
+            return null;
+          } else if (_hasOrInheritsDiscriminator(s, schemas)) {
+            // discriminator.propertyName is used
+            return parentName;
+          }
+        }
+      }
+    }
+
+    return null;
   }
 
   String generateEqualsOverride(
