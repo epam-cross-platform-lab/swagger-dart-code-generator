@@ -5,10 +5,8 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_sockets_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_sockets_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_sockets_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
@@ -26,13 +24,6 @@ class SwaggerCodeGenerator {
     return <int, SwaggerModelsGenerator>{
       2: SwaggerModelsGeneratorV2(options),
       3: SwaggerModelsGeneratorV3(options)
-    };
-  }
-
-  Map<int, SwaggerSocketsGenerator> _getSocketsMap(GeneratorOptions options) {
-    return <int, SwaggerSocketsGenerator>{
-      2: SwaggerSocketsGeneratorV2(options),
-      3: SwaggerSocketsGeneratorV3(options)
     };
   }
 
@@ -95,11 +86,9 @@ class SwaggerCodeGenerator {
 
   String generateSocketsService(
     SwaggerRoot root,
-    String fileName,
     GeneratorOptions options,
   ) =>
-      _getSwaggerSocketsServiceGenerator(root, options)
-          .generate(root, fileName);
+      _getSwaggerSocketsServiceGenerator(root, options).generate(root);
 
   String generateModels(
           SwaggerRoot root, String fileName, GeneratorOptions options) =>
@@ -135,7 +124,7 @@ class SwaggerCodeGenerator {
     SwaggerRoot root,
     GeneratorOptions options,
   ) =>
-      _getSocketsMap(options)[_getApiVersion(root)]!;
+      SwaggerSocketsGenerator(options);
 
   SwaggerSocketsServiceGenerator _getSwaggerSocketsServiceGenerator(
     SwaggerRoot root,

@@ -15,7 +15,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart
 
 import 'constants.dart';
 
-abstract class SwaggerSocketsGenerator extends SwaggerGeneratorBase {
+class SwaggerSocketsGenerator extends SwaggerGeneratorBase {
   final GeneratorOptions _options;
 
   @override
@@ -23,15 +23,7 @@ abstract class SwaggerSocketsGenerator extends SwaggerGeneratorBase {
 
   SwaggerSocketsGenerator(this._options);
 
-  String generate(SwaggerRoot root, String fileName);
-
-  String generateFromMap(
-    SwaggerRoot root,
-    String fileName,
-    Map<String, SwaggerSchema> definitions,
-    Map<String, SwaggerSchema> responses,
-    Map<String, SwaggerSchema> requestBodies,
-  ) {
+  String generate(SwaggerRoot root, String fileName) {
     final fileImports = _generateSocketsImports(fileName);
 
     final socketClass = _generateClass(root, fileName);
@@ -40,7 +32,6 @@ abstract class SwaggerSocketsGenerator extends SwaggerGeneratorBase {
 $fileImports
 
 ${socketClass.accept(DartEmitter()).toString()}
-
     ''';
   }
 
@@ -54,6 +45,24 @@ ${socketClass.accept(DartEmitter()).toString()}
       ..docs.add(kServiceHeader)
       ..fields.add(Field(
         (f) => f
+          ..name = 'socket'
+          ..type = Reference('WebSocketChannel?')
+          ..modifier = FieldModifier.final$,
+      ))
+      ..fields.add(Field(
+        (f) => f
+          ..name = 'interceptors'
+          ..type = Reference('Iterable<dynamic>?')
+          ..modifier = FieldModifier.final$,
+      ))
+      ..fields.add(Field(
+        (f) => f
+          ..name = 'decoder'
+          ..type = Reference('\$SocketsJsonDecoder?')
+          ..modifier = FieldModifier.final$,
+      ))
+      ..fields.add(Field(
+        (f) => f
           ..static = true
           ..modifier = FieldModifier.constant
           ..name = '_basePath'
@@ -61,10 +70,46 @@ ${socketClass.accept(DartEmitter()).toString()}
       ))
       ..fields.add(Field(
         (f) => f
-          ..name = '_service'
-          ..type = Reference('${className}SocketsService')
-          ..assignment = Code('${className}SocketsService()')
+          ..name = '_host'
+          ..modifier = FieldModifier.final$
+          ..static = true
+          ..assignment = Code("'ws://${swaggerRoot.host}/'"),
+      ))
+      ..fields.add(Field(
+        (f) => f
+          ..name = '_defaultSocket'
+          ..assignment = Code('WebSocketChannel.connect(Uri.parse(_host))')
           ..modifier = FieldModifier.final$,
+      ))
+      ..fields.add(Field(
+        (f) => f
+          ..name = '_service'
+          ..type = Reference('SocketsService')
+          ..late = true,
+      ))
+      ..constructors.add(Constructor(
+        (c) => c
+          ..body = Code(
+            '_service = SocketsService(socket: socket ?? _defaultSocket, decoder : decoder, interceptors: interceptors,);',
+          )
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..name = 'socket'
+              ..toThis = true
+              ..named = true,
+          ))
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..name = 'decoder'
+              ..toThis = true
+              ..named = true,
+          ))
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..name = 'interceptors'
+              ..toThis = true
+              ..named = true,
+          )),
       ))
       ..methods.addAll([...allMethodsContent]));
   }
@@ -147,8 +192,8 @@ ${socketClass.accept(DartEmitter()).toString()}
   }
 
   Method _getSocketMethod(Method method) {
-    final parameters = method.optionalParameters.map((p) => p.copyWith(
-        annotations: [], type: Reference(p.type?.symbol?.split('.').last)));
+    final parameters =
+        method.optionalParameters.map((p) => p.copyWith(annotations: []));
 
     return Method(
       (m) => m
@@ -222,8 +267,10 @@ return _service.send<$returnType,$secondGeneric>('\$_basePath$path'$secondParame
     
 import 'dart:async';
 
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 import '$fileName.swagger.dart';
-import '$fileName.sockets.service.swagger.dart';
+import 'sockets_service.dart';
     ''';
   }
 
@@ -388,23 +435,23 @@ import '$fileName.sockets.service.swagger.dart';
           .asList();
     } else if (parameter.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return parameter.items!.ref.getRef().asEnum();
+        return parameter.items!.ref.getRef();
       }
       return _mapParameterName(
               parameter.items!.ref.getRef(), format, modelPostfix)
           .asList();
     } else if (parameter.schema?.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return parameter.schema!.items!.ref.getRef().asEnum();
+        return parameter.schema!.items!.ref.getRef();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return parameter.schema!.ref.getRef().asEnum();
+        return parameter.schema!.ref.getRef();
       }
 
       if (_isEnumRef(parameter.schema!.ref.getUnformattedRef(), root)) {
-        return parameter.schema!.ref.getRef().asEnum();
+        return parameter.schema!.ref.getRef();
       }
 
       if (parameter.schema!.items != null || parameter.schema!.type == kArray) {
@@ -463,7 +510,7 @@ import '$fileName.sockets.service.swagger.dart';
     final result = getValidatedClassName(
         '$pathString ${requestType.pascalCase} $parameterName');
 
-    return result.asEnum();
+    return result;
   }
 
   String _getRequestBodyTypeName({
@@ -477,7 +524,7 @@ import '$fileName.sockets.service.swagger.dart';
         final ref = schema.items?.ref.getRef() ?? '';
 
         if (_isEnumRef(ref, root)) {
-          return ref.asEnum().asList();
+          return ref.asList();
         }
 
         if (_isBasicTypeRef(ref, root)) {
@@ -498,7 +545,7 @@ import '$fileName.sockets.service.swagger.dart';
 
     if (schema.hasRef) {
       if (_isEnumRef(schema.ref, root)) {
-        return schema.ref.getRef().asEnum();
+        return schema.ref.getRef();
       }
 
       if (_isBasicTypeRef(schema.ref, root)) {

@@ -28,6 +28,7 @@ class GeneratorOptions {
     this.nullableModels = const [],
     this.cutFromModelNames = '',
     this.additionalHeaders = const [],
+    this.socketFiles = const [],
   });
 
   /// Build options from a JSON map.
@@ -99,6 +100,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: [])
   final List<String> excludePaths;
+
+  @JsonKey(defaultValue: [])
+  final List<String> socketFiles;
 
   /// Convert this options instance to JSON.
   Map<String, dynamic> toJson() => _$GeneratorOptionsToJson(this);

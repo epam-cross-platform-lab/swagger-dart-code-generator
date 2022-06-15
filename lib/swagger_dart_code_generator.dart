@@ -23,10 +23,9 @@ const String _outputEnumsFileExtension = '.enums.swagger.dart';
 const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
 const String _outputSocketsFileExtension = '.sockets.swagger.dart';
-const String _outputSocketsServiceFileExtension =
-    '.sockets.service.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
+const String _socketsServiceFileName = 'sockets_service.dart';
 
 String additionalResultPath = '';
 Set<String> allFiledList = {};
@@ -86,7 +85,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     result[url]!.add(join(out, '$name$_outputModelsFileExtension'));
     result[url]!.add(join(out, '$name$_outputResponsesFileExtension'));
     result[url]!.add(join(out, '$name$_outputSocketsFileExtension'));
-    result[url]!.add(join(out, '$name$_outputSocketsServiceFileExtension'));
   }
 
   for (var url in options.inputUrls) {
@@ -105,13 +103,12 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputResponsesFileExtension'));
     result[additionalResultPath]!
         .add(join(out, '$name$_outputSocketsFileExtension'));
-    result[additionalResultPath]!
-        .add(join(out, '$name$_outputSocketsServiceFileExtension'));
   }
 
   ///Register additional outputs in first input
   result[additionalResultPath]!.add(join(out, _indexFileName));
   result[additionalResultPath]!.add(join(out, _mappingFileName));
+  result[additionalResultPath]!.add(join(out, _socketsServiceFileName));
 
   return result.map((key, value) => MapEntry(key, value.toList()));
 }
@@ -175,6 +172,10 @@ class SwaggerDartCodeGenerator implements Builder {
         true,
         allFiledList.toList(),
       );
+
+      if (options.socketFiles.isNotEmpty) {
+        await _generateSocketService(buildStep.inputId, buildStep, parsed);
+      }
     }
   }
 
@@ -196,12 +197,6 @@ class SwaggerDartCodeGenerator implements Builder {
         contents, removeFileExtension(fileNameWithExtension), options);
 
     final enums = codeGenerator.generateEnums(
-        contents, removeFileExtension(fileNameWithExtension), options);
-
-    final sockets = codeGenerator.generateSockets(
-        contents, removeFileExtension(fileNameWithExtension), options);
-
-    final socketsService = codeGenerator.generateSocketsService(
         contents, removeFileExtension(fileNameWithExtension), options);
 
     final imports = codeGenerator.generateImportsContent(
@@ -254,29 +249,21 @@ class SwaggerDartCodeGenerator implements Builder {
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
     }
 
-    if (sockets.isNotEmpty) {
-      ///Write sockets
-      final formatterSockets = _tryFormatCode(sockets);
+    if (options.socketFiles.contains(fileNameWithoutExtension)) {
+      final sockets = codeGenerator.generateSockets(
+          contents, removeFileExtension(fileNameWithExtension), options);
 
-      final socketsAssetId = AssetId(
-          buildStep.inputId.package,
-          join(options.outputFolder,
-              '$fileNameWithoutExtension$_outputSocketsFileExtension'));
+      if (sockets.isNotEmpty) {
+        ///Write sockets
+        final formatterSockets = _tryFormatCode(sockets);
 
-      await buildStep.writeAsString(socketsAssetId, formatterSockets);
-    }
+        final socketsAssetId = AssetId(
+            buildStep.inputId.package,
+            join(options.outputFolder,
+                '$fileNameWithoutExtension$_outputSocketsFileExtension'));
 
-    if (socketsService.isNotEmpty) {
-      ///Write sockets services
-      final formatterSocketsServices = _tryFormatCode(socketsService);
-
-      final socketsServicesAssetId = AssetId(
-          buildStep.inputId.package,
-          join(options.outputFolder,
-              '$fileNameWithoutExtension$_outputSocketsServiceFileExtension'));
-
-      await buildStep.writeAsString(
-          socketsServicesAssetId, formatterSocketsServices);
+        await buildStep.writeAsString(socketsAssetId, formatterSockets);
+      }
     }
 
     if (options.separateModels) {
@@ -336,6 +323,19 @@ $dateToJson
           Reason: $e''');
       return code;
     }
+  }
+
+  Future<void> _generateSocketService(
+      AssetId inputId, BuildStep buildStep, SwaggerRoot root) async {
+    final codeGenerator = SwaggerCodeGenerator();
+
+    final socketsServiceAssetId = AssetId(
+        inputId.package, join(options.outputFolder, _socketsServiceFileName));
+
+    final socketService = codeGenerator.generateSocketsService(root, options);
+
+    await buildStep.writeAsString(
+        socketsServiceAssetId, _formatter.format(socketService));
   }
 
   Future<void> _generateAdditionalFiles(AssetId inputId, BuildStep buildStep,
