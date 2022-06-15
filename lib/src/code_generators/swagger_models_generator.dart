@@ -1302,14 +1302,18 @@ $copyWithMethod
 
   List<String> _getRequired(
       SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
-    if (schema.hasRef) {
-      final parentName = schema.ref.split('/').last.pascalCase;
-      final parentSchema = schemas[parentName];
-      return schema.required +
-          (parentSchema != null ? _getRequired(parentSchema, schemas) : []);
-    } else {
-      return schema.required;
+    final required = <String>{};
+    for (var interface in _getInterfaces(schema)) {
+      if (interface.hasRef) {
+        final parentName = interface.ref.split('/').last.pascalCase;
+        final parentSchema = schemas[parentName];
+        required.addAll(
+            parentSchema != null ? _getRequired(parentSchema, schemas) : []);
+      }
+      required.addAll(interface.required);
     }
+    required.addAll(schema.required);
+    return required.toList();
   }
 
   List<SwaggerSchema> _getInterfaces(SwaggerSchema schema) {
@@ -1341,13 +1345,13 @@ $copyWithMethod
     final interfaces = _getInterfaces(schema);
 
     if (interfaces.isNotEmpty) {
-      for (final schema  in interfaces) {
+      for (final schema in interfaces) {
         // get the actual schema
         if (schema.hasRef) {
           final parentName = schema.ref.split('/').last.pascalCase;
           final s = schemas[parentName];
           if (s == null) {
-            return "UNKNOWN_PARENT_NAME";
+            return null;
           } else if (_hasOrInheritsDiscriminator(s, schemas)) {
             // discriminator.propertyName is used
             return parentName;
