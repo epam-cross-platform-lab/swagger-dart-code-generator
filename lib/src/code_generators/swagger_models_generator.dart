@@ -1275,7 +1275,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final equalsOverride =
         generateEqualsOverride(generatedProperties, validatedClassName);
 
-    final parentContent = parent != null ? 'extends $parent ' : '';
+    final parentContent = parent != null ? 'implements $parent ' : '';
 
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
