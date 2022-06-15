@@ -1238,7 +1238,7 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     Map<String, SwaggerSchema> allClasses,
   ) {
     final properties = getModelProperties(schema, schemas);
-    final requiredProperties = schema.required;
+    final requiredProperties = _getRequired(schema, schemas);
     final parent = _getParent(schema, schemas);
 
     final generatedConstructorProperties = generateConstructorPropertiesContent(
@@ -1298,6 +1298,18 @@ $copyWithMethod
 ''';
 
     return generatedClass;
+  }
+
+  List<String> _getRequired(
+      SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+    if (schema.hasRef) {
+      final parentName = schema.ref.split('/').last.pascalCase;
+      final parentSchema = schemas[parentName];
+      return schema.required +
+          (parentSchema != null ? _getRequired(parentSchema, schemas) : []);
+    } else {
+      return schema.required;
+    }
   }
 
   List<SwaggerSchema> _getInterfaces(SwaggerSchema schema) {
