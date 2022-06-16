@@ -21,10 +21,13 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   SwaggerModelsGenerator(this._options);
 
   String generate(SwaggerRoot root, String fileName);
+
   String generateResponses(SwaggerRoot root, String fileName);
 
   String generateRequestBodies(SwaggerRoot root, String fileName);
+
   String getExtendsString(SwaggerSchema schema);
+
   List<String> getAllListEnumNames(SwaggerRoot root);
 
   String generateModelClassContent(
@@ -1277,11 +1280,13 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
 
     final parentContent = parent != null ? 'implements $parent ' : '';
 
+    final fromJson = generatedFromJson(schema, validatedClassName);
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $validatedClassName $parentContent{
 \t$validatedClassName($generatedConstructorProperties);\n
-\tfactory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);\n
+\t$fromJson\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
@@ -1298,6 +1303,25 @@ $copyWithMethod
 ''';
 
     return generatedClass;
+  }
+
+  String generatedFromJson(SwaggerSchema schema, String validatedClassName) {
+    if (_hasChildren(schema)) {
+      final discriminator = schema.discriminator!;
+      final propertyName = discriminator.propertyName;
+      return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
+          '\t\tswitch (json[\'$propertyName\']) {'
+          '\t\t\t${discriminator.mapping.entries.map(
+              (entry) => 'case \'${entry.key}\': return _\$${entry.value.split('/').last.pascalCase}FromJson(json);').join('\n')}'
+          '\t\t\tdefault: return _\$${validatedClassName}FromJson(json);'
+          '\t\t}'
+          '}';
+    }
+    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
+  }
+
+  bool _hasChildren(SwaggerSchema schema) {
+    return schema.discriminator?.mapping.isNotEmpty ?? false;
   }
 
   List<String> _getRequired(
@@ -1327,11 +1351,11 @@ $copyWithMethod
     return [];
   }
 
-  bool _hasOrInheritsDiscriminator(SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
-    if (schema.discriminator.isNotEmpty && schema.discriminator.containsKey('propertyName')) {
+  bool _hasOrInheritsDiscriminator(
+      SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+    if (schema.discriminator != null) {
       return true;
-    }
-    else if (schema.hasRef) {
+    } else if (schema.hasRef) {
       final parentName = schema.ref.split('/').last.pascalCase;
       final s = schemas[parentName];
       if (s != null) {

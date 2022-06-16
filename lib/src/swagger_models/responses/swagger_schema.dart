@@ -23,7 +23,7 @@ class SwaggerSchema {
     this.enumNames,
     this.isNullable = false,
     this.hasAdditionalProperties = false,
-    this.discriminator = const {}
+    this.discriminator,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -67,8 +67,8 @@ class SwaggerSchema {
   @JsonKey(name: 'properties', defaultValue: {})
   Map<String, SwaggerSchema> properties;
 
-  @JsonKey(name: 'discriminator', defaultValue: {})
-  Map<String, Object> discriminator;
+  @JsonKey(name: 'discriminator', defaultValue: null)
+  Discriminator? discriminator;
 
   @JsonKey(name: 'nullable', defaultValue: false)
   bool isNullable;
@@ -103,6 +103,21 @@ class SwaggerSchema {
         ..._$SwaggerSchemaToJson(this),
         if (enumNames != null) kEnumNames: enumNames,
       };
+}
+
+@JsonSerializable()
+class Discriminator {
+  Discriminator({this.propertyName = '', this.mapping = const {}});
+
+  @JsonKey(name: 'propertyName', defaultValue: '')
+  String propertyName;
+  @JsonKey(name: 'mapping', defaultValue: {})
+  Map<String, String> mapping;
+
+  factory Discriminator.fromJson(Map<String, dynamic> json) =>
+      _$DiscriminatorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DiscriminatorToJson(this);
 }
 
 bool _additionalsFromJson(dynamic value) => value != false;
