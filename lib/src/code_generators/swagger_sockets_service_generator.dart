@@ -19,6 +19,10 @@ class SwaggerSocketsServiceGenerator extends SwaggerGeneratorBase {
 
     final socketsServiceClass = _generateClass(root);
 
+    final socketInterceptor = _getSocketsInterceptorInterface();
+
+    final socketsParser = _getSocketServiceParser();
+
     final customDecoder = _getCustomJsonDecoder();
 
     return '''
@@ -26,7 +30,11 @@ $fileImports
 
 ${socketsServiceClass.accept(DartEmitter()).toString()}
 
+$socketInterceptor
+
 $customDecoder
+
+$socketsParser
     ''';
   }
 
@@ -60,7 +68,7 @@ $customDecoder
             (p) => p
               ..name = 'interceptors'
               ..named = true
-              ..type = Reference('Iterable<dynamic>?'),
+              ..type = Reference('Iterable<SocketsInterceptor>?'),
           )),
       ))
       ..constructors.add(Constructor(
@@ -100,7 +108,7 @@ $customDecoder
       ..fields.add(Field(
         (f) => f
           ..name = '_interceptors'
-          ..type = Reference('Iterable<dynamic>')
+          ..type = Reference('Iterable<SocketsInterceptor>')
           ..modifier = FieldModifier.final$,
       ))
       ..fields.add(Field(
@@ -131,6 +139,7 @@ $customDecoder
               ..type = Reference('V?')
               ..name = 'data',
           ))
+          ..modifier = MethodModifier.async
           ..body = Code(_getSendMethodBody()),
       ))
       ..add(Method(
@@ -141,7 +150,7 @@ $customDecoder
           ..requiredParameters.addAll([
             Parameter(
               (p) => p
-                ..type = Reference('String')
+                ..type = Reference('Object')
                 ..name = 'id',
             ),
             Parameter(
@@ -166,7 +175,7 @@ $customDecoder
                 ..name = 'data',
             ),
           )
-          ..body = Code(''),
+          ..body = Code(_getHandleResponseBody()),
       ))
       ..add(Method(
         (m) => m
@@ -188,6 +197,23 @@ $customDecoder
           ..returns = Reference('void')
           ..docs.add('\n')
           ..body = Code('_socket.sink.close();'),
+      ))
+      ..add(Method(
+        (m) => m
+          ..name = '_completeRequest'
+          ..returns = Reference('void')
+          ..docs.add('\n')
+          ..requiredParameters.add(Parameter(
+            (p) => p
+              ..name = 'id'
+              ..type = Reference('String'),
+          ))
+          ..requiredParameters.add(Parameter(
+            (p) => p
+              ..name = 'response'
+              ..type = Reference('SocketsServiceMessage'),
+          ))
+          ..body = Code(_getCompleteRequestBody()),
       ));
     // ..add(Method((m) => m));
     return serviceMethods;
@@ -209,13 +235,41 @@ if (_requests.containsKey(id)) {
   return _requests[id]!.future.then(_decodeValue<T>);
 }
 
-final _params = data != null ? jsonEncode(data) : '{}';
-final input = '{ "id": "\$id", "payload": \$_params }';
+Object interceptedData = data ?? '';
+for (final interceptor in _interceptors) {
+   interceptedData = await interceptor.beforeSend(path, data);
+}
 
 _requests[id] = Completer();
-_socket.sink.add('\$path:\$input');
+_socket.sink.add('\$path:\$interceptedData');
 
 return _requests[id]!.future.then(_decodeValue<T>); 
+    ''';
+  }
+
+  String _getHandleResponseBody() {
+    return '''
+final message = SocketsServiceParser.parse(data.toString()); 
+
+message.map(
+  response: (res) => _completeRequest(res.id, res),
+  error: (res) => _completeRequest(res.id, res),
+  event: (res) {},
+  emptyEvent: (res) {},
+  status: (res) {},
+);   
+    ''';
+  }
+
+  String _getCompleteRequestBody() {
+    return '''
+if (response is SocketsServiceMessageError) {
+  _requests[id]?.completeError(response.error);
+} else if (response is SocketsServiceMessageResponse) {
+  _requests[id]?.complete(response.result ?? {});
+}
+
+_requests.remove(id);    
     ''';
   }
 
@@ -231,6 +285,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'client_mapping.dart';
 
+    ''';
+  }
+
+  String _getSocketsInterceptorInterface() {
+    return '''
+abstract class SocketsInterceptor {
+  Future<Object> beforeSend(String path, Object? data);
+}    
     ''';
   }
 
@@ -283,6 +345,74 @@ class _CustomJsonDecoder implements \$SocketsJsonDecoder {
 
   List<T> _decodeList<T>(Iterable values) =>
       values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();
+}
+    ''';
+  }
+
+  String _getSocketServiceParser() {
+    return '''
+const String _kErrorMessagePattern = r'"?id"?:\\s*"?(?<id>[^,"]+)"?';    
+    
+class SocketsServiceParser {
+  static SocketsServiceMessage parse(String data) {
+    final delimiterIdx = data.indexOf(':');
+    assert(
+      delimiterIdx > 0,
+      'Incorrect response format, check request details and confirm with ApplicationService spec',
+    );
+    final command = data.substring(0, delimiterIdx);
+    final payload = data.substring(delimiterIdx + 1);
+    if (command.startsWith('events/')) {
+      return _parseEvent(command.replaceFirst('events/', ''), payload);
+    }
+    return _parseResponse(command, payload);
+  }
+  static SocketsServiceMessage _parseResponse(String command, String payload) {
+    try {
+      final responseData = jsonDecode(payload);
+      if (responseData['error'] != null) {
+        final _error = responseData['error'];
+        final errorMsg = _error is Map ? _error['message'] : _error;
+        return _parseError(command, errorMsg as String, responseData['id'] as String);
+      }
+      return SocketsServiceMessage.response(
+        id: responseData['id'] as String,
+        command: command,
+        result: responseData['result'],
+      );
+    } catch (e) {
+      return _parseError(command, e.toString());
+    }
+  }
+  static SocketsServiceMessage _parseError(String command, String errorMsg, [String? id]) {
+    var errorId = id;
+    if (id == null) {
+      final exp = RegExp(_kErrorMessagePattern).firstMatch(errorMsg);
+      errorId = exp?.namedGroup('id');
+    }
+    return SocketsServiceMessage.error(
+      id: errorId ?? '-1',
+      command: command,
+      error: errorMsg,
+    );
+  }
+  static SocketsServiceMessage _parseEvent(String command, String payload) {
+    if (command == 'startListen' || command == 'startListen') {
+      return SocketsServiceMessage.status(command: command, status: payload);
+    }
+    final responseData = jsonDecode(payload);
+    final params = responseData['params'] as List<dynamic>;
+    return params.isNotEmpty
+        ? SocketsServiceMessage.event(
+            command: command,
+            type: responseData['type'] as String,
+            params: params.first as Object,
+          )
+        : SocketsServiceMessage.emptyEvent(
+            command: command,
+            type: responseData['type'] as String,
+          );
+  }
 }    
     ''';
   }

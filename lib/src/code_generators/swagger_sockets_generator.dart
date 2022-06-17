@@ -52,7 +52,7 @@ ${socketClass.accept(DartEmitter()).toString()}
       ..fields.add(Field(
         (f) => f
           ..name = 'interceptors'
-          ..type = Reference('Iterable<dynamic>?')
+          ..type = Reference('Iterable<SocketsInterceptor>?')
           ..modifier = FieldModifier.final$,
       ))
       ..fields.add(Field(
