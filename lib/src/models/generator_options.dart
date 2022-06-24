@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'generator_options.g2.dart';
+part 'generator_options.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, anyMap: true)
 class GeneratorOptions {
@@ -44,7 +44,7 @@ class GeneratorOptions {
   final bool withConverter;
 
   @JsonKey(defaultValue: [])
-  final List<String> additionalHeaders;
+  final List<AdditionalHeadersMap> additionalHeaders;
 
   @JsonKey(defaultValue: [])
   List<String> inputUrls;
@@ -124,8 +124,11 @@ class DefaultValueMap {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ResponseOverrideValueMap {
-  ResponseOverrideValueMap(
-      {required this.url, required this.method, required this.overriddenValue});
+  ResponseOverrideValueMap({
+    required this.url,
+    required this.method,
+    required this.overriddenValue,
+  });
 
   /// Build a default value map from a JSON map.
   factory ResponseOverrideValueMap.fromJson(Map<String, dynamic> json) =>
@@ -158,4 +161,22 @@ class DefaultHeaderValueMap {
 
   factory DefaultHeaderValueMap.fromJson(Map<String, dynamic> json) =>
       _$DefaultHeaderValueMapFromJson(json);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class AdditionalHeadersMap {
+  AdditionalHeadersMap({required this.path, required this.additionalHeaders});
+
+  /// Build a default value map from a JSON map.
+  factory AdditionalHeadersMap.fromJson(Map<String, dynamic> json) =>
+      _$AdditionalHeadersMapFromJson(json);
+
+  @JsonKey(defaultValue: '')
+  final String path;
+
+  @JsonKey(defaultValue: [])
+  final List<String> additionalHeaders;
+
+  /// Convert this default value map instance to JSON.
+  Map<String, dynamic> toJson() => _$AdditionalHeadersMapToJson(this);
 }

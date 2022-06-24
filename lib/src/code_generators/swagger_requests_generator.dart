@@ -588,17 +588,22 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         .whereNotNull();
 
     final additionalHeaders =
-        options.additionalHeaders.map((e) => SwaggerRequestParameter(
-              inParameter: 'header',
-              name: e,
-              type: 'String',
-            ));
+        options.additionalHeaders.firstWhereOrNull((map) => map.path == path);
+
+    final additionalHeadersList = additionalHeaders?.additionalHeaders.map(
+          (e) => SwaggerRequestParameter(
+            inParameter: 'header',
+            name: e,
+            type: 'String',
+          ),
+        ) ??
+        [];
 
     final parameters = [
       ...swaggerRequest.parameters,
       ...swaggerPath.parameters,
       ...securityParameters,
-      ...additionalHeaders,
+      ...additionalHeadersList,
     ].map((par) => definedParameters[par.ref.split('/').last] ?? par).toList();
 
     final result = parameters
