@@ -24,7 +24,10 @@ targets:
           use_default_null_for_lists: false
           build_only_models: false
           additional_headers:
-            - "Cache-Control"
+            - path: "/pet"
+              additional_headers:
+                - "Cache-Control-Rewrite"
+                - "Another-Additional-Header"
           separate_models: false
           enums_case_sensitive: false
           cut_from_model_names: "ModelRenameV3"
