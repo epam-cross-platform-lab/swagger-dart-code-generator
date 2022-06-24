@@ -50,6 +50,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
+    if (schema.oneOf.isNotEmpty) {
+      return '';
+    }
+
     if (schema.hasRef) {
       return 'class $className {}';
     }
@@ -605,7 +609,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     String typeName;
     final refSchema = allClasses[parameterName];
-    if (kBasicSwaggerTypes.contains(refSchema?.type) &&
+    if (refSchema?.oneOf.isNotEmpty == true) {
+      typeName = kObject.pascalCase;
+    } else if (kBasicSwaggerTypes.contains(refSchema?.type) &&
         allClasses[parameterName]?.isEnum != true) {
       if (refSchema?.format == 'datetime') {
         typeName = 'DateTime';
@@ -1327,11 +1333,12 @@ $copyWithMethod
     return [];
   }
 
-  bool _hasOrInheritsDiscriminator(SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
-    if (schema.discriminator.isNotEmpty && schema.discriminator.containsKey('propertyName')) {
+  bool _hasOrInheritsDiscriminator(
+      SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+    if (schema.discriminator.isNotEmpty &&
+        schema.discriminator.containsKey('propertyName')) {
       return true;
-    }
-    else if (schema.hasRef) {
+    } else if (schema.hasRef) {
       final parentName = schema.ref.split('/').last.pascalCase;
       final s = schemas[parentName];
       if (s != null) {

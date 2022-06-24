@@ -740,6 +740,18 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     return kBasicTypes.contains(neededSchema.type);
   }
 
+  bool _isOneOfRef(String ref, SwaggerRoot root) {
+    final schemas = _getAllReusableObjects(root);
+
+    final neededSchema = schemas[ref.getUnformattedRef()];
+
+    if (neededSchema == null) {
+      return false;
+    }
+
+    return neededSchema.oneOf.isNotEmpty;
+  }
+
   bool _isEnumRef(String ref, SwaggerRoot root) {
     final schemas = root.components?.schemas ?? <String, SwaggerSchema>{};
     schemas.addAll(root.definitions);
@@ -797,6 +809,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       }
 
       if (_isBasicTypeRef(schema.ref, root)) {
+        return kObject.pascalCase;
+      }
+
+      if (_isOneOfRef(schema.ref, root)) {
         return kObject.pascalCase;
       }
 
@@ -945,15 +961,17 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     if (content.hasRef) {
       final ref = content.ref;
       final type = ref.getRef().withPostfix(modelPostfix);
+
       return kBasicTypesMap[type] ?? type;
     }
 
     final schemaRef = content.schema?.ref ?? '';
+
     if (schemaRef.isNotEmpty) {
       final allRefs = _getAllReusableObjects(swaggerRoot);
       final neededSchema = allRefs[schemaRef.getUnformattedRef()];
 
-      if (neededSchema == null) {
+      if (neededSchema == null || neededSchema.oneOf.isNotEmpty) {
         return kObject.pascalCase;
       }
 
