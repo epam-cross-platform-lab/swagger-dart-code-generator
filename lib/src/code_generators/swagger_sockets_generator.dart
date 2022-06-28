@@ -51,35 +51,15 @@ ${socketClass.accept(DartEmitter()).toString()}
       ))
       ..fields.add(Field(
         (f) => f
-          ..name = 'interceptors'
-          ..type = Reference('Iterable<SocketsInterceptor>?')
-          ..modifier = FieldModifier.final$,
-      ))
-      ..fields.add(Field(
-        (f) => f
           ..name = 'decoder'
           ..type = Reference('\$SocketsJsonDecoder?')
           ..modifier = FieldModifier.final$,
       ))
       ..fields.add(Field(
         (f) => f
-          ..static = true
-          ..modifier = FieldModifier.constant
-          ..name = '_basePath'
-          ..assignment = Code("'${swaggerRoot.basePath}'"),
-      ))
-      ..fields.add(Field(
-        (f) => f
-          ..name = '_host'
-          ..modifier = FieldModifier.final$
-          ..static = true
-          ..assignment = Code("'ws://${swaggerRoot.host}/'"),
-      ))
-      ..fields.add(Field(
-        (f) => f
           ..name = '_defaultSocket'
-          ..assignment = Code('WebSocketChannel.connect(Uri.parse(_host))')
-          ..modifier = FieldModifier.final$,
+          ..type = Reference('WebSocketChannel')
+          ..late = true,
       ))
       ..fields.add(Field(
         (f) => f
@@ -89,9 +69,10 @@ ${socketClass.accept(DartEmitter()).toString()}
       ))
       ..constructors.add(Constructor(
         (c) => c
-          ..body = Code(
-            '_service = SocketsService(socket: socket ?? _defaultSocket, decoder : decoder, interceptors: interceptors,);',
-          )
+          ..body = Code('''
+_defaultSocket = socket ?? WebSocketChannel.connect(Uri.parse('ws://${swaggerRoot.host}/'));          
+_service = SocketsService(socket: _defaultSocket, decoder : decoder);          
+          ''')
           ..optionalParameters.add(Parameter(
             (p) => p
               ..name = 'socket'
@@ -101,12 +82,6 @@ ${socketClass.accept(DartEmitter()).toString()}
           ..optionalParameters.add(Parameter(
             (p) => p
               ..name = 'decoder'
-              ..toThis = true
-              ..named = true,
-          ))
-          ..optionalParameters.add(Parameter(
-            (p) => p
-              ..name = 'interceptors'
               ..toThis = true
               ..named = true,
           )),
@@ -174,8 +149,8 @@ ${socketClass.accept(DartEmitter()).toString()}
             ? tempMethodName.asGenerics()
             : tempMethodName;
 
-        final methodCode =
-            _generateSocketMethodCode(returnTypeName, path, parameters);
+        final methodCode = _generateSocketMethodCode(
+            returnTypeName, path, parameters, swaggerRoot);
 
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
@@ -187,6 +162,14 @@ ${socketClass.accept(DartEmitter()).toString()}
         methods.addAll([socketMethod]);
       });
     });
+
+    methods.add(Method(
+      (m) => m
+        ..name = 'close'
+        ..returns = Reference('void')
+        ..docs.add('\n')
+        ..body = Code('_service.close();\n_defaultSocket.sink.close();'),
+    ));
 
     return methods;
   }
@@ -206,7 +189,11 @@ ${socketClass.accept(DartEmitter()).toString()}
   }
 
   String _generateSocketMethodCode(
-      String returnName, String path, List<Parameter> parameters) {
+    String returnName,
+    String path,
+    List<Parameter> parameters,
+    SwaggerRoot swaggerRoot,
+  ) {
     final returnType =
         returnName.isEmpty || kBasicTypesMap.containsKey(returnName)
             ? kGeneric
@@ -249,7 +236,7 @@ ${socketClass.accept(DartEmitter()).toString()}
 
     return '''
 $socketData  
-return _service.send<$returnType,$secondGeneric>('\$_basePath$path'$secondParameter);    
+return _service.send<$returnType,$secondGeneric>('${swaggerRoot.basePath}$path'$secondParameter);    
     ''';
   }
 

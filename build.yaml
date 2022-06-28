@@ -11,4 +11,4 @@ builders:
       "$lib$": [".swagger.dart", ".models.dart", ".converter.dart"]
     build_to: source
     auto_apply: dependents
-    runs_before: ["chopper_generator", "json_serializable"]
+    runs_before: ["chopper_generator", "json_serializable", "freezed"]

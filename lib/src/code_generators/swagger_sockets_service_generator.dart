@@ -17,28 +17,28 @@ class SwaggerSocketsServiceGenerator extends SwaggerGeneratorBase {
   String generate(SwaggerRoot root) {
     final fileImports = _generateImports();
 
-    final socketsServiceClass = _generateClass(root);
-
-    final socketInterceptor = _getSocketsInterceptorInterface();
+    final socketsServiceClass = _generateClass();
 
     final socketsParser = _getSocketServiceParser();
 
     final customDecoder = _getCustomJsonDecoder();
 
-    return '''
+    final serviceMessage = _generateServiceMessage();
+
+    return '''  
 $fileImports
 
 ${socketsServiceClass.accept(DartEmitter()).toString()}
 
-$socketInterceptor
-
 $customDecoder
 
 $socketsParser
+
+${serviceMessage.accept(DartEmitter()).toString()}
     ''';
   }
 
-  Class _generateClass(SwaggerRoot swaggerRoot) {
+  Class _generateClass() {
     final className = 'SocketsService';
 
     final factoryConstructorBody = _getFactoryConstructorBody(className);
@@ -47,34 +47,26 @@ $socketsParser
     return Class((c) => c
       ..name = className
       ..docs.add(kServiceHeader)
-      ..constructors.add(Constructor(
-        (c) => c
-          ..factory = true
-          ..body = Code(factoryConstructorBody)
-          ..optionalParameters.add(Parameter(
-            (p) => p
-              ..name = 'socket'
-              ..named = true
-              ..required = true
-              ..type = Reference('WebSocketChannel'),
-          ))
-          ..optionalParameters.add(Parameter(
-            (p) => p
-              ..name = 'decoder'
-              ..named = true
-              ..type = Reference('\$SocketsJsonDecoder?'),
-          ))
-          ..optionalParameters.add(Parameter(
-            (p) => p
-              ..name = 'interceptors'
-              ..named = true
-              ..type = Reference('Iterable<SocketsInterceptor>?'),
-          )),
-      ))
+      ..constructors.add(Constructor((c) => c
+        ..factory = true
+        ..body = Code(factoryConstructorBody)
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..name = 'socket'
+            ..named = true
+            ..required = true
+            ..type = Reference('WebSocketChannel'),
+        ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..name = 'decoder'
+            ..named = true
+            ..type = Reference('\$SocketsJsonDecoder?'),
+        ))))
       ..constructors.add(Constructor(
         (c) => c
           ..body = Code(
-            '_socket.stream.listen(_handleResponse, onError: _handleConnectionError);',
+            '_socket.stream.listen(handleResponse, onError: handleConnectionError);',
           )
           ..name = 'create'
           ..requiredParameters.add(Parameter(
@@ -85,11 +77,6 @@ $socketsParser
           ..requiredParameters.add(Parameter(
             (p) => p
               ..name = '_decoder'
-              ..toThis = true,
-          ))
-          ..requiredParameters.add(Parameter(
-            (p) => p
-              ..name = '_interceptors'
               ..toThis = true,
           )),
       ))
@@ -107,18 +94,159 @@ $socketsParser
       ))
       ..fields.add(Field(
         (f) => f
-          ..name = '_interceptors'
-          ..type = Reference('Iterable<SocketsInterceptor>')
-          ..modifier = FieldModifier.final$,
-      ))
-      ..fields.add(Field(
-        (f) => f
           ..type = Reference('Map<String, Completer<Object>>')
           ..name = '_requests'
           ..modifier = FieldModifier.final$
           ..assignment = Code('{}'),
       ))
       ..methods.addAll([...allServiceMethods]..join('\n')));
+  }
+
+  Class _generateServiceMessage() {
+    return Class(
+      (c) => c
+        ..name = 'SocketsServiceMessage'
+        ..annotations.add(refer(kFreezed))
+        ..mixins.add(Reference('_\$SocketsServiceMessage'))
+        ..constructors.addAll([
+          Constructor(
+            (c) => c
+              ..factory = true
+              ..constant = true
+              ..name = 'response'
+              ..redirect = Reference('SocketsServiceMessageResponse')
+              ..optionalParameters.addAll([
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..name = 'id'
+                    ..required = true
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'command'
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'result'
+                    ..type = Reference('Object?'),
+                ),
+              ]),
+          ),
+          Constructor(
+            (c) => c
+              ..factory = true
+              ..constant = true
+              ..name = 'error'
+              ..redirect = Reference('SocketsServiceMessageError')
+              ..optionalParameters.addAll([
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..name = 'id'
+                    ..required = true
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'command'
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'error'
+                    ..type = Reference('String'),
+                ),
+              ]),
+          ),
+          Constructor(
+            (c) => c
+              ..factory = true
+              ..constant = true
+              ..name = 'event'
+              ..redirect = Reference('SocketsServiceMessageEvent')
+              ..optionalParameters.addAll([
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..name = 'command'
+                    ..required = true
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'type'
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'params'
+                    ..type = Reference('Object'),
+                ),
+              ]),
+          ),
+          Constructor(
+            (c) => c
+              ..factory = true
+              ..constant = true
+              ..name = 'emptyEvent'
+              ..redirect = Reference('SocketsServiceMessageEmptyEvent')
+              ..optionalParameters.addAll([
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..name = 'command'
+                    ..required = true
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'type'
+                    ..type = Reference('String'),
+                ),
+              ]),
+          ),
+          Constructor(
+            (c) => c
+              ..factory = true
+              ..constant = true
+              ..name = 'status'
+              ..redirect = Reference('SocketsServiceMessageStatus')
+              ..optionalParameters.addAll([
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..name = 'command'
+                    ..required = true
+                    ..type = Reference('String'),
+                ),
+                Parameter(
+                  (p) => p
+                    ..named = true
+                    ..required = true
+                    ..name = 'status'
+                    ..type = Reference('String'),
+                ),
+              ]),
+          ),
+        ]),
+    );
   }
 
   List<Method> _getServiceMethods() {
@@ -144,7 +272,7 @@ $socketsParser
       ))
       ..add(Method(
         (m) => m
-          ..name = '_handleConnectionError'
+          ..name = 'handleConnectionError'
           ..returns = Reference('void')
           ..docs.add('\n')
           ..requiredParameters.addAll([
@@ -165,7 +293,7 @@ $socketsParser
       ))
       ..add(Method(
         (m) => m
-          ..name = '_handleResponse'
+          ..name = 'handleResponse'
           ..returns = Reference('void')
           ..docs.add('\n')
           ..requiredParameters.add(
@@ -200,6 +328,17 @@ $socketsParser
       ))
       ..add(Method(
         (m) => m
+          ..name = 'logStatus'
+          ..returns = Reference('void')
+          ..docs.add('\n')
+          ..requiredParameters.add(Parameter((p) => p
+            ..name = 'message'
+            ..type = Reference('SocketsServiceMessageStatus')))
+          ..body = Code(
+              "print('[SocketsService] Status: \${message.command} \${message.status}');"),
+      ))
+      ..add(Method(
+        (m) => m
           ..name = '_completeRequest'
           ..returns = Reference('void')
           ..docs.add('\n')
@@ -221,27 +360,24 @@ $socketsParser
 
   String _getFactoryConstructorBody(String className) {
     return '''
-final _decoder = decoder ?? _CustomJsonDecoder(generatedMapping);
-final _interceptors = interceptors ?? [];  
-return $className.create(socket, _decoder, _interceptors);    
+final _decoder = decoder ?? _CustomJsonDecoder(generatedMapping); 
+return $className.create(socket, _decoder);    
     ''';
   }
 
   String _getSendMethodBody() {
     return '''
-final id = '\$path\$data'.hashCode.toString();
+final id = '\$path\${data.hashCode}';
 
 if (_requests.containsKey(id)) {
   return _requests[id]!.future.then(_decodeValue<T>);
 }
 
-Object interceptedData = data ?? '';
-for (final interceptor in _interceptors) {
-   interceptedData = await interceptor.beforeSend(path, data);
-}
+final _params = data != null ? jsonEncode(data) : '{}';
+final input = '{ "id": "\$id", "payload": \$_params }';
 
 _requests[id] = Completer();
-_socket.sink.add('\$path:\$interceptedData');
+_socket.sink.add('\$path:\$input');
 
 return _requests[id]!.future.then(_decodeValue<T>); 
     ''';
@@ -256,7 +392,7 @@ message.map(
   error: (res) => _completeRequest(res.id, res),
   event: (res) {},
   emptyEvent: (res) {},
-  status: (res) {},
+  status: logStatus,
 );   
     ''';
   }
@@ -282,17 +418,12 @@ import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'client_mapping.dart';
 
-    ''';
-  }
+part 'sockets_service.freezed.dart';
 
-  String _getSocketsInterceptorInterface() {
-    return '''
-abstract class SocketsInterceptor {
-  Future<Object> beforeSend(String path, Object? data);
-}    
     ''';
   }
 

@@ -61,10 +61,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           [],
-      socketFiles: (json['socket_files'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
+      inputSocketsFolder: json['input_sockets_folder'] as String? ?? '',
+      outputSocketsFolder: json['output_sockets_folder'] as String? ?? '',
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -92,7 +90,8 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'response_override_value_map': instance.responseOverrideValueMap,
       'include_paths': instance.includePaths,
       'exclude_paths': instance.excludePaths,
-      'socket_files': instance.socketFiles,
+      'input_sockets_folder': instance.inputSocketsFolder,
+      'output_sockets_folder': instance.outputSocketsFolder,
     };
 
 DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) =>

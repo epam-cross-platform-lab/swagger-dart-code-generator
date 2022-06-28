@@ -28,7 +28,9 @@ const String _mappingFileName = 'client_mapping.dart';
 const String _socketsServiceFileName = 'sockets_service.dart';
 
 String additionalResultPath = '';
+String socketResultPath = '';
 Set<String> allFiledList = {};
+Set<String> socketFiles = {};
 
 String normal(String path) {
   return AssetId('', path).path;
@@ -51,6 +53,23 @@ String _getAdditionalResultPath(GeneratorOptions options) {
   return Directory(normalize(options.inputFolder)).listSync().first.path;
 }
 
+String _getSocketResultPath(GeneratorOptions options) {
+  final filesList = Directory(normalize(options.inputSocketsFolder)).listSync();
+
+  if (filesList.isNotEmpty) {
+    return filesList.first.path;
+  }
+
+  if (options.inputUrls.isNotEmpty) {
+    final path = normalize(
+        '${options.inputSocketsFolder}${getFileNameBase(options.inputUrls.first)}');
+    File(path).createSync();
+    return path;
+  }
+
+  return Directory(normalize(options.inputFolder)).listSync().first.path;
+}
+
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final result = <String, Set<String>>{};
 
@@ -58,20 +77,35 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
       (FileSystemEntity file) =>
           _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 
+  final socketsFilesList = Directory(normalize(options.inputSocketsFolder))
+      .listSync()
+      .where((FileSystemEntity file) =>
+          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+
   additionalResultPath =
       _getAdditionalResultPath(options).replaceAll('\\', '/');
 
+  socketResultPath = _getSocketResultPath(options).replaceAll('\\', '/');
+
   File(additionalResultPath).createSync();
+  File(socketResultPath).createSync();
 
   var out = normalize(options.outputFolder);
+  var outSockets = normalize(options.outputSocketsFolder);
 
   final filesPaths = filesList.map((e) => e.path.replaceAll('\\', '/'));
   final fileNames = filesList.map((e) => getFileNameBase(e.path));
 
+  final socketFilesPaths =
+      socketsFilesList.map((e) => e.path.replaceAll('\\', '/'));
+  final socketFileNames = socketsFilesList.map((e) => getFileNameBase(e.path));
+
   allFiledList.addAll(filesPaths);
   allFiledList.addAll(options.inputUrls);
+  socketFiles.addAll(socketFilesPaths);
 
   result[additionalResultPath] = {};
+  result[socketResultPath] = {};
 
   for (var url in filesPaths) {
     final name = removeFileExtension(getFileNameBase(url));
@@ -84,7 +118,20 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     result[url]!.add(join(out, '$name$_outputEnumsFileExtension'));
     result[url]!.add(join(out, '$name$_outputModelsFileExtension'));
     result[url]!.add(join(out, '$name$_outputResponsesFileExtension'));
-    result[url]!.add(join(out, '$name$_outputSocketsFileExtension'));
+  }
+
+  for (var url in socketFilesPaths) {
+    final name = removeFileExtension(getFileNameBase(url));
+    if (name == socketResultPath) {
+      continue;
+    }
+
+    result[url] = {};
+    result[url]!.add(join(outSockets, '$name$_outputFileExtension'));
+    result[url]!.add(join(outSockets, '$name$_outputEnumsFileExtension'));
+    result[url]!.add(join(outSockets, '$name$_outputModelsFileExtension'));
+    result[url]!.add(join(outSockets, '$name$_outputResponsesFileExtension'));
+    result[url]!.add(join(outSockets, '$name$_outputSocketsFileExtension'));
   }
 
   for (var url in options.inputUrls) {
@@ -101,14 +148,16 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputModelsFileExtension'));
     result[additionalResultPath]!
         .add(join(out, '$name$_outputResponsesFileExtension'));
-    result[additionalResultPath]!
-        .add(join(out, '$name$_outputSocketsFileExtension'));
   }
 
   ///Register additional outputs in first input
   result[additionalResultPath]!.add(join(out, _indexFileName));
   result[additionalResultPath]!.add(join(out, _mappingFileName));
-  result[additionalResultPath]!.add(join(out, _socketsServiceFileName));
+  if (socketFileNames.isNotEmpty) {
+    result[socketResultPath]!.add(join(outSockets, _socketsServiceFileName));
+    result[socketResultPath]!.add(join(outSockets, _indexFileName));
+    result[socketResultPath]!.add(join(outSockets, _mappingFileName));
+  }
 
   return result.map((key, value) => MapEntry(key, value.toList()));
 }
@@ -147,13 +196,30 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final fileNameWithExtension = getFileNameBase(buildStep.inputId.path);
     final fileNameWithoutExtension = removeFileExtension(fileNameWithExtension);
+    final outputFolder =
+        buildStep.inputId.path.contains(options.inputSocketsFolder)
+            ? options.outputSocketsFolder
+            : options.outputFolder;
 
     await _generateAndWriteFile(
       contents: parsed,
       buildStep: buildStep,
       fileNameWithExtension: fileNameWithExtension,
       fileNameWithoutExtension: fileNameWithoutExtension,
+      outputFolder: outputFolder,
     );
+
+    if (buildStep.inputId.path == socketResultPath) {
+      await _generateSocketService(buildStep.inputId, buildStep, parsed);
+
+      await _generateAdditionalFiles(
+        buildStep.inputId,
+        buildStep,
+        true,
+        socketFiles.toList(),
+        outputFolder,
+      );
+    }
 
     if (buildStep.inputId.path == additionalResultPath) {
       for (final url in options.inputUrls) {
@@ -171,11 +237,8 @@ class SwaggerDartCodeGenerator implements Builder {
         buildStep,
         true,
         allFiledList.toList(),
+        outputFolder,
       );
-
-      if (options.socketFiles.isNotEmpty) {
-        await _generateSocketService(buildStep.inputId, buildStep, parsed);
-      }
     }
   }
 
@@ -184,6 +247,7 @@ class SwaggerDartCodeGenerator implements Builder {
     required String fileNameWithoutExtension,
     required String fileNameWithExtension,
     required BuildStep buildStep,
+    required String outputFolder,
   }) async {
     final codeGenerator = SwaggerCodeGenerator();
 
@@ -219,10 +283,8 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final dateToJson = codeGenerator.generateDateToJson(options);
 
-    final copyAssetId = AssetId(
-        buildStep.inputId.package,
-        join(options.outputFolder,
-            '$fileNameWithoutExtension$_outputFileExtension'));
+    final copyAssetId = AssetId(buildStep.inputId.package,
+        join(outputFolder, '$fileNameWithoutExtension$_outputFileExtension'));
 
     if (!options.separateModels || !options.buildOnlyModels) {
       await buildStep.writeAsString(
@@ -243,13 +305,13 @@ class SwaggerDartCodeGenerator implements Builder {
 
       final enumsAssetId = AssetId(
           buildStep.inputId.package,
-          join(options.outputFolder,
+          join(outputFolder,
               '$fileNameWithoutExtension$_outputEnumsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
     }
 
-    if (options.socketFiles.contains(fileNameWithoutExtension)) {
+    if (outputFolder == options.outputSocketsFolder) {
       final sockets = codeGenerator.generateSockets(
           contents, removeFileExtension(fileNameWithExtension), options);
 
@@ -259,7 +321,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
         final socketsAssetId = AssetId(
             buildStep.inputId.package,
-            join(options.outputFolder,
+            join(outputFolder,
                 '$fileNameWithoutExtension$_outputSocketsFileExtension'));
 
         await buildStep.writeAsString(socketsAssetId, formatterSockets);
@@ -279,7 +341,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
       final enumsAssetId = AssetId(
           buildStep.inputId.package,
-          join(options.outputFolder,
+          join(outputFolder,
               '$fileNameWithoutExtension$_outputModelsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formattedModels);
@@ -329,8 +391,8 @@ $dateToJson
       AssetId inputId, BuildStep buildStep, SwaggerRoot root) async {
     final codeGenerator = SwaggerCodeGenerator();
 
-    final socketsServiceAssetId = AssetId(
-        inputId.package, join(options.outputFolder, _socketsServiceFileName));
+    final socketsServiceAssetId = AssetId(inputId.package,
+        join(options.outputSocketsFolder, _socketsServiceFileName));
 
     final socketService = codeGenerator.generateSocketsService(root, options);
 
@@ -339,11 +401,11 @@ $dateToJson
   }
 
   Future<void> _generateAdditionalFiles(AssetId inputId, BuildStep buildStep,
-      bool hasModels, List<String> allFiles) async {
+      bool hasModels, List<String> allFiles, String outputFolder) async {
     final codeGenerator = SwaggerCodeGenerator();
 
     final indexAssetId =
-        AssetId(inputId.package, join(options.outputFolder, _indexFileName));
+        AssetId(inputId.package, join(outputFolder, _indexFileName));
 
     final imports = codeGenerator.generateIndexes(allFiles, options);
 
@@ -352,8 +414,8 @@ $dateToJson
     }
 
     if (options.withConverter && !options.buildOnlyModels) {
-      final mappingAssetId = AssetId(
-          inputId.package, join(options.outputFolder, _mappingFileName));
+      final mappingAssetId =
+          AssetId(inputId.package, join(outputFolder, _mappingFileName));
 
       final mapping =
           codeGenerator.generateConverterMappings(hasModels, options);

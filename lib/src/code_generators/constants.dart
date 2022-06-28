@@ -35,6 +35,7 @@ const kFinal = 'final';
 const kMapStringDynamic = 'Map<String,dynamic>';
 const kRequired = 'required';
 
+const kFreezed = 'freezed';
 const kChopperService = 'ChopperService';
 const kChopperApi = 'ChopperApi';
 const kResponse = 'Response';
