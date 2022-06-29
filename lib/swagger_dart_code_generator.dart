@@ -58,16 +58,9 @@ String _getSocketResultPath(GeneratorOptions options) {
 
   if (filesList.isNotEmpty) {
     return filesList.first.path;
+  } else {
+    return '';
   }
-
-  if (options.inputUrls.isNotEmpty) {
-    final path = normalize(
-        '${options.inputSocketsFolder}${getFileNameBase(options.inputUrls.first)}');
-    File(path).createSync();
-    return path;
-  }
-
-  return Directory(normalize(options.inputFolder)).listSync().first.path;
 }
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
@@ -88,7 +81,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   socketResultPath = _getSocketResultPath(options).replaceAll('\\', '/');
 
   File(additionalResultPath).createSync();
-  File(socketResultPath).createSync();
 
   var out = normalize(options.outputFolder);
   var outSockets = normalize(options.outputSocketsFolder);
