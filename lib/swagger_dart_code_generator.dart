@@ -125,6 +125,24 @@ class SwaggerDartCodeGenerator implements Builder {
 
   @override
   Future<void> build(BuildStep buildStep) async {
+    if (buildStep.inputId.path == additionalResultPath) {
+      for (final url in options.inputUrls) {
+        final fileNameWithExtension = getFileNameBase(url);
+
+        final contents = await _download(url);
+
+        final filePath = join(options.inputFolder, fileNameWithExtension);
+        await File(filePath).create();
+        await File(filePath).writeAsString(contents);
+      }
+
+      await _generateAdditionalFiles(
+        buildStep.inputId,
+        buildStep,
+        true,
+        allFiledList.toList(),
+      );
+    }
     final file = File(buildStep.inputId.path);
     var contents = await file.readAsString();
 
@@ -148,25 +166,6 @@ class SwaggerDartCodeGenerator implements Builder {
       fileNameWithExtension: fileNameWithExtension,
       fileNameWithoutExtension: fileNameWithoutExtension,
     );
-
-    if (buildStep.inputId.path == additionalResultPath) {
-      for (final url in options.inputUrls) {
-        final fileNameWithExtension = getFileNameBase(url);
-
-        final contents = await _download(url);
-
-        final filePath = join(options.inputFolder, fileNameWithExtension);
-        await File(filePath).create();
-        await File(filePath).writeAsString(contents);
-      }
-
-      await _generateAdditionalFiles(
-        buildStep.inputId,
-        buildStep,
-        true,
-        allFiledList.toList(),
-      );
-    }
   }
 
   Future<void> _generateAndWriteFile({
