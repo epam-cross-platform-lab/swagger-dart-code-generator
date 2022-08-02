@@ -48,10 +48,10 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       hasAdditionalProperties: json['additionalProperties'] == null
           ? false
           : _additionalsFromJson(json['additionalProperties']),
-      discriminator: (json['discriminator'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as Object),
-      ) ??
-          {},
+      discriminator: json['discriminator'] == null
+          ? null
+          : Discriminator.fromJson(
+          json['discriminator'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
@@ -74,4 +74,19 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'allOf': instance.allOf,
       'additionalProperties': instance.hasAdditionalProperties,
       'enumNames': instance.enumNames,
+    };
+
+Discriminator _$DiscriminatorFromJson(Map<String, dynamic> json) =>
+    Discriminator(
+      propertyName: json['propertyName'] as String? ?? '',
+      mapping: (json['mapping'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+      ) ??
+          {},
+    );
+
+Map<String, dynamic> _$DiscriminatorToJson(Discriminator instance) =>
+    <String, dynamic>{
+      'propertyName': instance.propertyName,
+      'mapping': instance.mapping,
     };
