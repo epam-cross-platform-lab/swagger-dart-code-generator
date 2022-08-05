@@ -1240,9 +1240,8 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
   ) {
-    final properties = getModelProperties(schema, schemas);
+    final properties = getModelProperties(schema, schemas, allClasses);
     final requiredProperties = _getRequired(schema, schemas);
-    final parent = _getParent(schema, schemas);
 
     final generatedConstructorProperties = generateConstructorPropertiesContent(
       className: className,
@@ -1278,13 +1277,11 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final equalsOverride =
         generateEqualsOverride(generatedProperties, validatedClassName);
 
-    final parentContent = parent != null ? 'implements $parent ' : '';
-
     final fromJson = generatedFromJson(schema, validatedClassName);
 
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
-class $validatedClassName $parentContent{
+class $validatedClassName{
 \t$validatedClassName($generatedConstructorProperties);\n
 \t$fromJson\n
 $generatedProperties
@@ -1306,33 +1303,24 @@ $copyWithMethod
   }
 
   String generatedFromJson(SwaggerSchema schema, String validatedClassName) {
-    if (_hasChildren(schema)) {
-      final discriminator = schema.discriminator!;
-      final propertyName = discriminator.propertyName;
-      return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
-          '\t\tswitch (json[\'$propertyName\']) {'
-          '\t\t\t${discriminator.mapping.entries.map(
-              (entry) => 'case \'${entry.key}\': return _\$${entry.value.split('/').last.pascalCase}FromJson(json);').join('\n')}'
-          '\t\t\tdefault: return _\$${validatedClassName}FromJson(json);'
-          '\t\t}'
-          '}';
-    }
     return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
   }
 
-  bool _hasChildren(SwaggerSchema schema) {
-    return schema.discriminator?.mapping.isNotEmpty ?? false;
-  }
-
   List<String> _getRequired(
-      SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
+      SwaggerSchema schema, Map<String, SwaggerSchema> schemas,
+      [int recursionCount = 5]) {
     final required = <String>{};
+    if (recursionCount == 0) {
+      return required.toList();
+    }
     for (var interface in _getInterfaces(schema)) {
       if (interface.hasRef) {
         final parentName = interface.ref.split('/').last.pascalCase;
         final parentSchema = schemas[parentName];
-        required.addAll(
-            parentSchema != null ? _getRequired(parentSchema, schemas) : []);
+
+        required.addAll(parentSchema != null
+            ? _getRequired(parentSchema, schemas, recursionCount - 1)
+            : []);
       }
       required.addAll(interface.required);
     }
@@ -1458,22 +1446,30 @@ $allHashComponents;
   }
 
   Map<String, SwaggerSchema> getModelProperties(
-    SwaggerSchema modelMap,
+    SwaggerSchema schema,
     Map<String, SwaggerSchema> schemas,
+    Map<String, SwaggerSchema> allClasses,
   ) {
-    if (modelMap.allOf.isEmpty) {
-      return modelMap.properties;
+    if (schema.allOf.isEmpty) {
+      return schema.properties;
     }
 
-    final allOf = modelMap.allOf;
+    final allOf = schema.allOf;
 
     final newModelMap = allOf.firstWhereOrNull((m) => m.properties.isNotEmpty);
 
-    if (newModelMap == null) {
-      return {};
+    final currentProperties = newModelMap?.properties ?? {};
+
+    final refs = allOf.where((element) => element.ref.isNotEmpty).toList();
+    for (var allOf in refs) {
+      final allOfSchema = allClasses[allOf.ref.getUnformattedRef()];
+
+      currentProperties.addAll(allOfSchema?.properties ?? {});
     }
 
-    final currentProperties = newModelMap.properties;
+    if (currentProperties.isEmpty) {
+      return {};
+    }
 
     final allOfRef = allOf.firstWhereOrNull((m) => m.hasRef);
 

@@ -1,3 +1,8 @@
+# 2.7.0
+
+* Fixed and optimizations
+* Improved multipart support ([#440](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/440))
+
 # 2.6.0
 
 * ***Breaking*** Removed  `use_default_null_for_lists` option

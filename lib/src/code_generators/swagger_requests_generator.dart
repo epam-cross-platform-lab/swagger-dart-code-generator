@@ -567,6 +567,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     if (name == kInteger && format == kInt64) {
       return kNum;
     }
+
+    if (name == kArray) {
+      return 'List?';
+    }
+
     return kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
   }
 
@@ -639,14 +644,15 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final schema = requestBody.content?.schema;
         schema?.properties.forEach((key, value) {
           if (value.type == 'string' && value.format == 'binary') {
+            final isRequired = schema.required.contains(key);
             result.add(
               Parameter(
                 (p) => p
                   ..name = key
                   ..named = true
-                  ..required = schema.required.contains(key)
+                  ..required = isRequired
                   ..type = Reference(
-                    'List<int>',
+                    isRequired ? 'List<int>' : 'List<int>?',
                   )
                   ..named = true
                   ..annotations.add(
