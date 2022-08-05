@@ -1339,42 +1339,6 @@ $copyWithMethod
     return [];
   }
 
-  bool _hasOrInheritsDiscriminator(
-      SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
-    if (schema.discriminator != null) {
-      return true;
-    } else if (schema.hasRef) {
-      final parentName = schema.ref.split('/').last.pascalCase;
-      final s = schemas[parentName];
-      if (s != null) {
-        return _hasOrInheritsDiscriminator(s, schemas);
-      }
-    }
-    return false;
-  }
-
-  String? _getParent(SwaggerSchema schema, Map<String, SwaggerSchema> schemas) {
-    final interfaces = _getInterfaces(schema);
-
-    if (interfaces.isNotEmpty) {
-      for (final schema in interfaces) {
-        // get the actual schema
-        if (schema.hasRef) {
-          final parentName = schema.ref.split('/').last.pascalCase;
-          final s = schemas[parentName];
-          if (s == null) {
-            return null;
-          } else if (_hasOrInheritsDiscriminator(s, schemas)) {
-            // discriminator.propertyName is used
-            return parentName;
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
   String generateEqualsOverride(
       String generatedProperties, String validatedClassName) {
     final splittedProperties = RegExp(
