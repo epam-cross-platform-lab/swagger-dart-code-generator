@@ -13,8 +13,8 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       enumValuesObj: json['enum'] as List<dynamic>? ?? [],
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
             (k, e) =>
-            MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
-      ) ??
+                MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
+          ) ??
           {},
       items: json['items'] == null
           ? null
@@ -26,16 +26,16 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
       oneOf: (json['oneOf'] as List<dynamic>?)
-          ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
-          .toList() ??
+              ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           [],
       anyOf: (json['anyOf'] as List<dynamic>?)
-          ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
-          .toList() ??
+              ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           [],
       allOf: (json['allOf'] as List<dynamic>?)
-          ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
-          .toList() ??
+              ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           [],
       required: json['required'] == null
           ? const []
@@ -48,10 +48,10 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       hasAdditionalProperties: json['additionalProperties'] == null
           ? false
           : _additionalsFromJson(json['additionalProperties']),
-      discriminator: json['discriminator'] == null
-          ? null
-          : Discriminator.fromJson(
-          json['discriminator'] as Map<String, dynamic>),
+      discriminator: json['discriminator'] is Map<String, dynamic>
+          ? Discriminator.fromJson(
+              json['discriminator'] as Map<String, dynamic>)
+          : null,
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
@@ -81,7 +81,7 @@ Discriminator _$DiscriminatorFromJson(Map<String, dynamic> json) =>
       propertyName: json['propertyName'] as String? ?? '',
       mapping: (json['mapping'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as String),
-      ) ??
+          ) ??
           {},
     );
 
