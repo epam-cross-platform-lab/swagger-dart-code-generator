@@ -286,6 +286,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           results.add(getValidatedClassName(neededResponse));
         }
       }
+    } else if (successResponse?.schema?.properties.isNotEmpty == true) {
+      results.add(response);
     }
 
     return results.where((element) => _isValidModelName(element)).toList();

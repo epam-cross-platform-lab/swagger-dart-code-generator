@@ -1,3 +1,7 @@
+# 2.7.1
+
+* Fixed generation of putIfAbsent for responses ([#436](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/436))
+
 # 2.7.0
 
 * Fixed and optimizations
