@@ -1271,6 +1271,9 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
+    final copyWithWrapped =
+        generateCopyWithWrappedContent(generatedProperties, validatedClassName);
+
     final getHashContent =
         generateGetHashContent(generatedProperties, validatedClassName);
 
@@ -1297,6 +1300,8 @@ $equalsOverride
 $getHashContent
 }
 $copyWithMethod
+
+$copyWithWrapped
 ''';
 
     return generatedClass;
@@ -1388,6 +1393,28 @@ $copyWithMethod
         .join(',\n');
 
     return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
+  }
+
+  String generateCopyWithWrappedContent(
+      String generatedProperties, String validatedClassName) {
+    final splittedProperties = RegExp(
+      'final (.+) (.+);',
+    ).allMatches(generatedProperties).map((e) {
+      return 'Wrapped<${e.group(1)!}>? ${e.group(2)!}';
+    });
+
+    if (splittedProperties.isEmpty) {
+      return '';
+    }
+
+    final spittedPropertiesJoined = splittedProperties.join(', ');
+
+    final splittedPropertiesNamesContent = splittedProperties
+        .map((e) => e.substring(e.indexOf(' ') + 1))
+        .map((e) => '$e: ($e != null ? $e.value : this.$e)')
+        .join(',\n');
+
+    return 'extension \$${validatedClassName}WrappedExtension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
   }
 
   String generateGetHashContent(
