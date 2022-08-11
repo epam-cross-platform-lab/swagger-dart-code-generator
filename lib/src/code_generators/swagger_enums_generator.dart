@@ -221,14 +221,7 @@ $enumMap
       }
 
       result.add(validatedValue);
-
-      if (isInteger) {
-        resultStrings.add(
-            "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
-      } else {
-        resultStrings.add(
-            "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
-      }
+      resultStrings.add(validatedValue);
     }
 
     return resultStrings.join(',\n');
@@ -288,6 +281,10 @@ $enumMap
 
     if (exceptionWords.contains(result.toLowerCase())) {
       return '\$' + result.lower;
+    }
+
+    if (result.isEmpty) {
+      return 'undefined';
     }
 
     return result.lower;
