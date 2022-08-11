@@ -1,3 +1,7 @@
+# 2.7.3
+
+* Fixed issue with generation `+` and `-` signs as enum names ([#444](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/444))
+
 # 2.7.2
 
 * Implemented generation of copyWithWrapped ([#438](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/438))
