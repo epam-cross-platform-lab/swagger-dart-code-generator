@@ -1414,7 +1414,7 @@ $copyWithWrapped
         .map((e) => '$e: ($e != null ? $e.value : this.$e)')
         .join(',\n');
 
-    return 'extension \$${validatedClassName}WrappedExtension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
+    return 'extension \$${validatedClassName}WrappedExtension on $validatedClassName { $validatedClassName copyWithWrapped({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
   }
 
   String generateGetHashContent(
