@@ -17,6 +17,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
                   .toList() ??
               [],
       buildOnlyModels: json['build_only_models'] as bool? ?? false,
+      exposeHttpClient: json['expose_http_client'] as bool? ?? false,
       defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
               ?.map((e) =>
                   DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
@@ -85,6 +86,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'classes_with_nullabe_lists': instance.classesWithNullabeLists,
       'cut_from_model_names': instance.cutFromModelNames,
       'build_only_models': instance.buildOnlyModels,
+      'expose_http_client': instance.exposeHttpClient,
       'model_postfix': instance.modelPostfix,
       'default_values_map': instance.defaultValuesMap,
       'default_header_values_map': instance.defaultHeaderValuesMap,

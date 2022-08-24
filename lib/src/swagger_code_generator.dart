@@ -40,6 +40,7 @@ class SwaggerCodeGenerator {
     String swaggerFileName,
     bool hasModels,
     bool buildOnlyModels,
+    bool exposeHttpClient,
     bool hasEnums,
     bool separateModels,
     GeneratorOptions options,
@@ -48,6 +49,7 @@ class SwaggerCodeGenerator {
           swaggerFileName,
           hasModels,
           buildOnlyModels,
+          exposeHttpClient,
           hasEnums,
           separateModels);
 
@@ -81,10 +83,10 @@ class SwaggerCodeGenerator {
   String generateRequests(SwaggerRoot root, String className, String fileName,
           GeneratorOptions options) =>
       _getSwaggerRequestsGenerator(root, options).generate(
-        swaggerRoot: root,
-        className: className,
-        fileName: fileName,
-      );
+          swaggerRoot: root,
+          className: className,
+          fileName: fileName,
+          exposeHttpClient: options.exposeHttpClient);
 
   String generateCustomJsonConverter(
           String fileName, GeneratorOptions options) =>

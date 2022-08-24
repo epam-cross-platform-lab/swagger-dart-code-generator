@@ -192,6 +192,7 @@ class SwaggerDartCodeGenerator implements Builder {
       fileNameWithoutExtension,
       models.isNotEmpty,
       options.buildOnlyModels,
+      options.exposeHttpClient,
       enums.isNotEmpty,
       options.separateModels,
       options,

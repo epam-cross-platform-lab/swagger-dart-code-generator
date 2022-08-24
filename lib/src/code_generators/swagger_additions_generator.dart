@@ -41,6 +41,7 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
     String swaggerFileName,
     bool hasModels,
     bool buildOnlyModels,
+    bool exposeHttpClient,
     bool hasEnums,
     bool separateModels,
   ) {
@@ -49,12 +50,18 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
     final chopperPartImport =
         buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
+    final httpImport = exposeHttpClient
+        ? '''
+import 'package:http/http.dart' as http;
+'''
+        : '';
+
     final chopperImports = buildOnlyModels
         ? ''
         : '''import 'package:chopper/chopper.dart';
 
 import 'client_mapping.dart';
-import 'package:chopper/chopper.dart' as chopper;''';
+import 'package:chopper/chopper.dart' as chopper;$httpImport''';
 
     final enumsImport = hasEnums
         ? "import '$swaggerFileName.enums.swagger.dart' as enums;"

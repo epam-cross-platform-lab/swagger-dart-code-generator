@@ -12,6 +12,7 @@ class GeneratorOptions {
     this.separateModels = false,
     this.classesWithNullabeLists = const [],
     this.buildOnlyModels = false,
+    this.exposeHttpClient = false,
     this.defaultValuesMap = const <DefaultValueMap>[],
     this.defaultHeaderValuesMap = const <DefaultHeaderValueMap>[],
     this.responseOverrideValueMap = const <ResponseOverrideValueMap>[],
@@ -81,6 +82,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool buildOnlyModels;
+
+  @JsonKey(defaultValue: false)
+  final bool exposeHttpClient;
 
   @JsonKey(defaultValue: '')
   final String modelPostfix;

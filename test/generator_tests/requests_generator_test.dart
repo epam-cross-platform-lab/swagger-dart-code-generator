@@ -25,6 +25,7 @@ void main() {
         swaggerRoot: root,
         className: 'CarsService',
         fileName: 'cars_service',
+        exposeHttpClient: false,
       );
 
       final result2 = SwaggerRequestsGenerator(GeneratorOptions(
@@ -42,13 +43,18 @@ void main() {
         swaggerRoot: root,
         className: 'CarsService',
         fileName: 'cars_service',
+        exposeHttpClient: false,
       );
 
       expect(result2, contains('Future<chopper.Response<CarModel>>'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsGet'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
-      expect(result, contains('Future<chopper.Response<CarModel>> carsMultipartPost'));
-      expect(result, contains('{@Part() required String filename, @PartFile() required List<int> file}'));
+      expect(result,
+          contains('Future<chopper.Response<CarModel>> carsMultipartPost'));
+      expect(
+          result,
+          contains(
+              '{@Part() required String filename, @PartFile() required List<int> file}'));
     });
   });
 }

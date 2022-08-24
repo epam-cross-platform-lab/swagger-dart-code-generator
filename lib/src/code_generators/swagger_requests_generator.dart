@@ -22,39 +22,30 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
   SwaggerRequestsGenerator(this._options);
 
-  String generate({
-    required SwaggerRoot swaggerRoot,
-    required String className,
-    required String fileName,
-  }) {
-    final service = _generateService(
-      swaggerRoot,
-      className,
-      fileName,
-    );
+  String generate(
+      {required SwaggerRoot swaggerRoot,
+      required String className,
+      required String fileName,
+      required bool exposeHttpClient}) {
+    final service =
+        _generateService(swaggerRoot, className, fileName, exposeHttpClient);
 
     return service.accept(DartEmitter()).toString();
   }
 
-  Class _generateService(
-    SwaggerRoot swaggerRoot,
-    String className,
-    String fileName,
-  ) {
+  Class _generateService(SwaggerRoot swaggerRoot, String className,
+      String fileName, bool exposeHttpClient) {
     final allMethodsContent = _getAllMethodsContent(
       swaggerRoot: swaggerRoot,
     );
 
     final chopperClient = getChopperClientContent(
-      className,
-      swaggerRoot.host,
-      swaggerRoot.basePath,
-    );
+        className, swaggerRoot.host, swaggerRoot.basePath, exposeHttpClient);
 
     return Class(
       (c) => c
         ..methods.addAll([
-          _generateCreateMethod(className, chopperClient),
+          _generateCreateMethod(className, chopperClient, exposeHttpClient),
           ...allMethodsContent
         ])
         ..extend = Reference(kChopperService)
@@ -65,37 +56,49 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     );
   }
 
-  Method _generateCreateMethod(String className, String body) {
+  Method _generateCreateMethod(
+      String className, String body, bool exposeHttpClient) {
     return Method(
-      (m) => m
-        ..returns = Reference(className)
-        ..name = 'create'
-        ..static = true
-        ..optionalParameters.add(Parameter(
-          (p) => p
-            ..named = true
-            ..type = Reference('ChopperClient?')
-            ..name = 'client',
-        ))
-        ..optionalParameters.add(Parameter(
-          (p) => p
-            ..named = true
-            ..type = Reference('Authenticator?')
-            ..name = 'authenticator',
-        ))
-        ..optionalParameters.add(Parameter(
-          (p) => p
-            ..named = true
-            ..type = Reference('String?')
-            ..name = 'baseUrl',
-        ))
-        ..optionalParameters.add(Parameter(
-          (p) => p
-            ..named = true
-            ..type = Reference('Iterable<dynamic>?')
-            ..name = 'interceptors',
-        ))
-        ..body = Code(body),
+      (m) {
+        m
+          ..returns = Reference(className)
+          ..name = 'create'
+          ..static = true
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..named = true
+              ..type = Reference('ChopperClient?')
+              ..name = 'client',
+          ))
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..named = true
+              ..type = Reference('Authenticator?')
+              ..name = 'authenticator',
+          ))
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..named = true
+              ..type = Reference('String?')
+              ..name = 'baseUrl',
+          ))
+          ..optionalParameters.add(Parameter(
+            (p) => p
+              ..named = true
+              ..type = Reference('Iterable<dynamic>?')
+              ..name = 'interceptors',
+          ))
+          ..body = Code(body);
+
+        if (exposeHttpClient) {
+          m.optionalParameters.add(Parameter(
+            (p) => p
+              ..named = true
+              ..type = Reference('http.Client?')
+              ..name = 'httpClient',
+          ));
+        }
+      },
     );
   }
 
@@ -1079,6 +1082,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     String className,
     String host,
     String basePath,
+    bool exposeHttpClient,
   ) {
     final baseUrlString = options.withBaseUrl
         ? "baseUrl:  baseUrl ?? 'http://$host$basePath'"
@@ -1087,6 +1091,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final converterString = options.withConverter
         ? 'converter: \$JsonSerializableConverter(),'
         : 'converter: chopper.JsonConverter(),';
+
+    final httpClient = !exposeHttpClient ? '' : '\n      client: httpClient,';
 
     final chopperClientBody = '''
     if(client!=null){
@@ -1097,7 +1103,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       services: [_\$$className()],
       $converterString
       interceptors: interceptors ?? [],
-      authenticator: authenticator,
+      authenticator: authenticator,$httpClient
       $baseUrlString);
     return _\$$className(newClient);
 ''';
