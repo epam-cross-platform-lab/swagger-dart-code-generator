@@ -17,6 +17,8 @@ void main() {
 
       expect(result, contains("part 'swagger.fileName.swagger.chopper.dart';"));
       expect(result, contains("part 'swagger.fileName.swagger.g.dart';"));
+      expect(
+          result, isNot(contains("import 'package:http/http.dart' as http;")));
     });
 
     test('Should generate correct imports', () {
@@ -25,6 +27,13 @@ void main() {
 
       expect(result,
           contains("import 'swagger.fileName.enums.swagger.dart' as enums;"));
+    });
+
+    test('Should generate correct imports', () {
+      final result = generator.generateImportsContent(
+          'swagger.fileName', true, false, true, true, false);
+
+      expect(result, contains("import 'package:http/http.dart' as http;"));
     });
 
     test('Should generate indexes file', () {

@@ -43,7 +43,7 @@ void main() {
         swaggerRoot: root,
         className: 'CarsService',
         fileName: 'cars_service',
-        exposeHttpClient: false,
+        exposeHttpClient: true,
       );
 
       expect(result2, contains('Future<chopper.Response<CarModel>>'));
@@ -55,6 +55,8 @@ void main() {
           result,
           contains(
               '{@Part() required String filename, @PartFile() required List<int> file}'));
+      expect(result, isNot(contains('      client: httpClient,\n')));
+      expect(result2, contains('      client: httpClient,\n'));
     });
   });
 }
