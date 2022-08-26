@@ -22,6 +22,7 @@ targets:
           with_converter: true
           use_path_for_request_names: true
           use_default_null_for_lists: false
+          override_equals_and_hashcode: true
           build_only_models: false
           additional_headers:
             - "Cache-Control"
