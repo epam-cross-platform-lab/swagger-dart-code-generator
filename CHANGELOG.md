@@ -1,3 +1,7 @@
+# 2.7.4
+
+* Added new build options flag `override_equals_and_hashcode` to disable generation of hashCode and equals if need to decrease codebase
+
 # 2.7.3
 
 * Fixed issue with generation `+` and `-` signs as enum names ([#444](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/444))
