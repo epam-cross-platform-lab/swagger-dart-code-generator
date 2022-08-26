@@ -1,4 +1,4 @@
-# 2.7.4
+# 2.7.5
 
 * Added new build options flag `override_equals_and_hashcode` to disable generation of hashCode and equals if need to decrease codebase
 
