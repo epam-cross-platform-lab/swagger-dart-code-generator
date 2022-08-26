@@ -28,6 +28,7 @@ class GeneratorOptions {
     this.nullableModels = const [],
     this.cutFromModelNames = '',
     this.additionalHeaders = const [],
+    this.overrideEqualsAndHashcode = true,
   });
 
   /// Build options from a JSON map.
@@ -39,6 +40,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;
+
+  @JsonKey(defaultValue: true)
+  final bool overrideEqualsAndHashcode;
 
   @JsonKey(defaultValue: true)
   final bool withConverter;

@@ -1274,11 +1274,17 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithWrapped =
         generateCopyWithWrappedContent(generatedProperties, validatedClassName);
 
-    final getHashContent =
-        generateGetHashContent(generatedProperties, validatedClassName);
+    final getHashContent = generateGetHashContent(
+      generatedProperties,
+      validatedClassName,
+      options,
+    );
 
-    final equalsOverride =
-        generateEqualsOverride(generatedProperties, validatedClassName);
+    final equalsOverride = generateEqualsOverride(
+      generatedProperties,
+      validatedClassName,
+      options,
+    );
 
     final fromJson = generatedFromJson(schema, validatedClassName);
 
@@ -1345,7 +1351,14 @@ $copyWithWrapped
   }
 
   String generateEqualsOverride(
-      String generatedProperties, String validatedClassName) {
+    String generatedProperties,
+    String validatedClassName,
+    GeneratorOptions options,
+  ) {
+    if (!options.overrideEqualsAndHashcode) {
+      return '';
+    }
+
     final splittedProperties = RegExp(
       'final .+ (.+);',
     ).allMatches(generatedProperties).map((e) => e.group(1)!);
@@ -1418,7 +1431,14 @@ $copyWithWrapped
   }
 
   String generateGetHashContent(
-      String generatedProperties, String validatedClassName) {
+    String generatedProperties,
+    String validatedClassName,
+    GeneratorOptions options,
+  ) {
+    if (!options.overrideEqualsAndHashcode) {
+      return '';
+    }
+
     final propertiesHash = RegExp(
       'final .+ (.+);',
     )
