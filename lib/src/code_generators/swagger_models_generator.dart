@@ -1271,9 +1271,6 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
-    final copyWithWrapped =
-        generateCopyWithWrappedContent(generatedProperties, validatedClassName);
-
     final getHashContent = generateGetHashContent(
       generatedProperties,
       validatedClassName,
@@ -1306,8 +1303,6 @@ $equalsOverride
 $getHashContent
 }
 $copyWithMethod
-
-$copyWithWrapped
 ''';
 
     return generatedClass;
@@ -1384,7 +1379,7 @@ $copyWithWrapped
 
   String generateCopyWithContent(
       String generatedProperties, String validatedClassName) {
-    final splittedProperties = RegExp(
+    final splittedCopyWithProperties = RegExp(
       'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       var type = e.group(1)!;
@@ -1394,40 +1389,39 @@ $copyWithWrapped
       return '$type ${e.group(2)!}';
     });
 
-    if (splittedProperties.isEmpty) {
-      return '';
-    }
-
-    final spittedPropertiesJoined = splittedProperties.join(', ');
-
-    final splittedPropertiesNamesContent = splittedProperties
-        .map((e) => e.substring(e.indexOf(' ') + 1))
-        .map((e) => '$e: $e ?? this.$e')
-        .join(',\n');
-
-    return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
-  }
-
-  String generateCopyWithWrappedContent(
-      String generatedProperties, String validatedClassName) {
-    final splittedProperties = RegExp(
+    final splittedCopyWithWrappedProperties = RegExp(
       'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       return 'Wrapped<${e.group(1)!}>? ${e.group(2)!}';
     });
 
-    if (splittedProperties.isEmpty) {
+    if (splittedCopyWithProperties.isEmpty) {
       return '';
     }
 
-    final spittedPropertiesJoined = splittedProperties.join(', ');
+    final spittedCopyWithPropertiesJoined =
+        splittedCopyWithProperties.join(', ');
 
-    final splittedPropertiesNamesContent = splittedProperties
+    final spittedCopyWithWrappedPropertiesJoined =
+        splittedCopyWithWrappedProperties.join(', ');
+
+    final splittedCopyWithPropertiesNamesContent = splittedCopyWithProperties
         .map((e) => e.substring(e.indexOf(' ') + 1))
-        .map((e) => '$e: ($e != null ? $e.value : this.$e)')
+        .map((e) => '$e: $e ?? this.$e')
         .join(',\n');
 
-    return 'extension \$${validatedClassName}WrappedExtension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
+    final splittedCopyWithWrappedPropertiesNamesContent =
+        splittedCopyWithWrappedProperties
+            .map((e) => e.substring(e.indexOf(' ') + 1))
+            .map((e) => '$e: ($e != null ? $e.value : this.$e)')
+            .join(',\n');
+
+    final copyWithWrapped =
+        '$validatedClassName copyWithWrapped({$spittedCopyWithWrappedPropertiesJoined}) { return $validatedClassName($splittedCopyWithWrappedPropertiesNamesContent); }';
+    final copyWith =
+        '$validatedClassName copyWith({$spittedCopyWithPropertiesJoined}) { return $validatedClassName($splittedCopyWithPropertiesNamesContent); }';
+
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith $copyWithWrapped}';
   }
 
   String generateGetHashContent(
