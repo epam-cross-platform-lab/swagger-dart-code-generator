@@ -397,8 +397,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName += '?';
     }
 
+    final propertyKey = propertyName.replaceAll('\$', '\\\$');
+
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
@@ -540,12 +542,16 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final dateToJsonValue = generateToJsonForDate(prop);
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+  }
+
+  String _validatePropertyKey(String key) {
+    return key.replaceAll('\$', '\\\$');
   }
 
   String generatePropertyContentByAllOf({
@@ -585,7 +591,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
@@ -650,7 +656,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final includeIfNullString = generateIncludeIfNullString();
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
@@ -806,19 +812,21 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final includeIfNullString = generateIncludeIfNullString();
+    final validatedPropertyKey = _validatePropertyKey(propertyKey);
 
     String jsonKeyContent;
     if (unknownEnumValue.jsonKey.isEmpty) {
       if (options.classesWithNullabeLists
           .any((element) => RegExp(element).hasMatch(className))) {
-        jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString)\n";
+        jsonKeyContent =
+            "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString)\n";
       } else {
         jsonKeyContent =
-            "@JsonKey(name: '$propertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
+            "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
       }
     } else {
       jsonKeyContent =
-          "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+          "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
     }
 
     var listPropertyName = 'List<$typeName>';
@@ -841,7 +849,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   ) {
     final includeIfNullString = generateIncludeIfNullString();
 
-    var jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString";
+    var jsonKeyContent =
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString";
 
     var typeName = '';
 

@@ -1,5 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
@@ -666,11 +667,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             result.add(
               Parameter(
                 (p) => p
-                  ..name = key
+                  ..name = SwaggerModelsGenerator.getValidatedParameterName(key)
                   ..named = true
                   ..required = schema.required.contains(key)
                   ..type = Reference(
-                      _mapParameterName(value.type, value.format, modelPostfix))
+                    _mapParameterName(value.type, value.format, modelPostfix)
+                        .makeNullable(),
+                  )
                   ..named = true
                   ..annotations.add(
                     refer(kPart.pascalCase).call([]),
