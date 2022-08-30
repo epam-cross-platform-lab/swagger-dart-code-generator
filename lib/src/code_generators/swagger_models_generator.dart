@@ -1280,6 +1280,12 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
+<<<<<<< HEAD
+=======
+    final copyWithWrapped =
+        generateCopyWithWrappedContent(generatedProperties, validatedClassName);
+
+>>>>>>> master
     final getHashContent = generateGetHashContent(
       generatedProperties,
       validatedClassName,
