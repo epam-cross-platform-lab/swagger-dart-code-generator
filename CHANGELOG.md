@@ -1,3 +1,8 @@
+# 2.7.6
+
+* Fixed copyWith method generation ([#438](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/438))
+* Fixed generation of names with dots and other bad things ([#449](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/449))
+
 # 2.7.5
 
 * Added new build options flag `override_equals_and_hashcode` to disable generation of hashCode and equals if need to decrease codebase

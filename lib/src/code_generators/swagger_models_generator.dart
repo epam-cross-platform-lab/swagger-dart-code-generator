@@ -397,8 +397,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName += '?';
     }
 
+    final propertyKey = propertyName.replaceAll('\$', '\\\$');
+
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyName'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
@@ -540,12 +542,16 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final dateToJsonValue = generateToJsonForDate(prop);
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+  }
+
+  String _validatePropertyKey(String key) {
+    return key.replaceAll('\$', '\\\$');
   }
 
   String generatePropertyContentByAllOf({
@@ -585,7 +591,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
@@ -650,7 +656,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final includeIfNullString = generateIncludeIfNullString();
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
@@ -806,19 +812,21 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final includeIfNullString = generateIncludeIfNullString();
+    final validatedPropertyKey = _validatePropertyKey(propertyKey);
 
     String jsonKeyContent;
     if (unknownEnumValue.jsonKey.isEmpty) {
       if (options.classesWithNullabeLists
           .any((element) => RegExp(element).hasMatch(className))) {
-        jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString)\n";
+        jsonKeyContent =
+            "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString)\n";
       } else {
         jsonKeyContent =
-            "@JsonKey(name: '$propertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
+            "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
       }
     } else {
       jsonKeyContent =
-          "@JsonKey(name: '$propertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+          "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
     }
 
     var listPropertyName = 'List<$typeName>';
@@ -841,7 +849,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   ) {
     final includeIfNullString = generateIncludeIfNullString();
 
-    var jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString";
+    var jsonKeyContent =
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString";
 
     var typeName = '';
 
@@ -1271,9 +1280,6 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
     final copyWithMethod =
         generateCopyWithContent(generatedProperties, validatedClassName);
 
-    final copyWithWrapped =
-        generateCopyWithWrappedContent(generatedProperties, validatedClassName);
-
     final getHashContent = generateGetHashContent(
       generatedProperties,
       validatedClassName,
@@ -1306,8 +1312,6 @@ $equalsOverride
 $getHashContent
 }
 $copyWithMethod
-
-$copyWithWrapped
 ''';
 
     return generatedClass;
@@ -1384,7 +1388,7 @@ $copyWithWrapped
 
   String generateCopyWithContent(
       String generatedProperties, String validatedClassName) {
-    final splittedProperties = RegExp(
+    final splittedCopyWithProperties = RegExp(
       'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       var type = e.group(1)!;
@@ -1394,40 +1398,39 @@ $copyWithWrapped
       return '$type ${e.group(2)!}';
     });
 
-    if (splittedProperties.isEmpty) {
-      return '';
-    }
-
-    final spittedPropertiesJoined = splittedProperties.join(', ');
-
-    final splittedPropertiesNamesContent = splittedProperties
-        .map((e) => e.substring(e.indexOf(' ') + 1))
-        .map((e) => '$e: $e ?? this.$e')
-        .join(',\n');
-
-    return 'extension \$${validatedClassName}Extension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
-  }
-
-  String generateCopyWithWrappedContent(
-      String generatedProperties, String validatedClassName) {
-    final splittedProperties = RegExp(
+    final splittedCopyWithWrappedProperties = RegExp(
       'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       return 'Wrapped<${e.group(1)!}>? ${e.group(2)!}';
     });
 
-    if (splittedProperties.isEmpty) {
+    if (splittedCopyWithProperties.isEmpty) {
       return '';
     }
 
-    final spittedPropertiesJoined = splittedProperties.join(', ');
+    final spittedCopyWithPropertiesJoined =
+        splittedCopyWithProperties.join(', ');
 
-    final splittedPropertiesNamesContent = splittedProperties
+    final spittedCopyWithWrappedPropertiesJoined =
+        splittedCopyWithWrappedProperties.join(', ');
+
+    final splittedCopyWithPropertiesNamesContent = splittedCopyWithProperties
         .map((e) => e.substring(e.indexOf(' ') + 1))
-        .map((e) => '$e: ($e != null ? $e.value : this.$e)')
+        .map((e) => '$e: $e ?? this.$e')
         .join(',\n');
 
-    return 'extension \$${validatedClassName}WrappedExtension on $validatedClassName { $validatedClassName copyWith({$spittedPropertiesJoined}) { return $validatedClassName($splittedPropertiesNamesContent);}}';
+    final splittedCopyWithWrappedPropertiesNamesContent =
+        splittedCopyWithWrappedProperties
+            .map((e) => e.substring(e.indexOf(' ') + 1))
+            .map((e) => '$e: ($e != null ? $e.value : this.$e)')
+            .join(',\n');
+
+    final copyWithWrapped =
+        '$validatedClassName copyWithWrapped({$spittedCopyWithWrappedPropertiesJoined}) { return $validatedClassName($splittedCopyWithWrappedPropertiesNamesContent); }';
+    final copyWith =
+        '$validatedClassName copyWith({$spittedCopyWithPropertiesJoined}) { return $validatedClassName($splittedCopyWithPropertiesNamesContent); }';
+
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith $copyWithWrapped}';
   }
 
   String generateGetHashContent(
