@@ -1301,8 +1301,6 @@ class $validatedClassName{
 \t$fromJson\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
-\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
-\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
 @override
 String toString() => jsonEncode(this);
