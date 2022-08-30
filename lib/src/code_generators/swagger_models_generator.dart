@@ -1425,12 +1425,10 @@ $copyWithMethod
             .map((e) => '$e: ($e != null ? $e.value : this.$e)')
             .join(',\n');
 
-    final copyWithWrapped =
-        '$validatedClassName copyWithWrapped({$spittedCopyWithWrappedPropertiesJoined}) { return $validatedClassName($splittedCopyWithWrappedPropertiesNamesContent); }';
     final copyWith =
         '$validatedClassName copyWith({$spittedCopyWithPropertiesJoined}) { return $validatedClassName($splittedCopyWithPropertiesNamesContent); }';
 
-    return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith $copyWithWrapped}';
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith }';
   }
 
   String generateGetHashContent(
