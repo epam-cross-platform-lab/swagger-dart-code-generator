@@ -1301,6 +1301,8 @@ class $validatedClassName{
 \t$fromJson\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
+\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
 @override
 String toString() => jsonEncode(this);
@@ -1426,7 +1428,10 @@ $copyWithMethod
     final copyWith =
         '$validatedClassName copyWith({$spittedCopyWithPropertiesJoined}) { return $validatedClassName($splittedCopyWithPropertiesNamesContent); }';
 
-    return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith }';
+    final copyWithWrapped =
+        '$validatedClassName copyWithWrapped({$spittedCopyWithWrappedPropertiesJoined}) { return $validatedClassName($splittedCopyWithWrappedPropertiesNamesContent); }';
+
+    return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith $copyWithWrapped}';
   }
 
   String generateGetHashContent(
