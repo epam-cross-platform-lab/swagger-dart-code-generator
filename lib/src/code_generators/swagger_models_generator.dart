@@ -10,8 +10,6 @@ import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
-import 'constants.dart';
-
 abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   final GeneratorOptions _options;
 
