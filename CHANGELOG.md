@@ -1,4 +1,4 @@
-# 2.7.7
+# 2.7.7+1
 
 * Returned generation of @JsonValue for enums
 
