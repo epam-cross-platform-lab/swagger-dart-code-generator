@@ -221,7 +221,14 @@ $enumMap
       }
 
       result.add(validatedValue);
-      resultStrings.add(validatedValue);
+
+      if (isInteger) {
+        resultStrings.add(
+            "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
+      } else {
+        resultStrings.add(
+            "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
+      }
     }
 
     return resultStrings.join(',\n');

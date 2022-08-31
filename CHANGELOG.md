@@ -1,3 +1,7 @@
+# 2.7.7+1
+
+* Returned generation of @JsonValue for enums
+
 # 2.7.6
 
 * Fixed copyWith method generation ([#438](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/438))

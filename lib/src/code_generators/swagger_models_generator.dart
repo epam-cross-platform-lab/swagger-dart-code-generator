@@ -10,8 +10,6 @@ import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
-import 'constants.dart';
-
 abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   final GeneratorOptions _options;
 
@@ -1425,10 +1423,11 @@ $copyWithMethod
             .map((e) => '$e: ($e != null ? $e.value : this.$e)')
             .join(',\n');
 
-    final copyWithWrapped =
-        '$validatedClassName copyWithWrapped({$spittedCopyWithWrappedPropertiesJoined}) { return $validatedClassName($splittedCopyWithWrappedPropertiesNamesContent); }';
     final copyWith =
         '$validatedClassName copyWith({$spittedCopyWithPropertiesJoined}) { return $validatedClassName($splittedCopyWithPropertiesNamesContent); }';
+
+    final copyWithWrapped =
+        '$validatedClassName copyWithWrapped({$spittedCopyWithWrappedPropertiesJoined}) { return $validatedClassName($splittedCopyWithWrappedPropertiesNamesContent); }';
 
     return 'extension \$${validatedClassName}Extension on $validatedClassName { $copyWith $copyWithWrapped}';
   }
