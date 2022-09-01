@@ -69,6 +69,7 @@ import 'package:chopper/chopper.dart' as chopper;''';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
+${options.overrideToString ? "import 'dart:convert';" : ''}
 """);
     }
 

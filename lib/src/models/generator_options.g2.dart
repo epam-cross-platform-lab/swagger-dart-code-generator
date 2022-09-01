@@ -66,12 +66,14 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
           [],
       overrideEqualsAndHashcode:
           json['override_equals_and_hashcode'] as bool? ?? true,
+      overrideToString: json['override_to_string'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'use_path_for_request_names': instance.usePathForRequestNames,
       'with_base_url': instance.withBaseUrl,
+      'override_to_string': instance.overrideToString,
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,
       'with_converter': instance.withConverter,
       'additional_headers': instance.additionalHeaders,
