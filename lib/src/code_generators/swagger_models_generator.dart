@@ -1302,9 +1302,6 @@ $generatedProperties
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
-@override
-String toString() => jsonEncode(this);
-
 $equalsOverride
 
 $getHashContent
