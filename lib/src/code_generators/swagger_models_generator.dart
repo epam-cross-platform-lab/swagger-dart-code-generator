@@ -425,16 +425,20 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           : '$enumNameCamelCase$propertyNameCamelCase';
       final String fromJsonSuffix;
       final String toJsonSuffix;
-      if (isList) {
-        print('AZAZAZ - $className');
-      }
-      final defaultValueSuffix =
-          options.classesWithNullabeLists.contains(className)
-              ? 'defaultValue: null,'
-              : '';
+
+      var defaultValueSuffix = '';
 
       if (isList) {
-        fromJsonSuffix = 'ListFromJson';
+        defaultValueSuffix = options.classesWithNullabeLists.contains(className)
+            ? 'defaultValue: null,'
+            : 'defaultValue: [],';
+      }
+
+      if (isList) {
+        fromJsonSuffix =
+            options.classesWithNullabeLists.contains(className) && isList
+                ? 'NullableListFromJson'
+                : 'ListFromJson';
         toJsonSuffix = 'ListToJson';
       } else {
         fromJsonSuffix = 'FromJson';
@@ -445,7 +449,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           ', toJson: $enumNameCamelCase$toJsonSuffix, fromJson: $fromJsonFunction, $defaultValueSuffix';
 
       if (defaultValue != null) {
-        final String returnType;
+        var returnType = '';
         final String valueType;
         final String defaultValueString;
         if (isList && defaultValue is List) {
@@ -463,8 +467,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
                   defaultValue?.toString() ?? '');
           defaultValueString = '$validatedTypeName.$defaultValueCamelCase';
         }
-        fromJson = '''
 
+        if (options.classesWithNullabeLists.contains(className) && isList) {
+          returnType = '$returnType?';
+        }
+
+        fromJson = '''
 
 static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fromJsonSuffix(value, $defaultValueString);
             ''';
@@ -668,6 +676,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
+
+    if (options.classesWithNullabeLists.contains(className) &&
+        typeName.startsWith('List<') &&
+        !typeName.endsWith('?')) {
+      typeName += '?';
+    }
 
     return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
@@ -1134,7 +1148,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   }
 
   String generateEnumFromJsonToJsonMethods(
-      List<SwaggerEnum> swaggerEnums, bool enumsCaseSensitive) {
+    List<SwaggerEnum> swaggerEnums,
+    bool enumsCaseSensitive,
+  ) {
     return swaggerEnums
         .map((e) => generateEnumFromJsonToJson(e, enumsCaseSensitive))
         .join('\n');
@@ -1207,6 +1223,21 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
   if(${neededName.camelCase} == null)
   {
     return defaultValue ?? [];
+  }
+
+  return ${neededName.camelCase}
+      .map((e) => ${neededName.camelCase}FromJson(e.toString()))
+      .toList();
+}
+
+
+List<enums.$neededName>? ${neededName.camelCase}NullableListFromJson(
+    List? ${neededName.camelCase},
+    [List<enums.$neededName>? defaultValue,]) {
+
+  if(${neededName.camelCase} == null)
+  {
+    return defaultValue;
   }
 
   return ${neededName.camelCase}
