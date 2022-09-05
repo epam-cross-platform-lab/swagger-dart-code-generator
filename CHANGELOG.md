@@ -1,3 +1,7 @@
+# 2.7.9
+
+* Fixed generation of List of enums using nullableLists properties
+
 # 2.7.8
 
 * Added option not to override `toString()` method
