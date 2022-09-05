@@ -1290,6 +1290,13 @@ List<enums.$neededName> ${neededName.camelCase}ListFromJson(
       options,
     );
 
+    final toStringOverride = options.overrideToString
+        ? '''
+@override
+String toString() => jsonEncode(this);
+'''
+        : '';
+
     final fromJson = generatedFromJson(schema, validatedClassName);
 
     final generatedClass = '''
@@ -1302,10 +1309,9 @@ $generatedProperties
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
-@override
-String toString() => jsonEncode(this);
-
 $equalsOverride
+
+$toStringOverride
 
 $getHashContent
 }

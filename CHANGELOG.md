@@ -1,3 +1,7 @@
+# 2.7.8
+
+* Added option not to override `toString()` method
+
 # 2.7.7+1
 
 * Returned generation of @JsonValue for enums
