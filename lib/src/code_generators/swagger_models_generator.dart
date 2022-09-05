@@ -428,10 +428,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
       var defaultValueSuffix = '';
 
-      if (isList) {
-        defaultValueSuffix = options.classesWithNullabeLists.contains(className)
-            ? 'defaultValue: null,'
-            : 'defaultValue: [],';
+      if (isList && options.classesWithNullabeLists.contains(className)) {
+        defaultValueSuffix = 'defaultValue: null,';
       }
 
       if (isList) {
