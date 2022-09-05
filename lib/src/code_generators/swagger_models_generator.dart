@@ -379,12 +379,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      propertyName,
-      typeName.toString(),
-      prop.defaultValue,
-      false,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: propertyName,
+      typeName: typeName.toString(),
+      defaultValue: prop.defaultValue,
+      isList: false,
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
@@ -402,14 +402,15 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
-  _JsonEnumValue generateEnumValue(
-    List<String> allEnumNames,
-    List<String> allEnumListNames,
-    String propertyName,
-    String typeName,
-    dynamic defaultValue,
-    bool isList,
-  ) {
+  _JsonEnumValue generateEnumValue({
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required String propertyName,
+    required String typeName,
+    required dynamic defaultValue,
+    required bool isList,
+    String className = '',
+  }) {
     final validatedTypeName = getValidatedClassName(typeName);
 
     var jsonKey = '';
@@ -425,6 +426,14 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       final String fromJsonSuffix;
       final String toJsonSuffix;
       if (isList) {
+        print('AZAZAZ - $className');
+      }
+      final defaultValueSuffix =
+          options.classesWithNullabeLists.contains(className)
+              ? 'defaultValue: null,'
+              : '';
+
+      if (isList) {
         fromJsonSuffix = 'ListFromJson';
         toJsonSuffix = 'ListToJson';
       } else {
@@ -433,7 +442,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       }
       final fromJsonFunction = '$fromJsonPrefix$fromJsonSuffix';
       jsonKey =
-          ', toJson: $enumNameCamelCase$toJsonSuffix, fromJson: $fromJsonFunction';
+          ', toJson: $enumNameCamelCase$toJsonSuffix, fromJson: $fromJsonFunction, $defaultValueSuffix';
 
       if (defaultValue != null) {
         final String returnType;
@@ -529,12 +538,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     }
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      propertyName,
-      typeName,
-      prop.defaultValue,
-      false,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: propertyName,
+      typeName: typeName,
+      defaultValue: prop.defaultValue,
+      isList: false,
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
@@ -580,12 +589,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final includeIfNullString = generateIncludeIfNullString();
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      propertyName,
-      typeName,
-      prop.defaultValue,
-      false,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: propertyName,
+      typeName: typeName,
+      defaultValue: prop.defaultValue,
+      isList: false,
     );
 
     final jsonKeyContent =
@@ -639,12 +648,13 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     }
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      propertyName,
-      typeName,
-      prop.defaultValue,
-      false,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: propertyName,
+      typeName: typeName,
+      defaultValue: prop.defaultValue,
+      className: className,
+      isList: false,
     );
 
     if (allEnumListNames.contains(typeName)) {
@@ -676,12 +686,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     allEnumNames.add(enumName);
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      key,
-      enumName,
-      prop.defaultValue,
-      false,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: key,
+      typeName: enumName,
+      defaultValue: prop.defaultValue,
+      isList: false,
     );
 
     final includeIfNullString = generateIncludeIfNullString();
@@ -801,12 +811,13 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      propertyName,
-      typeName,
-      prop.defaultValue,
-      true,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      className: className,
+      propertyName: propertyName,
+      typeName: typeName,
+      defaultValue: prop.defaultValue,
+      isList: true,
     );
 
     final includeIfNullString = generateIncludeIfNullString();
@@ -874,12 +885,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     }
 
     final unknownEnumValue = generateEnumValue(
-      allEnumNames,
-      allEnumListNames,
-      propertyName,
-      typeName,
-      prop.defaultValue,
-      false,
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: propertyName,
+      typeName: typeName,
+      defaultValue: prop.defaultValue,
+      isList: false,
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
