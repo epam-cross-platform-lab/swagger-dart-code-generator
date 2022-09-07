@@ -917,6 +917,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return kBasicTypesMap[neededResponse.type]!;
       }
 
+      if (neededResponse.oneOf.isNotEmpty) {
+        return kObject.pascalCase;
+      }
+
       return getValidatedClassName(ref.getRef() + modelPostfix);
     }
 

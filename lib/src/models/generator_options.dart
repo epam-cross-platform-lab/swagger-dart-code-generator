@@ -30,6 +30,7 @@ class GeneratorOptions {
     this.additionalHeaders = const [],
     this.overrideEqualsAndHashcode = true,
     this.overrideToString = true,
+    this.pageWidth,
   });
 
   /// Build options from a JSON map.
@@ -41,6 +42,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;
+
+  @JsonKey(defaultValue: null)
+  final int? pageWidth;
 
   @JsonKey(defaultValue: true)
   final bool overrideToString;
