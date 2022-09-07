@@ -864,7 +864,7 @@ void main() {
       expect(
         result,
         contains(
-          '@JsonKey(name: \'success\', toJson: successToJson, fromJson: successSuccessFromJson)',
+          '@JsonKey(name: \'success\', toJson: successToJson, fromJson: successSuccessFromJson, )',
         ),
       );
       expect(
@@ -884,7 +884,7 @@ void main() {
       expect(
         result,
         contains(
-          '@JsonKey(name: \'success\', toJson: successListToJson, fromJson: successListFromJson)',
+          '@JsonKey(name: \'success\', toJson: successListToJson, fromJson: successListFromJson, )',
         ),
       );
     });
@@ -896,7 +896,7 @@ void main() {
       expect(
         result,
         contains(
-          '@JsonKey(name: \'successOther\', toJson: successListToJson, fromJson: successSuccessOtherListFromJson)',
+          '@JsonKey(name: \'successOther\', toJson: successListToJson, fromJson: successSuccessOtherListFromJson, )',
         ),
       );
       expect(
