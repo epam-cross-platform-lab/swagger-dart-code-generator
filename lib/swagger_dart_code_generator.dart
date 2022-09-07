@@ -121,7 +121,15 @@ class SwaggerDartCodeGenerator implements Builder {
 
   late GeneratorOptions options;
 
-  final DartFormatter _formatter = DartFormatter();
+  DartFormatter? _formatter;
+
+  DartFormatter get formatter {
+    _formatter ??= DartFormatter(
+      pageWidth: options.pageWidth,
+    );
+
+    return _formatter!;
+  }
 
   @override
   Future<void> build(BuildStep buildStep) async {
@@ -287,7 +295,7 @@ $dateToJson
 
   String _tryFormatCode(String code) {
     try {
-      final formattedResult = _formatter.format(code);
+      final formattedResult = formatter.format(code);
       return formattedResult;
     } catch (e) {
       print('''[WARNING] Code formatting failed.
@@ -307,7 +315,7 @@ $dateToJson
     final imports = codeGenerator.generateIndexes(allFiles, options);
 
     if (!options.buildOnlyModels) {
-      await buildStep.writeAsString(indexAssetId, _formatter.format(imports));
+      await buildStep.writeAsString(indexAssetId, formatter.format(imports));
     }
 
     if (options.withConverter && !options.buildOnlyModels) {
@@ -317,7 +325,7 @@ $dateToJson
       final mapping =
           codeGenerator.generateConverterMappings(hasModels, options);
 
-      await buildStep.writeAsString(mappingAssetId, _formatter.format(mapping));
+      await buildStep.writeAsString(mappingAssetId, formatter.format(mapping));
     }
   }
 
