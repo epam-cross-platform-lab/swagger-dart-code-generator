@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'test_data.dart';
 
 void main() {
-  group('Additions generator tests', () {
+  group('Requests generator tests', () {
     final root = SwaggerRoot.parse(carsService);
 
     test('Should generate CarsApi', () {
@@ -49,10 +49,6 @@ void main() {
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
       expect(result,
           contains('Future<chopper.Response<CarModel>> carsMultipartPost'));
-      expect(
-          result,
-          contains(
-              '{@Part() required String? filename, @PartFile() required List<int> file}'));
     });
   });
 }

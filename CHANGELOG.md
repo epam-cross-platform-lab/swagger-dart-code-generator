@@ -1,3 +1,7 @@
+# 2.8.0
+
+* Added Chopper 5.+ Support ([#464](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/464))
+
 # 2.7.9
 
 * Fixed generation of List of enums using nullableLists properties
