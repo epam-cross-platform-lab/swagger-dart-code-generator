@@ -54,6 +54,7 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
         : '''import 'package:chopper/chopper.dart';
 
 import 'client_mapping.dart';
+import 'dart:async';
 import 'package:chopper/chopper.dart' as chopper;''';
 
     final enumsImport = hasEnums
@@ -181,14 +182,14 @@ class \$CustomJsonDecoder {
 
 class \$JsonSerializableConverter extends chopper.JsonConverter {
   @override
-  chopper.Response<ResultType> convertResponse<ResultType, Item>(chopper.Response response) {
+  FutureOr<chopper.Response<ResultType>> convertResponse<ResultType, Item>(chopper.Response response) async {
     if (response.bodyString.isEmpty) {
       // In rare cases, when let's say 204 (no content) is returned -
       // we cannot decode the missing json with the result type specified
       return chopper.Response(response.base, null, error: response.error);
     }
 
-    final jsonRes = super.convertResponse(response);
+    final jsonRes = await super.convertResponse(response);
     return jsonRes.copyWith<ResultType>(
         body: \$jsonDecoder.decode<Item>(jsonRes.body) as ResultType);
   }

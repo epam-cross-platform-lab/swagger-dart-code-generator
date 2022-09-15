@@ -7,12 +7,12 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  chopper: ^4.0.1
+  chopper: ^5.0.0
   
 dev_dependencies:
   swagger_dart_code_generator:
     path: ../
-  chopper_generator: ^4.0.5
+  chopper_generator: ^5.0.0+1
   build_runner: ^2.1.7
   json_annotation: ^4.4.0
   json_serializable: ^6.1.4
