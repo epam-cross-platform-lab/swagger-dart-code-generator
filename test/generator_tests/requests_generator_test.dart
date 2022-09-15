@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'test_data.dart';
 
 void main() {
-  group('Additions generator tests', () {
+  group('Requests generator tests', () {
     final root = SwaggerRoot.parse(carsService);
 
     test('Should generate CarsApi', () {
