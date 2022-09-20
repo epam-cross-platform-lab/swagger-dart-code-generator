@@ -1,3 +1,6 @@
+# 2.8.1
+
+* Fixed generation of some enums and classes ([#458](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/458))
 # 2.8.0
 
 * Added Chopper 5.+ Support ([#464](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/464))
