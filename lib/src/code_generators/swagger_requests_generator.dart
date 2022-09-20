@@ -208,6 +208,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         if (schema?.type == kArray) {
           if (schema?.items?.ref.isNotEmpty == true) {
             final ref = schema!.items!.ref;
+
+            final itemSchema = root.allSchemas[ref.getUnformattedRef()];
+
+            if (itemSchema?.enumValues.isNotEmpty == true) {
+              continue;
+            }
+
             final itemType = getValidatedClassName(ref.getUnformattedRef());
             results.add(itemType);
           } else {
