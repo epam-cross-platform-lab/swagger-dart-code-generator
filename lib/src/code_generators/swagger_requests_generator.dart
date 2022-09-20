@@ -208,6 +208,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         if (schema?.type == kArray) {
           if (schema?.items?.ref.isNotEmpty == true) {
             final ref = schema!.items!.ref;
+
+            final itemSchema = root.allSchemas[ref.getUnformattedRef()];
+
+            if (itemSchema?.enumValues.isNotEmpty == true) {
+              continue;
+            }
+
             final itemType = getValidatedClassName(ref.getUnformattedRef());
             results.add(itemType);
           } else {
@@ -510,6 +517,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String requestType,
     required String modelPostfix,
     required SwaggerRoot root,
+    required Map<String, SwaggerRequestParameter> definedParameters,
   }) {
     final format = parameter.schema?.format ?? '';
 
@@ -517,6 +525,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return _mapParameterName(kString, format, '');
     } else if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true) {
+      if (definedParameters.containsValue(parameter)) {
+        return getValidatedClassName(parameter.name).asEnum();
+      }
+
       return _getEnumParameterTypeName(
           parameterName: parameter.name, path: path, requestType: requestType);
     } else if (parameter.items?.type.isNotEmpty == true) {
@@ -627,6 +639,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   parameter: swaggerParameter,
                   path: path,
                   requestType: requestType,
+                  definedParameters: definedParameters,
                   modelPostfix: modelPostfix,
                   root: root,
                 ).makeNullable(),
@@ -796,7 +809,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         return '';
       } else if (schema.type == kObject) {
-        return getValidatedClassName('$requestPath\$$kRequestBody');
+        if (schema.properties.isNotEmpty) {
+          return getValidatedClassName('$requestPath\$$kRequestBody');
+        }
+
+        return kObject.pascalCase;
       }
 
       return kBasicTypesMap[schema.type] ?? schema.type;

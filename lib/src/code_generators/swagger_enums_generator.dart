@@ -102,21 +102,25 @@ $enumsFromRequestBodies
     definedParameters.addAll(swaggerRoot.parameters);
     definedParameters.addAll(swaggerRoot.components?.parameters ?? {});
 
-    //Link defined parameters with requests
-    swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
-      swaggerPath.requests
-          .forEach((String requestType, SwaggerRequest swaggerRequest) {
-        swaggerRequest.parameters =
-            swaggerRequest.parameters.map((SwaggerRequestParameter parameter) {
-          if (definedParameters
-              .containsKey(parameter.ref.getUnformattedRef())) {
-            return definedParameters[parameter.ref.getUnformattedRef()]!;
-          }
+    definedParameters.forEach((key, swaggerRequestParameter) {
+      final enumValues = swaggerRequestParameter.schema?.enumValues ??
+          swaggerRequestParameter.items?.enumValues ??
+          [];
 
-          return getOriginalOrOverriddenRequestParameter(parameter,
-              swaggerRoot.components?.parameters.values.toList() ?? []);
-        }).toList();
-      });
+      final isInteger =
+          kIntegerTypes.contains(swaggerRequestParameter.schema?.type) ||
+              kIntegerTypes.contains(swaggerRequestParameter.items?.type);
+
+      if (enumValues.isNotEmpty) {
+        final enumContent = generateEnumContent(
+          getValidatedClassName(key),
+          enumValues,
+          isInteger,
+        );
+
+        result.writeln(enumContent);
+        enumNames.add(swaggerRequestParameter.name);
+      }
     });
 
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
