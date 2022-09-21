@@ -6,6 +6,14 @@ homepage: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 repository: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 issue_tracker: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues
 
+platforms:
+  android:
+  ios:
+  macos:
+  windows:
+  linux:
+  web:
+
 description: Have you been turned into a problem with writing code for Http
   requests? This package can help. It has all of the Http and model codegen
   functionality you have been looking for.
