@@ -598,6 +598,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String modelPostfix,
     required SwaggerRoot root,
     required SwaggerPath swaggerPath,
+
   }) {
     final definedParameters = <String, SwaggerRequestParameter>{};
     definedParameters.addAll(root.parameters);
@@ -657,10 +658,15 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     if (requestBody != null) {
       if (requestBody.content?.isMultipart == true) {
-        final schema = requestBody.content?.schema;
+        var schema = requestBody.content?.schema;
+
+        if (schema?.ref.isNotEmpty == true) {
+          schema = root.allSchemas[schema?.ref.getUnformattedRef()];
+        }
+        
         schema?.properties.forEach((key, value) {
           if (value.type == 'string' && value.format == 'binary') {
-            final isRequired = schema.required.contains(key);
+            final isRequired = schema!.required.contains(key);
             result.add(
               Parameter(
                 (p) => p
@@ -682,7 +688,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                 (p) => p
                   ..name = SwaggerModelsGenerator.getValidatedParameterName(key)
                   ..named = true
-                  ..required = schema.required.contains(key)
+                  ..required = schema!.required.contains(key)
                   ..type = Reference(
                     _mapParameterName(value.type, value.format, modelPostfix)
                         .makeNullable(),
