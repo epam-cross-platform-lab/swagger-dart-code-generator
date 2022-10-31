@@ -97,7 +97,9 @@ class SwaggerSchema {
       _$SwaggerSchemaFromJson(json)
         ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
             ?.map((e) => e as String)
-            .toList();
+            .toList()
+        ..isNullable =
+            (json[kIsNullable] ?? json[kIsNullable] ?? false) as bool;
 
   Map<String, dynamic> toJson() => {
         ..._$SwaggerSchemaToJson(this),
