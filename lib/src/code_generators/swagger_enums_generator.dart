@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
@@ -9,7 +10,6 @@ import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
-import 'package:collection/collection.dart';
 
 abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
   final GeneratorOptions _options;
@@ -393,8 +393,8 @@ $enumMap
         var result = '';
 
         schema.items?.properties.forEach((key, value) {
-          result +=
-              generateEnumContentIfPossible(value, '$className\$Item$key');
+          result += generateEnumContentIfPossible(
+              value, '$className\$Item${key.pascalCase}');
         });
 
         return result;
