@@ -329,7 +329,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               .any((p0) => p0.code.toString().contains('symbol=Body'))) {
             return p.copyWith(type: Reference('dynamic'));
           } else {
-            return p.copyWith(type: Reference('List<String?>'));
+            return p.copyWith(type: Reference('List<String?>?'));
           }
         }
       }
@@ -382,6 +382,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         return '${p.name} : enums.\$${enumName}Map[${p.name}]$toStringPart';
       }
+
+      if (p.type!.symbol!.startsWith('List<enums.')) {
+        final typeName = p.type!.symbol!;
+        final name = typeName.substring(11, typeName.length - 2).camelCase;
+        return '${p.name} : ${name}ListToJson(${p.name})';
+      }
+
       return '${p.name} : ${p.name}';
     }).join(', ');
 
@@ -543,7 +550,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           .asList();
     } else if (parameter.schema?.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return parameter.schema!.items!.ref.getRef().asEnum();
+        return parameter.schema!.items!.ref.getRef().asEnum().asList().makeNullable();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.hasRef == true) {
@@ -598,7 +605,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String modelPostfix,
     required SwaggerRoot root,
     required SwaggerPath swaggerPath,
-
   }) {
     final definedParameters = <String, SwaggerRequestParameter>{};
     definedParameters.addAll(root.parameters);
@@ -663,7 +669,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         if (schema?.ref.isNotEmpty == true) {
           schema = root.allSchemas[schema?.ref.getUnformattedRef()];
         }
-        
+
         schema?.properties.forEach((key, value) {
           if (value.type == 'string' && value.format == 'binary') {
             final isRequired = schema!.required.contains(key);
