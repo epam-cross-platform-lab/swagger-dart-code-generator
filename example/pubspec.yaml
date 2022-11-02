@@ -11,9 +11,7 @@ dependencies:
   
 dev_dependencies:
   swagger_dart_code_generator:
-    git:
-      url: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator.git
-      ref: version/2.8.3
+    path: ../
   chopper_generator: ^5.0.0+1
   build_runner: ^2.1.7
   json_annotation: ^4.4.0

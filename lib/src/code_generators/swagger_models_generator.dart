@@ -42,7 +42,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     if(options.overridenModels.contains(getValidatedClassName(className)))
     {
-      return 'typedef $className = dynamic';
+      return '';
     }
     
     if (schema.isEnum) {
