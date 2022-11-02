@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'generator_options.g.dart';
+part 'generator_options.g2.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, anyMap: true)
 class GeneratorOptions {
@@ -57,7 +57,7 @@ class GeneratorOptions {
   final bool withConverter;
 
   @JsonKey(defaultValue: [])
-  final List<OverridenModel> overridenModels;
+  final List<String> overridenModels;
 
   @JsonKey(defaultValue: [])
   final List<String> additionalHeaders;
@@ -174,23 +174,4 @@ class DefaultHeaderValueMap {
 
   factory DefaultHeaderValueMap.fromJson(Map<String, dynamic> json) =>
       _$DefaultHeaderValueMapFromJson(json);
-}
-
-@JsonSerializable(fieldRename: FieldRename.snake)
-class OverridenModel {
-  OverridenModel({
-    required this.originClassName,
-    required this.overridenClassName,
-  });
-
-  @JsonKey(defaultValue: '')
-  final String originClassName;
-
-  @JsonKey(defaultValue: '')
-  final String overridenClassName;
-
-  Map<String, dynamic> toJson() => _$OverridenModelToJson(this);
-
-  factory OverridenModel.fromJson(Map<String, dynamic> json) =>
-      _$OverridenModelFromJson(json);
 }

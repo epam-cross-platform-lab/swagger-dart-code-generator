@@ -39,6 +39,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
   ) {
+
+    if(options.overridenModels.contains(getValidatedClassName(className)))
+    {
+      return '';
+    }
+    
     if (schema.isEnum) {
       return '';
     }
