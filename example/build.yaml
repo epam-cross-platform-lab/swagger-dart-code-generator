@@ -26,6 +26,8 @@ targets:
           build_only_models: false
           additional_headers:
             - "Cache-Control"
+          overriden_models:
+            - "Order"
           separate_models: false
           enums_case_sensitive: false
           cut_from_model_names: "ModelRenameV3"

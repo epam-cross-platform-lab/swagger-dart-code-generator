@@ -17,282 +17,403 @@ class _$PetServiceJson extends PetServiceJson {
   final definitionType = PetServiceJson;
 
   @override
-  Future<Response<dynamic>> _petPost(
-      {required Pet? body, String? cacheControl}) {
-    final $url = '/pet';
-    final $headers = {
+  Future<Response<dynamic>> _petPost({
+    required Pet? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _petPut(
-      {required Pet? body, String? cacheControl}) {
-    final $url = '/pet';
-    final $headers = {
+  Future<Response<dynamic>> _petPut({
+    required Pet? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('PUT', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<List<Pet>>> _petFindByStatusGet(
-      {required String? status, String? cacheControl}) {
-    final $url = '/pet/findByStatus';
-    final $params = <String, dynamic>{'status': status};
-    final $headers = {
+  Future<Response<List<Pet>>> _petFindByStatusGet({
+    required String? status,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet/findByStatus';
+    final Map<String, dynamic> $params = <String, dynamic>{'status': status};
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl,
-        parameters: $params, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+      headers: $headers,
+    );
     return client.send<List<Pet>, Pet>($request);
   }
 
   @override
-  Future<Response<List<Pet>>> _petFindByTagsGet(
-      {required List<String>? tags, String? cacheControl}) {
-    final $url = '/pet/findByTags';
-    final $params = <String, dynamic>{'tags': tags};
-    final $headers = {
+  Future<Response<List<Pet>>> _petFindByTagsGet({
+    required List<String>? tags,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet/findByTags';
+    final Map<String, dynamic> $params = <String, dynamic>{'tags': tags};
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl,
-        parameters: $params, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+      headers: $headers,
+    );
     return client.send<List<Pet>, Pet>($request);
   }
 
   @override
-  Future<Response<Pet>> _petPetIdGet(
-      {required int? petId, String? apiKey, String? cacheControl}) {
-    final $url = '/pet/${petId}';
-    final $headers = {
+  Future<Response<Pet>> _petPetIdGet({
+    required int? petId,
+    String? apiKey,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet/${petId}';
+    final Map<String, String> $headers = {
       if (apiKey != null) 'api_key': apiKey,
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<Pet, Pet>($request);
   }
 
   @override
-  Future<Response<dynamic>> _petPetIdPost(
-      {required int? petId,
-      String? name,
-      String? status,
-      String? cacheControl}) {
-    final $url = '/pet/${petId}';
-    final $headers = {
+  Future<Response<dynamic>> _petPetIdPost({
+    required int? petId,
+    String? name,
+    String? status,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet/${petId}';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $body = <String, dynamic>{'name': name, 'status': status};
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final $body = <String, dynamic>{
+      'name': name,
+      'status': status,
+    };
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _petPetIdDelete(
-      {String? apiKey, required int? petId, String? cacheControl}) {
-    final $url = '/pet/${petId}';
-    final $headers = {
+  Future<Response<dynamic>> _petPetIdDelete({
+    String? apiKey,
+    required int? petId,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet/${petId}';
+    final Map<String, String> $headers = {
       if (apiKey != null) 'api_key': apiKey,
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('DELETE', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'DELETE',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<ApiResponse>> _petPetIdUploadImagePost(
-      {required int? petId,
-      String? additionalMetadata,
-      List<String>? file,
-      String? cacheControl}) {
-    final $url = '/pet/${petId}/uploadImage';
-    final $headers = {
+  Future<Response<ApiResponse>> _petPetIdUploadImagePost({
+    required int? petId,
+    String? additionalMetadata,
+    List<String>? file,
+    String? cacheControl,
+  }) {
+    final String $url = '/pet/${petId}/uploadImage';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = <String, dynamic>{
       'additionalMetadata': additionalMetadata,
-      'file': file
+      'file': file,
     };
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<ApiResponse, ApiResponse>($request);
   }
 
   @override
-  Future<Response<Object>> _storeInventoryGet(
-      {String? apiKey, String? cacheControl}) {
-    final $url = '/store/inventory';
-    final $headers = {
+  Future<Response<Object>> _storeInventoryGet({
+    String? apiKey,
+    String? cacheControl,
+  }) {
+    final String $url = '/store/inventory';
+    final Map<String, String> $headers = {
       if (apiKey != null) 'api_key': apiKey,
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<Object, Object>($request);
   }
 
   @override
-  Future<Response<Order>> _storeOrderPost(
-      {required Order? body, String? cacheControl}) {
-    final $url = '/store/order';
-    final $headers = {
+  Future<Response<Order>> _storeOrderPost({
+    required Order? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/store/order';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<Order, Order>($request);
   }
 
   @override
-  Future<Response<Order>> _storeOrderOrderIdGet(
-      {required int? orderId, String? cacheControl}) {
-    final $url = '/store/order/${orderId}';
-    final $headers = {
+  Future<Response<Order>> _storeOrderOrderIdGet({
+    required int? orderId,
+    String? cacheControl,
+  }) {
+    final String $url = '/store/order/${orderId}';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<Order, Order>($request);
   }
 
   @override
-  Future<Response<dynamic>> _storeOrderOrderIdDelete(
-      {required int? orderId, String? cacheControl}) {
-    final $url = '/store/order/${orderId}';
-    final $headers = {
+  Future<Response<dynamic>> _storeOrderOrderIdDelete({
+    required int? orderId,
+    String? cacheControl,
+  }) {
+    final String $url = '/store/order/${orderId}';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('DELETE', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'DELETE',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _userPost(
-      {required User? body, String? cacheControl}) {
-    final $url = '/user';
-    final $headers = {
+  Future<Response<dynamic>> _userPost({
+    required User? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/user';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _userCreateWithArrayPost(
-      {required List<User>? body, String? cacheControl}) {
-    final $url = '/user/createWithArray';
-    final $headers = {
+  Future<Response<dynamic>> _userCreateWithArrayPost({
+    required List<User>? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/user/createWithArray';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _userCreateWithListPost(
-      {required List<User>? body, String? cacheControl}) {
-    final $url = '/user/createWithList';
-    final $headers = {
+  Future<Response<dynamic>> _userCreateWithListPost({
+    required List<User>? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/user/createWithList';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<String>> _userLoginGet(
-      {required String? username,
-      required String? password,
-      String? cacheControl}) {
-    final $url = '/user/login';
-    final $params = <String, dynamic>{
+  Future<Response<String>> _userLoginGet({
+    required String? username,
+    required String? password,
+    String? cacheControl,
+  }) {
+    final String $url = '/user/login';
+    final Map<String, dynamic> $params = <String, dynamic>{
       'username': username,
-      'password': password
+      'password': password,
     };
-    final $headers = {
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl,
-        parameters: $params, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+      headers: $headers,
+    );
     return client.send<String, String>($request);
   }
 
   @override
   Future<Response<dynamic>> _userLogoutGet({String? cacheControl}) {
-    final $url = '/user/logout';
-    final $headers = {
+    final String $url = '/user/logout';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<User>> _userUsernameGet(
-      {required String? username, String? cacheControl}) {
-    final $url = '/user/${username}';
-    final $headers = {
+  Future<Response<User>> _userUsernameGet({
+    required String? username,
+    String? cacheControl,
+  }) {
+    final String $url = '/user/${username}';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('GET', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<User, User>($request);
   }
 
   @override
-  Future<Response<dynamic>> _userUsernamePut(
-      {required String? username, required User? body, String? cacheControl}) {
-    final $url = '/user/${username}';
-    final $headers = {
+  Future<Response<dynamic>> _userUsernamePut({
+    required String? username,
+    required User? body,
+    String? cacheControl,
+  }) {
+    final String $url = '/user/${username}';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
     final $body = body;
-    final $request =
-        Request('PUT', $url, client.baseUrl, body: $body, headers: $headers);
+    final Request $request = Request(
+      'PUT',
+      $url,
+      client.baseUrl,
+      body: $body,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _userUsernameDelete(
-      {required String? username, String? cacheControl}) {
-    final $url = '/user/${username}';
-    final $headers = {
+  Future<Response<dynamic>> _userUsernameDelete({
+    required String? username,
+    String? cacheControl,
+  }) {
+    final String $url = '/user/${username}';
+    final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-
-    final $request = Request('DELETE', $url, client.baseUrl, headers: $headers);
+    final Request $request = Request(
+      'DELETE',
+      $url,
+      client.baseUrl,
+      headers: $headers,
+    );
     return client.send<dynamic, dynamic>($request);
   }
 }
