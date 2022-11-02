@@ -355,13 +355,19 @@ $dateToJson
         ? "import '$fileNameWithoutExtension.enums.swagger.dart' as enums;"
         : '';
 
+    final overridenModels = options.overridenModels.isEmpty
+        ? ''
+        : 'import \'overriden_models.dart\';';
+
     return '''
 // ignore_for_file: type=lint
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
+
 $enumsImport
+$overridenModels
 
     part '$fileNameWithoutExtension.models.swagger.g.dart';
 
