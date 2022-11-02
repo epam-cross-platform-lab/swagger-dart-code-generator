@@ -518,6 +518,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     return false;
   }
 
+  String _validateParameterTypeName(String parameterName) {
+    final overridenModel = options.overridenModels.firstWhereOrNull(
+        (element) => element.originClassName == parameterName);
+
+    return overridenModel?.overridenClassName ?? parameterName;
+  }
+
   String _getParameterTypeName({
     required SwaggerRequestParameter parameter,
     required String path,
@@ -550,7 +557,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           .asList();
     } else if (parameter.schema?.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return parameter.schema!.items!.ref.getRef().asEnum().asList().makeNullable();
+        return parameter.schema!.items!.ref
+            .getRef()
+            .asEnum()
+            .asList()
+            .makeNullable();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.hasRef == true) {
@@ -642,14 +653,14 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   _getHeaderDefaultValue(swaggerParameter) == null &&
                   swaggerParameter.inParameter != kHeader
               ..type = Reference(
-                _getParameterTypeName(
+                _validateParameterTypeName(_getParameterTypeName(
                   parameter: swaggerParameter,
                   path: path,
                   requestType: requestType,
                   definedParameters: definedParameters,
                   modelPostfix: modelPostfix,
                   root: root,
-                ).makeNullable(),
+                )).makeNullable(),
               )
               ..named = true
               ..annotations.add(
@@ -696,7 +707,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..named = true
                   ..required = schema!.required.contains(key)
                   ..type = Reference(
-                    _mapParameterName(value.type, value.format, modelPostfix)
+                    _validateParameterTypeName(_mapParameterName(
+                            value.type, value.format, modelPostfix))
                         .makeNullable(),
                   )
                   ..named = true
@@ -741,6 +753,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           );
         }
       }
+
+      typeName = _validateParameterTypeName(typeName);
 
       if (typeName.isNotEmpty) {
         result.add(
