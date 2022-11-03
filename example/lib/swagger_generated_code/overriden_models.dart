@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
 
-import 'pet_service_json.enums.swagger.dart' as enums;
 export 'pet_service_json.enums.swagger.dart';
 
 part 'overriden_models.g.dart';
