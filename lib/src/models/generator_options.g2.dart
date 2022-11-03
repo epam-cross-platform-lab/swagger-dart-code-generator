@@ -68,6 +68,10 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
           json['override_equals_and_hashcode'] as bool? ?? true,
       overrideToString: json['override_to_string'] as bool? ?? true,
       pageWidth: json['page_width'] as int?,
+      overridenModels: (json['overriden_models'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -78,6 +82,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'override_to_string': instance.overrideToString,
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,
       'with_converter': instance.withConverter,
+      'overriden_models': instance.overridenModels,
       'additional_headers': instance.additionalHeaders,
       'input_urls': instance.inputUrls,
       'nullable_models': instance.nullableModels,

@@ -1,3 +1,7 @@
+# 2.8.4
+
+* Fixed issue with duplicated enums ([#470](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/470))
+
 # 2.8.3
 
 * Fixed issue with duplicated enums ([#469](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/469))

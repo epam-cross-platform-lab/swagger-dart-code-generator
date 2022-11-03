@@ -31,6 +31,7 @@ class GeneratorOptions {
     this.overrideEqualsAndHashcode = true,
     this.overrideToString = true,
     this.pageWidth,
+    this.overridenModels = const [],
   });
 
   /// Build options from a JSON map.
@@ -54,6 +55,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
+
+  @JsonKey(defaultValue: [])
+  final List<String> overridenModels;
 
   @JsonKey(defaultValue: [])
   final List<String> additionalHeaders;

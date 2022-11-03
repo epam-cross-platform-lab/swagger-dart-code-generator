@@ -59,6 +59,20 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   additionalResultPath =
       _getAdditionalResultPath(options).replaceAll('\\', '/');
 
+  if (options.overridenModels.isNotEmpty) {
+    final path = normalize('${options.outputFolder}overriden_models.dart');
+
+    if (!Directory(options.outputFolder).existsSync()) {
+      Directory(options.outputFolder).createSync();
+    }
+
+    if (!File(path).existsSync()) {
+      File(path).createSync();
+      File(path).writeAsString(
+          '//Put your overriden models here (${options.overridenModels.join(',')})');
+    }
+  }
+
   File(additionalResultPath).createSync();
 
   var out = normalize(options.outputFolder);
@@ -341,13 +355,19 @@ $dateToJson
         ? "import '$fileNameWithoutExtension.enums.swagger.dart' as enums;"
         : '';
 
+    final overridenModels = options.overridenModels.isEmpty
+        ? ''
+        : 'import \'overriden_models.dart\';';
+
     return '''
 // ignore_for_file: type=lint
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
+
 $enumsImport
+$overridenModels
 
     part '$fileNameWithoutExtension.models.swagger.g.dart';
 

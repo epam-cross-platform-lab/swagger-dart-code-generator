@@ -6,35 +6,6 @@ part of 'pet_service_yaml.swagger.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Order _$OrderFromJson(Map<String, dynamic> json) => Order(
-      id: json['id'] as num?,
-      petId: json['petId'] as num?,
-      quantity: json['quantity'] as int?,
-      shipDate: json['shipDate'] == null
-          ? null
-          : DateTime.parse(json['shipDate'] as String),
-      status: orderStatusFromJson(json['status']),
-      complete: json['complete'] as bool? ?? false,
-    );
-
-Map<String, dynamic> _$OrderToJson(Order instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('petId', instance.petId);
-  writeNotNull('quantity', instance.quantity);
-  writeNotNull('shipDate', instance.shipDate?.toIso8601String());
-  writeNotNull('status', orderStatusToJson(instance.status));
-  writeNotNull('complete', instance.complete);
-  return val;
-}
-
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
       id: json['id'] as num?,
       name: json['name'] as String? ?? '',

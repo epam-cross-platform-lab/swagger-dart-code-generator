@@ -550,7 +550,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           .asList();
     } else if (parameter.schema?.items?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
-        return parameter.schema!.items!.ref.getRef().asEnum().asList().makeNullable();
+        return parameter.schema!.items!.ref
+            .getRef()
+            .asEnum()
+            .asList()
+            .makeNullable();
       }
       return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
     } else if (parameter.schema?.hasRef == true) {
