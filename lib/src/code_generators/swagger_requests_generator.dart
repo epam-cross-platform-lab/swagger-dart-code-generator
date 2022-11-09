@@ -693,16 +693,18 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               ),
             );
           } else {
+            final typeName = requestBody.content?.schema?.ref.isNotEmpty == true
+                ? getValidatedClassName(
+                    requestBody.content!.schema!.ref.getRef())
+                : _mapParameterName(value.type, value.format, modelPostfix);
+
             result.add(
               Parameter(
                 (p) => p
                   ..name = SwaggerModelsGenerator.getValidatedParameterName(key)
                   ..named = true
                   ..required = schema!.required.contains(key)
-                  ..type = Reference(
-                    _mapParameterName(value.type, value.format, modelPostfix)
-                        .makeNullable(),
-                  )
+                  ..type = Reference(typeName.makeNullable())
                   ..named = true
                   ..annotations.add(
                     refer(kPart.pascalCase).call([]),
