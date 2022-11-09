@@ -1,3 +1,7 @@
+# 2.8.5
+
+* Fixed generation of request bodies with refs ([#484](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/484))
+
 # 2.8.4
 
 * Fixed issue with duplicated enums ([#470](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/470))
