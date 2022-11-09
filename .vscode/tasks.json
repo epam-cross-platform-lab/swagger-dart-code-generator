@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "remove_output",
+      "command": "rm -rf example/lib/swagger_generated_code",
+      "type": "shell",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "silent"
+      },
+      "group": "build"
+    }
+  ]
+}
