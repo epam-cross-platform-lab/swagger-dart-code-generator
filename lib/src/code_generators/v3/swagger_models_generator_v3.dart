@@ -57,7 +57,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     var result = <String, SwaggerSchema>{};
 
     final allModelNames =
-        components!.schemas.keys.map((e) => getValidatedClassName(e));
+        components?.schemas.keys.map((e) => getValidatedClassName(e)) ?? [];
 
     for (var key in requestBodies.keys) {
       if (!allModelNames.contains(key)) {

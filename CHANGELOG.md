@@ -1,3 +1,7 @@
+# 2.8.6
+
+* Fixed generation of request bodies in some cases ([#489](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/489))
+
 # 2.8.5
 
 * Fixed generation of request bodies with refs ([#484](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/484))
