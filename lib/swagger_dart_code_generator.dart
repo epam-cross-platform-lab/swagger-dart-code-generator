@@ -212,7 +212,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
-      models.isNotEmpty || requestBodies.isNotEmpty,
+      models.isNotEmpty || requestBodies.isNotEmpty || responses.isNotEmpty,
       options.buildOnlyModels,
       enums.isNotEmpty,
       options.separateModels,

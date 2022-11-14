@@ -2,6 +2,10 @@
 
 * Fixed generation of request bodies in some cases ([#489](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/489))
 
+* Added `Method` to key classes ([#492](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/492))
+
+* Fixed generation of list request bodies ([#493](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/493))
+
 # 2.8.5
 
 * Fixed generation of request bodies with refs ([#484](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/484))
