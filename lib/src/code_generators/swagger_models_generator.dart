@@ -784,7 +784,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
             allClasses: allClasses,
             prop: items,
             propertyName: propertyName,
-          ).asList();
+          ).makeNullable().asList();
         }
       }
 
