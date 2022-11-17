@@ -1,5 +1,7 @@
 # 2.8.6
 
+* Make Object in List of Object nullable ([#498](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/498))
+
 * Fixed generation of request bodies in some cases ([#489](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/489))
 
 * Added `Method` to key classes ([#492](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/492))
