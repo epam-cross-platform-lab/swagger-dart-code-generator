@@ -1,3 +1,7 @@
+# 2.8.7
+
+* Fixed generation of basic types refs and lists of them ([#502](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/502))
+
 # 2.8.6
 
 * Make Object in List of Object nullable ([#498](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/498))

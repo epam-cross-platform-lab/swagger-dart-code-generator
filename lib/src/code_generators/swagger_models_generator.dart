@@ -39,12 +39,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
   ) {
-
-    if(options.overridenModels.contains(getValidatedClassName(className)))
-    {
+    if (options.overridenModels.contains(getValidatedClassName(className))) {
       return '';
     }
-    
+
     if (schema.isEnum) {
       return '';
     }
@@ -581,6 +579,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     required List<String> allEnumListNames,
     required String propertyName,
     required List<String> requiredProperties,
+    required Map<String, String> basicTypesMap,
   }) {
     final allOf = prop.allOf;
     String typeName;
@@ -596,6 +595,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       }
 
       typeName = getValidatedClassName(className);
+    }
+
+    if (basicTypesMap.containsKey(typeName)) {
+      typeName = basicTypesMap[typeName]!;
     }
 
     final includeIfNullString = generateIncludeIfNullString();
@@ -1052,6 +1055,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
             allEnumNames: allEnumNames,
             propertyKey: propertyKey,
             propertyName: propertyName,
+            basicTypesMap: basicTypesMap,
             requiredProperties: requiredProperties,
           ),
         );
@@ -1120,7 +1124,14 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         if (result[ref.getUnformattedRef()] != null) {
           result[key] = result[ref.getUnformattedRef()]!.asList();
         } else if (ref.isNotEmpty) {
-          result[key] = ref.getRef().asList();
+          var typeName = ref.getUnformattedRef();
+          final schema = allClasses[typeName];
+
+          if (kBasicTypes.contains(schema?.type)) {
+            typeName = _mapBasicTypeToDartType(schema!.type, value.format);
+          }
+
+          result[key] = typeName.asList();
         }
       }
     });

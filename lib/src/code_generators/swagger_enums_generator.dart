@@ -110,9 +110,9 @@ $enumsFromRequestBodies
       final isInteger =
           kIntegerTypes.contains(swaggerRequestParameter.schema?.type) ||
               kIntegerTypes.contains(swaggerRequestParameter.items?.type);
-      
-      
-      if (enumValues.isNotEmpty && swaggerRoot.components?.schemas.containsKey(key) != true) {
+
+      if (enumValues.isNotEmpty &&
+          swaggerRoot.components?.schemas.containsKey(key) != true) {
         final enumContent = generateEnumContent(
           getValidatedClassName(key),
           enumValues,
