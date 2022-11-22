@@ -49,7 +49,9 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
     final chopperPartImport =
         buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
-        final overridenModels = options.overridenModels.isEmpty ? '' : 'import \'overriden_models.dart\';';
+    final overridenModels = options.overridenModels.isEmpty
+        ? ''
+        : 'import \'overriden_models.dart\';';
 
     final chopperImports = buildOnlyModels
         ? ''
@@ -58,7 +60,6 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
 import 'client_mapping.dart';
 import 'dart:async';
 import 'package:chopper/chopper.dart' as chopper;''';
-
 
     final enumsImport = hasEnums
         ? "import '$swaggerFileName.enums.swagger.dart' as enums;"

@@ -739,8 +739,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         if (schema.format == kBinary) {
           typeName = kObject.pascalCase;
         } else if (schema.items?.type.isNotEmpty == true) {
-          typeName = _mapParameterName(
-              schema.items!.type, schema.items!.format, options.modelPostfix).asList();
+          typeName = _mapParameterName(schema.items!.type, schema.items!.format,
+                  options.modelPostfix)
+              .asList();
         } else {
           typeName = _getRequestBodyTypeName(
             schema: schema,
