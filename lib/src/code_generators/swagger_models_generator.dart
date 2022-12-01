@@ -1534,7 +1534,9 @@ $allHashComponents;
 
     final newModelMap = allOf.firstWhereOrNull((m) => m.properties.isNotEmpty);
 
-    final currentProperties = newModelMap?.properties ?? {};
+    final currentProperties = schema.properties;
+
+    currentProperties.addAll(newModelMap?.properties ?? {});
 
     final refs = allOf.where((element) => element.ref.isNotEmpty).toList();
     for (var allOf in refs) {
@@ -1623,6 +1625,12 @@ $allHashComponents;
           final allOfModel = schemas[ref.getUnformattedRef()];
 
           final allOfModelProperties = allOfModel?.properties ?? {};
+
+          if (allOfModel?.allOf.isNotEmpty == true) {
+            for (var element in allOfModel?.allOf ?? <SwaggerSchema>[]) {
+              properties.addAll(element.properties);
+            }
+          }
 
           properties.addAll(allOfModelProperties);
         }

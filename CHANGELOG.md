@@ -1,5 +1,7 @@
 # 2.8.7
 
+* Fixed generation `allOf` properties with just properties ([#507](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/507))
+
 * Fixed generation of basic types refs and lists of them ([#502](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/502))
 
 # 2.8.6
