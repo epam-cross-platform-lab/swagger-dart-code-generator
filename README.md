@@ -148,7 +148,7 @@ targets:
             - url: '/store/inventory'
               method: get
               overridden_value: 'List<dynamic>'
-              - url: '/news/latest'
+            - url: '/news/latest'
               method: put
               overridden_value: 'MyPerfectType'
 ```
