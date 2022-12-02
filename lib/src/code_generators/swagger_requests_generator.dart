@@ -254,11 +254,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           final itemType = getValidatedClassName(ref.getUnformattedRef());
           results.add(itemType);
         } else {
-          final itemsType = schema?.items?.type;
+          final itemsType = schema?.items?.type ?? '';
 
-          if (!kBasicTypes.contains(itemsType) &&
-              schema?.items?.properties != null) {
-            final itemClassName = '$response\$Item';
+          if (!kBasicTypes.contains(itemsType) && itemsType != 'object' &&
+              schema?.items?.properties != null && !itemsType.startsWith('List<')) {
+            final itemClassName = '$itemsType\$Item';
 
             results.add(itemClassName);
           }

@@ -1,3 +1,7 @@
+# 2.8.8
+
+* Fixed generation of some List models
+
 # 2.8.7
 
 * Fixed generation `allOf` properties with just properties ([#507](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/507))
