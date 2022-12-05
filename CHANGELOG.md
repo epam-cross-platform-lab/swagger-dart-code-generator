@@ -1,3 +1,7 @@
+# 2.8.9
+
+* Fixed generation of request bodies and defined lists types
+
 # 2.8.8
 
 * Fixed generation of some List models
