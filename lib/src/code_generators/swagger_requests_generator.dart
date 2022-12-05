@@ -256,8 +256,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         } else {
           final itemsType = schema?.items?.type ?? '';
 
-          if (!kBasicTypes.contains(itemsType) && itemsType != 'object' &&
-              schema?.items?.properties != null && !itemsType.startsWith('List<')) {
+          if (!kBasicTypes.contains(itemsType) &&
+              itemsType != 'object' &&
+              schema?.items?.properties != null &&
+              !itemsType.startsWith('List<')) {
             final itemClassName = '$itemsType\$Item';
 
             results.add(itemClassName);
@@ -736,7 +738,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final schema = requestBody.content?.schema;
 
       if (schema != null) {
-        if (schema.format == kBinary) {
+        if (schema.format == kBinary || schema.oneOf.isNotEmpty) {
           typeName = kObject.pascalCase;
         } else if (schema.items?.type.isNotEmpty == true) {
           typeName = _mapParameterName(schema.items!.type, schema.items!.format,

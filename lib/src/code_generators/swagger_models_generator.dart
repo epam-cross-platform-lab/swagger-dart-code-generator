@@ -1031,7 +1031,6 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       propertyName = getParameterName(propertyName, propertyNames);
 
       propertyNames.add(propertyName);
-
       if (prop.type.isNotEmpty) {
         results.add(generatePropertyContentByType(
           prop,
@@ -1095,8 +1094,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return results.join('\n');
   }
 
-  static Map<String, String> generateBasicTypesMapFromSchemas(
-      SwaggerRoot root) {
+  Map<String, String> generateBasicTypesMapFromSchemas(SwaggerRoot root) {
     final result = <String, String>{};
 
     final components = root.components;
@@ -1129,6 +1127,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
           if (kBasicTypes.contains(schema?.type)) {
             typeName = _mapBasicTypeToDartType(schema!.type, value.format);
+          } else {
+            typeName = getValidatedClassName(typeName);
           }
 
           result[key] = typeName.asList();
