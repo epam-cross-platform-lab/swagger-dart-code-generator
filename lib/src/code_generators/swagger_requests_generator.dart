@@ -156,8 +156,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         final hasOptionalBody =
             ['post', 'put', 'patch'].contains(requestType) &&
-                swaggerRequest.parameters.none((p) => p.inParameter == kBody) &&
-                swaggerRequest.requestBody == null;
+                swaggerRequest.parameters.none((p) => p.inParameter == kBody);
 
         final isMultipart = parameters.any((p) {
           return p.annotations
@@ -754,23 +753,22 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         }
       }
 
-      if (typeName.isNotEmpty) {
-        result.add(
-          Parameter(
-            (p) => p
-              ..name = kBody
-              ..named = true
-              ..required = true
-              ..type = Reference(
-                typeName.makeNullable(),
-              )
-              ..named = true
-              ..annotations.add(
-                refer(kBody.pascalCase).call([]),
-              ),
-          ),
-        );
-      }
+      result.add(
+        Parameter(
+          (p) => p
+            ..name = kBody
+            ..named = true
+            ..required = true
+            ..type = Reference(
+              (typeName.isNotEmpty ? typeName : kObject.pascalCase)
+                  .makeNullable(),
+            )
+            ..named = true
+            ..annotations.add(
+              refer(kBody.pascalCase).call([]),
+            ),
+        ),
+      );
     }
 
     return result.distinctParameters();
