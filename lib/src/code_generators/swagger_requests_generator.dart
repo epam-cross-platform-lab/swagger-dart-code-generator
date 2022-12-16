@@ -87,7 +87,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
           (p) => p
             ..named = true
-            ..type = Reference('String?')
+            ..type = Reference('Uri?')
             ..name = 'baseUrl',
         ))
         ..optionalParameters.add(Parameter(
@@ -1129,7 +1129,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     String basePath,
   ) {
     final baseUrlString = options.withBaseUrl
-        ? "baseUrl:  baseUrl ?? 'http://$host$basePath'"
+        ? "baseUrl:  baseUrl ?? Uri.parse('http://$host$basePath')"
         : '/*baseUrl: YOUR_BASE_URL*/';
 
     final converterString = options.withConverter

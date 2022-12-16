@@ -21,7 +21,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required Pet? body,
     String? cacheControl,
   }) {
-    final String $url = '/pet';
+    final Uri $url = Uri.parse('/pet');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -41,7 +41,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required Pet? body,
     String? cacheControl,
   }) {
-    final String $url = '/pet';
+    final Uri $url = Uri.parse('/pet');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -61,7 +61,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required String? status,
     String? cacheControl,
   }) {
-    final String $url = '/pet/findByStatus';
+    final Uri $url = Uri.parse('/pet/findByStatus');
     final Map<String, dynamic> $params = <String, dynamic>{'status': status};
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
@@ -81,7 +81,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required List<String>? tags,
     String? cacheControl,
   }) {
-    final String $url = '/pet/findByTags';
+    final Uri $url = Uri.parse('/pet/findByTags');
     final Map<String, dynamic> $params = <String, dynamic>{'tags': tags};
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
@@ -102,7 +102,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     String? apiKey,
     String? cacheControl,
   }) {
-    final String $url = '/pet/${petId}';
+    final Uri $url = Uri.parse('/pet/${petId}');
     final Map<String, String> $headers = {
       if (apiKey != null) 'api_key': apiKey,
       if (cacheControl != null) 'Cache-Control': cacheControl,
@@ -123,7 +123,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     String? status,
     String? cacheControl,
   }) {
-    final String $url = '/pet/${petId}';
+    final Uri $url = Uri.parse('/pet/${petId}');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -147,7 +147,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required int? petId,
     String? cacheControl,
   }) {
-    final String $url = '/pet/${petId}';
+    final Uri $url = Uri.parse('/pet/${petId}');
     final Map<String, String> $headers = {
       if (apiKey != null) 'api_key': apiKey,
       if (cacheControl != null) 'Cache-Control': cacheControl,
@@ -168,7 +168,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     List<String>? file,
     String? cacheControl,
   }) {
-    final String $url = '/pet/${petId}/uploadImage';
+    final Uri $url = Uri.parse('/pet/${petId}/uploadImage');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -191,7 +191,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     String? apiKey,
     String? cacheControl,
   }) {
-    final String $url = '/store/inventory';
+    final Uri $url = Uri.parse('/store/inventory');
     final Map<String, String> $headers = {
       if (apiKey != null) 'api_key': apiKey,
       if (cacheControl != null) 'Cache-Control': cacheControl,
@@ -210,7 +210,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required Order? body,
     String? cacheControl,
   }) {
-    final String $url = '/store/order';
+    final Uri $url = Uri.parse('/store/order');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -230,7 +230,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required int? orderId,
     String? cacheControl,
   }) {
-    final String $url = '/store/order/${orderId}';
+    final Uri $url = Uri.parse('/store/order/${orderId}');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -248,7 +248,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required int? orderId,
     String? cacheControl,
   }) {
-    final String $url = '/store/order/${orderId}';
+    final Uri $url = Uri.parse('/store/order/${orderId}');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -266,7 +266,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required User? body,
     String? cacheControl,
   }) {
-    final String $url = '/user';
+    final Uri $url = Uri.parse('/user');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -286,7 +286,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required List<User>? body,
     String? cacheControl,
   }) {
-    final String $url = '/user/createWithArray';
+    final Uri $url = Uri.parse('/user/createWithArray');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -306,7 +306,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required List<User>? body,
     String? cacheControl,
   }) {
-    final String $url = '/user/createWithList';
+    final Uri $url = Uri.parse('/user/createWithList');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -327,7 +327,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required String? password,
     String? cacheControl,
   }) {
-    final String $url = '/user/login';
+    final Uri $url = Uri.parse('/user/login');
     final Map<String, dynamic> $params = <String, dynamic>{
       'username': username,
       'password': password,
@@ -347,7 +347,7 @@ class _$PetServiceYaml extends PetServiceYaml {
 
   @override
   Future<Response<dynamic>> _userLogoutGet({String? cacheControl}) {
-    final String $url = '/user/logout';
+    final Uri $url = Uri.parse('/user/logout');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -365,7 +365,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required String? username,
     String? cacheControl,
   }) {
-    final String $url = '/user/${username}';
+    final Uri $url = Uri.parse('/user/${username}');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -384,7 +384,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required User? body,
     String? cacheControl,
   }) {
-    final String $url = '/user/${username}';
+    final Uri $url = Uri.parse('/user/${username}');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
@@ -404,7 +404,7 @@ class _$PetServiceYaml extends PetServiceYaml {
     required String? username,
     String? cacheControl,
   }) {
-    final String $url = '/user/${username}';
+    final Uri $url = Uri.parse('/user/${username}');
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
