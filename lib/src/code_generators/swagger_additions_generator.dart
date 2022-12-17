@@ -135,6 +135,20 @@ String? _dateToJson(DateTime? date) {
 ''';
   }
 
+  ///Additional method to convert num/dynamic to json
+  String generateNumToStringFromJson() {
+    return '''
+// ignore: unused_element
+String? _numToStringFromJson(dynamic? value) {
+  if(value == null)
+  {
+    return null;
+  }
+  return value.toString();
+  }
+''';
+  }
+
   ///Copy-pasted converter from internet
   String generateCustomJsonConverter(String fileName) {
     if (!options.withConverter) {

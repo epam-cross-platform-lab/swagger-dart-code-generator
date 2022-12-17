@@ -392,6 +392,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
+    final numConvertStringToJsonValue = generateFromJsonForNumToString(prop);
 
     final includeIfNullString = generateIncludeIfNullString();
 
@@ -402,7 +403,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final propertyKey = propertyName.replaceAll('\$', '\\\$');
 
     final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue$numConvertStringToJsonValue${unknownEnumValue.jsonKey})\n";
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
@@ -500,6 +501,19 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return '';
   }
 
+  String generateFromJsonForNumToString(SwaggerSchema map) {
+    final type = map.type.toLowerCase();
+    final format = map.format.toLowerCase();
+
+    final isNum = type == kString && format == 'dynamic';
+
+    if (isNum) {
+      return ', fromJson: _numToStringFromJson';
+    }
+
+    return '';
+  }
+
   String nullable(
     String typeName,
     String className,
@@ -557,9 +571,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
+    final numConvertStringToJsonValue = generateFromJsonForNumToString(prop);
 
     final jsonKeyContent =
-        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
+        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue$numConvertStringToJsonValue)\n";
 
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
@@ -915,9 +930,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
+    final numConvertStringToJsonValue = generateFromJsonForNumToString(prop);
 
     jsonKeyContent += unknownEnumValue.jsonKey;
     jsonKeyContent += dateToJsonValue;
+    jsonKeyContent += numConvertStringToJsonValue;
 
     if ((prop.type == 'bool' || prop.type == 'boolean') &&
         prop.defaultValue != null) {

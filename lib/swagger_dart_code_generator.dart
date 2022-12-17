@@ -229,6 +229,7 @@ class SwaggerDartCodeGenerator implements Builder {
         removeFileExtension(fileNameWithExtension), options);
 
     final dateToJson = codeGenerator.generateDateToJson(options);
+    final numToStringFromJson = codeGenerator.generateNumToStringFromJson(options);
 
     final copyAssetId = AssetId(
         buildStep.inputId.package,
@@ -245,7 +246,8 @@ class SwaggerDartCodeGenerator implements Builder {
               options.separateModels ? '' : responses,
               options.separateModels ? '' : requestBodies,
               customDecoder,
-              options.separateModels ? '' : dateToJson));
+              options.separateModels ? '' : dateToJson,
+              options.separateModels ? '' : numToStringFromJson));
     }
 
     if (enums.isNotEmpty) {
@@ -268,6 +270,7 @@ class SwaggerDartCodeGenerator implements Builder {
         requestBodies,
         fileNameWithoutExtension,
         dateToJson,
+        numToStringFromJson,
         enums.isNotEmpty,
       ));
 
@@ -287,7 +290,8 @@ class SwaggerDartCodeGenerator implements Builder {
       String responses,
       String requestBodies,
       String customDecoder,
-      String dateToJson) {
+      String dateToJson,
+      String numToStringFromJson) {
     final result = """
 $imports
 
@@ -302,6 +306,8 @@ $requestBodies
 ${options.buildOnlyModels ? '' : customDecoder}
 
 $dateToJson
+
+$numToStringFromJson
 """;
 
     return _tryFormatCode(result);
@@ -349,6 +355,7 @@ $dateToJson
     String requestBodies,
     String fileNameWithoutExtension,
     String dateToJson,
+    String numToStringFromJson,
     bool hasEnums,
   ) {
     final enumsImport = hasEnums
@@ -378,6 +385,8 @@ $overridenModels
     $requestBodies
 
     $dateToJson
+    
+    $numToStringFromJson
     ''';
   }
 }
