@@ -25,7 +25,7 @@ abstract class PetServiceJson extends ChopperService {
   static PetServiceJson create({
     ChopperClient? client,
     Authenticator? authenticator,
-    String? baseUrl,
+    Uri? baseUrl,
     Iterable<dynamic>? interceptors,
   }) {
     if (client != null) {
@@ -37,7 +37,7 @@ abstract class PetServiceJson extends ChopperService {
         converter: $JsonSerializableConverter(),
         interceptors: interceptors ?? [],
         authenticator: authenticator,
-        baseUrl: baseUrl ?? 'http://petstore.swagger.io/v2');
+        baseUrl: baseUrl ?? Uri.parse('http://petstore.swagger.io/v2'));
     return _$PetServiceJson(newClient);
   }
 

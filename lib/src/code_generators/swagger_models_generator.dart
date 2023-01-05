@@ -684,6 +684,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
+    final propertySchema = allClasses[prop.ref.getUnformattedRef()];
+
+    if (propertySchema?.isNullable == true) {
+      typeName = typeName.makeNullable();
+    }
+
     if (options.classesWithNullabeLists.contains(className) &&
         typeName.startsWith('List<') &&
         !typeName.endsWith('?')) {
@@ -1013,7 +1019,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (propertiesMap.isEmpty) {
       return '';
     }
-
+    
     final results = <String>[];
     final propertyNames = <String>[];
 
@@ -1305,6 +1311,7 @@ List<enums.$neededName>? ${neededName.camelCase}NullableListFromJson(
     Map<String, SwaggerSchema> allClasses,
   ) {
     final properties = getModelProperties(schema, schemas, allClasses);
+
     final requiredProperties = _getRequired(schema, schemas);
 
     final generatedConstructorProperties = generateConstructorPropertiesContent(
