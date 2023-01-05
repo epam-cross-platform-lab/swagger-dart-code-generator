@@ -1,17 +1,17 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:collection/collection.dart';
+import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
-import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
+import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_response.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
-import 'package:recase/recase.dart';
-import 'package:collection/collection.dart';
-import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
 
 import 'constants.dart';
 
@@ -668,6 +668,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final requestBody = swaggerRequest.requestBody;
 
     if (requestBody != null) {
+      // MULTIPART REQUESTS
       if (requestBody.content?.isMultipart == true) {
         var schema = requestBody.content?.schema;
 
@@ -675,6 +676,28 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           schema = root.allSchemas[schema?.ref.getUnformattedRef()];
         }
 
+        // in case a scheme for the request is defined, we use only one param const kBody and the type of this param will be the scheme as class.
+        if (requestBody.content?.schema?.ref.isNotEmpty == true) {
+          result.add(
+            Parameter(
+              (p) => p
+                ..name = kBody
+                ..named = true
+                ..required = true
+                ..type = Reference(getValidatedClassName(
+                    requestBody.content!.schema!.ref.getRef()))
+                ..named = true
+                ..annotations.add(
+                  refer(kPart.pascalCase).call([]),
+                ),
+            ),
+          );
+
+          // early return
+          return result.distinctParameters();
+        }
+
+        // otherwise no request scheme is defined, we provide every param as a separate param.
         schema?.properties.forEach((key, value) {
           if (value.type == 'string' && value.format == 'binary') {
             final isRequired = schema!.required.contains(key);
@@ -694,10 +717,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               ),
             );
           } else {
-            final typeName = requestBody.content?.schema?.ref.isNotEmpty == true
-                ? getValidatedClassName(
-                    requestBody.content!.schema!.ref.getRef())
-                : _mapParameterName(value.type, value.format, modelPostfix);
+            final typeName =
+                _mapParameterName(value.type, value.format, modelPostfix);
 
             result.add(
               Parameter(
@@ -718,6 +739,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return result.distinctParameters();
       }
 
+      // OTHER REQUESTS EXCEPT MULTIPART
       var typeName = '';
 
       if (requestBody.hasRef) {
