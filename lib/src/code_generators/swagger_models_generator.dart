@@ -6,7 +6,6 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_generato
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
@@ -18,7 +17,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
   SwaggerModelsGenerator(this._options);
 
-  String generate(SwaggerRoot root, String fileName);
+  String generate(
+    SwaggerRoot root,
+    String fileName,
+  );
 
   String generateResponses(SwaggerRoot root, String fileName);
 
@@ -195,12 +197,13 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     return results;
   }
 
-  String generateBase(
-      SwaggerRoot root,
-      String fileName,
-      Map<String, SwaggerSchema> classes,
-      bool generateFromJsonToJsonForRequests) {
-    final allEnums = getAllEnums(root);
+  String generateBase({
+    required SwaggerRoot root,
+    required String fileName,
+    required Map<String, SwaggerSchema> classes,
+    required List<EnumModel> allEnums,
+    required bool generateFromJsonToJsonForRequests,
+  }) {
     final allEnumListNames = getAllListEnumNames(root);
 
     final generatedEnumFromJsonToJson = generateFromJsonToJsonForRequests
@@ -419,7 +422,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     var jsonKey = '';
     var fromJson = '';
-    if (allEnumNames.contains(validatedTypeName)) {
+    if (validatedTypeName.startsWith('enums.')) {
       isList = isList || allEnumListNames.contains(validatedTypeName);
 
       final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
@@ -464,9 +467,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         } else {
           valueType = 'Object';
           returnType = validatedTypeName;
-          final defaultValueCamelCase =
-              SwaggerEnumsGenerator.getValidatedEnumFieldName(
-                  defaultValue?.toString() ?? '');
+          final defaultValueCamelCase = EnumModel.getValidatedEnumFieldName(
+              defaultValue?.toString() ?? '');
           defaultValueString = '$validatedTypeName.$defaultValueCamelCase';
         }
 
@@ -1019,7 +1021,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (propertiesMap.isEmpty) {
       return '';
     }
-    
+
     final results = <String>[];
     final propertyNames = <String>[];
 
@@ -1169,7 +1171,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   }
 
   String generateEnumFromJsonToJsonMethods(
-    List<SwaggerEnum> swaggerEnums,
+    List<EnumModel> swaggerEnums,
     bool enumsCaseSensitive,
   ) {
     return swaggerEnums
@@ -1178,7 +1180,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   }
 
   String generateEnumFromJsonToJson(
-      SwaggerEnum swaggerEnum, bool enumsCaseSensitive) {
+      EnumModel swaggerEnum, bool enumsCaseSensitive) {
     final neededName =
         getValidatedClassName(swaggerEnum.name.replaceFirst('enums.', ''));
 
@@ -1570,147 +1572,6 @@ $allHashComponents;
     }
 
     return currentProperties;
-  }
-
-  List<String> getAllEnumNames(SwaggerRoot root) =>
-      getAllEnums(root).map((e) => e.name).toList(growable: false);
-
-  List<SwaggerEnum> getAllEnums(SwaggerRoot root) {
-    final results = getEnumsFromRequests(root);
-
-    final components = root.components;
-
-    final definitions = root.definitions;
-
-    final schemas = components?.schemas ?? {};
-
-    schemas.addAll(definitions);
-
-    final responses = components?.responses ?? {};
-
-    final requestBodies = components?.requestBodies ?? {};
-
-    final moreRequestBodies = getRequestBodiesFromRequests(root);
-
-    requestBodies.addAll(moreRequestBodies);
-
-    schemas.forEach((className, schema) {
-      if (schema.isEnum) {
-        return _addEnum(
-          outResults: results,
-          name: getValidatedClassName(className.capitalize),
-          schema: schema,
-        );
-      }
-
-      if (schema.isListEnum) {
-        return _addEnum(
-          outResults: results,
-          name: getValidatedClassName(className.capitalize),
-          schema: schema,
-        );
-      }
-
-      Map<String, SwaggerSchema>? properties;
-
-      if (schema.allOf.isNotEmpty) {
-        final allOf = schema.allOf;
-        var propertiesContainer =
-            allOf.firstWhereOrNull((e) => e.properties.isNotEmpty);
-
-        if (propertiesContainer != null) {
-          properties = propertiesContainer.properties;
-        } else {
-          properties = schema.properties;
-        }
-
-        var allOfRef = allOf.firstWhereOrNull((e) => e.hasRef);
-
-        if (allOfRef != null) {
-          final ref = allOfRef.ref;
-
-          final allOfModel = schemas[ref.getUnformattedRef()];
-
-          final allOfModelProperties = allOfModel?.properties ?? {};
-
-          if (allOfModel?.allOf.isNotEmpty == true) {
-            for (var element in allOfModel?.allOf ?? <SwaggerSchema>[]) {
-              properties.addAll(element.properties);
-            }
-          }
-
-          properties.addAll(allOfModelProperties);
-        }
-      } else if (schema.type == kArray) {
-        className += '\$Item';
-        properties = schema.items?.properties ?? {};
-      } else {
-        properties = schema.properties;
-      }
-
-      properties.forEach((name, propSchema) {
-        _addEnum(
-          outResults: results,
-          name: getValidatedClassName(
-              generateEnumName(getValidatedClassName(className), name)),
-          schema: propSchema,
-        );
-      });
-    });
-
-    void addEnumFromSchema(String className, SwaggerSchema schema) {
-      if (schema.isEnum) {
-        return _addEnum(
-          outResults: results,
-          name: className,
-          schema: schema,
-        );
-      }
-      final properties = schema.properties;
-
-      properties.forEach((name, propSchema) {
-        _addEnum(
-          outResults: results,
-          name: generateEnumName(className, name),
-          schema: propSchema,
-        );
-      });
-    }
-
-    responses.forEach(addEnumFromSchema);
-    requestBodies.forEach(addEnumFromSchema);
-
-    final resultsWithPrefix = results.map((element) {
-      return SwaggerEnum(
-        name: 'enums.${element.name}',
-        isInteger: element.isInteger,
-        defaultValue: element.defaultValue,
-      );
-    }).toList();
-
-    return resultsWithPrefix;
-  }
-
-  void _addEnum({
-    required List<SwaggerEnum> outResults,
-    required String name,
-    required SwaggerSchema schema,
-  }) {
-    var enums = schema.enumValuesObj;
-
-    if (enums.isEmpty) {
-      enums = schema.items?.enumValuesObj ?? [];
-    }
-
-    if (enums.isNotEmpty) {
-      final isInteger =
-          kIntegerTypes.contains(schema.type) || enums.firstOrNull is int;
-      outResults.add(SwaggerEnum(
-        name: name,
-        isInteger: isInteger,
-        defaultValue: schema.defaultValue ?? schema.items?.defaultValue,
-      ));
-    } else if (schema.type == kArray) {}
   }
 
   Map<String, SwaggerSchema> getRequestBodiesFromRequests(SwaggerRoot root) {

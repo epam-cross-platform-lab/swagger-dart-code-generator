@@ -1,4 +1,5 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -11,8 +12,21 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   String generate(SwaggerRoot root, String fileName) {
     final components = root.components;
     final schemas = components?.schemas;
+    final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
+      root,
+      fileName,
+      schemas ?? {},
+      root.components?.responses ?? {},
+      root.components?.requestBodies ?? {},
+    );
 
-    return generateBase(root, fileName, schemas ?? {}, true);
+    return generateBase(
+      root: root,
+      fileName: fileName,
+      classes: schemas ?? {},
+      generateFromJsonToJsonForRequests: true,
+      allEnums: allEnums,
+    );
   }
 
   @override
@@ -40,7 +54,13 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(root, fileName, result, false);
+    return generateBase(
+      root: root,
+      fileName: fileName,
+      classes: result,
+      generateFromJsonToJsonForRequests: false,
+      allEnums: [],
+    );
   }
 
   @override
@@ -69,7 +89,13 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(root, fileName, result, false);
+    return generateBase(
+      root: root,
+      fileName: fileName,
+      classes: result,
+      generateFromJsonToJsonForRequests: false,
+      allEnums: [],
+    );
   }
 
   @override
