@@ -204,12 +204,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
     required bool generateFromJsonToJsonForRequests,
   }) {
+    final ttt = allEnums.map((e) => '''
+String? ${e.name.camelCase}ToJson(enums.${e.name}? e) => enums.${e.name.camelCase}ToJson(e);
+enums.${e.name} ${e.name.camelCase}FromJson(Object? ${e.name.camelCase}, [enums.${e.name}? defaultValue]) => ${e.name.camelCase}FromJson(${e.name.camelCase}, defaultValue);
+''').join();
     final allEnumListNames = getAllListEnumNames(root);
-
-    final generatedEnumFromJsonToJson = generateFromJsonToJsonForRequests
-        ? generateEnumFromJsonToJsonMethods(
-            allEnums, options.enumsCaseSensitive)
-        : '';
 
     final classesFromResponses = getClassesFromResponses(root);
     classes.addAll(classesFromResponses);
@@ -222,7 +221,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
-    final generatedClasses = classes.keys.map((String className) {
+    var results = classes.keys.map((String className) {
       if (classes['enum'] != null) {
         return '';
       }
@@ -246,15 +245,13 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       );
     }).join('\n');
 
-    var results = '$generatedClasses\n$generatedEnumFromJsonToJson';
-
     final listEnums = getAllListEnumNames(root);
 
     for (var listEnum in listEnums) {
       results = results.replaceAll(' $listEnum ', ' List<$listEnum> ');
     }
 
-    return results;
+    return results + ttt;
   }
 
   static String getValidatedParameterName(String parameterName) {
@@ -1168,106 +1165,6 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       default:
         return '';
     }
-  }
-
-  String generateEnumFromJsonToJsonMethods(
-    List<EnumModel> swaggerEnums,
-    bool enumsCaseSensitive,
-  ) {
-    return swaggerEnums
-        .map((e) => generateEnumFromJsonToJson(e, enumsCaseSensitive))
-        .join('\n');
-  }
-
-  String generateEnumFromJsonToJson(
-      EnumModel swaggerEnum, bool enumsCaseSensitive) {
-    final neededName =
-        getValidatedClassName(swaggerEnum.name.replaceFirst('enums.', ''));
-
-    final toLowerCaseString = !enumsCaseSensitive ? '.toLowerCase()' : '';
-    final type = swaggerEnum.isInteger ? 'int' : 'String';
-    final defaultTypeValue = swaggerEnum.isInteger ? 0 : '\'\'';
-
-    return '''
-$type? ${neededName.camelCase}ToJson(enums.$neededName? ${neededName.camelCase}) {
-  return enums.\$${neededName}Map[${neededName.camelCase}];
-}
-
-enums.$neededName ${neededName.camelCase}FromJson(
-  Object? ${neededName.camelCase},
-  [enums.$neededName? defaultValue,]
-  ) {
-
-${swaggerEnum.isInteger ? '''
-if(${neededName.camelCase} is int)
-  {
-    return enums.\$${neededName}Map.entries
-      .firstWhere((element) => element.value == ${neededName.camelCase},
-      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, $defaultTypeValue))
-      .key;
-  }
-''' : '''
-if(${neededName.camelCase} is String)
-  {
- return enums.\$${neededName}Map.entries
-      .firstWhere((element) => element.value$toLowerCaseString == ${neededName.camelCase}$toLowerCaseString,
-      orElse: () => const MapEntry(enums.$neededName.swaggerGeneratedUnknown, $defaultTypeValue))
-      .key;
-      }
-'''}
- 
-    final parsedResult = defaultValue == null ? null : enums.\$${neededName}Map.entries
-      .firstWhereOrNull((element) => element.value == defaultValue)
-      ?.key;
-
-  return parsedResult ??
-      defaultValue ??
-      enums.$neededName.swaggerGeneratedUnknown;
-}
-
-
-List<$type> ${neededName.camelCase}ListToJson(
-    List<enums.$neededName>? ${neededName.camelCase}) {
-
-  if(${neededName.camelCase} == null)
-  {
-    return [];
-  }
-
-  return ${neededName.camelCase}
-      .map((e) => enums.\$${neededName}Map[e]!)
-      .toList();
-}
-
-List<enums.$neededName> ${neededName.camelCase}ListFromJson(
-    List? ${neededName.camelCase},
-    [List<enums.$neededName>? defaultValue,]) {
-
-  if(${neededName.camelCase} == null)
-  {
-    return defaultValue ?? [];
-  }
-
-  return ${neededName.camelCase}
-      .map((e) => ${neededName.camelCase}FromJson(e.toString()))
-      .toList();
-}
-
-
-List<enums.$neededName>? ${neededName.camelCase}NullableListFromJson(
-    List? ${neededName.camelCase},
-    [List<enums.$neededName>? defaultValue,]) {
-
-  if(${neededName.camelCase} == null)
-  {
-    return defaultValue;
-  }
-
-  return ${neededName.camelCase}
-      .map((e) => ${neededName.camelCase}FromJson(e.toString()))
-      .toList();
-}
-    ''';
   }
 
   String generateConstructorPropertiesContent({

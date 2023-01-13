@@ -1,4 +1,5 @@
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -12,12 +13,17 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   String generate(SwaggerRoot root, String fileName) {
     final components = root.components;
     final schemas = components?.schemas;
+    final requestBodies = components?.requestBodies ?? {};
+
+    requestBodies.addAll(
+        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
+
     final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
       root,
       fileName,
       schemas ?? {},
       root.components?.responses ?? {},
-      root.components?.requestBodies ?? {},
+      requestBodies,
     );
 
     return generateBase(

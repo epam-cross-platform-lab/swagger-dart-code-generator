@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -79,7 +80,11 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
-    return 'import \'package:json_annotation/json_annotation.dart\'; ${allEnums.map((e) => e.toString()).join('\n')}';
+    return '''
+import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
+${allEnums.map((e) => e.toString()).join('\n')}
+''';
   }
 
   List<EnumModel> generateEnumsFromSchemaMap(Map<String, SwaggerSchema> map) {
@@ -125,7 +130,7 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
       if (enumValues.isNotEmpty &&
           swaggerRoot.components?.schemas.containsKey(key) != true) {
         final enumContent = EnumModel(
-          name: key,
+          name: getValidatedClassName(key),
           values: enumValues,
           isInteger: isInteger,
         );
@@ -171,7 +176,7 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
 
           if (enumValues.isNotEmpty) {
             final enumContent = EnumModel(
-              name: name,
+              name: getValidatedClassName(name),
               values: enumValues,
               isInteger: isInteger,
             );
@@ -256,7 +261,7 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
       final isInteger = isIntegerEnum(schema);
 
       return EnumModel(
-        name: enumName,
+        name: getValidatedClassName(enumName),
         values: enumValues,
         isInteger: isInteger,
       );
@@ -359,6 +364,7 @@ class EnumModel {
     return '''
 ${_getEnumContent()}
 ${_getEnumValuesMapContent()}
+${_generateEnumFromJsonToJson()}
 ''';
   }
 
@@ -442,5 +448,91 @@ ${resultStrings.join(',\n')}
     }
 
     return result.lower;
+  }
+
+  String _generateEnumFromJsonToJson() {
+    final type = isInteger ? 'int' : 'String';
+    final defaultTypeValue = isInteger ? 0 : '\'\'';
+
+    return '''
+$type? ${name.camelCase}ToJson($name? ${name.camelCase}) {
+  return \$${name}Map[${name.camelCase}];
+}
+
+$name ${name.camelCase}FromJson(
+  Object? ${name.camelCase},
+  [$name? defaultValue,]
+  ) {
+
+${isInteger ? '''
+if(${name.camelCase} is int)
+  {
+    return \$${name}Map.entries
+      .firstWhere((element) => element.value == ${name.camelCase},
+      orElse: () => const MapEntry($name.swaggerGeneratedUnknown, $defaultTypeValue))
+      .key;
+  }
+''' : '''
+if(${name.camelCase} is String)
+  {
+ return \$${name}Map.entries
+      .firstWhere((element) => element.value == ${name.camelCase},
+      orElse: () => const MapEntry($name.swaggerGeneratedUnknown, $defaultTypeValue))
+      .key;
+      }
+'''}
+ 
+    final parsedResult = defaultValue == null ? null : \$${name}Map.entries
+      .firstWhereOrNull((element) => element.value == defaultValue)
+      ?.key;
+
+  return parsedResult ??
+      defaultValue ??
+      $name.swaggerGeneratedUnknown;
+}
+
+
+List<$type> ${name.camelCase}ListToJson(
+    List<$name>? ${name.camelCase}) {
+
+  if(${name.camelCase} == null)
+  {
+    return [];
+  }
+
+  return ${name.camelCase}
+      .map((e) => \$${name}Map[e]!)
+      .toList();
+}
+
+List<$name> ${name.camelCase}ListFromJson(
+    List? ${name.camelCase},
+    [List<$name>? defaultValue,]) {
+
+  if(${name.camelCase} == null)
+  {
+    return defaultValue ?? [];
+  }
+
+  return ${name.camelCase}
+      .map((e) => ${name.camelCase}FromJson(e.toString()))
+      .toList();
+}
+
+
+List<$name>? ${name.camelCase}NullableListFromJson(
+    List? ${name.camelCase},
+    [List<$name>? defaultValue,]) {
+
+  if(${name.camelCase} == null)
+  {
+    return defaultValue;
+  }
+
+  return ${name.camelCase}
+      .map((e) => ${name.camelCase}FromJson(e.toString()))
+      .toList();
+}
+    ''';
   }
 }
