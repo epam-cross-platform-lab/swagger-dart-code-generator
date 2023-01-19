@@ -174,10 +174,6 @@ abstract class SwaggerGeneratorBase {
   }
 
   String generateRequestName(String path, String requestType) {
-    if (path == '/') {
-      path = '\$';
-    }
-
     path = path.split('{').map((e) => e.capitalize).join();
     path = path.split('}').map((e) => e.capitalize).join();
     path = path.split(',').map((e) => e.capitalize).join();
