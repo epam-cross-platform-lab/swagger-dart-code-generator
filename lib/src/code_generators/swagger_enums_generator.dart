@@ -4,6 +4,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
@@ -33,6 +34,9 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
     required String fileName,
   }) {
     final requestBodies = root.components?.requestBodies ?? {};
+    requestBodies.addAll(
+        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
+
     final responses = root.components?.responses ?? {};
     final definitions = root.components?.schemas ?? {};
     definitions.addAll(root.definitions);
