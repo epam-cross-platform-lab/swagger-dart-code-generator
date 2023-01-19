@@ -1,6 +1,6 @@
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -10,21 +10,17 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   SwaggerModelsGeneratorV3(GeneratorOptions options) : super(options);
 
   @override
-  String generate(SwaggerRoot root, String fileName) {
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final components = root.components;
     final schemas = components?.schemas;
     final requestBodies = components?.requestBodies ?? {};
 
     requestBodies.addAll(
         SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
-
-    final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
-      root,
-      fileName,
-      schemas ?? {},
-      root.components?.responses ?? {},
-      requestBodies,
-    );
 
     return generateBase(
       root: root,
@@ -36,23 +32,16 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   }
 
   @override
-  String generateResponses(SwaggerRoot root, String fileName) {
+  String generateResponses({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final components = root.components;
 
     if (components == null) {
       return '';
     }
-
-    final schemas = components.schemas;
-    final requestBodies = components.requestBodies;
-
-    final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
-      root,
-      fileName,
-      schemas,
-      root.components?.responses ?? {},
-      requestBodies,
-    );
 
     final responses = components.responses;
 
@@ -81,7 +70,11 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   }
 
   @override
-  String generateRequestBodies(SwaggerRoot root, String fileName) {
+  String generateRequestBodies({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final components = root.components;
     final requestBodies = components?.requestBodies ?? {};
 
@@ -105,15 +98,6 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
         }
       }
     }
-
-    final schemas = components?.schemas ?? {};
-    final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
-      root,
-      fileName,
-      schemas,
-      root.components?.responses ?? {},
-      requestBodies,
-    );
 
     return generateBase(
       root: root,

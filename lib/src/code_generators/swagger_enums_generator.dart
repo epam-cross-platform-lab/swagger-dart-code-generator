@@ -22,27 +22,24 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
 
   SwaggerEnumsGenerator(this._options);
 
-  String generate(SwaggerRoot root, String fileName);
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  });
 
-  List<EnumModel> generateAllEnums(
-      SwaggerRoot root,
-      String fileName,
-      Map<String, SwaggerSchema> definitions,
-      Map<String, SwaggerSchema> responses,
-      Map<String, SwaggerSchema> requestBodies) {
+  List<EnumModel> generateAllEnums({
+    required SwaggerRoot root,
+    required String fileName,
+  }) {
+    final requestBodies = root.components?.requestBodies ?? {};
+    final responses = root.components?.responses ?? {};
+    final definitions = root.components?.schemas ?? {};
+    definitions.addAll(root.definitions);
+
     final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
     final enumsFromResponses = generateEnumsFromSchemaMap(responses);
     final enumsFromRequestBodies = generateEnumsFromSchemaMap(requestBodies);
-
-    if (definitions.isEmpty) {
-      final result = [
-        ...enumsFromRequests,
-        ...enumsFromResponses,
-        ...enumsFromRequestBodies,
-      ];
-
-      return result;
-    }
 
     final enumsFromClasses = definitions.keys
         .map((String className) {
@@ -68,19 +65,13 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
   }
 
   String generateFromMap(
-      SwaggerRoot root,
-      String fileName,
-      Map<String, SwaggerSchema> definitions,
-      Map<String, SwaggerSchema> responses,
-      Map<String, SwaggerSchema> requestBodies) {
-    final allEnums = generateAllEnums(
-      root,
-      fileName,
-      definitions,
-      responses,
-      requestBodies,
-    );
-
+    SwaggerRoot root,
+    String fileName,
+    Map<String, SwaggerSchema> definitions,
+    Map<String, SwaggerSchema> responses,
+    Map<String, SwaggerSchema> requestBodies,
+    List<EnumModel> allEnums,
+  ) {
     if (allEnums.isEmpty) {
       return '';
     }

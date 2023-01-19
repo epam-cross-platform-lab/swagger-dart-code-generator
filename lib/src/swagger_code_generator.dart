@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_additions_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
@@ -51,32 +52,61 @@ class SwaggerCodeGenerator {
           hasEnums,
           separateModels);
 
+  List<EnumModel> generateAllEnums({
+    required SwaggerRoot root,
+    required String fileName,
+    required GeneratorOptions options,
+  }) =>
+      _getSwaggerEnumsGenerator(root, options)
+          .generateAllEnums(fileName: fileName, root: root);
+
   String generateResponses(
     SwaggerRoot root,
     String fileName,
     GeneratorOptions options,
+    List<EnumModel> allEnums,
   ) =>
-      _getSwaggerModelsGenerator(root, options)
-          .generateResponses(root, fileName);
+      _getSwaggerModelsGenerator(root, options).generateResponses(
+        root: root,
+        fileName: fileName,
+        allEnums: allEnums,
+      );
 
   String generateRequestBodies(
     SwaggerRoot root,
     String fileName,
     GeneratorOptions options,
+    List<EnumModel> allEnums,
   ) =>
-      _getSwaggerModelsGenerator(root, options)
-          .generateRequestBodies(root, fileName);
+      _getSwaggerModelsGenerator(root, options).generateRequestBodies(
+        root: root,
+        fileName: fileName,
+        allEnums: allEnums,
+      );
 
   String generateEnums(
     SwaggerRoot root,
     String fileName,
+    List<EnumModel> allEnums,
     GeneratorOptions options,
   ) =>
-      _getSwaggerEnumsGenerator(root, options).generate(root, fileName);
+      _getSwaggerEnumsGenerator(root, options).generate(
+        root: root,
+        fileName: fileName,
+        allEnums: allEnums,
+      );
 
   String generateModels(
-          SwaggerRoot root, String fileName, GeneratorOptions options) =>
-      _getSwaggerModelsGenerator(root, options).generate(root, fileName);
+    SwaggerRoot root,
+    String fileName,
+    GeneratorOptions options,
+    List<EnumModel> allEnums,
+  ) =>
+      _getSwaggerModelsGenerator(root, options).generate(
+        root: root,
+        fileName: fileName,
+        allEnums: allEnums,
+      );
 
   String generateRequests(SwaggerRoot root, String className, String fileName,
           GeneratorOptions options) =>

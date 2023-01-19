@@ -17,14 +17,23 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
   SwaggerModelsGenerator(this._options);
 
-  String generate(
-    SwaggerRoot root,
-    String fileName,
-  );
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  });
 
-  String generateResponses(SwaggerRoot root, String fileName);
+  String generateResponses({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  });
 
-  String generateRequestBodies(SwaggerRoot root, String fileName);
+  String generateRequestBodies({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  });
 
   String getExtendsString(SwaggerSchema schema);
 
@@ -1027,10 +1036,6 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       propertyName = propertyName.asParameterName();
 
       propertyName = getParameterName(propertyName, propertyNames);
-
-      if (propertyName == 'target') {
-        final tt = 0;
-      }
 
       propertyNames.add(propertyName);
       if (prop.type.isNotEmpty) {

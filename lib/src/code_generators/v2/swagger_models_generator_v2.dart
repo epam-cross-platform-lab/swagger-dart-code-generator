@@ -1,5 +1,5 @@
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -9,33 +9,36 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   SwaggerModelsGeneratorV2(GeneratorOptions options) : super(options);
 
   @override
-  String generate(
-    SwaggerRoot root,
-    String fileName,
-  ) {
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final definitions = root.definitions;
     return generateBase(
       root: root,
       fileName: fileName,
       classes: definitions,
       generateEnumsMethods: true,
-      allEnums: SwaggerEnumsGeneratorV2(options).generateAllEnums(
-        root,
-        fileName,
-        definitions,
-        {},
-        {},
-      ),
+      allEnums: allEnums,
     );
   }
 
   @override
-  String generateResponses(SwaggerRoot root, String fileName) {
+  String generateResponses({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     return '';
   }
 
   @override
-  String generateRequestBodies(SwaggerRoot root, String fileName) {
+  String generateRequestBodies({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     return '';
   }
 
