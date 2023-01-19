@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -202,12 +202,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required String fileName,
     required Map<String, SwaggerSchema> classes,
     required List<EnumModel> allEnums,
-    required bool generateFromJsonToJsonForRequests,
+    required bool generateEnumsMethods,
   }) {
-    final ttt = allEnums.map((e) => '''
-String? ${e.name.camelCase}ToJson(enums.${e.name}? e) => enums.${e.name.camelCase}ToJson(e);
-enums.${e.name} ${e.name.camelCase}FromJson(Object? ${e.name.camelCase}, [enums.${e.name}? defaultValue]) => ${e.name.camelCase}FromJson(${e.name.camelCase}, defaultValue);
-''').join();
+    final ttt = generateEnumsMethods
+        ? allEnums.map((e) => e.generateFromJsonToJson()).join()
+        : '';
+
     final allEnumListNames = getAllListEnumNames(root);
 
     final classesFromResponses = getClassesFromResponses(root);
@@ -588,9 +588,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     } else {
       var className = allOf.first.ref.getRef();
 
-      final enumClassName = 'enums.$className';
-      if (allEnumNames.contains(enumClassName)) {
-        className = enumClassName;
+      if (allEnumNames.contains(className)) {
+        className = 'enums.$className';
       }
 
       typeName = getValidatedClassName(className);
@@ -651,10 +650,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = getValidatedClassName(typeName);
     }
 
-    final allEnumsNamesWithoutPrefix =
-        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
-
-    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
+    if (allEnumNames.contains(typeName)) {
       typeName = 'enums.$typeName';
     } else if (!basicTypesMap.containsKey(parameterName) &&
         !allEnumListNames.contains(typeName)) {
@@ -762,7 +758,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           typeName = items.ref.split('/').last;
 
           if (!allEnumListNames.contains(typeName) &&
-              !allEnumNames.contains('enums.' + typeName) &&
+              !allEnumNames.contains(typeName) &&
               !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
           }
@@ -773,7 +769,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         } else if (typeName.isNotEmpty && typeName != kDynamic) {
           typeName = typeName.pascalCase;
         }
-      } else if (!allEnumNames.contains('enums.$typeName') &&
+      } else if (!allEnumNames.contains(typeName) &&
           !kBasicTypes.contains(typeName.toLowerCase())) {
         typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
       }
@@ -796,7 +792,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         }
       }
 
-      if (allEnumNames.contains('enums.$typeName')) {
+      if (allEnumNames.contains(typeName)) {
         typeName = 'enums.$typeName';
       }
     }
@@ -903,10 +899,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       );
     }
 
-    final allEnumsNamesWithoutPrefix =
-        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
-
-    if (allEnumsNamesWithoutPrefix.contains(typeName)) {
+    if (allEnumNames.contains(typeName)) {
       typeName = 'enums.$typeName';
     }
 
@@ -1034,6 +1027,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       propertyName = propertyName.asParameterName();
 
       propertyName = getParameterName(propertyName, propertyNames);
+
+      if (propertyName == 'target') {
+        final tt = 0;
+      }
 
       propertyNames.add(propertyName);
       if (prop.type.isNotEmpty) {

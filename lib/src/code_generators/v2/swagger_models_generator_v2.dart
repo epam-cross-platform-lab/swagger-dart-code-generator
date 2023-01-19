@@ -1,4 +1,3 @@
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
@@ -19,6 +18,7 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
       root: root,
       fileName: fileName,
       classes: definitions,
+      generateEnumsMethods: true,
       allEnums: SwaggerEnumsGeneratorV2(options).generateAllEnums(
         root,
         fileName,
@@ -26,7 +26,6 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
         {},
         {},
       ),
-      generateFromJsonToJsonForRequests: true,
     );
   }
 

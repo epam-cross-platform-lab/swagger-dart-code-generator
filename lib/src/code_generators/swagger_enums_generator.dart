@@ -1,10 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
-import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
-import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
@@ -36,30 +35,36 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
     final enumsFromRequestBodies = generateEnumsFromSchemaMap(requestBodies);
 
     if (definitions.isEmpty) {
-      return [
+      final result = [
         ...enumsFromRequests,
         ...enumsFromResponses,
         ...enumsFromRequestBodies,
       ];
+
+      return result;
     }
 
     final enumsFromClasses = definitions.keys
         .map((String className) {
-          return generateEnumsFromClasses(
+          final result = generateEnumsFromClasses(
             getValidatedClassName(className.pascalCase),
             definitions[className]!,
             definitions,
           );
+
+          return result;
         })
         .expand((w) => w)
         .toList();
 
-    return [
+    final result = [
       ...enumsFromClasses,
       ...enumsFromRequests,
       ...enumsFromResponses,
       ...enumsFromRequestBodies,
     ];
+
+    return result;
   }
 
   String generateFromMap(
@@ -330,6 +335,12 @@ ${allEnums.map((e) => e.toString()).join('\n')}
 
         final allOfModel = schemas[ref.getUnformattedRef()];
 
+        if (allOfModel?.allOf.isNotEmpty == true) {
+          final allOfInside = allOfModel?.allOf.first;
+
+          properties.addAll(allOfInside?.properties ?? {});
+        }
+
         final allOfModelProperties = allOfModel?.properties ?? {};
 
         properties.addAll(allOfModelProperties);
@@ -343,196 +354,5 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     }
 
     return generateEnumsContentFromModelProperties(properties, className);
-  }
-}
-
-class EnumModel {
-  final String name;
-  final List<String> values;
-  final bool isInteger;
-
-  static const String defaultEnumFieldName = 'value_';
-
-  const EnumModel({
-    required this.name,
-    required this.values,
-    required this.isInteger,
-  });
-
-  @override
-  String toString() {
-    return '''
-${_getEnumContent()}
-${_getEnumValuesMapContent()}
-${_generateEnumFromJsonToJson()}
-''';
-  }
-
-  String _getEnumValuesMapContent() {
-    final neededStrings = <String>[];
-    final fields = <String>[];
-
-    for (int i = 0; i < values.length; i++) {
-      final value = values[i];
-      var validatedValue = value;
-
-      validatedValue = getValidatedEnumFieldName(validatedValue);
-
-      while (fields.contains(validatedValue)) {
-        validatedValue += '\$';
-      }
-
-      fields.add(validatedValue);
-      if (isInteger) {
-        neededStrings
-            .add('\t$name.$validatedValue: ${value.replaceAll('\$', '\\\$')}');
-      } else {
-        neededStrings.add(
-            '\t$name.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-      }
-    }
-
-    return '''
-const \$${name}Map = {
-${neededStrings.join(',\n')}};''';
-  }
-
-  String _getEnumContent() {
-    final resultStrings = <String>[];
-
-    for (int i = 0; i < values.length; i++) {
-      final value = values[i];
-      var validatedValue = value;
-
-      validatedValue = getValidatedEnumFieldName(validatedValue);
-
-      if (isInteger) {
-        resultStrings.add(
-            "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
-      } else {
-        resultStrings.add(
-            "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
-      }
-    }
-
-    return '''
-enum $name {
-@JsonValue('swaggerGeneratedUnknown')
-swaggerGeneratedUnknown,
-${resultStrings.join(',\n')}
-}''';
-  }
-
-  static String getValidatedEnumFieldName(String name) {
-    if (name.isEmpty) {
-      name = 'null';
-    }
-
-    var result = name
-        .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
-        .split('_')
-        .where((element) => element.isNotEmpty)
-        .map((String word) => word.toLowerCase().capitalize)
-        .join();
-
-    if (result.startsWith(RegExp('[0-9]+'))) {
-      result = defaultEnumFieldName + result;
-    }
-
-    if (exceptionWords.contains(result.toLowerCase())) {
-      return '\$' + result.lower;
-    }
-
-    if (result.isEmpty) {
-      return 'undefined';
-    }
-
-    return result.lower;
-  }
-
-  String _generateEnumFromJsonToJson() {
-    final type = isInteger ? 'int' : 'String';
-    final defaultTypeValue = isInteger ? 0 : '\'\'';
-
-    return '''
-$type? ${name.camelCase}ToJson($name? ${name.camelCase}) {
-  return \$${name}Map[${name.camelCase}];
-}
-
-$name ${name.camelCase}FromJson(
-  Object? ${name.camelCase},
-  [$name? defaultValue,]
-  ) {
-
-${isInteger ? '''
-if(${name.camelCase} is int)
-  {
-    return \$${name}Map.entries
-      .firstWhere((element) => element.value == ${name.camelCase},
-      orElse: () => const MapEntry($name.swaggerGeneratedUnknown, $defaultTypeValue))
-      .key;
-  }
-''' : '''
-if(${name.camelCase} is String)
-  {
- return \$${name}Map.entries
-      .firstWhere((element) => element.value == ${name.camelCase},
-      orElse: () => const MapEntry($name.swaggerGeneratedUnknown, $defaultTypeValue))
-      .key;
-      }
-'''}
- 
-    final parsedResult = defaultValue == null ? null : \$${name}Map.entries
-      .firstWhereOrNull((element) => element.value == defaultValue)
-      ?.key;
-
-  return parsedResult ??
-      defaultValue ??
-      $name.swaggerGeneratedUnknown;
-}
-
-
-List<$type> ${name.camelCase}ListToJson(
-    List<$name>? ${name.camelCase}) {
-
-  if(${name.camelCase} == null)
-  {
-    return [];
-  }
-
-  return ${name.camelCase}
-      .map((e) => \$${name}Map[e]!)
-      .toList();
-}
-
-List<$name> ${name.camelCase}ListFromJson(
-    List? ${name.camelCase},
-    [List<$name>? defaultValue,]) {
-
-  if(${name.camelCase} == null)
-  {
-    return defaultValue ?? [];
-  }
-
-  return ${name.camelCase}
-      .map((e) => ${name.camelCase}FromJson(e.toString()))
-      .toList();
-}
-
-
-List<$name>? ${name.camelCase}NullableListFromJson(
-    List? ${name.camelCase},
-    [List<$name>? defaultValue,]) {
-
-  if(${name.camelCase} == null)
-  {
-    return defaultValue;
-  }
-
-  return ${name.camelCase}
-      .map((e) => ${name.camelCase}FromJson(e.toString()))
-      .toList();
-}
-    ''';
   }
 }

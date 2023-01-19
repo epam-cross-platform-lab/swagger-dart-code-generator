@@ -30,7 +30,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       root: root,
       fileName: fileName,
       classes: schemas ?? {},
-      generateFromJsonToJsonForRequests: true,
+      generateEnumsMethods: true,
       allEnums: allEnums,
     );
   }
@@ -42,6 +42,17 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     if (components == null) {
       return '';
     }
+
+    final schemas = components.schemas;
+    final requestBodies = components.requestBodies;
+
+    final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
+      root,
+      fileName,
+      schemas,
+      root.components?.responses ?? {},
+      requestBodies,
+    );
 
     final responses = components.responses;
 
@@ -64,8 +75,8 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       root: root,
       fileName: fileName,
       classes: result,
-      generateFromJsonToJsonForRequests: false,
-      allEnums: [],
+      allEnums: allEnums,
+      generateEnumsMethods: false,
     );
   }
 
@@ -95,12 +106,21 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
+    final schemas = components?.schemas ?? {};
+    final allEnums = SwaggerEnumsGeneratorV3(options).generateAllEnums(
+      root,
+      fileName,
+      schemas,
+      root.components?.responses ?? {},
+      requestBodies,
+    );
+
     return generateBase(
       root: root,
       fileName: fileName,
       classes: result,
-      generateFromJsonToJsonForRequests: false,
-      allEnums: [],
+      allEnums: allEnums,
+      generateEnumsMethods: false,
     );
   }
 
