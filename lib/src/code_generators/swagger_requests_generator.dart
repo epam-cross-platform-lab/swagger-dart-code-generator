@@ -708,7 +708,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..type = Reference(typeName.makeNullable())
                   ..named = true
                   ..annotations.add(
-                    refer(kPart.pascalCase).call([]),
+                    refer(kPart.pascalCase).call([literalString(key)]),
                   ),
               ),
             );
