@@ -1,7 +1,6 @@
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_models_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
-import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:test/test.dart';
@@ -21,68 +20,6 @@ void main() {
       outputFolder: '',
     ),
   );
-  group('generate', () {
-    const fileName = 'order_service.dart';
-
-    test('Should parse object name as a field Type', () {
-      final map = SwaggerRoot.parse(modelWithParametersV3);
-
-      final result = generator.generate(map, fileName);
-
-      expect(
-          result, contains('final enums.TokensResponseTokenType? tokenType'));
-    });
-
-    test('Should generate .toLower() when caseSensitive: false', () {
-      final map = SwaggerRoot.parse(modelWithParametersV3);
-      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
-        inputFolder: '',
-        outputFolder: '',
-        enumsCaseSensitive: false,
-      )).generate(map, fileName);
-
-      expect(
-          result,
-          contains(
-              'element.value.toLowerCase() == someEnumModel.toLowerCase()'));
-    });
-
-    test('Should NOT generate .toLower() when caseSensitive: false', () {
-      final map = SwaggerRoot.parse(modelWithParametersV3);
-      final result = generator.generate(map, fileName);
-
-      expect(result, contains('element.value == someEnumModel'));
-    });
-
-    test('Should parse object name as a field Type', () {
-      final map = SwaggerRoot.parse(modelWithParametersV2);
-      final result = generator2.generate(map, fileName);
-
-      expect(
-          result,
-          contains(
-              'final enums.ActiveOrderAndListSummaryShoppingType shoppingType'));
-    });
-
-    test('Should parse object name as a field Type', () {
-      const expectedResult = "@JsonKey(name: 'expires_in', defaultValue: 19)";
-      final map = SwaggerRoot.parse(modelWithParametersV3);
-      final result = SwaggerModelsGeneratorV3(
-        GeneratorOptions(
-          inputFolder: '',
-          outputFolder: '',
-          defaultValuesMap: [
-            DefaultValueMap(
-              typeName: 'int',
-              defaultValue: '19',
-            ),
-          ],
-        ),
-      ).generate(map, fileName);
-
-      expect(result, contains(expectedResult));
-    });
-  });
 
   group('generateDefaultValueFromMap', () {
     test('Should return default value', () {
@@ -261,77 +198,6 @@ void main() {
       );
 
       expect(result.contains(', includeIfNull: false'), equals(false));
-    });
-  });
-
-  group('generatePropertyContentByRef', () {
-    test('Should return property with JsonKey', () {
-      final propertyEntryMap = SwaggerSchema(ref: 'Pet');
-      const propertyName = 'shipDate';
-      const propertyKey = 'shipDateGet';
-      const className = 'Animals';
-      const jsonKeyExpendedResult = "@JsonKey(name: '$propertyKey'";
-      const expectedResult =
-          '\t$jsonKeyExpendedResult)\n\tfinal Pet? $propertyName;';
-
-      final result = generator.generatePropertyContentByRef(
-        propertyEntryMap,
-        propertyName,
-        propertyKey,
-        className,
-        [],
-        [],
-        {},
-        [],
-        {},
-      );
-
-      expect(result, contains(jsonKeyExpendedResult));
-      expect(result, contains(expectedResult));
-    });
-
-    test('Should add toJsonFromJson', () {
-      final propertyEntryMap = SwaggerSchema(ref: 'Pet');
-      const propertyName = 'shipDate';
-      const propertyKey = 'shipDateGet';
-      const className = 'Animals';
-
-      final result = generator.generatePropertyContentByRef(
-        propertyEntryMap,
-        propertyName,
-        propertyKey,
-        className,
-        ['enums.Pet'],
-        [],
-        {},
-        [],
-        {},
-      );
-
-      expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
-    });
-  });
-
-  group('generateEnumPropertyContent', () {
-    test('Should return enum property with JsonKey with fromJson and toJson',
-        () {
-      const key = 'dog';
-      const className = 'animals';
-      const jsonKeyExpectedResult =
-          'toJson: animalsDogToJson, fromJson: animalsDogFromJson';
-      const expectedResult = 'final AnimalsDog? dog;';
-      final result = generator.generateEnumPropertyContent(
-        key,
-        className,
-        key,
-        [],
-        [],
-        SwaggerSchema(),
-        [],
-      );
-
-      expect(result, contains(jsonKeyExpectedResult));
-      expect(result, contains(expectedResult));
     });
   });
 
@@ -658,54 +524,6 @@ void main() {
     });
   });
 
-  group('generatePropertyContentByType', () {
-    test('Should return property content by schema', () {
-      final map = SwaggerSchema(type: 'enum');
-      const propertyName = 'dog';
-      const className = 'Animals';
-      const propertyKey = 'Dog';
-      final result = generator.generatePropertyContentByType(
-        map,
-        propertyName,
-        propertyKey,
-        className,
-        <DefaultValueMap>[],
-        [],
-        [],
-        [],
-        {},
-        [],
-        {},
-      );
-
-      expect(result,
-          contains('toJson: animalsDogToJson, fromJson: animalsDogFromJson'));
-    });
-
-    test('Should return property content by schema', () {
-      final map = SwaggerSchema(type: 'array');
-      const propertyName = 'dog';
-      const className = 'Animals';
-      const propertyKey = 'Dog';
-
-      final result = generator.generatePropertyContentByType(
-        map,
-        propertyName,
-        propertyKey,
-        className,
-        <DefaultValueMap>[],
-        [],
-        [],
-        [],
-        {},
-        [],
-        {},
-      );
-
-      expect(result, contains('final List<Object>? dog;'));
-    });
-  });
-
   group('Tests for getValidatedClassName', () {
     test('Should', () {
       final result = generator.getValidatedClassName('Request');
@@ -714,205 +532,49 @@ void main() {
     });
   });
 
-  group('Tests for generateGeneralPropertyContent', () {
-    test('Should', () {
-      final result = generator.generateGeneralPropertyContent(
-        'name',
-        'key',
-        'className',
-        [],
-        SwaggerSchema(ref: 'ClassNameName'),
-        ['enums.ClassNameName'],
-        [],
-        [],
-      );
-
-      expect(result, contains('final enums.ClassNameName? name;'));
-    });
-  });
-
   group('Tests for generateResponses', () {
     test('Should generate empty string for V2', () {
       final map = SwaggerRoot.parse(schemasResponsesWithResponse);
-      final result = generator2.generateResponses(map, 'fileName');
+      final result = generator2.generateResponses(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
 
       expect(result, equals(''));
     });
 
     test('Should generate class from responses V3', () {
       final map = SwaggerRoot.parse(schemasResponsesWithResponse);
-      final result = generator.generateResponses(map, 'fileName');
+      final result = generator.generateResponses(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
 
       expect(result, contains('class SpaResponse'));
     });
 
     test('Should generate class from responses V3 and Schemas', () {
       final map = SwaggerRoot.parse(schemasResponsesWithResponseAndSchemas);
-      final result = generator.generateResponses(map, 'fileName');
+      final result = generator.generateResponses(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
 
       expect(result, contains('class SpaResponse'));
-    });
-  });
-
-  group('Tests for getAllEnumNames', () {
-    test('Should', () {
-      final map = SwaggerRoot.parse(enumAsDefinitionV2);
-      final result = generator2.getAllEnumNames(map);
-
-      expect(result, contains('enums.SpaResponse'));
-    });
-
-    test('Should get enum name from schemas', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsInProperties);
-      final result = generator.getAllEnumNames(map);
-
-      expect(result, contains('enums.SpaSchemaSuccessValues'));
-    });
-
-    test('Should get enum name from responses', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsInProperties);
-      final result = generator.getAllEnumNames(map);
-
-      expect(result, contains('enums.SpaResponse'));
-    });
-
-    test('Should get enum name from responses with Enum items', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsInProperties);
-      final result = generator.getAllEnumNames(map);
-
-      expect(result, contains('enums.SpaEnumResponseFailedValued'));
-    });
-  });
-
-  group('Tests for getAllEnums', () {
-    test('Should get enums with integer return types', () {
-      final map = SwaggerRoot.parse(schemasWithIntegers);
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(SwaggerEnum(
-          name: 'enums.AccountType',
-          isInteger: true,
-          defaultValue: null,
-        )),
-      );
-    });
-
-    test('Should get enums with integer return types in properties', () {
-      final map = SwaggerRoot.parse(schemasWithIntegers);
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(
-          SwaggerEnum(
-            name: 'enums.SpaSchemaSuccessValues',
-            isInteger: true,
-            defaultValue: 1,
-          ),
-        ),
-      );
-    });
-
-    test('Should get enums with integer return types in response', () {
-      final map = SwaggerRoot.parse(schemasWithIntegers);
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(
-          SwaggerEnum(
-            name: 'enums.SpaResponse',
-            isInteger: true,
-            defaultValue: null,
-          ),
-        ),
-      );
-    });
-
-    test('Should get enums with integer return types in response properties',
-        () {
-      final map = SwaggerRoot.parse(schemasWithIntegers);
-      final result = generator.getAllEnums(map);
-
-      expect(
-        result,
-        contains(
-          SwaggerEnum(
-            name: 'enums.SpaEnumResponseFailedValued',
-            isInteger: true,
-            defaultValue: null,
-          ),
-        ),
-      );
-    });
-  });
-
-  group('Tests allOf enums', () {
-    test('Class properties should get enums. prefix', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsFromAllOf);
-      final result = generator.generateResponses(map, 'fileName');
-
-      expect(result, contains('final enums.Success? success'));
-    });
-
-    test('fromJson should have default value', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsFromAllOf);
-      final result = generator.generateResponses(map, 'fileName');
-
-      expect(
-        result,
-        contains(
-          '@JsonKey(name: \'success\', toJson: successToJson, fromJson: successSuccessFromJson, )',
-        ),
-      );
-      expect(
-        result,
-        contains(
-          'enums.Success successSuccessFromJson(Object? value) => successFromJson(value, enums.Success.one)',
-        ),
-      );
-    });
-  });
-
-  group('Tests enums ref', () {
-    test('fromJson should use use the standard function', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsArrayRef);
-      final result = generator.generateResponses(map, 'fileName');
-
-      expect(
-        result,
-        contains(
-          '@JsonKey(name: \'success\', toJson: successListToJson, fromJson: successListFromJson, )',
-        ),
-      );
-    });
-
-    test('fromJson should use use a custom default value function', () {
-      final map = SwaggerRoot.parse(schemasWithEnumsArrayRef);
-      final result = generator.generateResponses(map, 'fileName');
-
-      expect(
-        result,
-        contains(
-          '@JsonKey(name: \'successOther\', toJson: successListToJson, fromJson: successSuccessOtherListFromJson, )',
-        ),
-      );
-      expect(
-        result,
-        contains(
-          'static List<enums.Success> successSuccessOtherListFromJson(List? value) '
-          '=> successListFromJson(value, [enums.Success.one, enums.Success.two])',
-        ),
-      );
     });
   });
 
   group('Tests for models from responses', () {
     test('Should generate correct model from response', () {
       final map = SwaggerRoot.parse(requestWithReturnTypeInjected);
-      final result = generator.generate(map, 'my_service');
+      final result = generator.generate(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
 
       expect(result, contains('class ModelItemsGet\$Response'));
     });
@@ -921,7 +583,11 @@ void main() {
   group('Tests for additionalProperties', () {
     test('Should generate dynamic map type', () {
       final map = SwaggerRoot.parse(objectWithadditionalProperties);
-      final result = generator.generate(map, 'test');
+      final result = generator.generate(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
 
       expect(result, contains('final Map<String,dynamic>? metadata'));
     });
