@@ -16,41 +16,7 @@ class EnumModel {
   });
 
   @override
-  String toString() {
-    return '''
-${_getEnumContent()}
-${_getEnumValuesMapContent()}
-''';
-  }
-
-  String _getEnumValuesMapContent() {
-    final neededStrings = <String>[];
-    final fields = <String>[];
-
-    for (int i = 0; i < values.length; i++) {
-      final value = values[i];
-      var validatedValue = value;
-
-      validatedValue = getValidatedEnumFieldName(validatedValue);
-
-      while (fields.contains(validatedValue)) {
-        validatedValue += '\$';
-      }
-
-      fields.add(validatedValue);
-      if (isInteger) {
-        neededStrings
-            .add('\t$name.$validatedValue: ${value.replaceAll('\$', '\\\$')}');
-      } else {
-        neededStrings.add(
-            '\t$name.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-      }
-    }
-
-    return '''
-const \$${name}Map = {
-${neededStrings.join(',\n')}};''';
-  }
+  String toString() => _getEnumContent();
 
   String _getEnumContent() {
     final resultStrings = <String>[];
@@ -59,7 +25,7 @@ ${neededStrings.join(',\n')}};''';
       final value = values[i];
       var validatedValue = value;
 
-      validatedValue = getValidatedEnumFieldName(validatedValue);
+      validatedValue = getValidatedEnumFieldName(validatedValue, isInteger);
 
       if (isInteger) {
         resultStrings.add(
@@ -72,13 +38,18 @@ ${neededStrings.join(',\n')}};''';
 
     return '''
 enum $name {
-@JsonValue('swaggerGeneratedUnknown')
-swaggerGeneratedUnknown,
-${resultStrings.join(',\n')}
+@JsonValue(null)
+swaggerGeneratedUnknown(null),
+
+${resultStrings.join(',\n')};
+
+final ${isInteger ? 'int' : 'String'}? value;
+
+const $name(this.value);
 }''';
   }
 
-  static String getValidatedEnumFieldName(String name) {
+  static String getValidatedEnumFieldName(String name, bool isInteger) {
     if (name.isEmpty) {
       name = 'null';
     }
@@ -95,23 +66,22 @@ ${resultStrings.join(',\n')}
     }
 
     if (exceptionWords.contains(result.toLowerCase())) {
-      return '\$' + result.lower;
+      return '\$${result.lower}(${isInteger ? name : '\'$name\''})';
     }
 
     if (result.isEmpty) {
-      return 'undefined';
+      return 'undefined(${isInteger ? name : '\'$name\''})';
     }
 
-    return result.lower;
+    return '${result.lower}(${isInteger ? name : '\'$name\''})';
   }
 
   String generateFromJsonToJson() {
     final type = isInteger ? 'int' : 'String';
-    final defaultTypeValue = isInteger ? 0 : '\'\'';
 
     return '''
 $type? ${name.camelCase}ToJson(enums.$name? ${name.camelCase}) {
-  return enums.\$${name}Map[${name.camelCase}];
+  return ${name.camelCase}?.value;
 }
 
 enums.$name ${name.camelCase}FromJson(
@@ -119,31 +89,7 @@ enums.$name ${name.camelCase}FromJson(
   [enums.$name? defaultValue,]
   ) {
 
-${isInteger ? '''
-if(${name.camelCase} is int)
-  {
-    return enums.\$${name}Map.entries
-      .firstWhere((element) => element.value == ${name.camelCase},
-      orElse: () => const MapEntry(enums.$name.swaggerGeneratedUnknown, $defaultTypeValue))
-      .key;
-  }
-''' : '''
-if(${name.camelCase} is String)
-  {
- return enums.\$${name}Map.entries
-      .firstWhere((element) => element.value == ${name.camelCase},
-      orElse: () => const MapEntry(enums.$name.swaggerGeneratedUnknown, $defaultTypeValue))
-      .key;
-      }
-'''}
- 
-    final parsedResult = defaultValue == null ? null : enums.\$${name}Map.entries
-      .firstWhereOrNull((element) => element.value == defaultValue)
-      ?.key;
-
-  return parsedResult ??
-      defaultValue ??
-      enums.$name.swaggerGeneratedUnknown;
+return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown;
 }
 
 
@@ -156,7 +102,7 @@ List<$type> ${name.camelCase}ListToJson(
   }
 
   return ${name.camelCase}
-      .map((e) => enums.\$${name}Map[e]!)
+      .map((e) => e.value!)
       .toList();
 }
 
