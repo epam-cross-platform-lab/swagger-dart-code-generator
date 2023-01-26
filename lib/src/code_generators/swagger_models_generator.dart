@@ -1020,7 +1020,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (propertiesMap.isEmpty) {
       return '';
     }
-
+    
     final results = <String>[];
     final propertyNames = <String>[];
 
