@@ -24,6 +24,7 @@ class SwaggerSchema {
     this.isNullable = false,
     this.hasAdditionalProperties = false,
     this.discriminator,
+    this.msEnum,
   });
 
   @JsonKey(name: 'type', defaultValue: '')
@@ -51,8 +52,17 @@ class SwaggerSchema {
   @JsonKey(name: 'enum', defaultValue: [])
   List<Object?> enumValuesObj;
 
-  List<String> get enumValues =>
-      enumValuesObj.map((e) => e.toString()).toList();
+  @JsonKey(name: 'x-ms-enum', defaultValue: null)
+  MsEnum? msEnum;
+
+  List<String> get enumValues {
+    final values = (msEnum?.values.isNotEmpty == true
+            ? msEnum?.values.map((e) => e.value)
+            : enumValuesObj) ??
+        [];
+
+    return values.map((e) => e.toString()).toList();
+  }
 
   bool get isEnum => enumValuesObj.isNotEmpty;
 
@@ -98,8 +108,10 @@ class SwaggerSchema {
         ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
             ?.map((e) => e as String)
             .toList()
-        ..isNullable =
-            (json[kIsNullable] ?? json[kIsNullable] ?? json[kNullable] ?? false) as bool;
+        ..isNullable = (json[kIsNullable] ??
+            json[kIsNullable] ??
+            json[kNullable] ??
+            false) as bool;
 
   Map<String, dynamic> toJson() => {
         ..._$SwaggerSchemaToJson(this),
@@ -130,4 +142,31 @@ List<String> _requiredFromJson(dynamic value) {
   }
 
   return [];
+}
+
+@JsonSerializable()
+class MsEnum {
+  @JsonKey(name: 'values')
+  final List<MsEnumValue> values;
+
+  const MsEnum({
+    this.values = const [],
+  });
+
+  Map<String, dynamic> toJson() => _$MsEnumToJson(this);
+
+  factory MsEnum.fromJson(Map<String, dynamic> json) => _$MsEnumFromJson(json);
+}
+
+@JsonSerializable()
+class MsEnumValue {
+  @JsonKey(name: 'value')
+  final Object? value;
+
+  const MsEnumValue({this.value = const []});
+
+  Map<String, dynamic> toJson() => _$MsEnumValueToJson(this);
+
+  factory MsEnumValue.fromJson(Map<String, dynamic> json) =>
+      _$MsEnumValueFromJson(json);
 }
