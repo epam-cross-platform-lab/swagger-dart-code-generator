@@ -39,5 +39,5 @@ dev_dependencies:
   json_serializable: ^6.1.4
   remove_from_coverage: ^2.0.0
   test: ^1.20.1
-  lints: ^1.0.1
+  lints: ^2.0.1
  

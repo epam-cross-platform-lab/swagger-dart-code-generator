@@ -92,11 +92,11 @@ abstract class SwaggerGeneratorBase {
 
     if (jsonKey.startsWith(RegExp('[0-9]')) ||
         exceptionWords.contains(jsonKey)) {
-      jsonKey = '\$' + jsonKey;
+      jsonKey = '\$$jsonKey';
     }
 
     if (kBasicTypes.contains(jsonKey)) {
-      jsonKey = '\$' + jsonKey;
+      jsonKey = '\$$jsonKey';
     }
 
     return jsonKey;

@@ -415,7 +415,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
-  _JsonEnumValue generateEnumValue({
+  JsonEnumValue generateEnumValue({
     required List<String> allEnumNames,
     required List<String> allEnumListNames,
     required String propertyName,
@@ -489,7 +489,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       }
     }
 
-    return _JsonEnumValue(
+    return JsonEnumValue(
       jsonKey: jsonKey,
       fromJson: fromJson,
     );
@@ -1506,8 +1506,8 @@ $allHashComponents;
   }
 }
 
-class _JsonEnumValue {
-  _JsonEnumValue({
+class JsonEnumValue {
+  JsonEnumValue({
     required this.jsonKey,
     required this.fromJson,
   });
