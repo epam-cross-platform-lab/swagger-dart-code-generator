@@ -1,8 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
-import 'package:swagger_dart_code_generator/src/exception_words.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
@@ -17,69 +19,85 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
   @override
   GeneratorOptions get options => _options;
 
-  static const String defaultEnumFieldName = 'value_';
   static const String defaultEnumValueName = 'swaggerGeneratedUnknown';
 
   SwaggerEnumsGenerator(this._options);
 
-  String generate(SwaggerRoot root, String fileName);
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  });
 
-  String generateFromMap(
-      SwaggerRoot root,
-      String fileName,
-      Map<String, SwaggerSchema> definitions,
-      Map<String, SwaggerSchema> responses,
-      Map<String, SwaggerSchema> requestBodies) {
+  List<EnumModel> generateAllEnums({
+    required SwaggerRoot root,
+    required String fileName,
+  }) {
+    final requestBodies = root.components?.requestBodies ?? {};
+    requestBodies.addAll(
+        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
+
+    final responses = root.components?.responses ?? {};
+    final definitions = root.components?.schemas ?? {};
+    definitions.addAll(root.definitions);
+
     final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
     final enumsFromResponses = generateEnumsFromSchemaMap(responses);
     final enumsFromRequestBodies = generateEnumsFromSchemaMap(requestBodies);
 
-    if (definitions.isEmpty) {
-      return '''import 'package:json_annotation/json_annotation.dart';
-$enumsFromRequests$enumsFromResponses$enumsFromRequestBodies''';
-    }
-
     final enumsFromClasses = definitions.keys
         .map((String className) {
-          return generateEnumsFromClasses(
+          final result = generateEnumsFromClasses(
             getValidatedClassName(className.pascalCase),
             definitions[className]!,
             definitions,
           );
-        })
-        .where((element) => element.isNotEmpty)
-        .join('\n');
 
-    if (enumsFromClasses.isEmpty &&
-        enumsFromRequests.isEmpty &&
-        enumsFromResponses.isEmpty &&
-        enumsFromRequestBodies.isEmpty) {
+          return result;
+        })
+        .expand((w) => w)
+        .toList();
+
+    final result = [
+      ...enumsFromClasses,
+      ...enumsFromRequests,
+      ...enumsFromResponses,
+      ...enumsFromRequestBodies,
+    ];
+
+    return result;
+  }
+
+  String generateFromMap(
+    SwaggerRoot root,
+    String fileName,
+    Map<String, SwaggerSchema> definitions,
+    Map<String, SwaggerSchema> responses,
+    Map<String, SwaggerSchema> requestBodies,
+    List<EnumModel> allEnums,
+  ) {
+    if (allEnums.isEmpty) {
       return '';
     }
 
     return '''
 import 'package:json_annotation/json_annotation.dart';
-$enumsFromClasses
-
-$enumsFromRequests
-
-$enumsFromResponses
-
-$enumsFromRequestBodies
+import 'package:collection/collection.dart';
+${allEnums.map((e) => e.toString()).join('\n')}
 ''';
   }
 
-  String generateEnumsFromSchemaMap(Map<String, SwaggerSchema> map) {
+  List<EnumModel> generateEnumsFromSchemaMap(Map<String, SwaggerSchema> map) {
     if (map.isEmpty) {
-      return '';
+      return [];
     }
 
-    final enumsFromSchemas = map.keys
-        .map((String className) {
+    return map.keys
+        .map<List<EnumModel>>((String className) {
           final schema = map[className];
 
           if (schema == null) {
-            return '';
+            return [];
           }
 
           return generateEnumsFromClasses(
@@ -88,16 +106,13 @@ $enumsFromRequestBodies
             {},
           );
         })
-        .where((element) => element.isNotEmpty)
-        .join('\n');
-
-    return enumsFromSchemas;
+        .expand((w) => w)
+        .toList();
   }
 
-  String generateEnumsContentFromRequests(
+  List<EnumModel> generateEnumsContentFromRequests(
       SwaggerRoot swaggerRoot, String fileName) {
-    final enumNames = <String>[];
-    final result = StringBuffer();
+    final result = <EnumModel>[];
 
     final definedParameters = <String, SwaggerRequestParameter>{};
     definedParameters.addAll(swaggerRoot.parameters);
@@ -114,20 +129,31 @@ $enumsFromRequestBodies
 
       if (enumValues.isNotEmpty &&
           swaggerRoot.components?.schemas.containsKey(key) != true) {
-        final enumContent = generateEnumContent(
-          getValidatedClassName(key),
-          enumValues,
-          isInteger,
+        final enumContent = EnumModel(
+          name: getValidatedClassName(key),
+          values: enumValues,
+          isInteger: isInteger,
         );
 
-        result.writeln(enumContent);
-        enumNames.add(swaggerRequestParameter.name);
+        result.add(enumContent);
       }
     });
 
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
       swaggerPath.requests
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
+        final successResponse = SwaggerRequestsGenerator.getSuccessedResponse(
+            responses: swaggerRequest.responses);
+        final successResponseSchema = successResponse?.schema;
+
+        if (successResponseSchema != null) {
+          final responseEnums = generateEnumsFromSchemaMap({
+            '${path.pascalCase}${requestType.pascalCase}\$$kResponse':
+                successResponseSchema
+          });
+          result.addAll(responseEnums);
+        }
+
         if (swaggerRequest.parameters.isEmpty) {
           return;
         }
@@ -140,10 +166,6 @@ $enumsFromRequestBodies
 
           name = getValidatedClassName(name);
 
-          if (enumNames.contains(name)) {
-            continue;
-          }
-
           final enumValues = swaggerRequestParameter.schema?.enumValues ??
               swaggerRequestParameter.items?.enumValues ??
               [];
@@ -153,175 +175,68 @@ $enumsFromRequestBodies
                   kIntegerTypes.contains(swaggerRequestParameter.items?.type);
 
           if (enumValues.isNotEmpty) {
-            final enumContent = generateEnumContent(
-              name,
-              enumValues,
-              isInteger,
+            final enumContent = EnumModel(
+              name: getValidatedClassName(name),
+              values: enumValues,
+              isInteger: isInteger,
             );
 
-            result.writeln(enumContent);
-            enumNames.add(swaggerRequestParameter.name);
+            result.add(enumContent);
           }
         }
       });
     });
 
-    return result.toString();
-  }
-
-  String generateEnumContent(
-    String enumName,
-    List<String> enumValues,
-    bool isInteger,
-  ) {
-    final enumValuesContent = getEnumValuesContent(
-      enumValues: enumValues,
-      isInteger: isInteger,
-      enumValuesNames: [],
-    );
-
-    final enumMap = '''
-\n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(
-      enumName,
-      enumValues: enumValues,
-      enumValuesNames: [],
-      isInteger: isInteger,
-    )}
-      };
-      ''';
-
-    final result = """
-enum $enumName{
-\t@JsonValue('swaggerGeneratedUnknown')
-\tswaggerGeneratedUnknown,
-$enumValuesContent
-}
-
-$enumMap
- """;
-
     return result;
   }
 
-  String getEnumValuesContent({
-    required List<String> enumValues,
-    required List<String> enumValuesNames,
-    required bool isInteger,
-  }) {
-    final result = <String>[];
-    final resultStrings = <String>[];
-
-    for (int i = 0; i < enumValues.length; i++) {
-      final value = enumValues[i];
-      var validatedValue = value;
-
-      if (enumValuesNames.length == enumValues.length) {
-        validatedValue = enumValuesNames[i];
-      }
-
-      validatedValue = getValidatedEnumFieldName(validatedValue);
-
-      while (result.contains(validatedValue)) {
-        validatedValue += '\$';
-      }
-
-      result.add(validatedValue);
-
-      if (isInteger) {
-        resultStrings.add(
-            "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
-      } else {
-        resultStrings.add(
-            "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
-      }
-    }
-
-    return resultStrings.join(',\n');
-  }
-
-  String getEnumValuesMapContent(
-    String enumName, {
-    required List<String> enumValues,
-    required List<String> enumValuesNames,
-    required bool isInteger,
-  }) {
-    final neededStrings = <String>[];
-    final fields = <String>[];
-
-    for (int i = 0; i < enumValues.length; i++) {
-      final value = enumValues[i];
-      var validatedValue = value;
-
-      if (enumValuesNames.length == enumValues.length) {
-        validatedValue = enumValuesNames[i];
-      }
-
-      validatedValue = getValidatedEnumFieldName(validatedValue);
-
-      while (fields.contains(validatedValue)) {
-        validatedValue += '\$';
-      }
-
-      fields.add(validatedValue);
-      if (isInteger) {
-        neededStrings.add(
-            '\t$enumName.$validatedValue: ${value.replaceAll('\$', '\\\$')}');
-      } else {
-        neededStrings.add(
-            '\t$enumName.$validatedValue: \'${value.replaceAll('\$', '\\\$')}\'');
-      }
-    }
-
-    return neededStrings.join(',\n');
-  }
-
-  static String getValidatedEnumFieldName(String name) {
-    if (name.isEmpty) {
-      name = 'null';
-    }
-
-    var result = name
-        .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
-        .split('_')
-        .where((element) => element.isNotEmpty)
-        .map((String word) => word.toLowerCase().capitalize)
-        .join();
-
-    if (result.startsWith(RegExp('[0-9]+'))) {
-      result = defaultEnumFieldName + result;
-    }
-
-    if (exceptionWords.contains(result.toLowerCase())) {
-      return '\$' + result.lower;
-    }
-
-    if (result.isEmpty) {
-      return 'undefined';
-    }
-
-    return result.lower;
-  }
-
-  String generateEnumsContentFromModelProperties(
+  List<EnumModel> generateEnumsContentFromModelProperties(
       Map<String, SwaggerSchema> map, String className) {
     if (map.isEmpty) {
-      return '';
+      return [];
     }
 
     final gemeratedEnumsContent = map.keys
-        .map((String key) {
+        .map<List<EnumModel>>((String key) {
           final enumValues = map[key];
 
-          if (enumValues != null && enumValues.type.isNotEmpty) {
-            return generateEnumContentIfPossible(
-                enumValues, generateEnumName(className, key));
+          if (enumValues == null) {
+            return [];
           }
 
-          return '';
+          Map<String, SwaggerSchema> properties = {};
+          properties.addAll(enumValues.properties);
+          properties.addAll(enumValues.items?.properties ?? {});
+
+          final result = <EnumModel>[];
+
+          if (properties.isNotEmpty) {
+            final isListProperty =
+                enumValues.items?.properties.isNotEmpty == true;
+
+            result.addAll(
+              generateEnumsContentFromModelProperties(
+                properties,
+                '$className\$${key.pascalCase}${isListProperty ? '\$Item' : ''}',
+              ),
+            );
+          }
+
+          if (enumValues.type.isNotEmpty) {
+            final enumModel = generateEnumContentIfPossible(
+              enumValues,
+              generateEnumName(className, key),
+            );
+
+            if (enumModel != null) {
+              result.add(enumModel);
+            }
+          }
+
+          return result;
         })
-        .where((String generatedEnum) => generatedEnum.isNotEmpty)
-        .join('\n');
+        .expand((w) => w)
+        .toList();
 
     return gemeratedEnumsContent;
   }
@@ -336,73 +251,64 @@ $enumMap
     return enumValues.isNotEmpty && enumValues.first is int;
   }
 
-  String generateEnumContentIfPossible(SwaggerSchema schema, String enumName) {
+  EnumModel? generateEnumContentIfPossible(
+      SwaggerSchema schema, String enumName) {
     enumName = getValidatedClassName(enumName);
 
     if (schema.isEnum) {
       final enumValues = schema.enumValues;
 
-      final enumValuesNames = schema.enumNames ?? [];
-
       final isInteger = isIntegerEnum(schema);
 
-      final enumMap = '''
-\n\tconst \$${enumName}Map = {
-\t${getEnumValuesMapContent(
-        enumName,
-        enumValues: enumValues,
-        enumValuesNames: enumValuesNames,
+      return EnumModel(
+        name: getValidatedClassName(enumName),
+        values: enumValues,
         isInteger: isInteger,
-      )}
-      };
-      ''';
-
-      return """
-enum ${enumName.capitalize} {
-\t@JsonValue('$defaultEnumValueName')\n  $defaultEnumValueName,
-${getEnumValuesContent(
-        enumValues: enumValues,
-        enumValuesNames: enumValuesNames,
-        isInteger: isInteger,
-      )}
-}
-
-$enumMap
-""";
+      );
     } else if (schema.items != null) {
       return generateEnumContentIfPossible(schema.items!, enumName);
     } else {
-      return '';
+      return null;
     }
   }
 
-  String generateEnumsFromClasses(
+  List<EnumModel> generateEnumsFromClasses(
     String className,
     SwaggerSchema schema,
     Map<String, SwaggerSchema> schemas,
   ) {
     if (schema.isEnum) {
-      return generateEnumContentIfPossible(schema, className);
+      final enumModel = generateEnumContentIfPossible(schema, className);
+
+      return enumModel == null ? [] : [enumModel];
     }
 
     if (schema.items != null) {
       if (schema.items!.isEnum) {
-        return generateEnumContentIfPossible(schema.items!, className);
+        final enumModel =
+            generateEnumContentIfPossible(schema.items!, className);
+        return enumModel == null ? [] : [enumModel];
       }
 
       if (schema.items?.properties.isNotEmpty == true) {
-        var result = '';
+        var result = <EnumModel>[];
 
         schema.items?.properties.forEach((key, value) {
-          result += generateEnumContentIfPossible(
+          final enumModel = generateEnumContentIfPossible(
               value, '$className\$Item${key.pascalCase}');
+          if (enumModel != null) {
+            result.add(enumModel);
+          }
         });
 
         return result;
       }
 
-      return generateEnumContentIfPossible(schema.items!, className);
+      final enumModel = generateEnumContentIfPossible(schema.items!, className);
+
+      return enumModel == null ? [] : [enumModel];
     }
+
     Map<String, SwaggerSchema> properties;
 
     if (schema.allOf.isNotEmpty) {
@@ -424,6 +330,12 @@ $enumMap
 
         final allOfModel = schemas[ref.getUnformattedRef()];
 
+        if (allOfModel?.allOf.isNotEmpty == true) {
+          final allOfInside = allOfModel?.allOf.first;
+
+          properties.addAll(allOfInside?.properties ?? {});
+        }
+
         final allOfModelProperties = allOfModel?.properties ?? {};
 
         properties.addAll(allOfModelProperties);
@@ -433,7 +345,7 @@ $enumMap
     }
 
     if (properties.isEmpty) {
-      return '';
+      return [];
     }
 
     return generateEnumsContentFromModelProperties(properties, className);

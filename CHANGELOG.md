@@ -1,3 +1,12 @@
+# 2.10.0
+
+* Fixed generation very comples swaggers with enums ([#528](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/528))
+* Implemented new enums support (Dart 2.17 and higher required) ([#408](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/408))
+
+# 2.9.0
+
+* Fixed generation of nullable model properties ([#522](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/522))
+
 # 2.9.0
 
 * Fixed generation of nullable model properties ([#522](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/522))

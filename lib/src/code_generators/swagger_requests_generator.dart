@@ -373,15 +373,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   ) {
     final parametersListString = parameters.map((p) {
       if (p.type!.symbol!.startsWith('enums.')) {
-        final enumName =
-            p.type!.symbol!.replaceFirst('enums.', '').replaceAll('?', '');
-
-        final toStringPart = p.annotations
-                .any((p0) => p0.code.toString().contains('symbol=Body'))
-            ? ''
-            : '?.toString()';
-
-        return '${p.name} : enums.\$${enumName}Map[${p.name}]$toStringPart';
+        return '${p.name} : ${p.name}?.value?.toString()';
       }
 
       if (p.type!.symbol!.startsWith('List<enums.')) {
@@ -729,7 +721,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..type = Reference(typeName.makeNullable())
                   ..named = true
                   ..annotations.add(
-                    refer(kPart.pascalCase).call([]),
+                    refer(kPart.pascalCase).call([literalString(key)]),
                   ),
               ),
             );

@@ -198,17 +198,41 @@ class SwaggerDartCodeGenerator implements Builder {
   }) async {
     final codeGenerator = SwaggerCodeGenerator();
 
+    final fileWithoutExtension = removeFileExtension(fileNameWithExtension);
+
+    final allEnums = codeGenerator.generateAllEnums(
+      root: contents,
+      fileName: fileWithoutExtension,
+      options: options,
+    );
+
     final models = codeGenerator.generateModels(
-        contents, removeFileExtension(fileNameWithExtension), options);
+      contents,
+      fileWithoutExtension,
+      options,
+      allEnums,
+    );
 
     final responses = codeGenerator.generateResponses(
-        contents, removeFileExtension(fileNameWithExtension), options);
+      contents,
+      fileWithoutExtension,
+      options,
+      allEnums,
+    );
 
     final requestBodies = codeGenerator.generateRequestBodies(
-        contents, removeFileExtension(fileNameWithExtension), options);
+      contents,
+      fileWithoutExtension,
+      options,
+      allEnums,
+    );
 
     final enums = codeGenerator.generateEnums(
-        contents, removeFileExtension(fileNameWithExtension), options);
+      contents,
+      fileWithoutExtension,
+      allEnums,
+      options,
+    );
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,

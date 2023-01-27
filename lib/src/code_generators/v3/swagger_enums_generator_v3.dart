@@ -1,3 +1,4 @@
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -7,7 +8,11 @@ class SwaggerEnumsGeneratorV3 extends SwaggerEnumsGenerator {
   SwaggerEnumsGeneratorV3(GeneratorOptions options) : super(options);
 
   @override
-  String generate(SwaggerRoot root, String fileName) {
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final components = root.components;
     final schemas = components?.schemas;
 
@@ -24,6 +29,7 @@ class SwaggerEnumsGeneratorV3 extends SwaggerEnumsGenerator {
       schemas ?? {},
       responses ?? {},
       requestBodies,
+      allEnums,
     );
   }
 }

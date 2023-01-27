@@ -92,11 +92,11 @@ abstract class SwaggerGeneratorBase {
 
     if (jsonKey.startsWith(RegExp('[0-9]')) ||
         exceptionWords.contains(jsonKey)) {
-      jsonKey = '\$' + jsonKey;
+      jsonKey = '\$$jsonKey';
     }
 
     if (kBasicTypes.contains(jsonKey)) {
-      jsonKey = '\$' + jsonKey;
+      jsonKey = '\$$jsonKey';
     }
 
     return jsonKey;
@@ -174,10 +174,6 @@ abstract class SwaggerGeneratorBase {
   }
 
   String generateRequestName(String path, String requestType) {
-    if (path == '/') {
-      path = '\$';
-    }
-
     path = path.split('{').map((e) => e.capitalize).join();
     path = path.split('}').map((e) => e.capitalize).join();
     path = path.split(',').map((e) => e.capitalize).join();
