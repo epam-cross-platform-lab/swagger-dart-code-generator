@@ -6,6 +6,7 @@ class EnumModel {
   final String name;
   final List<String> values;
   final bool isInteger;
+  final List<String> enumNames;
 
   static const String defaultEnumFieldName = 'value_';
 
@@ -13,6 +14,7 @@ class EnumModel {
     required this.name,
     required this.values,
     required this.isInteger,
+    required this.enumNames,
   });
 
   @override
