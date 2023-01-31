@@ -6,6 +6,7 @@ class EnumModel {
   final String name;
   final List<String> values;
   final bool isInteger;
+  final List<String> enumNames;
 
   static const String defaultEnumFieldName = 'value_';
 
@@ -13,6 +14,7 @@ class EnumModel {
     required this.name,
     required this.values,
     required this.isInteger,
+    required this.enumNames,
   });
 
   @override
@@ -23,9 +25,11 @@ class EnumModel {
 
     for (int i = 0; i < values.length; i++) {
       final value = values[i];
-      var validatedValue = value;
 
-      validatedValue = getValidatedEnumFieldName(validatedValue, isInteger);
+      var validatedValue = enumNames.isNotEmpty ? enumNames[i] : value;
+
+      validatedValue =
+          getValidatedEnumFieldName(validatedValue, value, isInteger);
 
       if (isInteger) {
         resultStrings.add(
@@ -49,12 +53,14 @@ const $name(this.value);
 }''';
   }
 
-  static String getValidatedEnumFieldName(String name, bool isInteger) {
-    if (name.isEmpty) {
-      name = 'null';
+
+  static String getValidatedEnumFieldName(
+      String fieldName, String fieldValue, bool isInteger) {
+    if (fieldName.isEmpty) {
+      fieldName = 'null';
     }
 
-    var result = name
+    var result = fieldName
         .replaceAll(RegExp(r'[^\w|\_|)]'), '_')
         .split('_')
         .where((element) => element.isNotEmpty)
@@ -66,14 +72,15 @@ const $name(this.value);
     }
 
     if (exceptionWords.contains(result.toLowerCase())) {
-      return '\$${result.lower}(${isInteger ? name : '\'$name\''})';
+      return '\$${result.lower}(${isInteger ? fieldValue : '\'$fieldValue\''})';
     }
 
     if (result.isEmpty) {
-      return 'undefined(${isInteger ? name : '\'$name\''})';
+      return 'undefined(${isInteger ? fieldValue : '\'$fieldValue\''})';
     }
 
-    return '${result.lower}(${isInteger ? name : '\'$name\''})';
+    return '${result.lower}(${isInteger ? fieldValue : '\'$fieldValue\''})';
+
   }
 
   String generateFromJsonToJson() {

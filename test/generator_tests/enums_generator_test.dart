@@ -18,6 +18,7 @@ void main() {
       const output = 'catDogCars';
       final result = EnumModel.getValidatedEnumFieldName(
         name,
+        name,
         false,
       );
 
@@ -28,6 +29,7 @@ void main() {
       const name = 'null';
       const output = '\$null';
       final result = EnumModel.getValidatedEnumFieldName(
+        name,
         name,
         false,
       );

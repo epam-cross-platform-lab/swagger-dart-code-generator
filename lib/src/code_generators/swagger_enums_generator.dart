@@ -123,6 +123,8 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           swaggerRequestParameter.items?.enumValues ??
           [];
 
+      final enumNames = swaggerRequestParameter.schema?.enumNames ?? [];
+
       final isInteger =
           kIntegerTypes.contains(swaggerRequestParameter.schema?.type) ||
               kIntegerTypes.contains(swaggerRequestParameter.items?.type);
@@ -132,6 +134,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
         final enumContent = EnumModel(
           name: getValidatedClassName(key),
           values: enumValues,
+          enumNames: enumNames,
           isInteger: isInteger,
         );
 
@@ -169,6 +172,8 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           final enumValues = swaggerRequestParameter.schema?.enumValues ??
               swaggerRequestParameter.items?.enumValues ??
               [];
+          
+          final enumNames = swaggerRequestParameter.schema?.enumNames ?? [];
 
           final isInteger =
               kIntegerTypes.contains(swaggerRequestParameter.schema?.type) ||
@@ -178,6 +183,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
             final enumContent = EnumModel(
               name: getValidatedClassName(name),
               values: enumValues,
+              enumNames: enumNames,
               isInteger: isInteger,
             );
 
@@ -258,11 +264,16 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     if (schema.isEnum) {
       final enumValues = schema.enumValues;
 
+
+      final enumNames = schema.enumNames ?? [];
+
+
       final isInteger = isIntegerEnum(schema);
 
       return EnumModel(
         name: getValidatedClassName(enumName),
         values: enumValues,
+        enumNames: enumNames,
         isInteger: isInteger,
       );
     } else if (schema.items != null) {
