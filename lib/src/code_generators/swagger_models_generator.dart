@@ -474,8 +474,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           valueType = 'Object';
           returnType = validatedTypeName;
           final defaultValueCamelCase = EnumModel.getValidatedEnumFieldName(
-              defaultValue?.toString() ?? '', defaultValue?.toString() ?? '', false);
-          defaultValueString = '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
+              defaultValue?.toString() ?? '',
+              defaultValue?.toString() ?? '',
+              false);
+
+          defaultValueString =
+              '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
         }
 
         if (options.classesWithNullabeLists.contains(className) && isList) {
@@ -1020,7 +1024,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (propertiesMap.isEmpty) {
       return '';
     }
-    
+
     final results = <String>[];
     final propertyNames = <String>[];
 

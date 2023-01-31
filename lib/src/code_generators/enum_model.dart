@@ -25,6 +25,7 @@ class EnumModel {
 
     for (int i = 0; i < values.length; i++) {
       final value = values[i];
+
       var validatedValue = enumNames.isNotEmpty ? enumNames[i] : value;
 
       validatedValue =
@@ -52,6 +53,7 @@ const $name(this.value);
 }''';
   }
 
+
   static String getValidatedEnumFieldName(
       String fieldName, String fieldValue, bool isInteger) {
     if (fieldName.isEmpty) {
@@ -78,6 +80,7 @@ const $name(this.value);
     }
 
     return '${result.lower}(${isInteger ? fieldValue : '\'$fieldValue\''})';
+
   }
 
   String generateFromJsonToJson() {

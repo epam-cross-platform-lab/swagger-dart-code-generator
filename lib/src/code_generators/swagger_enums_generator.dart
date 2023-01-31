@@ -264,6 +264,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     if (schema.isEnum) {
       final enumValues = schema.enumValues;
 
+
       final enumNames = schema.enumNames ?? [];
 
 
