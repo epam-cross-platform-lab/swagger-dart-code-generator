@@ -11,6 +11,7 @@ const List<String> kKeyClasses = [
   'Query',
   'Body',
   'Method',
+  'Uri',
 ];
 
 const kBasicTypes = [
