@@ -165,7 +165,7 @@ class _$PetServiceSwagger extends PetServiceSwagger {
   Future<Response<ApiResponse>> _petPetIdUploadImagePost({
     required int? petId,
     String? additionalMetadata,
-    List<String>? file,
+    List<int>? file,
     String? cacheControl,
   }) {
     final Uri $url = Uri.parse('/pet/${petId}/uploadImage');
@@ -206,8 +206,8 @@ class _$PetServiceSwagger extends PetServiceSwagger {
   }
 
   @override
-  Future<Response<Order>> _storeOrderPost({
-    required Order? body,
+  Future<Response<dynamic>> _storeOrderPost({
+    required dynamic body,
     String? cacheControl,
   }) {
     final Uri $url = Uri.parse('/store/order');
@@ -222,11 +222,11 @@ class _$PetServiceSwagger extends PetServiceSwagger {
       body: $body,
       headers: $headers,
     );
-    return client.send<Order, Order>($request);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<Order>> _storeOrderOrderIdGet({
+  Future<Response<dynamic>> _storeOrderOrderIdGet({
     required int? orderId,
     String? cacheControl,
   }) {
@@ -240,7 +240,7 @@ class _$PetServiceSwagger extends PetServiceSwagger {
       client.baseUrl,
       headers: $headers,
     );
-    return client.send<Order, Order>($request);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
