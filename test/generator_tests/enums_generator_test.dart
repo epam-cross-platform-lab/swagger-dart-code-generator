@@ -20,6 +20,7 @@ void main() {
         name,
         name,
         false,
+        [],
       );
 
       expect(result, contains(output));
@@ -32,6 +33,7 @@ void main() {
         name,
         name,
         false,
+        [],
       );
 
       expect(result, contains(output));
