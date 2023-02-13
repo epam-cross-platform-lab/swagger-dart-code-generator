@@ -474,9 +474,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           valueType = 'Object';
           returnType = validatedTypeName;
           final defaultValueCamelCase = EnumModel.getValidatedEnumFieldName(
-              defaultValue?.toString() ?? '',
-              defaultValue?.toString() ?? '',
-              false);
+            defaultValue?.toString() ?? '',
+            defaultValue?.toString() ?? '',
+            false,
+            [],
+          );
+
 
           defaultValueString =
               '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';

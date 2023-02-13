@@ -23,13 +23,23 @@ class EnumModel {
   String _getEnumContent() {
     final resultStrings = <String>[];
 
+    final allFieldNames = <String>[];
+
     for (int i = 0; i < values.length; i++) {
       final value = values[i];
 
       var validatedValue = enumNames.isNotEmpty ? enumNames[i] : value;
 
-      validatedValue =
-          getValidatedEnumFieldName(validatedValue, value, isInteger);
+      validatedValue = getValidatedEnumFieldName(
+        validatedValue,
+        value,
+        isInteger,
+        allFieldNames,
+      );
+
+      allFieldNames
+          .add(validatedValue.substring(0, validatedValue.indexOf('(')));
+
 
       if (isInteger) {
         resultStrings.add(
@@ -53,9 +63,13 @@ const $name(this.value);
 }''';
   }
 
-
   static String getValidatedEnumFieldName(
-      String fieldName, String fieldValue, bool isInteger) {
+    String fieldName,
+    String fieldValue,
+    bool isInteger,
+    List<String> allFieldNames,
+  ) {
+
     if (fieldName.isEmpty) {
       fieldName = 'null';
     }
@@ -71,15 +85,21 @@ const $name(this.value);
       result = defaultEnumFieldName + result;
     }
 
-    if (exceptionWords.contains(result.toLowerCase())) {
-      return '\$${result.lower}(${isInteger ? fieldValue : '\'$fieldValue\''})';
+    result = result.lower;
+
+    while (allFieldNames.contains(result.lower)) {
+      result = '\$$result';
+    }
+
+    if (exceptionWords.contains(result)) {
+      return '\$$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
     }
 
     if (result.isEmpty) {
       return 'undefined(${isInteger ? fieldValue : '\'$fieldValue\''})';
     }
 
-    return '${result.lower}(${isInteger ? fieldValue : '\'$fieldValue\''})';
+    return '$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
 
   }
 
