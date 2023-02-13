@@ -40,6 +40,7 @@ class EnumModel {
       allFieldNames
           .add(validatedValue.substring(0, validatedValue.indexOf('(')));
 
+
       if (isInteger) {
         resultStrings.add(
             "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
@@ -68,6 +69,7 @@ const $name(this.value);
     bool isInteger,
     List<String> allFieldNames,
   ) {
+
     if (fieldName.isEmpty) {
       fieldName = 'null';
     }
@@ -98,6 +100,7 @@ const $name(this.value);
     }
 
     return '$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
+
   }
 
   String generateFromJsonToJson() {

@@ -480,6 +480,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
             [],
           );
 
+
           defaultValueString =
               '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
         }
