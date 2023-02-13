@@ -72,7 +72,7 @@ const kBasicTypesMap = <String, String>{
   'boolean': 'bool',
   'bool': 'bool',
   'string': 'String',
-  'file': 'List<String>',
+  'file': 'List<int>',
   'number': 'num',
   'object': 'Object',
   'num': 'num',

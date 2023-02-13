@@ -1,52 +1,50 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:collection/collection.dart';
 
 enum OrderStatus {
-  @JsonValue('swaggerGeneratedUnknown')
-  swaggerGeneratedUnknown,
-  @JsonValue('placed')
-  placed,
-  @JsonValue('approved')
-  approved,
-  @JsonValue('delivered')
-  delivered
-}
+  @JsonValue(null)
+  swaggerGeneratedUnknown(null),
 
-const $OrderStatusMap = {
-  OrderStatus.placed: 'placed',
-  OrderStatus.approved: 'approved',
-  OrderStatus.delivered: 'delivered'
-};
+  @JsonValue('placed')
+  placed('placed'),
+  @JsonValue('approved')
+  approved('approved'),
+  @JsonValue('delivered')
+  delivered('delivered');
+
+  final String? value;
+
+  const OrderStatus(this.value);
+}
 
 enum PetStatus {
-  @JsonValue('swaggerGeneratedUnknown')
-  swaggerGeneratedUnknown,
-  @JsonValue('available')
-  available,
-  @JsonValue('pending')
-  pending,
-  @JsonValue('sold')
-  sold
-}
+  @JsonValue(null)
+  swaggerGeneratedUnknown(null),
 
-const $PetStatusMap = {
-  PetStatus.available: 'available',
-  PetStatus.pending: 'pending',
-  PetStatus.sold: 'sold'
-};
+  @JsonValue('available')
+  available('available'),
+  @JsonValue('pending')
+  pending('pending'),
+  @JsonValue('sold')
+  sold('sold');
+
+  final String? value;
+
+  const PetStatus(this.value);
+}
 
 enum PetFindByStatusGetStatus {
-  @JsonValue('swaggerGeneratedUnknown')
-  swaggerGeneratedUnknown,
-  @JsonValue('available')
-  available,
-  @JsonValue('pending')
-  pending,
-  @JsonValue('sold')
-  sold
-}
+  @JsonValue(null)
+  swaggerGeneratedUnknown(null),
 
-const $PetFindByStatusGetStatusMap = {
-  PetFindByStatusGetStatus.available: 'available',
-  PetFindByStatusGetStatus.pending: 'pending',
-  PetFindByStatusGetStatus.sold: 'sold'
-};
+  @JsonValue('available')
+  available('available'),
+  @JsonValue('pending')
+  pending('pending'),
+  @JsonValue('sold')
+  sold('sold');
+
+  final String? value;
+
+  const PetFindByStatusGetStatus(this.value);
+}

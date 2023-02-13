@@ -88,8 +88,7 @@ abstract class PetServiceJson extends ChopperService {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
     return _petFindByStatusGet(
-        status: enums.$PetFindByStatusGetStatusMap[status]?.toString(),
-        cacheControl: cacheControl);
+        status: status?.value?.toString(), cacheControl: cacheControl);
   }
 
   ///Finds Pets by status
@@ -199,7 +198,7 @@ abstract class PetServiceJson extends ChopperService {
   Future<chopper.Response<ApiResponse>> petPetIdUploadImagePost({
     required int? petId,
     String? additionalMetadata,
-    List<String>? file,
+    List<int>? file,
     String? cacheControl,
   }) {
     generatedMapping.putIfAbsent(
@@ -223,7 +222,7 @@ abstract class PetServiceJson extends ChopperService {
   Future<chopper.Response<ApiResponse>> _petPetIdUploadImagePost({
     @Path('petId') required int? petId,
     @Field('additionalMetadata') String? additionalMetadata,
-    @Field('file') List<String>? file,
+    @Field('file') List<int>? file,
     @Header('Cache-Control') String? cacheControl,
   });
 
@@ -828,33 +827,104 @@ extension $ApiResponseExtension on ApiResponse {
   }
 }
 
+String? orderStatusToJson(enums.OrderStatus? orderStatus) {
+  return orderStatus?.value;
+}
+
+enums.OrderStatus orderStatusFromJson(
+  Object? orderStatus, [
+  enums.OrderStatus? defaultValue,
+]) {
+  return enums.OrderStatus.values
+          .firstWhereOrNull((e) => e.value == orderStatus) ??
+      defaultValue ??
+      enums.OrderStatus.swaggerGeneratedUnknown;
+}
+
+List<String> orderStatusListToJson(List<enums.OrderStatus>? orderStatus) {
+  if (orderStatus == null) {
+    return [];
+  }
+
+  return orderStatus.map((e) => e.value!).toList();
+}
+
+List<enums.OrderStatus> orderStatusListFromJson(
+  List? orderStatus, [
+  List<enums.OrderStatus>? defaultValue,
+]) {
+  if (orderStatus == null) {
+    return defaultValue ?? [];
+  }
+
+  return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
+}
+
+List<enums.OrderStatus>? orderStatusNullableListFromJson(
+  List? orderStatus, [
+  List<enums.OrderStatus>? defaultValue,
+]) {
+  if (orderStatus == null) {
+    return defaultValue;
+  }
+
+  return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
+}
+
+String? petStatusToJson(enums.PetStatus? petStatus) {
+  return petStatus?.value;
+}
+
+enums.PetStatus petStatusFromJson(
+  Object? petStatus, [
+  enums.PetStatus? defaultValue,
+]) {
+  return enums.PetStatus.values.firstWhereOrNull((e) => e.value == petStatus) ??
+      defaultValue ??
+      enums.PetStatus.swaggerGeneratedUnknown;
+}
+
+List<String> petStatusListToJson(List<enums.PetStatus>? petStatus) {
+  if (petStatus == null) {
+    return [];
+  }
+
+  return petStatus.map((e) => e.value!).toList();
+}
+
+List<enums.PetStatus> petStatusListFromJson(
+  List? petStatus, [
+  List<enums.PetStatus>? defaultValue,
+]) {
+  if (petStatus == null) {
+    return defaultValue ?? [];
+  }
+
+  return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
+}
+
+List<enums.PetStatus>? petStatusNullableListFromJson(
+  List? petStatus, [
+  List<enums.PetStatus>? defaultValue,
+]) {
+  if (petStatus == null) {
+    return defaultValue;
+  }
+
+  return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
+}
+
 String? petFindByStatusGetStatusToJson(
     enums.PetFindByStatusGetStatus? petFindByStatusGetStatus) {
-  return enums.$PetFindByStatusGetStatusMap[petFindByStatusGetStatus];
+  return petFindByStatusGetStatus?.value;
 }
 
 enums.PetFindByStatusGetStatus petFindByStatusGetStatusFromJson(
   Object? petFindByStatusGetStatus, [
   enums.PetFindByStatusGetStatus? defaultValue,
 ]) {
-  if (petFindByStatusGetStatus is String) {
-    return enums.$PetFindByStatusGetStatusMap.entries
-        .firstWhere(
-            (element) =>
-                element.value.toLowerCase() ==
-                petFindByStatusGetStatus.toLowerCase(),
-            orElse: () => const MapEntry(
-                enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown, ''))
-        .key;
-  }
-
-  final parsedResult = defaultValue == null
-      ? null
-      : enums.$PetFindByStatusGetStatusMap.entries
-          .firstWhereOrNull((element) => element.value == defaultValue)
-          ?.key;
-
-  return parsedResult ??
+  return enums.PetFindByStatusGetStatus.values
+          .firstWhereOrNull((e) => e.value == petFindByStatusGetStatus) ??
       defaultValue ??
       enums.PetFindByStatusGetStatus.swaggerGeneratedUnknown;
 }
@@ -865,9 +935,7 @@ List<String> petFindByStatusGetStatusListToJson(
     return [];
   }
 
-  return petFindByStatusGetStatus
-      .map((e) => enums.$PetFindByStatusGetStatusMap[e]!)
-      .toList();
+  return petFindByStatusGetStatus.map((e) => e.value!).toList();
 }
 
 List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatusListFromJson(
@@ -895,123 +963,6 @@ List<enums.PetFindByStatusGetStatus>?
   return petFindByStatusGetStatus
       .map((e) => petFindByStatusGetStatusFromJson(e.toString()))
       .toList();
-}
-
-String? orderStatusToJson(enums.OrderStatus? orderStatus) {
-  return enums.$OrderStatusMap[orderStatus];
-}
-
-enums.OrderStatus orderStatusFromJson(
-  Object? orderStatus, [
-  enums.OrderStatus? defaultValue,
-]) {
-  if (orderStatus is String) {
-    return enums.$OrderStatusMap.entries
-        .firstWhere(
-            (element) =>
-                element.value.toLowerCase() == orderStatus.toLowerCase(),
-            orElse: () =>
-                const MapEntry(enums.OrderStatus.swaggerGeneratedUnknown, ''))
-        .key;
-  }
-
-  final parsedResult = defaultValue == null
-      ? null
-      : enums.$OrderStatusMap.entries
-          .firstWhereOrNull((element) => element.value == defaultValue)
-          ?.key;
-
-  return parsedResult ??
-      defaultValue ??
-      enums.OrderStatus.swaggerGeneratedUnknown;
-}
-
-List<String> orderStatusListToJson(List<enums.OrderStatus>? orderStatus) {
-  if (orderStatus == null) {
-    return [];
-  }
-
-  return orderStatus.map((e) => enums.$OrderStatusMap[e]!).toList();
-}
-
-List<enums.OrderStatus> orderStatusListFromJson(
-  List? orderStatus, [
-  List<enums.OrderStatus>? defaultValue,
-]) {
-  if (orderStatus == null) {
-    return defaultValue ?? [];
-  }
-
-  return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
-}
-
-List<enums.OrderStatus>? orderStatusNullableListFromJson(
-  List? orderStatus, [
-  List<enums.OrderStatus>? defaultValue,
-]) {
-  if (orderStatus == null) {
-    return defaultValue;
-  }
-
-  return orderStatus.map((e) => orderStatusFromJson(e.toString())).toList();
-}
-
-String? petStatusToJson(enums.PetStatus? petStatus) {
-  return enums.$PetStatusMap[petStatus];
-}
-
-enums.PetStatus petStatusFromJson(
-  Object? petStatus, [
-  enums.PetStatus? defaultValue,
-]) {
-  if (petStatus is String) {
-    return enums.$PetStatusMap.entries
-        .firstWhere(
-            (element) => element.value.toLowerCase() == petStatus.toLowerCase(),
-            orElse: () =>
-                const MapEntry(enums.PetStatus.swaggerGeneratedUnknown, ''))
-        .key;
-  }
-
-  final parsedResult = defaultValue == null
-      ? null
-      : enums.$PetStatusMap.entries
-          .firstWhereOrNull((element) => element.value == defaultValue)
-          ?.key;
-
-  return parsedResult ??
-      defaultValue ??
-      enums.PetStatus.swaggerGeneratedUnknown;
-}
-
-List<String> petStatusListToJson(List<enums.PetStatus>? petStatus) {
-  if (petStatus == null) {
-    return [];
-  }
-
-  return petStatus.map((e) => enums.$PetStatusMap[e]!).toList();
-}
-
-List<enums.PetStatus> petStatusListFromJson(
-  List? petStatus, [
-  List<enums.PetStatus>? defaultValue,
-]) {
-  if (petStatus == null) {
-    return defaultValue ?? [];
-  }
-
-  return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
-}
-
-List<enums.PetStatus>? petStatusNullableListFromJson(
-  List? petStatus, [
-  List<enums.PetStatus>? defaultValue,
-]) {
-  if (petStatus == null) {
-    return defaultValue;
-  }
-
-  return petStatus.map((e) => petStatusFromJson(e.toString())).toList();
 }
 
 typedef $JsonFactory<T> = T Function(Map<String, dynamic> json);
