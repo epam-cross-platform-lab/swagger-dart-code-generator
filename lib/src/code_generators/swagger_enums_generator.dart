@@ -172,7 +172,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           final enumValues = swaggerRequestParameter.schema?.enumValues ??
               swaggerRequestParameter.items?.enumValues ??
               [];
-          
+
           final enumNames = swaggerRequestParameter.schema?.enumNames ?? [];
 
           final isInteger =
@@ -264,9 +264,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     if (schema.isEnum) {
       final enumValues = schema.enumValues;
 
-
       final enumNames = schema.enumNames ?? [];
-
 
       final isInteger = isIntegerEnum(schema);
 
@@ -340,6 +338,14 @@ ${allEnums.map((e) => e.toString()).join('\n')}
         final ref = allOfRef.ref;
 
         final allOfModel = schemas[ref.getUnformattedRef()];
+
+        if (allOfModel?.allOf.isNotEmpty == true) {
+          final allOfRef =
+              allOfModel?.allOf.firstWhereOrNull((e) => e.hasRef)?.ref ?? '';
+          final allOfModelInside = schemas[allOfRef.getUnformattedRef()];
+
+          properties.addAll(allOfModelInside?.properties ?? {});
+        }
 
         if (allOfModel?.allOf.isNotEmpty == true) {
           final allOfInside = allOfModel?.allOf.first;
