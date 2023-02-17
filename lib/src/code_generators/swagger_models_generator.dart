@@ -480,7 +480,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
             [],
           );
 
-
           defaultValueString =
               '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
         }
@@ -1456,6 +1455,13 @@ $allHashComponents;
     final refs = allOf.where((element) => element.ref.isNotEmpty).toList();
     for (var allOf in refs) {
       final allOfSchema = allClasses[allOf.ref.getUnformattedRef()];
+
+      if (allOfSchema != null) {
+        final properties = allOfSchema.properties;
+        for (final allOf in allOfSchema.allOf) {
+          properties.addAll(allOf.properties);
+        }
+      }
 
       currentProperties.addAll(allOfSchema?.properties ?? {});
     }
