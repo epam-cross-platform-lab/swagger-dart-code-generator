@@ -1,3 +1,7 @@
+# 2.10.1
+
+* Fixed some issues
+
 # 2.10.0
 
 * Fixed generation very comples swaggers with enums ([#528](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/528))
