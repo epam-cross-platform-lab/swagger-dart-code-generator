@@ -206,8 +206,8 @@ class _$PetServiceJson extends PetServiceJson {
   }
 
   @override
-  Future<Response<dynamic>> _storeOrderPost({
-    required dynamic body,
+  Future<Response<Order>> _storeOrderPost({
+    required Order? body,
     String? cacheControl,
   }) {
     final Uri $url = Uri.parse('/store/order');
@@ -222,11 +222,11 @@ class _$PetServiceJson extends PetServiceJson {
       body: $body,
       headers: $headers,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<Order, Order>($request);
   }
 
   @override
-  Future<Response<dynamic>> _storeOrderOrderIdGet({
+  Future<Response<Order>> _storeOrderOrderIdGet({
     required int? orderId,
     String? cacheControl,
   }) {
@@ -240,7 +240,7 @@ class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       headers: $headers,
     );
-    return client.send<dynamic, dynamic>($request);
+    return client.send<Order, Order>($request);
   }
 
   @override

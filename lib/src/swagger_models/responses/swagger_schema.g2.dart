@@ -48,13 +48,10 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       hasAdditionalProperties: json['additionalProperties'] == null
           ? false
           : _additionalsFromJson(json['additionalProperties']),
-      discriminator: json['discriminator'] == null
+      msEnum: json['x-ms-enum'] == null
           ? null
-          : Discriminator.fromJson(
-              json['discriminator'] as Map<String, dynamic>),
-    )..msEnum = json['x-ms-enum'] == null
-        ? null
-        : MsEnum.fromJson(json['x-ms-enum'] as Map<String, dynamic>);
+          : MsEnum.fromJson(json['x-ms-enum'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
     <String, dynamic>{
@@ -69,7 +66,6 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'required': instance.required,
       'items': instance.items,
       'properties': instance.properties,
-      'discriminator': instance.discriminator,
       'nullable': instance.isNullable,
       'schema': instance.schema,
       'oneOf': instance.oneOf,
@@ -77,21 +73,6 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'allOf': instance.allOf,
       'additionalProperties': instance.hasAdditionalProperties,
       'enumNames': instance.enumNames,
-    };
-
-Discriminator _$DiscriminatorFromJson(Map<String, dynamic> json) =>
-    Discriminator(
-      propertyName: json['propertyName'] as String? ?? '',
-      mapping: (json['mapping'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as String),
-          ) ??
-          {},
-    );
-
-Map<String, dynamic> _$DiscriminatorToJson(Discriminator instance) =>
-    <String, dynamic>{
-      'propertyName': instance.propertyName,
-      'mapping': instance.mapping,
     };
 
 MsEnum _$MsEnumFromJson(Map<String, dynamic> json) => MsEnum(
