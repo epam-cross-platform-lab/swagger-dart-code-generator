@@ -40,7 +40,6 @@ class EnumModel {
       allFieldNames
           .add(validatedValue.substring(0, validatedValue.indexOf('(')));
 
-
       if (isInteger) {
         resultStrings.add(
             "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
@@ -69,7 +68,6 @@ const $name(this.value);
     bool isInteger,
     List<String> allFieldNames,
   ) {
-
     if (fieldName.isEmpty) {
       fieldName = 'null';
     }
@@ -87,20 +85,19 @@ const $name(this.value);
 
     result = result.lower;
 
+    if (exceptionWords.contains(result)) {
+      result = '\$$result';
+    }
+
+    if (result.isEmpty) {
+      result = 'undefined';
+    }
+
     while (allFieldNames.contains(result.lower)) {
       result = '\$$result';
     }
 
-    if (exceptionWords.contains(result)) {
-      return '\$$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
-    }
-
-    if (result.isEmpty) {
-      return 'undefined(${isInteger ? fieldValue : '\'$fieldValue\''})';
-    }
-
     return '$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
-
   }
 
   String generateFromJsonToJson() {
