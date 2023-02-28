@@ -213,7 +213,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
     required bool generateEnumsMethods,
   }) {
-    final ttt = generateEnumsMethods
+    final allEnumsString = generateEnumsMethods
         ? allEnums.map((e) => e.generateFromJsonToJson()).join()
         : '';
 
@@ -227,7 +227,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     classes.addAll(classesFromInnerClasses);
 
     if (classes.isEmpty) {
-      return '';
+      return allEnumsString;
     }
 
     var results = classes.keys.map((String className) {
@@ -260,7 +260,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       results = results.replaceAll(' $listEnum ', ' List<$listEnum> ');
     }
 
-    return results + ttt;
+    return results + allEnumsString;
   }
 
   static String getValidatedParameterName(String parameterName) {
