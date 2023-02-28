@@ -103,6 +103,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         final itemClassName = '$className\$Item';
 
+        if (options.overridenModels
+            .contains(getValidatedClassName(itemClassName))) {
+          return '';
+        }
+
         final resultClass = generateModelClassString(
           root,
           itemClassName,
