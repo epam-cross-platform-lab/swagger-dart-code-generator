@@ -1,3 +1,7 @@
+# 2.10.2
+
+* Fixed generation of enumMaps in case when no models defined ([#540](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/540))
+
 # 2.10.1
 
 * Fixed some issues
