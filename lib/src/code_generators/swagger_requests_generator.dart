@@ -305,7 +305,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   bool _isValidModelName(String modelName) {
     if (modelName.isEmpty ||
         kBasicTypes.contains(modelName) ||
-        modelName.startsWith(kMap)) {
+        modelName.startsWith('$kMap<')) {
       return false;
     }
     return true;
