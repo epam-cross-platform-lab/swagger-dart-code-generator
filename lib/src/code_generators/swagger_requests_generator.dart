@@ -290,9 +290,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           }
         }
       } else {
-        final neededResponse = response.removeListOrStream();
-        if (!kBasicTypes.contains(neededResponse)) {
-          results.add(getValidatedClassName(neededResponse));
+        if (!response.startsWith('$kMap<')) {
+          final neededResponse = response.removeListOrStream();
+          if (!kBasicTypes.contains(neededResponse)) {
+            results.add(getValidatedClassName(neededResponse));
+          }
         }
       }
     } else if (successResponse?.schema?.properties.isNotEmpty == true) {
