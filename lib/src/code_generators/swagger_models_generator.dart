@@ -1275,6 +1275,9 @@ String toString() => jsonEncode(this);
 
     final fromJson = generatedFromJson(schema, validatedClassName);
 
+
+   
+
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $validatedClassName{
@@ -1282,6 +1285,7 @@ class $validatedClassName{
 \t$fromJson\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
 $equalsOverride
 
