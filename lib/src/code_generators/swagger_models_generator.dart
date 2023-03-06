@@ -1275,6 +1275,8 @@ String toString() => jsonEncode(this);
 
     final fromJson = generatedFromJson(schema, validatedClassName);
 
+    final toJson = generatedToJson(schema, validatedClassName);
+
 
    
 
@@ -1283,9 +1285,9 @@ String toString() => jsonEncode(this);
 class $validatedClassName{
 \t$validatedClassName($generatedConstructorProperties);\n
 \t$fromJson\n
+\t$toJson\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
-\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 
 $equalsOverride
 
@@ -1301,6 +1303,18 @@ $copyWithMethod
 
   String generatedFromJson(SwaggerSchema schema, String validatedClassName) {
     return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
+  }
+
+  String generatedToJson(SwaggerSchema schema, String validatedClassName) {
+    if(options.generateToJsonFor.isEmpty || options.generateToJsonFor.contains(validatedClassName)) {
+      return '''
+\tstatic const toJsonFactory = _\$${validatedClassName}ToJson; here
+\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
+''';
+    }
+
+
+    return '';
   }
 
   List<String> _getRequired(
