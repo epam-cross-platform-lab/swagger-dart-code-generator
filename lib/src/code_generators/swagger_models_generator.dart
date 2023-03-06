@@ -1275,10 +1275,12 @@ String toString() => jsonEncode(this);
 
     final fromJson = generatedFromJson(schema, validatedClassName);
 
-    final toJson = generatedToJson(schema, validatedClassName);
+    final toJson = generateToJson(schema, validatedClassName);
+
+    final createToJson = generateCreateToJson(schema, validatedClassName);
 
     final generatedClass = '''
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true $createToJson)
 class $validatedClassName{
 \t$validatedClassName($generatedConstructorProperties);\n
 \t$fromJson\n
@@ -1302,7 +1304,7 @@ $copyWithMethod
     return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
   }
 
-  String generatedToJson(SwaggerSchema schema, String validatedClassName) {
+  String generateToJson(SwaggerSchema schema, String validatedClassName) {
     if (options.generateToJsonFor.isEmpty ||
         options.generateToJsonFor.contains(validatedClassName)) {
       return '''
@@ -1312,6 +1314,15 @@ $copyWithMethod
     }
 
     return '';
+  }
+
+  String generateCreateToJson(SwaggerSchema schema, String validatedClassName) {
+    if (options.generateToJsonFor.isEmpty ||
+        options.generateToJsonFor.contains(validatedClassName)) {
+      return '';
+    }
+
+    return ', createToJson: false';
   }
 
   List<String> _getRequired(
