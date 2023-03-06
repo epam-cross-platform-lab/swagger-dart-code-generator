@@ -1277,9 +1277,6 @@ String toString() => jsonEncode(this);
 
     final toJson = generatedToJson(schema, validatedClassName);
 
-
-   
-
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true)
 class $validatedClassName{
@@ -1306,13 +1303,13 @@ $copyWithMethod
   }
 
   String generatedToJson(SwaggerSchema schema, String validatedClassName) {
-    if(options.generateToJsonFor.isEmpty || options.generateToJsonFor.contains(validatedClassName)) {
+    if (options.generateToJsonFor.isEmpty ||
+        options.generateToJsonFor.contains(validatedClassName)) {
       return '''
-\tstatic const toJsonFactory = _\$${validatedClassName}ToJson; here
+\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
 ''';
     }
-
 
     return '';
   }
