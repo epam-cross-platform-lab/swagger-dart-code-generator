@@ -72,6 +72,10 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           [],
+      generateToJsonFor: (json['generate_to_json_for'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -83,6 +87,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,
       'with_converter': instance.withConverter,
       'overriden_models': instance.overridenModels,
+      'generate_to_json_for': instance.generateToJsonFor,
       'additional_headers': instance.additionalHeaders,
       'input_urls': instance.inputUrls,
       'nullable_models': instance.nullableModels,

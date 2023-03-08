@@ -50,7 +50,7 @@ class SwaggerRequestParameter {
   @JsonKey(name: 'items')
   SwaggerRequestItems? items;
 
-  @JsonKey(ignore: true, defaultValue: '')
+  @JsonKey(defaultValue: '')
   String key;
 
   Map<String, dynamic> toJson() => _$SwaggerRequestParameterToJson(this);

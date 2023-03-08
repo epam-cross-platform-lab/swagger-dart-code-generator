@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:collection/collection.dart';
 
 enum OrderStatus {
   @JsonValue(null)
