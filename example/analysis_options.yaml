@@ -8,6 +8,7 @@ analyzer:
   exclude:
     - example/**/*.dart
     - lib/**/*.g2.dart
+    - lib/**/*.swagger.dart
 linter:
   rules:
     - type_annotate_public_apis
