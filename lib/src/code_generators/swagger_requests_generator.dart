@@ -292,6 +292,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       } else {
         if (!response.startsWith('$kMap<')) {
           final neededResponse = response.removeListOrStream();
+
           if (!kBasicTypes.contains(neededResponse)) {
             results.add(getValidatedClassName(neededResponse));
           }
@@ -1175,6 +1176,7 @@ extension on SwaggerRoot {
   Map<String, SwaggerSchema> get allSchemas => {
         ...definitions,
         ...components?.schemas ?? {},
+        ...components?.responses ?? {},
       };
 }
 
