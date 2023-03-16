@@ -160,7 +160,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         final isMultipart = parameters.any((p) {
           return p.annotations
-              .any((p0) => p0.call([]).toString().contains('symbol=PartFile'));
+              .any((p0) => p0.call([]).toString().contains('symbol=Part'));
         });
 
         final method = Method((m) => m
