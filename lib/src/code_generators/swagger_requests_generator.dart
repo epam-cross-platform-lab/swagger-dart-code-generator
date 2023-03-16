@@ -594,7 +594,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return 'List?';
     }
 
-    return kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
+    final result = kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
+
+    if (result.isEmpty) {
+      return kDynamic;
+    }
+
+    return result;
   }
 
   List<Parameter> _getAllParameters({
