@@ -596,8 +596,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     final result = kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
 
-    if (result.isEmpty) {
-      return kDynamic;
+    if(result.isEmpty) {
+      return kObject.pascalCase;
     }
 
     return result;
