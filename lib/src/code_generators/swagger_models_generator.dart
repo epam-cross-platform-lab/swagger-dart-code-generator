@@ -823,6 +823,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       );
     }
 
+    if(items?.properties.isNotEmpty == true) {
+      typeName += '\$Item';
+    }
+
     return typeName;
   }
 
