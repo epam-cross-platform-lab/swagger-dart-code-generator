@@ -160,7 +160,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         final isMultipart = parameters.any((p) {
           return p.annotations
-              .any((p0) => p0.call([]).toString().contains('symbol=PartFile'));
+              .any((p0) => p0.call([]).toString().contains('symbol=Part'));
         });
 
         final method = Method((m) => m
@@ -586,15 +586,17 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }
 
   String _mapParameterName(String name, String format, String modelPostfix) {
-    if (name == kInteger && format == kInt64) {
-      return kNum;
-    }
-
     if (name == kArray) {
       return 'List?';
     }
 
-    return kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
+    final result = kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
+
+    if(result.isEmpty) {
+      return kDynamic;
+    }
+
+    return result;
   }
 
   List<Parameter> _getAllParameters({
