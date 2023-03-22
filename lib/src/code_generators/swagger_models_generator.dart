@@ -329,10 +329,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     switch (parameter.type) {
       case 'integer':
       case 'int':
-        if (parameter.format == kInt64) {
-          return kNum;
-        }
-        return 'int';
       case 'int32':
       case 'int64':
         return 'int';

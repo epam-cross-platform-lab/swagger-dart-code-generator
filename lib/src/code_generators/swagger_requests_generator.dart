@@ -586,10 +586,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }
 
   String _mapParameterName(String name, String format, String modelPostfix) {
-    if (name == kInteger && format == kInt64) {
-      return kNum;
-    }
-
     if (name == kArray) {
       return 'List?';
     }
