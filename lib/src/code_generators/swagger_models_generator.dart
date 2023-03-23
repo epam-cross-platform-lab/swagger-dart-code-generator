@@ -823,7 +823,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       );
     }
 
-    if(items?.properties.isNotEmpty == true) {
+    if (items?.properties.isNotEmpty == true) {
       typeName += '\$Item';
     }
 
@@ -1196,7 +1196,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final propertyNames = <String>[];
 
     entityMap.forEach((key, value) {
-      var fieldName = getParameterName(key.asParameterName(), propertyNames);
+      var fieldName = generateFieldName(
+        getParameterName(key.asParameterName(), propertyNames),
+      );
 
       propertyNames.add(fieldName);
 
