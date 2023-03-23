@@ -244,10 +244,12 @@ class SwaggerDartCodeGenerator implements Builder {
     );
 
     final requests = codeGenerator.generateRequests(
-        contents,
-        getClassNameFromFileName(fileNameWithExtension),
-        removeFileExtension(fileNameWithExtension),
-        options);
+      contents,
+      getClassNameFromFileName(fileNameWithExtension),
+      removeFileExtension(fileNameWithExtension),
+      options,
+      allEnums,
+    );
 
     final customDecoder = codeGenerator.generateCustomJsonConverter(
         removeFileExtension(fileNameWithExtension), options);

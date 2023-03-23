@@ -25,6 +25,7 @@ void main() {
         swaggerRoot: root,
         className: 'CarsService',
         fileName: 'cars_service',
+        allEnums: [],
       );
 
       final result2 = SwaggerRequestsGenerator(GeneratorOptions(
@@ -40,6 +41,7 @@ void main() {
             'car'
           ])).generate(
         swaggerRoot: root,
+        allEnums: [],
         className: 'CarsService',
         fileName: 'cars_service',
       );
