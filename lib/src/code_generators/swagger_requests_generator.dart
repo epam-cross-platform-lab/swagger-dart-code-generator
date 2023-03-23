@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
@@ -21,15 +22,19 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   @override
   GeneratorOptions get options => _options;
 
-  SwaggerRequestsGenerator(this._options);
+  SwaggerRequestsGenerator(
+    this._options,
+  );
 
   String generate({
     required SwaggerRoot swaggerRoot,
     required String className,
     required String fileName,
+    required List<EnumModel> allEnums,
   }) {
     final service = _generateService(
       swaggerRoot,
+      allEnums,
       className,
       fileName,
     );
@@ -39,11 +44,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
   Class _generateService(
     SwaggerRoot swaggerRoot,
+    List<EnumModel> allEnums,
     String className,
     String fileName,
   ) {
     final allMethodsContent = _getAllMethodsContent(
       swaggerRoot: swaggerRoot,
+      allEnums: allEnums,
     );
 
     final chopperClient = getChopperClientContent(
@@ -102,6 +109,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
   List<Method> _getAllMethodsContent({
     required SwaggerRoot swaggerRoot,
+    required List<EnumModel> allEnums,
   }) {
     final methods = <Method>[];
 
@@ -134,6 +142,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           ignoreHeaders: options.ignoreHeaders,
           modelPostfix: options.modelPostfix,
           swaggerPath: swaggerPath,
+          allEnums: allEnums,
           path: path,
           requestType: requestType,
           root: swaggerRoot,
@@ -333,7 +342,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               .any((p0) => p0.code.toString().contains('symbol=Body'))) {
             return p.copyWith(type: Reference('dynamic'));
           } else {
-            return p.copyWith(type: Reference('List<String?>?'));
+            return p.copyWith(type: Reference('List<Object?>?'));
           }
         }
       }
@@ -520,6 +529,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String requestType,
     required String modelPostfix,
     required SwaggerRoot root,
+    required List<EnumModel> allEnums,
     required Map<String, SwaggerRequestParameter> definedParameters,
   }) {
     final format = parameter.schema?.format ?? '';
@@ -552,7 +562,14 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             .asList()
             .makeNullable();
       }
-      return (parameter.schema!.items!.ref.getRef() + modelPostfix).asList();
+
+      var className = parameter.schema!.items!.ref.getRef();
+
+      if (allEnums.any((e) => e.name == className)) {
+        className = 'enums.$className';
+      }
+
+      return (className + modelPostfix).asList();
     } else if (parameter.schema?.hasRef == true) {
       if (_isEnumRefParameter(parameter, root)) {
         return parameter.schema!.ref.getRef().asEnum();
@@ -592,7 +609,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     final result = kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
 
-    if(result.isEmpty) {
+    if (result.isEmpty) {
       return kDynamic;
     }
 
@@ -607,6 +624,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String modelPostfix,
     required SwaggerRoot root,
     required SwaggerPath swaggerPath,
+    required List<EnumModel> allEnums,
   }) {
     final definedParameters = <String, SwaggerRequestParameter>{};
     definedParameters.addAll(root.parameters);
@@ -650,6 +668,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   requestType: requestType,
                   definedParameters: definedParameters,
                   modelPostfix: modelPostfix,
+                  allEnums: allEnums,
                   root: root,
                 ).makeNullable(),
               )

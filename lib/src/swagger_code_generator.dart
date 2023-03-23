@@ -108,12 +108,18 @@ class SwaggerCodeGenerator {
         allEnums: allEnums,
       );
 
-  String generateRequests(SwaggerRoot root, String className, String fileName,
-          GeneratorOptions options) =>
+  String generateRequests(
+    SwaggerRoot root,
+    String className,
+    String fileName,
+    GeneratorOptions options,
+    List<EnumModel> allEnums,
+  ) =>
       _getSwaggerRequestsGenerator(root, options).generate(
         swaggerRoot: root,
         className: className,
         fileName: fileName,
+        allEnums: allEnums,
       );
 
   String generateCustomJsonConverter(
