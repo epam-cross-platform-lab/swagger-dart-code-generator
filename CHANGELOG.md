@@ -1,6 +1,16 @@
-# 2.10.2
+# 2.10.3
 
 * Fixed generation `putIfAbsent` in requests for not needed schemas ([#554](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/554))
+
+* Added `hashCode` to exception words ([#577](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/577))
+
+* Fixed syntax issues with generation ([#572](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/572))
+
+* Fixed generation of array of integers ([#570](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/570))
+
+* Added generation of int64 as `int` ([#568](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/568))
+
+* Some fixes with generation arrays ([#571](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/571))
 
 # 2.10.2
 
