@@ -54,4 +54,5 @@ List<String> exceptionWords = <String>[
   'part',
   'try',
   'client',
+  'hashCode',
 ];
