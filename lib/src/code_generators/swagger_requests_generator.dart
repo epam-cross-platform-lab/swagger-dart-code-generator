@@ -713,6 +713,24 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           return result.distinctParameters();
         }
 
+        if (schema?.properties.isEmpty == true) {
+          result.add(
+              Parameter(
+                (p) => p
+                  ..name = 'file'
+                  ..named = true
+                  ..required = true
+                  ..type = Reference(
+                    options.multipartFileType,
+                  )
+                  ..named = true
+                  ..annotations.add(
+                    refer(kPartFile.pascalCase).call([]),
+                  ),
+              ),
+            );
+        }
+
         // otherwise no request scheme is defined, we provide every param as a separate param.
         schema?.properties.forEach((key, value) {
           if (value.type == 'string' && value.format == 'binary') {

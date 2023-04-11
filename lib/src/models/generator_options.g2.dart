@@ -76,6 +76,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           [],
+      multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -85,6 +86,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'page_width': instance.pageWidth,
       'override_to_string': instance.overrideToString,
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,
+      'multipart_file_type': instance.multipartFileType,
       'with_converter': instance.withConverter,
       'overriden_models': instance.overridenModels,
       'generate_to_json_for': instance.generateToJsonFor,

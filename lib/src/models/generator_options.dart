@@ -33,6 +33,7 @@ class GeneratorOptions {
     this.pageWidth,
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
+    this.multipartFileType = 'List<int>',
   });
 
   /// Build options from a JSON map.
@@ -53,6 +54,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool overrideEqualsAndHashcode;
+
+  @JsonKey(defaultValue: 'List<int>')
+  final String multipartFileType;
 
   @JsonKey(defaultValue: true)
   final bool withConverter;
