@@ -742,7 +742,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..named = true
                   ..required = isRequired
                   ..type = Reference(
-                    isRequired ? 'List<int>' : 'List<int>?',
+                    options.multipartFileType,
                   )
                   ..named = true
                   ..annotations.add(
