@@ -1,3 +1,7 @@
+# 2.10.4
+
+* Fixed generation of multipart body parameters
+
 # 2.10.3
 
 * Fixed generation `putIfAbsent` in requests for not needed schemas ([#554](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/554))
