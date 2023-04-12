@@ -18,11 +18,10 @@ extension CapitalizeExtension on String {
 
 extension TypeExtension on String {
   String makeNullable() {
-    if(this == kDynamic)
-    {
+    if (this == kDynamic) {
       return this;
     }
-    
+
     if (endsWith('?')) {
       return this;
     }
