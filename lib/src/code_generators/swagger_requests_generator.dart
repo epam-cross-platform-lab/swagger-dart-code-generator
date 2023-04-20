@@ -131,6 +131,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           return;
         }
 
+        if (options.addBasePathToRequests) {
+          path = '${swaggerRoot.basePath}$path';
+        }
+
         final methodName = _getRequestMethodName(
           requestType: requestType,
           swaggerRequest: swaggerRequest,
