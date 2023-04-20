@@ -1184,7 +1184,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   ) {
     final baseUrlString = options.withBaseUrl
         ? "baseUrl:  baseUrl ?? Uri.parse('http://$host$basePath')"
-        : 'baseUrl';
+        : 'baseUrl: baseUrl';
 
     final converterString = options.withConverter
         ? 'converter: \$JsonSerializableConverter(),'
