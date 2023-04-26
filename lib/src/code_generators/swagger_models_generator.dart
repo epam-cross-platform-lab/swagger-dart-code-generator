@@ -161,6 +161,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           result[innerClassName] = propSchema;
         }
       });
+
+      if (schema.items != null) {
+        result.addAll(getClassesFromInnerClasses(
+            {'${getValidatedClassName(classKey)}\$item': schema.items!}));
+      }
     });
 
     if (result.isNotEmpty) {
