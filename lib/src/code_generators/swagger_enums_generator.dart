@@ -4,6 +4,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/utils.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -48,7 +49,7 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
     final enumsFromClasses = definitions.keys
         .map((String className) {
           final result = generateEnumsFromClasses(
-            getValidatedClassName(className.pascalCase),
+            getValidatedClassName(className.toClassName),
             definitions[className]!,
             definitions,
           );
@@ -101,7 +102,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           }
 
           return generateEnumsFromClasses(
-            getValidatedClassName(className.pascalCase),
+            getValidatedClassName(className.toClassName),
             schema,
             {},
           );
@@ -151,7 +152,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
 
         if (successResponseSchema != null) {
           final responseEnums = generateEnumsFromSchemaMap({
-            '${path.pascalCase}${requestType.pascalCase}\$$kResponse':
+            '${path.toClassName}${requestType.toClassName}\$$kResponse':
                 successResponseSchema
           });
           result.addAll(responseEnums);
@@ -223,7 +224,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
             result.addAll(
               generateEnumsContentFromModelProperties(
                 properties,
-                '$className\$${key.pascalCase}${isListProperty ? '\$Item' : ''}',
+                '$className\$${key.toClassName}${isListProperty ? '\$Item' : ''}',
               ),
             );
           }
@@ -304,7 +305,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
 
         schema.items?.properties.forEach((key, value) {
           final enumModel = generateEnumContentIfPossible(
-              value, '$className\$Item${key.pascalCase}');
+              value, '$className\$Item${key.toClassName}');
           if (enumModel != null) {
             result.add(enumModel);
           }
