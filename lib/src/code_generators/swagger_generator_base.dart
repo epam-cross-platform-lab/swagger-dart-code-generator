@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/utils.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -36,8 +37,8 @@ abstract class SwaggerGeneratorBase {
     final words = className.split('\$');
 
     final result = words
-        .map((e) => e.pascalCase
-            .split(RegExp(r'\W+|\_'))
+        .map((e) => e.toClassName
+            .split(RegExp(r'\W+'))
             .map((String str) => str.capitalize)
             .join())
         .join('\$')

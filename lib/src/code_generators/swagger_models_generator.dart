@@ -3,6 +3,7 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/utils.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -205,8 +206,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
             neededResponse.schema != null &&
             neededResponse.schema!.type == kObject &&
             neededResponse.schema!.properties.isNotEmpty) {
-          final pathText = key.split('/').map((e) => e.pascalCase).join();
-          final requestText = operation.pascalCase;
+          final pathText = key.split('/').map((e) => e.toClassName).join();
+          final requestText = operation.toClassName;
 
           results['$pathText$requestText\$Response'] = neededResponse.schema!;
         }
@@ -253,7 +254,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
       return generateModelClassContent(
         root,
-        className.pascalCase,
+        className.toClassName,
         classes[className]!,
         classes,
         options.defaultValuesMap,
@@ -318,7 +319,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     String? refNameParameter,
   ) {
     if (refNameParameter != null) {
-      return refNameParameter.pascalCase;
+      return refNameParameter.toClassName;
     }
 
     if (parameter == null) return 'Object';
@@ -328,7 +329,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     if (parameter.hasRef) {
-      return parameter.ref.split('/').last.pascalCase;
+      return parameter.ref.split('/').last.toClassName;
     }
 
     switch (parameter.type) {
@@ -438,7 +439,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       isList = isList || allEnumListNames.contains(validatedTypeName);
 
       final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
-      final propertyNameCamelCase = propertyName.pascalCase;
+      final propertyNameCamelCase = propertyName.toClassName;
       final fromJsonPrefix = defaultValue == null
           ? enumNameCamelCase
           : '$enumNameCamelCase$propertyNameCamelCase';
@@ -760,7 +761,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     required Map<String, SwaggerSchema> allClasses,
   }) {
     if (className.endsWith('\$Item')) {
-      return kObject.pascalCase;
+      return kObject.toClassName;
     }
 
     final items = prop.items;
@@ -788,7 +789,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         if (basicTypesMap.containsKey(typeName)) {
           typeName = basicTypesMap[typeName]!;
         } else if (typeName.isNotEmpty && typeName != kDynamic) {
-          typeName = typeName.pascalCase;
+          typeName = typeName.toClassName;
         }
       } else if (!allEnumNames.contains(typeName) &&
           !kBasicTypes.contains(typeName.toLowerCase())) {
@@ -913,7 +914,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (prop.hasAdditionalProperties && prop.type == 'object') {
       typeName = kMapStringDynamic;
     } else if (prop.hasRef) {
-      typeName = prop.ref.split('/').last.pascalCase + options.modelPostfix;
+      typeName = prop.ref.split('/').last.toClassName + options.modelPostfix;
     } else {
       typeName = getParameterTypeName(
         className,
@@ -1341,7 +1342,7 @@ $copyWithMethod
     }
     for (var interface in _getInterfaces(schema)) {
       if (interface.hasRef) {
-        final parentName = interface.ref.split('/').last.pascalCase;
+        final parentName = interface.ref.split('/').last.toClassName;
         final parentSchema = schemas[parentName];
 
         required.addAll(parentSchema != null
@@ -1542,7 +1543,7 @@ $allHashComponents;
           if (schema != null) {
             if (schema.type == kObject && schema.properties.isNotEmpty) {
               final className =
-                  '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
+                  '${pathKey.toClassName}${requestKey.toClassName}\$$kRequestBody';
 
               result[getValidatedClassName(className)] = schema;
             }

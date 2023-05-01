@@ -4,6 +4,7 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/utils.dart';
 import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -419,7 +420,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     bool isMultipart,
   ) {
     return [
-      refer(requestType.pascalCase).call(
+      refer(requestType.toClassName).call(
         [],
         {
           kPath: literalString(path),
@@ -427,7 +428,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         },
       ),
       if (isMultipart)
-        refer(kMultipart.pascalCase).call(
+        refer(kMultipart.toClassName).call(
           [],
           {},
         ),
@@ -479,10 +480,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return refer(kField)
             .call([literalString(parameter.name.replaceAll('\$', ''))]);
       case kBody:
-        return refer(kBody.pascalCase).call([]);
+        return refer(kBody.toClassName).call([]);
       default:
         //https://github.com/lejard-h/chopper/issues/295
-        return refer(parameter.inParameter.pascalCase)
+        return refer(parameter.inParameter.toClassName)
             .call([literalString(parameter.name.replaceAll('\$', ''))]);
     }
   }
@@ -494,11 +495,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }) {
     final pathString = path
         .split('/')
-        .map((e) => e.replaceAll('}', '').replaceAll('{', '').pascalCase)
+        .map((e) => e.replaceAll('}', '').replaceAll('{', '').toClassName)
         .join();
 
     final result = getValidatedClassName(
-        '$pathString ${requestType.pascalCase} $parameterName');
+        '$pathString ${requestType.toClassName} $parameterName');
 
     return result.asEnum();
   }
@@ -603,7 +604,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return _mapParameterName(parameter.schema!.type, format, modelPostfix);
     }
 
-    return kObject.pascalCase;
+    return kObject.toClassName;
   }
 
   String _mapParameterName(String name, String format, String modelPostfix) {
@@ -611,7 +612,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return 'List?';
     }
 
-    final result = kBasicTypesMap[name] ?? name.pascalCase + modelPostfix;
+    final result = kBasicTypesMap[name] ?? name.toClassName + modelPostfix;
 
     if (result.isEmpty) {
       return kDynamic;
@@ -708,7 +709,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                     requestBody.content!.schema!.ref.getRef()))
                 ..named = true
                 ..annotations.add(
-                  refer(kPart.pascalCase).call([]),
+                  refer(kPart.toClassName).call([]),
                 ),
             ),
           );
@@ -729,7 +730,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                 )
                 ..named = true
                 ..annotations.add(
-                  refer(kPartFile.pascalCase).call([]),
+                  refer(kPartFile.toClassName).call([]),
                 ),
             ),
           );
@@ -750,7 +751,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   )
                   ..named = true
                   ..annotations.add(
-                    refer(kPartFile.pascalCase).call([]),
+                    refer(kPartFile.toClassName).call([]),
                   ),
               ),
             );
@@ -767,7 +768,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..type = Reference(typeName.makeNullable())
                   ..named = true
                   ..annotations.add(
-                    refer(kPart.pascalCase).call([literalString(key)]),
+                    refer(kPart.toClassName).call([literalString(key)]),
                   ),
               ),
             );
@@ -798,7 +799,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
       if (schema != null) {
         if (schema.format == kBinary || schema.oneOf.isNotEmpty) {
-          typeName = kObject.pascalCase;
+          typeName = kObject.toClassName;
         } else if (schema.items?.type.isNotEmpty == true) {
           typeName = _mapParameterName(schema.items!.type, schema.items!.format,
                   options.modelPostfix)
@@ -808,7 +809,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             schema: schema,
             modelPostfix: options.modelPostfix,
             root: root,
-            requestPath: path + requestType.pascalCase,
+            requestPath: path + requestType.toClassName,
           );
         }
       }
@@ -820,12 +821,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             ..named = true
             ..required = true
             ..type = Reference(
-              (typeName.isNotEmpty ? typeName : kObject.pascalCase)
+              (typeName.isNotEmpty ? typeName : kObject.toClassName)
                   .makeNullable(),
             )
             ..named = true
             ..annotations.add(
-              refer(kBody.pascalCase).call([]),
+              refer(kBody.toClassName).call([]),
             ),
         ),
       );
@@ -882,7 +883,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         }
 
         if (_isBasicTypeRef(ref, root)) {
-          return kObject.pascalCase;
+          return kObject.toClassName;
         }
 
         if (ref.isNotEmpty) {
@@ -895,7 +896,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           return getValidatedClassName('$requestPath\$$kRequestBody');
         }
 
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       return kBasicTypesMap[schema.type] ?? schema.type;
@@ -907,7 +908,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       }
 
       if (_isBasicTypeRef(schema.ref, root)) {
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       return getValidatedClassName(
@@ -960,7 +961,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String methodName,
     required String modelPostfix,
   }) {
-    return '${methodName.pascalCase}\$$kResponse$modelPostfix';
+    return '${methodName.toClassName}\$$kResponse$modelPostfix';
   }
 
   String? _getReturnTypeFromType(
@@ -1005,11 +1006,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final neededResponse = allReusableObjects[ref.getUnformattedRef()];
 
       if (neededResponse == null) {
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       if (neededResponse.ref.isNotEmpty) {
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       if (kBasicTypes.contains(neededResponse.type)) {
@@ -1017,7 +1018,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       }
 
       if (neededResponse.oneOf.isNotEmpty) {
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       return getValidatedClassName(ref.getRef() + modelPostfix);
@@ -1068,11 +1069,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final neededSchema = allRefs[schemaRef.getUnformattedRef()];
 
       if (neededSchema == null) {
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       if (kBasicTypes.contains(neededSchema.type)) {
-        return kObject.pascalCase;
+        return kObject.toClassName;
       }
 
       var typeName =
