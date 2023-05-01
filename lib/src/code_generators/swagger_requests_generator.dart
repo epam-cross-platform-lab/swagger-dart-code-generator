@@ -1075,8 +1075,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return kObject.pascalCase;
       }
 
-      final typeName =
+      var typeName =
           getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
+      
+      if(neededSchema.isNullable) {
+        typeName = typeName.makeNullable();
+      }
 
       return typeName;
     }
