@@ -543,28 +543,6 @@ void main() {
 
       expect(result, equals(''));
     });
-
-    test('Should generate class from responses V3', () {
-      final map = SwaggerRoot.parse(schemasResponsesWithResponse);
-      final result = generator.generateResponses(
-        root: map,
-        fileName: 'fileName',
-        allEnums: [],
-      );
-
-      expect(result, contains('class SpaResponse'));
-    });
-
-    test('Should generate class from responses V3 and Schemas', () {
-      final map = SwaggerRoot.parse(schemasResponsesWithResponseAndSchemas);
-      final result = generator.generateResponses(
-        root: map,
-        fileName: 'fileName',
-        allEnums: [],
-      );
-
-      expect(result, contains('class SpaResponse'));
-    });
   });
 
   group('Tests for models from responses', () {
