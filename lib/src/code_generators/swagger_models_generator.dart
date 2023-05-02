@@ -23,11 +23,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
   });
 
-  String generateResponses({
-    required SwaggerRoot root,
-    required String fileName,
-    required List<EnumModel> allEnums,
-  });
+  // String generateResponses({
+  //   required SwaggerRoot root,
+  //   required String fileName,
+  //   required List<EnumModel> allEnums,
+  // });
 
   String generateRequestBodies({
     required SwaggerRoot root,
@@ -196,14 +196,26 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         final neededResponse = responses['200'];
 
-        if (neededResponse != null &&
-            neededResponse.schema != null &&
-            neededResponse.schema!.type == kObject &&
-            neededResponse.schema!.properties.isNotEmpty) {
+        final neededSchema =
+            neededResponse?.schema ?? neededResponse?.content?.schema;
+
+        if (neededSchema != null &&
+            neededSchema.type == kObject &&
+            neededSchema.properties.isNotEmpty) {
           final pathText = key.split('/').map((e) => e.pascalCase).join();
           final requestText = operation.pascalCase;
 
-          results['$pathText$requestText\$Response'] = neededResponse.schema!;
+          results['$pathText$requestText\$Response'] = neededSchema;
+        } else {
+          if (neededSchema?.type == kArray) {
+            final itemsSchema = neededSchema?.items;
+
+            if (itemsSchema?.properties.isNotEmpty == true) {
+              final pathText = key.split('/').map((e) => e.pascalCase).join();
+              final requestText = operation.pascalCase;
+              results['$pathText$requestText\$Response'] = neededSchema!;
+            }
+          }
         }
       });
     });
