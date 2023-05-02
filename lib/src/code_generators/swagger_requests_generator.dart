@@ -1049,6 +1049,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required SwaggerResponse swaggerResponse,
     required String modelPostfix,
     required SwaggerRoot swaggerRoot,
+    required String requestName,
   }) {
     final content = swaggerResponse.content;
 
@@ -1079,6 +1080,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
       
       if(neededSchema.isNullable) {
+        typeName = typeName.makeNullable();
+      }
+
+      if (neededSchema.isNullable) {
         typeName = typeName.makeNullable();
       }
 
@@ -1121,6 +1126,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             kObject;
 
         return itemsItemsType.asList().asList();
+      } else if (content.schema?.items?.properties.isNotEmpty == true) {
+       
+        final requestText = requestName.pascalCase;
+
+        final typeName = getValidatedClassName('$requestText\$Response');
+
+        return typeName.asList();
       } else if (itemsType.isNotEmpty) {
         final parameterType = _mapParameterName(itemsType, itemsFormat, '');
         return parameterType.asList();
@@ -1155,6 +1167,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       responses: responses,
     );
 
+    if (path == '/search/simple/') {
+      final tt = 0;
+    }
+
     if (neededResponse == null) {
       return '';
     }
@@ -1175,6 +1191,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           swaggerResponse: neededResponse,
           modelPostfix: modelPostfix,
           swaggerRoot: swaggerRoot,
+          requestName: methodName,
         ) ??
         '';
 
