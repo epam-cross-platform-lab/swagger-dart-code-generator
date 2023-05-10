@@ -166,7 +166,6 @@ abstract class SwaggerGeneratorBase {
 
     final neededParameter = definedParameters.firstWhere(
         (SwaggerRequestParameter element) =>
-            element.name == parameterClassName ||
             element.key == parameterClassName,
         orElse: () => swaggerRequestParameter);
 
