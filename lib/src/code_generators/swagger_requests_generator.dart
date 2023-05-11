@@ -254,7 +254,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final ref =
           refs.firstWhereOrNull((element) => element?.isNotEmpty == true) ?? '';
 
-      final schema = root.allSchemas[ref.getUnformattedRef()];
+      final refName = ref.getUnformattedRef();
+
+      final schema =
+          root.allSchemas[refName] ?? root.allSchemas['$refName\$RequestBody'];
 
       if (schema?.type == kArray) {
         if (schema?.items?.ref.isNotEmpty == true) {
@@ -780,6 +783,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final ref = requestBody.ref;
         typeName = ref.getRef();
 
+        if (root.components?.requestBodies
+                .containsKey(ref.getUnformattedRef()) ==
+            true) {
+          typeName =
+              getValidatedClassName('${ref.getUnformattedRef()}\$RequestBody');
+        }
+
         final requestBodyRef =
             root.components?.requestBodies[ref.getRef()]?.ref ?? '';
 
@@ -1016,6 +1026,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return kObject.pascalCase;
       }
 
+      if (ref.contains('/responses/')) {
+        return getValidatedClassName(
+            '${ref.getRef()}\$$kResponse$modelPostfix');
+      }
+
       return getValidatedClassName(ref.getRef() + modelPostfix);
     }
 
@@ -1119,7 +1134,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         return itemsItemsType.asList().asList();
       } else if (content.schema?.items?.properties.isNotEmpty == true) {
-       
         final requestText = requestName.pascalCase;
 
         final typeName = getValidatedClassName('$requestText\$Response');
@@ -1158,10 +1172,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final neededResponse = getSuccessedResponse(
       responses: responses,
     );
-
-    if (path == '/search/simple/') {
-      final tt = 0;
-    }
 
     if (neededResponse == null) {
       return '';
@@ -1233,6 +1243,7 @@ extension on SwaggerRoot {
         ...definitions,
         ...components?.schemas ?? {},
         ...components?.responses ?? {},
+        ...components?.requestBodies ?? {}
       };
 }
 

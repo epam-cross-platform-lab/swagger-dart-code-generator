@@ -23,18 +23,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
   });
 
-  // String generateResponses({
-  //   required SwaggerRoot root,
-  //   required String fileName,
-  //   required List<EnumModel> allEnums,
-  // });
-
-  String generateRequestBodies({
-    required SwaggerRoot root,
-    required String fileName,
-    required List<EnumModel> allEnums,
-  });
-
   String getExtendsString(SwaggerSchema schema);
 
   List<String> getAllListEnumNames(SwaggerRoot root);
@@ -55,6 +43,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     if (schema.isEnum) {
+      return '';
+    }
+
+    if (schema.ref.isNotEmpty) {
       return '';
     }
 
@@ -81,7 +73,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         if (items.hasRef) {
           final ref = items.ref;
 
-          final itemSchema = schemas[ref.getUnformattedRef()];
+          final itemSchema =
+              allClasses[getValidatedClassName(ref.getUnformattedRef())];
 
           if (itemSchema != null && kBasicTypes.contains(itemSchema.type)) {
             return 'typedef $className = List<${kBasicTypesMap[itemSchema.type]}>;';
@@ -252,22 +245,20 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         return '';
       }
 
-      final allClasses = {
-        ...root.definitions,
-        ...root.components?.responses ?? {},
-        ...root.components?.schemas ?? {},
-      };
+      final currentClass = classes[className]!;
+
+      final tt = 0;
 
       return generateModelClassContent(
         root,
         className.pascalCase,
-        classes[className]!,
+        currentClass,
         classes,
         options.defaultValuesMap,
         options.classesWithNullabeLists,
         allEnums.map((e) => e.name).toList(),
         allEnumListNames,
-        allClasses,
+        classes,
       );
     }).join('\n');
 
@@ -1548,8 +1539,7 @@ $allHashComponents;
           final schema = content.schema;
           if (schema != null) {
             if (schema.type == kObject && schema.properties.isNotEmpty) {
-              final className =
-                  '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
+              final className = '${pathKey.pascalCase}${requestKey.pascalCase}';
 
               result[getValidatedClassName(className)] = schema;
             }

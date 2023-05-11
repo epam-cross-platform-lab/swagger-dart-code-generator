@@ -37,13 +37,24 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
     requestBodies.addAll(
         SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
 
+    final formattedRequestBodies = <String, SwaggerSchema>{};
+    requestBodies.forEach((key, value) {
+      formattedRequestBodies['$key\$RequestBody'] = value;
+    });
+
     final responses = root.components?.responses ?? {};
+    final formattedResponses = <String, SwaggerSchema>{};
+    responses.forEach((key, value) {
+      formattedResponses['$key\$Response'] = value;
+    });
+
     final definitions = root.components?.schemas ?? {};
     definitions.addAll(root.definitions);
 
     final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
-    final enumsFromResponses = generateEnumsFromSchemaMap(responses);
-    final enumsFromRequestBodies = generateEnumsFromSchemaMap(requestBodies);
+    final enumsFromResponses = generateEnumsFromSchemaMap(formattedResponses);
+    final enumsFromRequestBodies =
+        generateEnumsFromSchemaMap(formattedRequestBodies);
 
     final enumsFromClasses = definitions.keys
         .map((String className) {
