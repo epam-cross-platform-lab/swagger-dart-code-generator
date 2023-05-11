@@ -33,7 +33,7 @@ extension TypeExtension on String {
 
   String getUnformattedRef() => split('/').last;
 
-  String withPostfix(String postfix) => '$this$postfix';
+  String withPostfix(String postfix) => this + postfix;
 
   String asList() => 'List<$this>';
 
