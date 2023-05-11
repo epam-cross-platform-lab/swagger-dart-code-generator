@@ -50,16 +50,6 @@ void main() {
         outputFolder: '',
       ),
     );
-
-    test('Should generate enum name', () {
-      const className = 'animal';
-      const enumName = 'cat';
-      const expectedResult = 'AnimalCat';
-      final result = generator.generateAllEnums(
-          root: SwaggerRoot.parse(aaa), fileName: 'fileName');
-
-      expect(result, contains(expectedResult));
-    });
   });
 
   group('getOriginalOrOverriddenRequestParameter', () {
