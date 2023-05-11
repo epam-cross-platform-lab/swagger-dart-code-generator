@@ -90,6 +90,9 @@ ${options.overrideToString ? "import 'dart:convert';" : ''}
     if (enumsImport.isNotEmpty) {
       result.write(enumsImport);
     }
+    options.importPaths.forEach((element) {
+      result.write('import \'$element\';');
+    });
 
     if (enumsExport.isNotEmpty) {
       result.write(enumsExport);

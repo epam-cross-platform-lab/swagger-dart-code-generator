@@ -159,9 +159,16 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               .map((key, value) => MapEntry(value.url, value)),
         );
 
-        final returns = returnTypeName.isEmpty
-            ? kFutureResponse
-            : returnTypeName.asFutureResponse();
+        final String returns;
+
+        if (options.customReturnType.isNotEmpty) {
+          final innerResponseType =
+              returnTypeName.isEmpty ? 'dynamic' : returnTypeName;
+
+          returns = '${options.customReturnType}<$innerResponseType>';
+        } else {
+          returns = returnTypeName.isEmpty ? kFutureResponse : returnTypeName.asFutureResponse();
+        }
 
         final hasOptionalBody =
             ['post', 'put', 'patch'].contains(requestType) &&
