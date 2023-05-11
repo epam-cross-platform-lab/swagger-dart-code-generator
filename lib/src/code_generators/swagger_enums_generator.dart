@@ -158,7 +158,8 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
         final successResponse = SwaggerRequestsGenerator.getSuccessedResponse(
             responses: swaggerRequest.responses);
-        final successResponseSchema = successResponse?.schema;
+        final successResponseSchema =
+            successResponse?.schema ?? successResponse?.content?.schema;
 
         if (successResponseSchema != null) {
           final responseEnums = generateEnumsFromSchemaMap({
@@ -168,12 +169,17 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           result.addAll(responseEnums);
         }
 
-        if (swaggerRequest.parameters.isEmpty) {
+        final parameters = [
+          ...swaggerPath.parameters,
+          ...swaggerRequest.parameters,
+        ];
+
+        if (parameters.isEmpty) {
           return;
         }
 
-        for (var p = 0; p < swaggerRequest.parameters.length; p++) {
-          final swaggerRequestParameter = swaggerRequest.parameters[p];
+        for (var p = 0; p < parameters.length; p++) {
+          final swaggerRequestParameter = parameters[p];
 
           var name = generateRequestEnumName(
               path, requestType, swaggerRequestParameter.name);

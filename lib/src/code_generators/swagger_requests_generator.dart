@@ -1240,7 +1240,7 @@ extension on SwaggerRequestParameter {
   String get anyRef => schema?.ref ?? items?.ref ?? schema?.items?.ref ?? ref;
 }
 
-extension on SwaggerRoot {
+extension SwaggerRootExtension on SwaggerRoot {
   Map<String, SwaggerSchema> get allSchemas => {
         ...definitions,
         ...components?.schemas ?? {},
