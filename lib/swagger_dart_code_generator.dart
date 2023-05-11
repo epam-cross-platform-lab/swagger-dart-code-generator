@@ -213,13 +213,6 @@ class SwaggerDartCodeGenerator implements Builder {
       allEnums,
     );
 
-    final requestBodies = codeGenerator.generateRequestBodies(
-      contents,
-      fileWithoutExtension,
-      options,
-      allEnums,
-    );
-
     final enums = codeGenerator.generateEnums(
       contents,
       fileWithoutExtension,
@@ -229,7 +222,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
-      models.isNotEmpty || requestBodies.isNotEmpty,
+      models.isNotEmpty,
       options.buildOnlyModels,
       enums.isNotEmpty,
       options.separateModels,
@@ -261,7 +254,6 @@ class SwaggerDartCodeGenerator implements Builder {
               imports,
               requests,
               options.separateModels ? '' : models,
-              options.separateModels ? '' : requestBodies,
               customDecoder,
               options.separateModels ? '' : dateToJson));
     }
@@ -282,7 +274,6 @@ class SwaggerDartCodeGenerator implements Builder {
       ///Write models to separate file
       final formattedModels = _tryFormatCode(_generateSeparateModelsFileContent(
         models,
-        requestBodies,
         fileNameWithoutExtension,
         dateToJson,
         enums.isNotEmpty,
@@ -301,7 +292,6 @@ class SwaggerDartCodeGenerator implements Builder {
       String imports,
       String requests,
       String models,
-      String requestBodies,
       String customDecoder,
       String dateToJson) {
     final result = """
@@ -310,8 +300,6 @@ $imports
 ${options.buildOnlyModels ? '' : requests}
 
 $models
-
-$requestBodies
 
 ${options.buildOnlyModels ? '' : customDecoder}
 
@@ -359,7 +347,6 @@ $dateToJson
 
   String _generateSeparateModelsFileContent(
     String models,
-    String requestBodies,
     String fileNameWithoutExtension,
     String dateToJson,
     bool hasEnums,
@@ -385,8 +372,6 @@ $overridenModels
     part '$fileNameWithoutExtension.models.swagger.g.dart';
 
     $models
-
-    $requestBodies
 
     $dateToJson
     ''';

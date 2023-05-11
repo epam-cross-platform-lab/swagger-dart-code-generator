@@ -745,7 +745,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..named = true
                   ..required = isRequired
                   ..type = Reference(
-                    options.multipartFileType,
+                    isRequired
+                        ? options.multipartFileType
+                        : options.multipartFileType.makeNullable(),
                   )
                   ..named = true
                   ..annotations.add(

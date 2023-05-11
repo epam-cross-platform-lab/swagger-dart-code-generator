@@ -247,8 +247,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
       final currentClass = classes[className]!;
 
-      final tt = 0;
-
       return generateModelClassContent(
         root,
         className.pascalCase,
