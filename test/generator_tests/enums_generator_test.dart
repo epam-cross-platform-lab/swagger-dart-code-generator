@@ -2,10 +2,8 @@ import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart'
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
-import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 import 'package:test/test.dart';
 
-import '../code_examples.dart';
 
 void main() {
   final generator = SwaggerEnumsGeneratorV3(
@@ -41,15 +39,6 @@ void main() {
 
       expect(result, contains(output));
     });
-  });
-
-  group('generateEnumName', () {
-    final generator = SwaggerEnumsGeneratorV3(
-      GeneratorOptions(
-        inputFolder: '',
-        outputFolder: '',
-      ),
-    );
   });
 
   group('getOriginalOrOverriddenRequestParameter', () {
