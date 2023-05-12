@@ -1,3 +1,8 @@
+# 2.11.0
+
+* Code refactoring
+* ***Breaking*** Changed naming of Responses, RequestBodies
+
 # 2.10.4
 
 * Fixed generation of multipart body parameters
