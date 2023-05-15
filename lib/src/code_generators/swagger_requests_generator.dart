@@ -94,6 +94,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
           (p) => p
             ..named = true
+            ..type = Reference('Converter?')
+            ..name = 'converter',
+        ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
             ..type = Reference('Uri?')
             ..name = 'baseUrl',
         ))
@@ -1078,8 +1084,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
       var typeName =
           getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
-      
-      if(neededSchema.isNullable) {
+
+      if (neededSchema.isNullable) {
         typeName = typeName.makeNullable();
       }
 
@@ -1127,7 +1133,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         return itemsItemsType.asList().asList();
       } else if (content.schema?.items?.properties.isNotEmpty == true) {
-       
         final requestText = requestName.pascalCase;
 
         final typeName = getValidatedClassName('$requestText\$Response');
@@ -1212,8 +1217,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         : 'baseUrl: baseUrl';
 
     final converterString = options.withConverter
-        ? 'converter: \$JsonSerializableConverter(),'
-        : 'converter: chopper.JsonConverter(),';
+        ? 'converter: converter ?? \$JsonSerializableConverter(),'
+        : 'converter: converter ?? chopper.JsonConverter(),';
 
     final chopperClientBody = '''
     if(client!=null){
