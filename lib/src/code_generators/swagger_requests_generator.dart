@@ -752,6 +752,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           if ((value.type == 'string' && value.format == 'binary') ||
               value.type == 'file') {
             final isRequired = schema!.required.contains(key);
+            final typeName =
+            _mapParameterName(value.type, value.format, modelPostfix);
             result.add(
               Parameter(
                     (p) =>
@@ -762,6 +764,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..type = Reference(
                     options.multipartFileType,
                   )
+                  ..type = Reference(typeName.makeNullable())
                   ..named = true
                   ..annotations.add(
                     refer(kPartFile.pascalCase).call([]),
