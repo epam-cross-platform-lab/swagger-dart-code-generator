@@ -650,9 +650,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final parameterName = prop.ref.split('/').last;
 
     String typeName;
-    final refSchema = allClasses[parameterName];
+    final refSchema = allClasses[getValidatedClassName(parameterName)];
     if (kBasicSwaggerTypes.contains(refSchema?.type) &&
-        allClasses[parameterName]?.isEnum != true) {
+        allClasses[getValidatedClassName(parameterName)]?.isEnum != true) {
       if (refSchema?.format == 'datetime') {
         typeName = 'DateTime';
       } else {
