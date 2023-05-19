@@ -138,11 +138,23 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final result = <String, SwaggerSchema>{};
 
     classes.forEach((classKey, schema) {
-      final properties = schema.properties;
+      final properties = {
+        ...schema.properties,
+        ...schema.items?.properties ?? {},
+      };
+
+      final shouldUseItemsProperties =
+          schema.items?.properties.isNotEmpty == true;
 
       properties.forEach((propertyKey, propSchema) {
+        if (propertyKey == 'sender') {
+          final a = 0;
+        }
+
+        final itemPart = shouldUseItemsProperties ? '\$Item' : '';
+
         final innerClassName =
-            '${getValidatedClassName(classKey)}\$${getValidatedClassName(propertyKey)}';
+            '${getValidatedClassName(classKey)}$itemPart\$${getValidatedClassName(propertyKey)}';
 
         if (propSchema.properties.isNotEmpty) {
           result[innerClassName] = propSchema;
@@ -1045,7 +1057,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(root);
 
-      propertyName = propertyName.asParameterName();
+      propertyName = getValidatedClassName(propertyName).asParameterName();
 
       propertyName = getParameterName(propertyName, propertyNames);
 
@@ -1198,7 +1210,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     entityMap.forEach((key, value) {
       var fieldName = generateFieldName(
-        getParameterName(key.asParameterName(), propertyNames),
+        getParameterName(
+            getValidatedClassName(key).asParameterName(), propertyNames),
       );
 
       propertyNames.add(fieldName);
