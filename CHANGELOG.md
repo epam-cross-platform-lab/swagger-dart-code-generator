@@ -1,3 +1,6 @@
+# 2.10.5
+
+* Added converter as optional parameter for create()
 # 2.10.4
 
 * Fixed generation of multipart body parameters
