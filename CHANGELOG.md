@@ -1,3 +1,7 @@
+# 2.11.2
+
+* Some fixed and refactoring
+
 # 2.11.1
 
 * Fixed generation of models with type `number`

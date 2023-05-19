@@ -50,7 +50,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
-    if (kBasicTypes.contains(schema.type.toLowerCase())) {
+    if (kBasicSwaggerTypes.contains(schema.type.toLowerCase())) {
       return '';
     }
 

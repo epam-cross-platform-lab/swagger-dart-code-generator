@@ -25,7 +25,6 @@ const kBasicTypes = [
   'num',
   'Object',
   'String',
-  'number',
   kMap,
 ];
 
