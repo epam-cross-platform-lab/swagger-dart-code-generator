@@ -147,10 +147,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           schema.items?.properties.isNotEmpty == true;
 
       properties.forEach((propertyKey, propSchema) {
-        if (propertyKey == 'sender') {
-          final a = 0;
-        }
-
         final itemPart = shouldUseItemsProperties ? '\$Item' : '';
 
         final innerClassName =
@@ -163,7 +159,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         final items = propSchema.items;
 
         if (items != null && items.properties.isNotEmpty) {
-          result[innerClassName] = propSchema;
+          result['$innerClassName\$Item'] = propSchema;
         }
       });
     });
@@ -1058,6 +1054,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       final basicTypesMap = generateBasicTypesMapFromSchemas(root);
 
       propertyName = getValidatedClassName(propertyName).asParameterName();
+
+      if (propertyName.isEmpty) {
+        propertyName = '\$';
+      }
 
       propertyName = getParameterName(propertyName, propertyNames);
 
