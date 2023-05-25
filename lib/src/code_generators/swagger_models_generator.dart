@@ -163,6 +163,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         final items = propSchema.items;
 
         if (items != null && items.properties.isNotEmpty) {
+          propSchema.type = 'object';
           result['$innerClassName\$Item'] = propSchema;
         }
       });
