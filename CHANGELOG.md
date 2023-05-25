@@ -1,3 +1,7 @@
+# 2.11.5
+
+* Fixed generation of very complex models inside of arrays inside of models etc.
+
 # 2.11.4
 
 * Fixed generation of models without properties and sample types
