@@ -1,3 +1,7 @@
+# 2.11.4
+
+* Fixed generation of models without properties and sample types
+
 # 2.11.3
 
 * Some fixed and refactoring
