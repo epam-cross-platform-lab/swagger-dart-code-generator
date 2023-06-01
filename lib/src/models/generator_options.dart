@@ -7,6 +7,7 @@ class GeneratorOptions {
   /// Instantiate generator options.
   GeneratorOptions({
     this.withBaseUrl = true,
+    this.addBasePathToRequests = false,
     this.withConverter = true,
     this.ignoreHeaders = false,
     this.separateModels = false,
@@ -47,6 +48,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;
+
+  @JsonKey(defaultValue: false)
+  final bool addBasePathToRequests;
 
   @JsonKey(defaultValue: null)
   final int? pageWidth;

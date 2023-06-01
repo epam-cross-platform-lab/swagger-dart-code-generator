@@ -2,12 +2,12 @@
 <img src="https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/assets/lib_full_logo.png" height="100" alt="Swagger dart code generator" />
 </p>
 
-# :mega: **Build dart types from Swagger/OpenAPI schemas**
+# :mega: **Build dart types from Swagger/OpenAPI schemas** :mega:
 
 [![pub package](https://img.shields.io/pub/v/swagger_dart_code_generator.svg)](https://pub.dartlang.org/packages/swagger_dart_code_generator)
 ![GitHub issues](https://img.shields.io/github/issues-raw/epam-cross-platform-lab/swagger-dart-code-generator?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/epam-cross-platform-lab/swagger-dart-code-generator?style=flat-square)
-<a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/actions"><img src="https://img.shields.io/github/workflow/status/epam-cross-platform-lab/swagger-dart-code-generator/CI%20for%20master%20branch/master" alt="build"></a>
+<a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/actions"><img src="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/actions/workflows/master.yml/badge.svg" alt="build"></a>
 [![codecov](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/epam-cross-platform-lab/swagger-dart-code-generator)
 <a href="https://github.com/epam-cross-platform-lab/swagger-dart-code-generator"><img src="https://img.shields.io/github/stars/epam-cross-platform-lab/swagger-dart-code-generator?style=social" alt="Discord"></a>
 
@@ -28,17 +28,17 @@ In general case for each .swagger file three outputs will be created. </br>
 The generated code uses the following packages in run-time:
 ```yaml
 dependencies:
-  chopper: ^4.0.1
-  json_annotation: ^4.4.0
+  chopper: ^6.1.1
+  json_annotation: ^4.8.0
 ```
 
 Add the following to your `pubspec.yaml` file to be able to do code generation:
 ```yaml
 dev_dependencies:
-  build_runner: ^2.1.7
-  chopper_generator: ^4.0.5
-  json_serializable: ^6.1.4
-  swagger_dart_code_generator: ^2.4.6
+  build_runner: ^2.3.3
+  chopper_generator: ^6.0.0
+  json_serializable: ^6.6.1
+  swagger_dart_code_generator: ^2.10.4
 ```
 
 Then run:

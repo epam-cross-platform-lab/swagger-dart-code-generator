@@ -53,6 +53,86 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     );
   }
 
+<<<<<<< HEAD
+=======
+  // @override
+  // String generateResponses({
+  //   required SwaggerRoot root,
+  //   required String fileName,
+  //   required List<EnumModel> allEnums,
+  // }) {
+  //   final components = root.components;
+
+  //   if (components == null) {
+  //     return '';
+  //   }
+
+  //   final responses = components.responses;
+
+  //   var result = <String, SwaggerSchema>{};
+
+  //   final allModelNames =
+  //       components.schemas.keys.map((e) => getValidatedClassName(e));
+
+  //   for (var key in responses.keys) {
+  //     if (!allModelNames.contains(key)) {
+  //       final schema = responses[key];
+
+  //       if (schema != null && schema.ref.isEmpty) {
+  //         result.addAll({key: schema});
+  //       }
+  //     }
+  //   }
+
+  //   return generateBase(
+  //     root: root,
+  //     fileName: fileName,
+  //     classes: result,
+  //     allEnums: allEnums,
+  //     generateEnumsMethods: false,
+  //   );
+  // }
+
+  @override
+  String generateRequestBodies({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
+    final components = root.components;
+    final requestBodies = components?.requestBodies ?? {};
+
+    requestBodies.addAll(getRequestBodiesFromRequests(root));
+
+    if (requestBodies.isEmpty) {
+      return '';
+    }
+
+    var result = <String, SwaggerSchema>{};
+
+    final allModelNames =
+        components?.schemas.keys.map((e) => getValidatedClassName(e)) ?? [];
+
+    for (var key in requestBodies.keys) {
+      if (!allModelNames.contains(key)) {
+        final req = requestBodies[key];
+
+        if (req != null) {
+          result.addAll({key: req});
+        }
+      }
+    }
+
+    return generateBase(
+      root: root,
+      fileName: fileName,
+      classes: result,
+      allEnums: allEnums,
+      generateEnumsMethods: false,
+    );
+  }
+
+>>>>>>> master
   @override
   List<String> getAllListEnumNames(SwaggerRoot root) {
     final results = getEnumsFromRequests(root).map((e) => e.name).toList();

@@ -23,6 +23,21 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
   });
 
+<<<<<<< HEAD
+=======
+  // String generateResponses({
+  //   required SwaggerRoot root,
+  //   required String fileName,
+  //   required List<EnumModel> allEnums,
+  // });
+
+  String generateRequestBodies({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  });
+
+>>>>>>> master
   String getExtendsString(SwaggerSchema schema);
 
   List<String> getAllListEnumNames(SwaggerRoot root);
@@ -176,6 +191,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           result['$innerClassName\$Item'] = propSchema;
         }
       });
+
+      if (schema.items != null) {
+        result.addAll(getClassesFromInnerClasses(
+            {'${getValidatedClassName(classKey)}\$item': schema.items!}));
+      }
     });
 
     if (result.isNotEmpty) {

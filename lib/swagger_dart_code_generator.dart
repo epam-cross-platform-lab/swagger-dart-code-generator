@@ -213,6 +213,16 @@ class SwaggerDartCodeGenerator implements Builder {
       allEnums,
     );
 
+<<<<<<< HEAD
+=======
+    final requestBodies = codeGenerator.generateRequestBodies(
+      contents,
+      fileWithoutExtension,
+      options,
+      allEnums,
+    );
+
+>>>>>>> master
     final enums = codeGenerator.generateEnums(
       contents,
       fileWithoutExtension,
@@ -222,7 +232,11 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
+<<<<<<< HEAD
       models.isNotEmpty,
+=======
+      models.isNotEmpty || requestBodies.isNotEmpty,
+>>>>>>> master
       options.buildOnlyModels,
       enums.isNotEmpty,
       options.separateModels,
@@ -254,6 +268,10 @@ class SwaggerDartCodeGenerator implements Builder {
               imports,
               requests,
               options.separateModels ? '' : models,
+<<<<<<< HEAD
+=======
+              options.separateModels ? '' : requestBodies,
+>>>>>>> master
               customDecoder,
               options.separateModels ? '' : dateToJson));
     }
@@ -274,6 +292,10 @@ class SwaggerDartCodeGenerator implements Builder {
       ///Write models to separate file
       final formattedModels = _tryFormatCode(_generateSeparateModelsFileContent(
         models,
+<<<<<<< HEAD
+=======
+        requestBodies,
+>>>>>>> master
         fileNameWithoutExtension,
         dateToJson,
         enums.isNotEmpty,
@@ -292,6 +314,10 @@ class SwaggerDartCodeGenerator implements Builder {
       String imports,
       String requests,
       String models,
+<<<<<<< HEAD
+=======
+      String requestBodies,
+>>>>>>> master
       String customDecoder,
       String dateToJson) {
     final result = """
@@ -301,6 +327,11 @@ ${options.buildOnlyModels ? '' : requests}
 
 $models
 
+<<<<<<< HEAD
+=======
+$requestBodies
+
+>>>>>>> master
 ${options.buildOnlyModels ? '' : customDecoder}
 
 $dateToJson
@@ -347,6 +378,10 @@ $dateToJson
 
   String _generateSeparateModelsFileContent(
     String models,
+<<<<<<< HEAD
+=======
+    String requestBodies,
+>>>>>>> master
     String fileNameWithoutExtension,
     String dateToJson,
     bool hasEnums,
@@ -373,6 +408,11 @@ $overridenModels
 
     $models
 
+<<<<<<< HEAD
+=======
+    $requestBodies
+
+>>>>>>> master
     $dateToJson
     ''';
   }

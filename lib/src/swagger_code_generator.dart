@@ -60,6 +60,33 @@ class SwaggerCodeGenerator {
       _getSwaggerEnumsGenerator(root, options)
           .generateAllEnums(fileName: fileName, root: root);
 
+<<<<<<< HEAD
+=======
+  // String generateResponses(
+  //   SwaggerRoot root,
+  //   String fileName,
+  //   GeneratorOptions options,
+  //   List<EnumModel> allEnums,
+  // ) =>
+  //     _getSwaggerModelsGenerator(root, options).generateResponses(
+  //       root: root,
+  //       fileName: fileName,
+  //       allEnums: allEnums,
+  //     );
+
+  String generateRequestBodies(
+    SwaggerRoot root,
+    String fileName,
+    GeneratorOptions options,
+    List<EnumModel> allEnums,
+  ) =>
+      _getSwaggerModelsGenerator(root, options).generateRequestBodies(
+        root: root,
+        fileName: fileName,
+        allEnums: allEnums,
+      );
+
+>>>>>>> master
   String generateEnums(
     SwaggerRoot root,
     String fileName,
