@@ -1211,10 +1211,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       responses: responses,
     );
 
-    if (path == '/search/simple/') {
-      final tt = 0;
-    }
-
     if (neededResponse == null) {
       return '';
     }
