@@ -532,12 +532,10 @@ void main() {
     });
   });
 
-<<<<<<< HEAD
-=======
   group('Tests for generateResponses', () {
     test('Should generate empty string for V2', () {
       final map = SwaggerRoot.parse(schemasResponsesWithResponse);
-      final result = generator2.generateResponses(
+      final result = generator2.generate(
         root: map,
         fileName: 'fileName',
         allEnums: [],
@@ -547,7 +545,6 @@ void main() {
     });
   });
 
->>>>>>> master
   group('Tests for models from responses', () {
     test('Should generate correct model from response', () {
       final map = SwaggerRoot.parse(requestWithReturnTypeInjected);

@@ -1128,14 +1128,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       var typeName =
           getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
 
-<<<<<<< HEAD
-=======
-
-      if (neededSchema.isNullable) {
-        typeName = typeName.makeNullable();
-      }
-
->>>>>>> master
       if (neededSchema.isNullable) {
         typeName = typeName.makeNullable();
       }
@@ -1286,14 +1278,8 @@ extension on SwaggerRequestParameter {
   String get anyRef => schema?.ref ?? items?.ref ?? schema?.items?.ref ?? ref;
 }
 
-<<<<<<< HEAD
 extension SwaggerRootExtension on SwaggerRoot {
   Map<String, SwaggerSchema> get allSchemas => {
-=======
-extension on SwaggerRoot {
-  Map<String, SwaggerSchema> get allSchemas =>
-      {
->>>>>>> master
         ...definitions,
         ...components?.schemas ?? {},
         ...components?.responses ?? {},
