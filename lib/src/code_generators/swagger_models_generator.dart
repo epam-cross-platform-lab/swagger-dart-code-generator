@@ -147,6 +147,15 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         ...schema.items?.properties ?? {},
       };
 
+      for (var element in schema.allOf) {
+        properties.addAll(element.properties);
+
+        if (element.ref.isNotEmpty) {
+          final neededClass = classes[element.ref.getUnformattedRef()];
+          properties.addAll(neededClass?.properties ?? {});
+        }
+      }
+
       final shouldUseItemsProperties =
           schema.items?.properties.isNotEmpty == true;
 
