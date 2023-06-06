@@ -112,9 +112,17 @@ enums.$name ${name.camelCase}FromJson(
   Object? ${name.camelCase},
   [enums.$name? defaultValue,]
   ) {
-
-return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown;
+    return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown;
 }
+
+
+enums.$name? ${name.camelCase}NullableFromJson(
+  Object? ${name.camelCase},
+  [enums.$name? defaultValue,]
+  ) {
+    return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue;
+}
+
 
 
 List<$type> ${name.camelCase}ListToJson(
