@@ -350,6 +350,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
     }
 
+    if(parameter.items?.properties.isNotEmpty == true) {
+      return 'List<${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}\$Item$modelPostfix>';
+    }
+
     if (parameter.hasRef) {
       return parameter.ref.split('/').last.pascalCase;
     }
