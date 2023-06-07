@@ -1,3 +1,7 @@
+# 2.11.7
+
+* Updated SDK version
+
 # 2.11.6
 
 * Fixed generation of anyOf ref properties ([#613](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/613))
