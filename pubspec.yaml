@@ -1,6 +1,6 @@
 name: swagger_dart_code_generator
 
-version: 2.11.6
+version: 2.11.6+1
 
 homepage: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 repository: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
@@ -19,7 +19,7 @@ description: Have you been turned into a problem with writing code for Http
   functionality you have been looking for.
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
 
 dependencies:
   build: ^2.2.1
