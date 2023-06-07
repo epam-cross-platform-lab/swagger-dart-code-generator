@@ -23,7 +23,9 @@ class GeneratorOptions {
     this.usePathForRequestNames = true,
     this.includeIfNull,
     this.modelPostfix = '',
+    this.customReturnType = '',
     this.includePaths = const [],
+    this.importPaths = const [],
     this.excludePaths = const [],
     this.inputUrls = const [],
     this.nullableModels = const [],
@@ -124,6 +126,12 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: [])
   final List<String> includePaths;
+
+  @JsonKey(defaultValue: [])
+  final List<String> importPaths;
+
+  @JsonKey(defaultValue: '')
+  final String customReturnType;
 
   @JsonKey(defaultValue: [])
   final List<String> excludePaths;

@@ -33,7 +33,7 @@ extension TypeExtension on String {
 
   String getUnformattedRef() => split('/').last;
 
-  String withPostfix(String postfix) => '$this$postfix';
+  String withPostfix(String postfix) => this + postfix;
 
   String asList() => 'List<$this>';
 
@@ -45,7 +45,13 @@ extension TypeExtension on String {
   String asFutureResponse() => 'Future<chopper.Response<$this>>';
 
   String asParameterName() {
-    return SwaggerModelsGenerator.getValidatedParameterName(this);
+    final result = SwaggerModelsGenerator.getValidatedParameterName(this);
+
+    if (result.isEmpty) {
+      return '\$';
+    }
+
+    return result;
   }
 
   String asParameterType() {

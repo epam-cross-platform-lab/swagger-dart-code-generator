@@ -23,18 +23,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
   });
 
-  // String generateResponses({
-  //   required SwaggerRoot root,
-  //   required String fileName,
-  //   required List<EnumModel> allEnums,
-  // });
-
-  String generateRequestBodies({
-    required SwaggerRoot root,
-    required String fileName,
-    required List<EnumModel> allEnums,
-  });
-
   String getExtendsString(SwaggerSchema schema);
 
   List<String> getAllListEnumNames(SwaggerRoot root);
@@ -58,7 +46,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
-    if (kBasicTypes.contains(schema.type.toLowerCase())) {
+    if (schema.ref.isNotEmpty) {
+      return '';
+    }
+
+    if (kBasicSwaggerTypes.contains(schema.type.toLowerCase())) {
       return '';
     }
 
@@ -70,8 +62,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'class $className {}';
     }
 
-    if (schema.type == kObject && schema.anyOf.isNotEmpty) {
-      return 'typedef $className = Map<String, dynamic>;';
+    if (schema.anyOf.isNotEmpty) {
+      if (schema.type == kObject) {
+        return 'typedef $className = Map<String, dynamic>;';
+      } else {
+        return 'typedef $className = Object;';
+      }
     }
 
     if (schema.type == 'array') {
@@ -81,7 +77,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         if (items.hasRef) {
           final ref = items.ref;
 
-          final itemSchema = schemas[ref.getUnformattedRef()];
+          final itemSchema =
+              allClasses[getValidatedClassName(ref.getUnformattedRef())];
 
           if (itemSchema != null && kBasicTypes.contains(itemSchema.type)) {
             return 'typedef $className = List<${kBasicTypesMap[itemSchema.type]}>;';
@@ -145,11 +142,28 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final result = <String, SwaggerSchema>{};
 
     classes.forEach((classKey, schema) {
-      final properties = schema.properties;
+      final properties = {
+        ...schema.properties,
+        ...schema.items?.properties ?? {},
+      };
+
+      for (var element in schema.allOf) {
+        properties.addAll(element.properties);
+
+        if (element.ref.isNotEmpty) {
+          final neededClass = classes[element.ref.getUnformattedRef()];
+          properties.addAll(neededClass?.properties ?? {});
+        }
+      }
+
+      final shouldUseItemsProperties =
+          schema.items?.properties.isNotEmpty == true;
 
       properties.forEach((propertyKey, propSchema) {
+        final itemPart = shouldUseItemsProperties ? '\$Item' : '';
+
         final innerClassName =
-            '${getValidatedClassName(classKey)}\$${getValidatedClassName(propertyKey)}';
+            '${getValidatedClassName(classKey)}$itemPart\$${getValidatedClassName(propertyKey)}';
 
         if (propSchema.properties.isNotEmpty) {
           result[innerClassName] = propSchema;
@@ -158,7 +172,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         final items = propSchema.items;
 
         if (items != null && items.properties.isNotEmpty) {
-          result[innerClassName] = propSchema;
+          propSchema.type = 'object';
+          result['$innerClassName\$Item'] = propSchema;
         }
       });
 
@@ -257,22 +272,18 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         return '';
       }
 
-      final allClasses = {
-        ...root.definitions,
-        ...root.components?.responses ?? {},
-        ...root.components?.schemas ?? {},
-      };
+      final currentClass = classes[className]!;
 
       return generateModelClassContent(
         root,
         className.pascalCase,
-        classes[className]!,
+        currentClass,
         classes,
         options.defaultValuesMap,
         options.classesWithNullabeLists,
         allEnums.map((e) => e.name).toList(),
         allEnumListNames,
-        allClasses,
+        classes,
       );
     }).join('\n');
 
@@ -666,9 +677,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final parameterName = prop.ref.split('/').last;
 
     String typeName;
-    final refSchema = allClasses[parameterName];
+    final refSchema = allClasses[getValidatedClassName(parameterName)];
     if (kBasicSwaggerTypes.contains(refSchema?.type) &&
-        allClasses[parameterName]?.isEnum != true) {
+        allClasses[getValidatedClassName(parameterName)]?.isEnum != true) {
       if (refSchema?.format == 'datetime') {
         typeName = 'DateTime';
       } else {
@@ -1061,7 +1072,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(root);
 
-      propertyName = propertyName.asParameterName();
+      propertyName = getValidatedParameterName(propertyName).asParameterName();
+
+      if (propertyName.isEmpty) {
+        propertyName = '\$';
+      }
 
       propertyName = getParameterName(propertyName, propertyNames);
 
@@ -1214,7 +1229,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     entityMap.forEach((key, value) {
       var fieldName = generateFieldName(
-        getParameterName(key.asParameterName(), propertyNames),
+        getParameterName(
+            getValidatedClassName(key).asParameterName(), propertyNames),
       );
 
       propertyNames.add(fieldName);
@@ -1553,8 +1569,7 @@ $allHashComponents;
           final schema = content.schema;
           if (schema != null) {
             if (schema.type == kObject && schema.properties.isNotEmpty) {
-              final className =
-                  '${pathKey.pascalCase}${requestKey.pascalCase}\$$kRequestBody';
+              final className = '${pathKey.pascalCase}${requestKey.pascalCase}';
 
               result[getValidatedClassName(className)] = schema;
             }

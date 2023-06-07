@@ -25,24 +25,6 @@ class SwaggerModelsGeneratorV2 extends SwaggerModelsGenerator {
   }
 
   @override
-  String generateResponses({
-    required SwaggerRoot root,
-    required String fileName,
-    required List<EnumModel> allEnums,
-  }) {
-    return '';
-  }
-
-  @override
-  String generateRequestBodies({
-    required SwaggerRoot root,
-    required String fileName,
-    required List<EnumModel> allEnums,
-  }) {
-    return '';
-  }
-
-  @override
   List<String> getAllListEnumNames(SwaggerRoot root) {
     final results = getEnumsFromRequests(root).map((e) => e.name).toList();
 

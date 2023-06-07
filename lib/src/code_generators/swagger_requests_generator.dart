@@ -171,9 +171,16 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               .map((key, value) => MapEntry(value.url, value)),
         );
 
-        final returns = returnTypeName.isEmpty
-            ? kFutureResponse
-            : returnTypeName.asFutureResponse();
+        final String returns;
+
+        if (options.customReturnType.isNotEmpty) {
+          final innerResponseType =
+              returnTypeName.isEmpty ? 'dynamic' : returnTypeName;
+
+          returns = '${options.customReturnType}<$innerResponseType>';
+        } else {
+          returns = returnTypeName.isEmpty ? kFutureResponse : returnTypeName.asFutureResponse();
+        }
 
         final hasOptionalBody =
             ['post', 'put', 'patch'].contains(requestType) &&
@@ -265,7 +272,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final ref =
           refs.firstWhereOrNull((element) => element?.isNotEmpty == true) ?? '';
 
-      final schema = root.allSchemas[ref.getUnformattedRef()];
+      final refName = ref.getUnformattedRef();
+
+      final schema =
+          root.allSchemas[refName] ?? root.allSchemas['$refName\$RequestBody'];
 
       if (schema?.type == kArray) {
         if (schema?.items?.ref.isNotEmpty == true) {
@@ -768,7 +778,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   ..named = true
                   ..required = isRequired
                   ..type = Reference(
-                    options.multipartFileType,
+                    isRequired
+                        ? options.multipartFileType
+                        : options.multipartFileType.makeNullable(),
                   )
                   ..type = Reference(typeName.makeNullable())
                   ..named = true
@@ -807,6 +819,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       if (requestBody.hasRef) {
         final ref = requestBody.ref;
         typeName = ref.getRef();
+
+        if (root.components?.requestBodies
+                .containsKey(ref.getUnformattedRef()) ==
+            true) {
+          typeName =
+              getValidatedClassName('${ref.getUnformattedRef()}\$RequestBody');
+        }
 
         final requestBodyRef =
             root.components?.requestBodies[ref.getRef()]?.ref ?? '';
@@ -1045,6 +1064,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return kObject.pascalCase;
       }
 
+      if (ref.contains('/responses/')) {
+        return getValidatedClassName(
+            '${ref.getRef()}\$$kResponse$modelPostfix');
+      }
+
       return getValidatedClassName(ref.getRef() + modelPostfix);
     }
 
@@ -1103,11 +1127,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
       var typeName =
           getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
-
-
-      if (neededSchema.isNullable) {
-        typeName = typeName.makeNullable();
-      }
 
       if (neededSchema.isNullable) {
         typeName = typeName.makeNullable();
@@ -1192,10 +1211,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       responses: responses,
     );
 
-    if (path == '/search/simple/') {
-      final tt = 0;
-    }
-
     if (neededResponse == null) {
       return '';
     }
@@ -1259,12 +1274,12 @@ extension on SwaggerRequestParameter {
   String get anyRef => schema?.ref ?? items?.ref ?? schema?.items?.ref ?? ref;
 }
 
-extension on SwaggerRoot {
-  Map<String, SwaggerSchema> get allSchemas =>
-      {
+extension SwaggerRootExtension on SwaggerRoot {
+  Map<String, SwaggerSchema> get allSchemas => {
         ...definitions,
         ...components?.schemas ?? {},
         ...components?.responses ?? {},
+        ...components?.requestBodies ?? {}
       };
 }
 

@@ -535,7 +535,7 @@ void main() {
   group('Tests for generateResponses', () {
     test('Should generate empty string for V2', () {
       final map = SwaggerRoot.parse(schemasResponsesWithResponse);
-      final result = generator2.generateResponses(
+      final result = generator2.generate(
         root: map,
         fileName: 'fileName',
         allEnums: [],

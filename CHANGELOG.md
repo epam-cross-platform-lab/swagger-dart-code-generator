@@ -1,3 +1,32 @@
+# 2.11.6
+
+* Fixed generation of anyOf ref properties ([#613](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/613))
+
+# 2.11.5
+
+* Fixed generation of very complex models inside of arrays inside of models etc.
+
+# 2.11.4
+
+* Fixed generation of models without properties and sample types
+
+# 2.11.3
+
+* Some fixed and refactoring
+
+# 2.11.2
+
+* Some fixed and refactoring
+
+# 2.11.1
+
+* Fixed generation of models with type `number`
+
+# 2.11.0
+
+* Code refactoring
+* ***Breaking*** Changed naming of Responses, RequestBodies
+
 # 2.10.5
 
 * Added converter as optional parameter for create()
