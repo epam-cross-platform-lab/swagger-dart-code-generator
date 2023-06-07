@@ -47,7 +47,7 @@ void main() {
           SwaggerRequestParameter(ref: '#definitions/TestParameter');
       final overriddenParameters = [
         SwaggerRequestParameter(
-            name: 'TestParameter', type: 'Overridden parameter')
+            key: 'TestParameter', type: 'Overridden parameter')
       ];
 
       final result = generator.getOriginalOrOverriddenRequestParameter(

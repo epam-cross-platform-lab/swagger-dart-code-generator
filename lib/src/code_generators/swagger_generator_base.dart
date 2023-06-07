@@ -20,7 +20,7 @@ abstract class SwaggerGeneratorBase {
     }
 
     if (exceptionWords.contains(className)) {
-      return 'Object';
+      className = '\$$className';
     }
 
     if (className.isEmpty) {
@@ -165,8 +165,7 @@ abstract class SwaggerGeneratorBase {
     final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
     final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) =>
-            element.key == parameterClassName,
+        (SwaggerRequestParameter element) => element.key == parameterClassName,
         orElse: () => swaggerRequestParameter);
 
     return neededParameter;

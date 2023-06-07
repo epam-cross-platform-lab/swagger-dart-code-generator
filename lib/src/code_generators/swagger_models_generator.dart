@@ -1072,7 +1072,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(root);
 
-      propertyName = getValidatedClassName(propertyName).asParameterName();
+      propertyName = getValidatedParameterName(propertyName).asParameterName();
 
       if (propertyName.isEmpty) {
         propertyName = '\$';
