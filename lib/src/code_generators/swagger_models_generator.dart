@@ -173,7 +173,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         if (items != null && items.properties.isNotEmpty) {
           propSchema.type = 'object';
-          result['$innerClassName\$Item'] = propSchema;
+          result['$innerClassName\$Item'] = items;
         }
       });
 
@@ -350,7 +350,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
     }
 
-    if(parameter.items?.properties.isNotEmpty == true) {
+    if (parameter.items?.properties.isNotEmpty == true) {
       return 'List<${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}\$Item$modelPostfix>';
     }
 
