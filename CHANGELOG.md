@@ -1,3 +1,7 @@
+# 2.11.8
+
+* Fixed generation of fields of some models
+
 # 2.11.7
 
 * Updated SDK version
