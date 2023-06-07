@@ -32,8 +32,14 @@ String normal(String path) {
   return AssetId('', path).path;
 }
 
+Iterable<FileSystemEntity> _getInputFolderFilesList(GeneratorOptions options) {
+  return Directory(normalize(options.inputFolder)).listSync().where(
+      (FileSystemEntity file) =>
+          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+}
+
 String _getAdditionalResultPath(GeneratorOptions options) {
-  final filesList = Directory(normalize(options.inputFolder)).listSync();
+  final filesList = _getInputFolderFilesList(options);
 
   if (filesList.isNotEmpty) {
     return filesList.first.path;
@@ -46,15 +52,13 @@ String _getAdditionalResultPath(GeneratorOptions options) {
     return path;
   }
 
-  return Directory(normalize(options.inputFolder)).listSync().first.path;
+  return _getInputFolderFilesList(options).first.path;
 }
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final result = <String, Set<String>>{};
 
-  final filesList = Directory(normalize(options.inputFolder)).listSync().where(
-      (FileSystemEntity file) =>
-          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+  final filesList = _getInputFolderFilesList(options);
 
   additionalResultPath =
       _getAdditionalResultPath(options).replaceAll('\\', '/');
