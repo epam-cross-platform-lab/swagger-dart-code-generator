@@ -1230,7 +1230,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     entityMap.forEach((key, value) {
       var fieldName = generateFieldName(
         getParameterName(
-            getValidatedClassName(key).asParameterName(), propertyNames),
+            getValidatedParameterName(key).asParameterName(), propertyNames),
       );
 
       propertyNames.add(fieldName);
