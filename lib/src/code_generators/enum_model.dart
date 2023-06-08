@@ -120,6 +120,9 @@ enums.$name? ${name.camelCase}NullableFromJson(
   Object? ${name.camelCase},
   [enums.$name? defaultValue,]
   ) {
+    if(${name.camelCase} == null){
+      return null;
+    }
     return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue;
 }
 
