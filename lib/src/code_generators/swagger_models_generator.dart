@@ -631,7 +631,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final allOf = prop.allOf;
     String typeName;
 
-    if (allOf.length != 1) {
+    if (allOf
+            .where((element) =>
+                element.ref.isNotEmpty || element.properties.isNotEmpty)
+            .length >
+        1) {
       typeName = kDynamic;
     } else {
       var className = allOf.first.ref.getRef();
