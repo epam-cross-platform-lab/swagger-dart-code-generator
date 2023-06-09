@@ -8,7 +8,8 @@ part of 'generator_options.dart';
 
 GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       withBaseUrl: json['with_base_url'] as bool? ?? true,
-      addBasePathToRequests: json['add_base_path_to_requests'] as bool? ?? true,
+      addBasePathToRequests:
+          json['add_base_path_to_requests'] as bool? ?? false,
       withConverter: json['with_converter'] as bool? ?? true,
       ignoreHeaders: json['ignore_headers'] as bool? ?? false,
       separateModels: json['separate_models'] as bool? ?? false,

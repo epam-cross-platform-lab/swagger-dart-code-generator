@@ -173,7 +173,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         if (items != null && items.properties.isNotEmpty) {
           propSchema.type = 'object';
-          result['$innerClassName\$Item'] = propSchema;
+          result['$innerClassName\$Item'] = items;
         }
       });
 
@@ -348,6 +348,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     if (parameter.properties.isNotEmpty) {
       return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
+    }
+
+    if (parameter.items?.properties.isNotEmpty == true) {
+      return 'List<${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}\$Item$modelPostfix>';
     }
 
     if (parameter.hasRef) {
@@ -627,7 +631,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final allOf = prop.allOf;
     String typeName;
 
-    if (allOf.length != 1) {
+    if (allOf
+            .where((element) =>
+                element.ref.isNotEmpty || element.properties.isNotEmpty)
+            .length >
+        1) {
       typeName = kDynamic;
     } else {
       var className = allOf.first.ref.getRef();
@@ -1230,7 +1238,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     entityMap.forEach((key, value) {
       var fieldName = generateFieldName(
         getParameterName(
-            getValidatedClassName(key).asParameterName(), propertyNames),
+            getValidatedParameterName(key).asParameterName(), propertyNames),
       );
 
       propertyNames.add(fieldName);

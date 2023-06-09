@@ -292,12 +292,8 @@ class SwaggerDartCodeGenerator implements Builder {
     }
   }
 
-  String _generateFileContent(
-      String imports,
-      String requests,
-      String models,
-      String customDecoder,
-      String dateToJson) {
+  String _generateFileContent(String imports, String requests, String models,
+      String customDecoder, String dateToJson) {
     final result = """
 $imports
 
