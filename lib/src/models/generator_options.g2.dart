@@ -101,6 +101,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'additional_headers': instance.additionalHeaders,
       'input_urls': instance.inputUrls,
       'nullable_models': instance.nullableModels,
+      'all_not_required': instance.allNotRequired,
       'separate_models': instance.separateModels,
       'use_required_attribute_for_headers':
           instance.useRequiredAttributeForHeaders,

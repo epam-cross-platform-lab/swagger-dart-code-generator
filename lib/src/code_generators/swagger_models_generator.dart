@@ -1244,7 +1244,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       propertyNames.add(fieldName);
 
       if (options.nullableModels.contains(className) ||
-          !requiredProperties.contains(key)) {
+          !requiredProperties.contains(key) || options.allNotRequired) {
         results += '\t\tthis.$fieldName,\n';
       } else {
         results += '\t\t$kRequired this.$fieldName,\n';

@@ -29,6 +29,7 @@ class GeneratorOptions {
     this.excludePaths = const [],
     this.inputUrls = const [],
     this.nullableModels = const [],
+    this.allNotRequired = false,
     this.cutFromModelNames = '',
     this.additionalHeaders = const [],
     this.overrideEqualsAndHashcode = true,
@@ -84,6 +85,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: false)
   final bool separateModels;
+
+  @JsonKey(defaultValue: false)
+  final bool allNotRequired;
 
   @JsonKey(defaultValue: true)
   final bool useRequiredAttributeForHeaders;

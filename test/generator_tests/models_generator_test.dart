@@ -20,6 +20,12 @@ void main() {
       outputFolder: '',
     ),
   );
+  final generator3 = SwaggerModelsGeneratorV3(GeneratorOptions(
+    inputFolder: '',
+    outputFolder: '',
+    allNotRequired: true
+    ),
+  );
 
   group('generateDefaultValueFromMap', () {
     test('Should return default value', () {
@@ -185,6 +191,29 @@ void main() {
       );
 
       expect(result, contains(', includeIfNull: false'));
+    });
+
+    test('Should generate all fields not required if allNotRequired option is true', () {
+      final map = <String, dynamic>{
+        'Animal': {'type': 'dog'}
+      };
+      const expectedResult = 'this.animal';
+      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          includeIfNull: false,
+          allNotRequired: true
+      )).generateConstructorPropertiesContent(
+        className: '',
+        entityMap: map,
+        defaultValues: [],
+        requiredProperties: ['Animal'],
+        allEnumNames: [],
+        allEnumListNames: [],
+      );
+
+      expect(result.contains('required'), equals(false));
+
     });
 
     test('Should NOT generate includeIfNull if option is false', () {
@@ -479,7 +508,7 @@ void main() {
 
     test('Should return List<Object>', () {
       final map =
-          SwaggerSchema(items: SwaggerSchema(originalRef: 'TestOriginalRef'));
+      SwaggerSchema(items: SwaggerSchema(originalRef: 'TestOriginalRef'));
       const propertyName = 'dog';
       const className = 'Animals';
       const propertyKey = 'Dog';
@@ -502,7 +531,7 @@ void main() {
 
     test('Should return List<Object> by ref', () {
       final map =
-          SwaggerSchema(items: SwaggerSchema(ref: '#/definitions/TestObject'));
+      SwaggerSchema(items: SwaggerSchema(ref: '#/definitions/TestObject'));
       const propertyName = 'dog';
       const className = 'Animals';
       const propertyKey = 'Dog';
