@@ -15,14 +15,12 @@ targets:
         options:
           input_folder: "input_folder/"
           output_folder: "lib/swagger_generated_code/"
-          input_urls:
-            - "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/input_folder/pet_service_json.json"
-            - "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/input_folder/pet_service_yaml.yaml"
           with_base_url: true
           with_converter: true
           use_path_for_request_names: true
           use_default_null_for_lists: false
           override_equals_and_hashcode: true
+          all_not_required: true
           build_only_models: false
           additional_headers:
             - "Cache-Control"

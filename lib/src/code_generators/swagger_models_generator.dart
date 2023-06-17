@@ -556,7 +556,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   ) {
     if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey) ||
-        prop.isNullable == true) {
+        prop.isNullable == true ||  options.allNotRequired == true) {
       return typeName.makeNullable();
     }
     return typeName;
