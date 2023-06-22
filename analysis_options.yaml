@@ -3,6 +3,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  language:
+    strict-casts: true
   exclude:
     - example/**/*.dart
     - lib/**/*.g2.dart
