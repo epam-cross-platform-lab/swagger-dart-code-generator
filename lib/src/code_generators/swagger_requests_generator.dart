@@ -87,8 +87,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ))
         ..optionalParameters.add(Parameter(
           (p) => p
-<<<<<<< HEAD
-=======
             ..named = true
             ..type = Reference('http.Client?')
             ..name = 'httpClient',
@@ -96,7 +94,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
               (p) =>
           p
->>>>>>> master
             ..named = true
             ..type = Reference('Authenticator?')
             ..name = 'authenticator',
