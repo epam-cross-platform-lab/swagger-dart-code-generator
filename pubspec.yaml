@@ -19,7 +19,7 @@ description: Have you been turned into a problem with writing code for Http
   functionality you have been looking for.
 
 environment:
-  sdk: ">=2.12.0 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   build: ^2.2.1
@@ -31,7 +31,7 @@ dependencies:
   collection: ^1.15.0
   dart_style: ^2.2.1
   code_builder: ^4.1.0
-  http: ^0.13.4
+  http: ^1.0.0
   yaml: ^3.1.0
 
 dev_dependencies:

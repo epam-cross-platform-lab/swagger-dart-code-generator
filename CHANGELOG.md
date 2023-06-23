@@ -1,3 +1,9 @@
+# 2.11.10
+
+* Bump `package:http` to `^1.0.0`
+* Bump minimum dart version to `^3.0.0`
+* Fixed #625 generation of query enum parameters
+
 # 2.11.8
 
 * Fixed generation of fields of some models
