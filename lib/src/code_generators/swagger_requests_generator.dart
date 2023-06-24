@@ -563,10 +563,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }) {
     final format = parameter.schema?.format ?? '';
 
-    if (parameter.inParameter == kHeader) {
-      return _mapParameterName(kString, format, '');
-    } else if (parameter.items?.enumValues.isNotEmpty == true ||
-        parameter.schema?.enumValues.isNotEmpty == true) {
+    if (parameter.items?.enumValues.isNotEmpty == true ||
+        parameter.schema?.enumValues.isNotEmpty == true ||
+        parameter.enumValues.isNotEmpty) {
       if (definedParameters.containsValue(parameter)) {
         return getValidatedClassName(parameter.name).asEnum();
       }

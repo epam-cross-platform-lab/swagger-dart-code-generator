@@ -7,18 +7,20 @@ part 'swagger_request_parameter.g2.dart';
 
 @JsonSerializable()
 class SwaggerRequestParameter {
-  SwaggerRequestParameter(
-      {this.inParameter = '',
-      this.name = '',
-      this.description = '',
-      this.isRequired = false,
-      this.type = '',
-      this.item,
-      this.collectionFormat = '',
-      this.items,
-      this.schema,
-      this.ref = '',
-      this.key = ''});
+  SwaggerRequestParameter({
+    this.inParameter = '',
+    this.name = '',
+    this.description = '',
+    this.isRequired = false,
+    this.type = '',
+    this.item,
+    this.collectionFormat = '',
+    this.items,
+    this.schema,
+    this.ref = '',
+    this.key = '',
+    this.enumValuesObj = const [],
+  });
 
   @JsonKey(name: 'in', defaultValue: '')
   String inParameter;
@@ -40,6 +42,13 @@ class SwaggerRequestParameter {
 
   @JsonKey(name: 'item')
   ParameterItem? item;
+
+  @JsonKey(name: 'enum', defaultValue: [])
+  List<Object?> enumValuesObj;
+
+  List<String> get enumValues {
+    return enumValuesObj.map((e) => e.toString()).toList();
+  }
 
   @JsonKey(name: 'collectionFormat', defaultValue: '')
   String collectionFormat;

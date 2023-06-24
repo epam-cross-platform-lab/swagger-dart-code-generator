@@ -186,9 +186,15 @@ ${allEnums.map((e) => e.toString()).join('\n')}
 
           name = getValidatedClassName(name);
 
-          final enumValues = swaggerRequestParameter.schema?.enumValues ??
-              swaggerRequestParameter.items?.enumValues ??
-              [];
+          List<String> enumValues;
+
+          if (swaggerRequestParameter.enumValues.isNotEmpty) {
+            enumValues = swaggerRequestParameter.enumValues;
+          } else {
+            enumValues = swaggerRequestParameter.schema?.enumValues ??
+                swaggerRequestParameter.items?.enumValues ??
+                [];
+          }
 
           final enumNames = swaggerRequestParameter.schema?.enumNames ?? [];
 
