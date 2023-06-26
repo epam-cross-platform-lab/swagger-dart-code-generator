@@ -4,6 +4,7 @@ import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
 
+
 void main() {
   final generator = SwaggerEnumsGeneratorV3(
     GeneratorOptions(
@@ -40,31 +41,13 @@ void main() {
     });
   });
 
-  group('generateEnumName', () {
-    final generator = SwaggerEnumsGeneratorV3(
-      GeneratorOptions(
-        inputFolder: '',
-        outputFolder: '',
-      ),
-    );
-
-    test('Should generate enum name', () {
-      const className = 'animal';
-      const enumName = 'cat';
-      const expectedResult = 'AnimalCat';
-      final result = generator.generateEnumName(className, enumName);
-
-      expect(result, contains(expectedResult));
-    });
-  });
-
   group('getOriginalOrOverriddenRequestParameter', () {
     test('Should override parameter if needed', () {
       final incoming =
           SwaggerRequestParameter(ref: '#definitions/TestParameter');
       final overriddenParameters = [
         SwaggerRequestParameter(
-            name: 'TestParameter', type: 'Overridden parameter')
+            key: 'TestParameter', type: 'Overridden parameter')
       ];
 
       final result = generator.getOriginalOrOverriddenRequestParameter(

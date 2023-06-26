@@ -4,16 +4,16 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   chopper: ^6.1.1
   json_annotation: ^4.8.0
-  
+
 dev_dependencies:
   swagger_dart_code_generator:
     path: ../
   chopper_generator: ^6.0.0
   build_runner: ^2.3.3
   json_serializable: ^6.6.1
-  lints: ^1.0.1
+  lints: ^2.1.1

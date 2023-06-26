@@ -32,8 +32,14 @@ String normal(String path) {
   return AssetId('', path).path;
 }
 
+Iterable<FileSystemEntity> _getInputFolderFilesList(GeneratorOptions options) {
+  return Directory(normalize(options.inputFolder)).listSync().where(
+      (FileSystemEntity file) =>
+          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+}
+
 String _getAdditionalResultPath(GeneratorOptions options) {
-  final filesList = Directory(normalize(options.inputFolder)).listSync();
+  final filesList = _getInputFolderFilesList(options);
 
   if (filesList.isNotEmpty) {
     return filesList.first.path;
@@ -46,15 +52,13 @@ String _getAdditionalResultPath(GeneratorOptions options) {
     return path;
   }
 
-  return Directory(normalize(options.inputFolder)).listSync().first.path;
+  return _getInputFolderFilesList(options).first.path;
 }
 
 Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   final result = <String, Set<String>>{};
 
-  final filesList = Directory(normalize(options.inputFolder)).listSync().where(
-      (FileSystemEntity file) =>
-          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+  final filesList = _getInputFolderFilesList(options);
 
   additionalResultPath =
       _getAdditionalResultPath(options).replaceAll('\\', '/');
@@ -213,13 +217,6 @@ class SwaggerDartCodeGenerator implements Builder {
       allEnums,
     );
 
-    final requestBodies = codeGenerator.generateRequestBodies(
-      contents,
-      fileWithoutExtension,
-      options,
-      allEnums,
-    );
-
     final enums = codeGenerator.generateEnums(
       contents,
       fileWithoutExtension,
@@ -229,7 +226,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
-      models.isNotEmpty || requestBodies.isNotEmpty,
+      models.isNotEmpty,
       options.buildOnlyModels,
       enums.isNotEmpty,
       options.separateModels,
@@ -261,7 +258,6 @@ class SwaggerDartCodeGenerator implements Builder {
               imports,
               requests,
               options.separateModels ? '' : models,
-              options.separateModels ? '' : requestBodies,
               customDecoder,
               options.separateModels ? '' : dateToJson));
     }
@@ -282,7 +278,6 @@ class SwaggerDartCodeGenerator implements Builder {
       ///Write models to separate file
       final formattedModels = _tryFormatCode(_generateSeparateModelsFileContent(
         models,
-        requestBodies,
         fileNameWithoutExtension,
         dateToJson,
         enums.isNotEmpty,
@@ -297,21 +292,14 @@ class SwaggerDartCodeGenerator implements Builder {
     }
   }
 
-  String _generateFileContent(
-      String imports,
-      String requests,
-      String models,
-      String requestBodies,
-      String customDecoder,
-      String dateToJson) {
+  String _generateFileContent(String imports, String requests, String models,
+      String customDecoder, String dateToJson) {
     final result = """
 $imports
 
 ${options.buildOnlyModels ? '' : requests}
 
 $models
-
-$requestBodies
 
 ${options.buildOnlyModels ? '' : customDecoder}
 
@@ -359,7 +347,6 @@ $dateToJson
 
   String _generateSeparateModelsFileContent(
     String models,
-    String requestBodies,
     String fileNameWithoutExtension,
     String dateToJson,
     bool hasEnums,
@@ -385,8 +372,6 @@ $overridenModels
     part '$fileNameWithoutExtension.models.swagger.g.dart';
 
     $models
-
-    $requestBodies
 
     $dateToJson
     ''';

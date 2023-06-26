@@ -37,13 +37,24 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
     requestBodies.addAll(
         SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
 
+    final formattedRequestBodies = <String, SwaggerSchema>{};
+    requestBodies.forEach((key, value) {
+      formattedRequestBodies['$key\$RequestBody'] = value;
+    });
+
     final responses = root.components?.responses ?? {};
+    final formattedResponses = <String, SwaggerSchema>{};
+    responses.forEach((key, value) {
+      formattedResponses['$key\$Response'] = value;
+    });
+
     final definitions = root.components?.schemas ?? {};
     definitions.addAll(root.definitions);
 
     final enumsFromRequests = generateEnumsContentFromRequests(root, fileName);
-    final enumsFromResponses = generateEnumsFromSchemaMap(responses);
-    final enumsFromRequestBodies = generateEnumsFromSchemaMap(requestBodies);
+    final enumsFromResponses = generateEnumsFromSchemaMap(formattedResponses);
+    final enumsFromRequestBodies =
+        generateEnumsFromSchemaMap(formattedRequestBodies);
 
     final enumsFromClasses = definitions.keys
         .map((String className) {
@@ -147,7 +158,8 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
         final successResponse = SwaggerRequestsGenerator.getSuccessedResponse(
             responses: swaggerRequest.responses);
-        final successResponseSchema = successResponse?.schema;
+        final successResponseSchema =
+            successResponse?.schema ?? successResponse?.content?.schema;
 
         if (successResponseSchema != null) {
           final responseEnums = generateEnumsFromSchemaMap({
@@ -157,21 +169,32 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           result.addAll(responseEnums);
         }
 
-        if (swaggerRequest.parameters.isEmpty) {
+        final parameters = [
+          ...swaggerPath.parameters,
+          ...swaggerRequest.parameters,
+        ];
+
+        if (parameters.isEmpty) {
           return;
         }
 
-        for (var p = 0; p < swaggerRequest.parameters.length; p++) {
-          final swaggerRequestParameter = swaggerRequest.parameters[p];
+        for (var p = 0; p < parameters.length; p++) {
+          final swaggerRequestParameter = parameters[p];
 
           var name = generateRequestEnumName(
               path, requestType, swaggerRequestParameter.name);
 
           name = getValidatedClassName(name);
 
-          final enumValues = swaggerRequestParameter.schema?.enumValues ??
-              swaggerRequestParameter.items?.enumValues ??
-              [];
+          List<String> enumValues;
+
+          if (swaggerRequestParameter.enumValues.isNotEmpty) {
+            enumValues = swaggerRequestParameter.enumValues;
+          } else {
+            enumValues = swaggerRequestParameter.schema?.enumValues ??
+                swaggerRequestParameter.items?.enumValues ??
+                [];
+          }
 
           final enumNames = swaggerRequestParameter.schema?.enumNames ?? [];
 

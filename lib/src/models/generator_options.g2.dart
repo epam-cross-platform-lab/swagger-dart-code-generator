@@ -8,7 +8,8 @@ part of 'generator_options.dart';
 
 GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       withBaseUrl: json['with_base_url'] as bool? ?? true,
-      addBasePathToRequests: json['add_base_path_to_requests'] as bool? ?? true,
+      addBasePathToRequests:
+          json['add_base_path_to_requests'] as bool? ?? false,
       withConverter: json['with_converter'] as bool? ?? true,
       ignoreHeaders: json['ignore_headers'] as bool? ?? false,
       separateModels: json['separate_models'] as bool? ?? false,
@@ -44,7 +45,12 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
           json['use_path_for_request_names'] as bool? ?? true,
       includeIfNull: json['include_if_null'] as bool?,
       modelPostfix: json['model_postfix'] as String? ?? '',
+      customReturnType: json['custom_return_type'] as String? ?? '',
       includePaths: (json['include_paths'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      importPaths: (json['import_paths'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],
@@ -111,6 +117,8 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'default_header_values_map': instance.defaultHeaderValuesMap,
       'response_override_value_map': instance.responseOverrideValueMap,
       'include_paths': instance.includePaths,
+      'import_paths': instance.importPaths,
+      'custom_return_type': instance.customReturnType,
       'exclude_paths': instance.excludePaths,
     };
 

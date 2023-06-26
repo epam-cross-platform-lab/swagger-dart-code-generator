@@ -59,6 +59,7 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
 
 import 'client_mapping.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:chopper/chopper.dart' as chopper;''';
 
     final enumsImport = hasEnums
@@ -89,6 +90,9 @@ ${options.overrideToString ? "import 'dart:convert';" : ''}
     }
     if (enumsImport.isNotEmpty) {
       result.write(enumsImport);
+    }
+    for (var element in options.importPaths) {
+      result.write('import \'$element\';');
     }
 
     if (enumsExport.isNotEmpty) {
