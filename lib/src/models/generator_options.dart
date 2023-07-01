@@ -4,6 +4,7 @@ part 'generator_options.g2.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, anyMap: true)
 class GeneratorOptions {
+
   /// Instantiate generator options.
   GeneratorOptions({
     this.withBaseUrl = true,
@@ -38,6 +39,7 @@ class GeneratorOptions {
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
+    this.allNotFinal = true
   });
 
   /// Build options from a JSON map.
@@ -88,6 +90,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool allNotRequired;
+
+  @JsonKey(defaultValue: true)
+  final bool allNotFinal;
 
   @JsonKey(defaultValue: true)
   final bool useRequiredAttributeForHeaders;

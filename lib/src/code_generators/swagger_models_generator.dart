@@ -445,7 +445,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
-    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\t $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   JsonEnumValue generateEnumValue({
@@ -611,7 +611,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\t $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String _validatePropertyKey(String key) {
@@ -668,7 +668,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\t $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByRef(
@@ -743,7 +743,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName += '?';
     }
 
-    return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\t $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generateEnumPropertyContent(
@@ -776,7 +776,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     return '''
   @JsonKey(${unknownEnumValue.jsonKey.substring(2)}$includeIfNullString)
-  final $enumPropertyName ${generateFieldName(key)};
+   $enumPropertyName ${generateFieldName(key)};
 
   ${unknownEnumValue.fromJson}''';
   }
@@ -921,7 +921,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     listPropertyName = nullable(
         listPropertyName, className, requiredParameters, propertyKey, prop);
 
-    return '$jsonKeyContent  final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '$jsonKeyContent   $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generateGeneralPropertyContent(
@@ -989,7 +989,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent   $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByType(
@@ -1411,7 +1411,7 @@ $copyWithMethod
     }
 
     final splittedProperties = RegExp(
-      'final .+ (.+);',
+      ' .+ (.+);',
     ).allMatches(generatedProperties).map((e) => e.group(1)!);
 
     if (splittedProperties.isEmpty) {
@@ -1436,7 +1436,7 @@ $copyWithMethod
   String generateCopyWithContent(
       String generatedProperties, String validatedClassName) {
     final splittedCopyWithProperties = RegExp(
-      'final (.+) (.+);',
+      ' (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       var type = e.group(1)!;
       if (!type.endsWith('?') && type != kDynamic) {
@@ -1446,7 +1446,7 @@ $copyWithMethod
     });
 
     final splittedCopyWithWrappedProperties = RegExp(
-      'final (.+) (.+);',
+      ' (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       return 'Wrapped<${e.group(1)!}>? ${e.group(2)!}';
     });
@@ -1491,7 +1491,7 @@ $copyWithMethod
     }
 
     final propertiesHash = RegExp(
-      'final .+ (.+);',
+      ' .+ (.+);',
     )
         .allMatches(generatedProperties)
         .map((e) => e.group(1)!)
