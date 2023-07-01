@@ -20,20 +20,17 @@ void main() {
       outputFolder: '',
     ),
   );
-  final generator3 = SwaggerModelsGeneratorV3(GeneratorOptions(
-    inputFolder: '',
-    outputFolder: '',
-    allNotRequired: true
-    ),
+  final generator3 = SwaggerModelsGeneratorV3(
+    GeneratorOptions(inputFolder: '', outputFolder: '', allNotRequired: true),
   );
+
 
   group('generateDefaultValueFromMap', () {
     test('Should return default value', () {
       const defaultValue = 'true';
       const typeName = 'bool';
       const expectedResult = 'true';
-      final result = generator.generateDefaultValueFromMap(
-          DefaultValueMap(defaultValue: defaultValue, typeName: typeName));
+      final result = generator.generateDefaultValueFromMap(DefaultValueMap(defaultValue: defaultValue, typeName: typeName));
 
       expect(result, contains(expectedResult));
     });
@@ -42,8 +39,7 @@ void main() {
       const defaultValue = 'Animal';
       const typeName = 'Object';
       const expectedResult = 'Animal';
-      final result = generator.generateDefaultValueFromMap(
-          DefaultValueMap(defaultValue: defaultValue, typeName: typeName));
+      final result = generator.generateDefaultValueFromMap(DefaultValueMap(defaultValue: defaultValue, typeName: typeName));
 
       expect(result, contains(expectedResult));
     });
@@ -55,8 +51,7 @@ void main() {
       const parameterName = 'orderId';
       final parameter = SwaggerSchema(type: 'object');
       const expectedResult = 'Object';
-      final result = generator.getParameterTypeName(
-          className, parameterName, parameter, '', null);
+      final result = generator.getParameterTypeName(className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -66,8 +61,7 @@ void main() {
       const parameterName = 'orderId';
       final parameter = SwaggerSchema(type: 'array');
       const expectedResult = 'Object';
-      final result = generator.getParameterTypeName(
-          className, parameterName, parameter, '', null);
+      final result = generator.getParameterTypeName(className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -77,8 +71,7 @@ void main() {
       const parameterName = 'orderId';
       final parameter = SwaggerSchema(oneOf: [SwaggerSchema(type: 'animals')]);
       const expectedResult = 'Object';
-      final result = generator.getParameterTypeName(
-          className, parameterName, parameter, '', null);
+      final result = generator.getParameterTypeName(className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -87,8 +80,7 @@ void main() {
       const className = 'Animal';
       const parameterName = 'orderId';
       const expectedResult = 'Object';
-      final result = generator.getParameterTypeName(
-          className, parameterName, null, '', null);
+      final result = generator.getParameterTypeName(className, parameterName, null, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -98,8 +90,7 @@ void main() {
       const parameterName = 'orderId';
       final parameter = SwaggerSchema(ref: '#/definitions/Pet');
       const expectedResult = 'Pet';
-      final result = generator.getParameterTypeName(
-          className, parameterName, parameter, '', null);
+      final result = generator.getParameterTypeName(className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -109,8 +100,7 @@ void main() {
       const parameterName = 'orderId';
       const refNameParameter = 'animals_Object';
       const expectedResult = 'AnimalsObject';
-      final result = generator.getParameterTypeName(
-          className, parameterName, null, '', refNameParameter);
+      final result = generator.getParameterTypeName(className, parameterName, null, '', refNameParameter);
 
       expect(result, contains(expectedResult));
     });
@@ -120,8 +110,7 @@ void main() {
       const parameterName = 'orderId';
       final parameter = SwaggerSchema(type: 'string', format: 'date-time');
       const expectedResult = 'DateTime';
-      final result = generator.getParameterTypeName(
-          className, parameterName, parameter, '', null);
+      final result = generator.getParameterTypeName(className, parameterName, parameter, '', null);
 
       expect(result, contains(expectedResult));
     });
@@ -198,12 +187,9 @@ void main() {
         'Animal': {'type': 'dog'}
       };
       const expectedResult = 'this.animal';
-      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
-          inputFolder: '',
-          outputFolder: '',
-          includeIfNull: false,
-          allNotRequired: true
-      )).generateConstructorPropertiesContent(
+      final result =
+          SwaggerModelsGeneratorV3(GeneratorOptions(inputFolder: '', outputFolder: '', includeIfNull: false, allNotRequired: true))
+              .generateConstructorPropertiesContent(
         className: '',
         entityMap: map,
         defaultValues: [],
@@ -213,7 +199,6 @@ void main() {
       );
 
       expect(result.contains('required'), equals(false));
-
     });
 
     test('Should NOT generate includeIfNull if option is false', () {
@@ -235,9 +220,45 @@ void main() {
       final map = SwaggerSchema.fromJson({});
       const className = 'Animals';
       const classExpectedResult = 'class Animals{';
-      const factoryConstructorExpectedResult =
-          '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
+      const factoryConstructorExpectedResult = '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator.generateModelClassContent(
+        SwaggerRoot.empty,
+        className,
+        map,
+        {},
+        <DefaultValueMap>[],
+        [],
+        [],
+        [],
+        {},
+      );
+
+      expect(result, contains(classExpectedResult));
+      expect(result, contains(factoryConstructorExpectedResult));
+    });
+
+    test('Should return model class content without final', () {
+      final map = SwaggerSchema.fromJson({
+        "type": "object",
+        "properties": {
+          "name": {"type": "string", "maxLength": 100},
+          "avatar": {
+            "allOf": [
+              {"$ref": "#/components/schemas/File"}
+            ],
+            "nullable": true
+          },
+          "color": {"type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})", "maxLength": 18}
+        },
+        "required": ["name"]
+      });
+      const className = 'WholeChildGroup';
+      const classExpectedResult = 'class WholeChildGroup{';
+      const factoryConstructorExpectedResult =
+          '\tfactory WholeChildGroup.fromJson(Map<String, dynamic> json) => _\$WholeChildGroupFromJson(json);\n';
+      final result = SwaggerModelsGeneratorV3(
+        GeneratorOptions(inputFolder: '', outputFolder: '', allNotRequired: true, allNotFinal: true),
+      ).generateModelClassContent(
         SwaggerRoot.empty,
         className,
         map,
@@ -257,8 +278,7 @@ void main() {
       final map = SwaggerSchema.fromJson({});
       const className = 'Animals';
       const classExpectedResult = 'class Animals{';
-      const factoryConstructorExpectedResult =
-          '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
+      const factoryConstructorExpectedResult = '\tfactory Animals.fromJson(Map<String, dynamic> json) => _\$AnimalsFromJson(json);\n';
       final result = generator2.generateModelClassContent(
         SwaggerRoot.empty,
         className,
@@ -463,8 +483,7 @@ void main() {
       const propertyName = 'dog';
       const className = 'Animals';
       const propertyKey = 'Dog';
-      const jsonKeyExpectedResult =
-          "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
+      const jsonKeyExpectedResult = "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
       const propertyExpectedResult = 'final List<Object>? dog';
       final result = generator.generateListPropertyContent(
@@ -502,13 +521,11 @@ void main() {
         {},
       );
 
-      expect(
-          result, contains('toJson: dogListToJson, fromJson: dogListFromJson'));
+      expect(result, contains('toJson: dogListToJson, fromJson: dogListFromJson'));
     });
 
     test('Should return List<Object>', () {
-      final map =
-      SwaggerSchema(items: SwaggerSchema(originalRef: 'TestOriginalRef'));
+      final map = SwaggerSchema(items: SwaggerSchema(originalRef: 'TestOriginalRef'));
       const propertyName = 'dog';
       const className = 'Animals';
       const propertyKey = 'Dog';
@@ -530,8 +547,7 @@ void main() {
     });
 
     test('Should return List<Object> by ref', () {
-      final map =
-      SwaggerSchema(items: SwaggerSchema(ref: '#/definitions/TestObject'));
+      final map = SwaggerSchema(items: SwaggerSchema(ref: '#/definitions/TestObject'));
       const propertyName = 'dog';
       const className = 'Animals';
       const propertyKey = 'Dog';

@@ -77,8 +77,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         if (items.hasRef) {
           final ref = items.ref;
 
-          final itemSchema =
-              allClasses[getValidatedClassName(ref.getUnformattedRef())];
+          final itemSchema = allClasses[getValidatedClassName(ref.getUnformattedRef())];
 
           if (itemSchema != null && kBasicTypes.contains(itemSchema.type)) {
             return 'typedef $className = List<${kBasicTypesMap[itemSchema.type]}>;';
@@ -100,8 +99,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         final itemClassName = '$className\$Item';
 
-        if (options.overridenModels
-            .contains(getValidatedClassName(itemClassName))) {
+        if (options.overridenModels.contains(getValidatedClassName(itemClassName))) {
           return '';
         }
 
@@ -156,14 +154,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         }
       }
 
-      final shouldUseItemsProperties =
-          schema.items?.properties.isNotEmpty == true;
+      final shouldUseItemsProperties = schema.items?.properties.isNotEmpty == true;
 
       properties.forEach((propertyKey, propSchema) {
         final itemPart = shouldUseItemsProperties ? '\$Item' : '';
 
-        final innerClassName =
-            '${getValidatedClassName(classKey)}$itemPart\$${getValidatedClassName(propertyKey)}';
+        final innerClassName = '${getValidatedClassName(classKey)}$itemPart\$${getValidatedClassName(propertyKey)}';
 
         if (propSchema.properties.isNotEmpty) {
           result[innerClassName] = propSchema;
@@ -178,8 +174,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       });
 
       if (schema.items != null) {
-        result.addAll(getClassesFromInnerClasses(
-            {'${getValidatedClassName(classKey)}\$item': schema.items!}));
+        result.addAll(getClassesFromInnerClasses({'${getValidatedClassName(classKey)}\$item': schema.items!}));
       }
     });
 
@@ -201,27 +196,20 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           return;
         }
 
-        if (options.excludePaths.isNotEmpty &&
-            options.excludePaths
-                .any((exclPath) => RegExp(exclPath).hasMatch(operation))) {
+        if (options.excludePaths.isNotEmpty && options.excludePaths.any((exclPath) => RegExp(exclPath).hasMatch(operation))) {
           return;
         }
 
-        if (options.includePaths.isNotEmpty &&
-            !options.includePaths
-                .any((inclPath) => RegExp(inclPath).hasMatch(operation))) {
+        if (options.includePaths.isNotEmpty && !options.includePaths.any((inclPath) => RegExp(inclPath).hasMatch(operation))) {
           return;
         }
         final responses = request.responses;
 
         final neededResponse = responses['200'];
 
-        final neededSchema =
-            neededResponse?.schema ?? neededResponse?.content?.schema;
+        final neededSchema = neededResponse?.schema ?? neededResponse?.content?.schema;
 
-        if (neededSchema != null &&
-            neededSchema.type == kObject &&
-            neededSchema.properties.isNotEmpty) {
+        if (neededSchema != null && neededSchema.type == kObject && neededSchema.properties.isNotEmpty) {
           final pathText = key.split('/').map((e) => e.pascalCase).join();
           final requestText = operation.pascalCase;
 
@@ -250,9 +238,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
     required bool generateEnumsMethods,
   }) {
-    final allEnumsString = generateEnumsMethods
-        ? allEnums.map((e) => e.generateFromJsonToJson()).join()
-        : '';
+    final allEnumsString = generateEnumsMethods ? allEnums.map((e) => e.generateFromJsonToJson()).join() : '';
 
     final allEnumListNames = getAllListEnumNames(root);
 
@@ -310,19 +296,14 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final words = parameterName.split('\$');
 
     final result = words
-        .map((e) => e
-            .split(RegExp(r'\W+|\_'))
-            .mapIndexed(
-                (int index, String str) => index == 0 ? str : str.capitalize)
-            .join())
+        .map((e) => e.split(RegExp(r'\W+|\_')).mapIndexed((int index, String str) => index == 0 ? str : str.capitalize).join())
         .join('\$');
 
     if (isEnum) {
       return 'enums.$result';
     }
 
-    if (exceptionWords.contains(result.camelCase) ||
-        kBasicTypes.contains(result.camelCase)) {
+    if (exceptionWords.contains(result.camelCase) || kBasicTypes.contains(result.camelCase)) {
       return '\$$result';
     }
 
@@ -381,8 +362,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         return 'Object';
       case 'array':
         final items = parameter.items;
-        final typeName = getParameterTypeName(
-            className, parameterName, items, modelPostfix, null);
+        final typeName = getParameterTypeName(className, parameterName, items, modelPostfix, null);
         return 'List<$typeName>';
       default:
         return 'Object';
@@ -443,9 +423,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     final propertyKey = propertyName.replaceAll('\$', '\\\$');
 
-    final jsonKeyContent =
-        "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
-    return '\t$jsonKeyContent\t $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    final jsonKeyContent = "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
+    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   JsonEnumValue generateEnumValue({
@@ -466,9 +445,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
       final enumNameCamelCase = typeName.replaceAll('enums.', '').camelCase;
       final propertyNameCamelCase = propertyName.pascalCase;
-      final fromJsonPrefix = defaultValue == null
-          ? enumNameCamelCase
-          : '$enumNameCamelCase$propertyNameCamelCase';
+      final fromJsonPrefix = defaultValue == null ? enumNameCamelCase : '$enumNameCamelCase$propertyNameCamelCase';
       final String fromJsonSuffix;
       final String toJsonSuffix;
 
@@ -479,18 +456,14 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       }
 
       if (isList) {
-        fromJsonSuffix =
-            options.classesWithNullabeLists.contains(className) && isList
-                ? 'NullableListFromJson'
-                : 'ListFromJson';
+        fromJsonSuffix = options.classesWithNullabeLists.contains(className) && isList ? 'NullableListFromJson' : 'ListFromJson';
         toJsonSuffix = 'ListToJson';
       } else {
         fromJsonSuffix = 'FromJson';
         toJsonSuffix = 'ToJson';
       }
       final fromJsonFunction = '$fromJsonPrefix$fromJsonSuffix';
-      jsonKey =
-          ', toJson: $enumNameCamelCase$toJsonSuffix, fromJson: $fromJsonFunction, $defaultValueSuffix';
+      jsonKey = ', toJson: $enumNameCamelCase$toJsonSuffix, fromJson: $fromJsonFunction, $defaultValueSuffix';
 
       if (defaultValue != null) {
         var returnType = '';
@@ -499,9 +472,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         if (isList && defaultValue is List) {
           valueType = 'List';
           returnType = 'List<$validatedTypeName>';
-          final defaultValues = defaultValue
-              .map((e) => '$validatedTypeName.${e.toString().camelCase}')
-              .join(', ');
+          final defaultValues = defaultValue.map((e) => '$validatedTypeName.${e.toString().camelCase}').join(', ');
           defaultValueString = '[$defaultValues]';
         } else {
           valueType = 'Object';
@@ -513,8 +484,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
             [],
           );
 
-          defaultValueString =
-              '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
+          defaultValueString = '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
         }
 
         if (options.classesWithNullabeLists.contains(className) && isList) {
@@ -556,7 +526,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   ) {
     if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey) ||
-        prop.isNullable == true ||  options.allNotRequired == true) {
+        prop.isNullable == true ||
+        options.allNotRequired == true) {
       return typeName.makeNullable();
     }
     return typeName;
@@ -579,14 +550,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName]!;
     } else {
-      typeName = getValidatedClassName(getParameterTypeName(
-          className, propertyName, prop, options.modelPostfix, parameterName));
+      typeName = getValidatedClassName(getParameterTypeName(className, propertyName, prop, options.modelPostfix, parameterName));
     }
 
     final includeIfNullString = generateIncludeIfNullString();
 
-    final allEnumsNamesWithoutPrefix =
-        allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
+    final allEnumsNamesWithoutPrefix = allEnumNames.map((e) => e.replaceFirst('enums.', '')).toList();
 
     if (allEnumsNamesWithoutPrefix.contains(typeName)) {
       typeName = 'enums.$typeName';
@@ -608,10 +577,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
-    typeName =
-        nullable(typeName, className, requiredProperties, propertyKey, prop);
+    typeName = nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent\t $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String _validatePropertyKey(String key) {
@@ -631,11 +599,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final allOf = prop.allOf;
     String typeName;
 
-    if (allOf
-            .where((element) =>
-                element.ref.isNotEmpty || element.properties.isNotEmpty)
-            .length >
-        1) {
+    if (allOf.where((element) => element.ref.isNotEmpty || element.properties.isNotEmpty).length > 1) {
       typeName = kDynamic;
     } else {
       var className = allOf.first.ref.getRef();
@@ -662,13 +626,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       isList: false,
     );
 
-    final jsonKeyContent =
-        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+    final jsonKeyContent = "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    typeName =
-        nullable(typeName, className, requiredProperties, propertyKey, prop);
+    typeName = nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent\t $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByRef(
@@ -686,8 +648,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     String typeName;
     final refSchema = allClasses[getValidatedClassName(parameterName)];
-    if (kBasicSwaggerTypes.contains(refSchema?.type) &&
-        allClasses[getValidatedClassName(parameterName)]?.isEnum != true) {
+    if (kBasicSwaggerTypes.contains(refSchema?.type) && allClasses[getValidatedClassName(parameterName)]?.isEnum != true) {
       if (refSchema?.format == 'datetime') {
         typeName = 'DateTime';
       } else {
@@ -696,16 +657,14 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     } else if (basicTypesMap.containsKey(parameterName)) {
       typeName = basicTypesMap[parameterName]!;
     } else {
-      typeName = getValidatedClassName(getParameterTypeName(
-          className, propertyName, prop, options.modelPostfix, parameterName));
+      typeName = getValidatedClassName(getParameterTypeName(className, propertyName, prop, options.modelPostfix, parameterName));
 
       typeName = getValidatedClassName(typeName);
     }
 
     if (allEnumNames.contains(typeName)) {
       typeName = 'enums.$typeName';
-    } else if (!basicTypesMap.containsKey(parameterName) &&
-        !allEnumListNames.contains(typeName)) {
+    } else if (!basicTypesMap.containsKey(parameterName) && !allEnumListNames.contains(typeName)) {
       typeName += options.modelPostfix;
     }
 
@@ -725,11 +684,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     final includeIfNullString = generateIncludeIfNullString();
 
-    final jsonKeyContent =
-        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+    final jsonKeyContent = "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    typeName =
-        nullable(typeName, className, requiredProperties, propertyKey, prop);
+    typeName = nullable(typeName, className, requiredProperties, propertyKey, prop);
 
     final propertySchema = allClasses[prop.ref.getUnformattedRef()];
 
@@ -737,13 +694,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    if (options.classesWithNullabeLists.contains(className) &&
-        typeName.startsWith('List<') &&
-        !typeName.endsWith('?')) {
+    if (options.classesWithNullabeLists.contains(className) && typeName.startsWith('List<') && !typeName.endsWith('?')) {
       typeName += '?';
     }
 
-    return '\t$jsonKeyContent\t $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generateEnumPropertyContent(
@@ -771,12 +726,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final includeIfNullString = generateIncludeIfNullString();
 
     var enumPropertyName = className.capitalize + key.capitalize;
-    enumPropertyName = nullable(
-        enumPropertyName, className, requiredProperties, propertyKey, prop);
+    enumPropertyName = nullable(enumPropertyName, className, requiredProperties, propertyKey, prop);
 
     return '''
   @JsonKey(${unknownEnumValue.jsonKey.substring(2)}$includeIfNullString)
-   $enumPropertyName ${generateFieldName(key)};
+  final $enumPropertyName ${generateFieldName(key)};
 
   ${unknownEnumValue.fromJson}''';
   }
@@ -800,8 +754,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     if (items != null) {
       typeName = getValidatedClassName(items.originalRef);
 
-      if (typeName.isNotEmpty &&
-          !kBasicTypes.contains(typeName.toLowerCase())) {
+      if (typeName.isNotEmpty && !kBasicTypes.contains(typeName.toLowerCase())) {
         typeName += options.modelPostfix;
       }
 
@@ -809,9 +762,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         if (items.hasRef) {
           typeName = items.ref.split('/').last;
 
-          if (!allEnumListNames.contains(typeName) &&
-              !allEnumNames.contains(typeName) &&
-              !basicTypesMap.containsKey(typeName)) {
+          if (!allEnumListNames.contains(typeName) && !allEnumNames.contains(typeName) && !basicTypesMap.containsKey(typeName)) {
             typeName += options.modelPostfix;
           }
         }
@@ -821,8 +772,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         } else if (typeName.isNotEmpty && typeName != kDynamic) {
           typeName = typeName.pascalCase;
         }
-      } else if (!allEnumNames.contains(typeName) &&
-          !kBasicTypes.contains(typeName.toLowerCase())) {
+      } else if (!allEnumNames.contains(typeName) && !kBasicTypes.contains(typeName.toLowerCase())) {
         typeName = kBasicTypesMap[typeName] ?? typeName + options.modelPostfix;
       }
 
@@ -903,25 +853,20 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     String jsonKeyContent;
     if (unknownEnumValue.jsonKey.isEmpty) {
-      if (options.classesWithNullabeLists
-          .any((element) => RegExp(element).hasMatch(className))) {
-        jsonKeyContent =
-            "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString)\n";
+      if (options.classesWithNullabeLists.any((element) => RegExp(element).hasMatch(className))) {
+        jsonKeyContent = "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString)\n";
       } else {
-        jsonKeyContent =
-            "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
+        jsonKeyContent = "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString, defaultValue: <$typeName>[])\n";
       }
     } else {
-      jsonKeyContent =
-          "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
+      jsonKeyContent = "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
     }
 
     var listPropertyName = 'List<$typeName>';
 
-    listPropertyName = nullable(
-        listPropertyName, className, requiredParameters, propertyKey, prop);
+    listPropertyName = nullable(listPropertyName, className, requiredParameters, propertyKey, prop);
 
-    return '$jsonKeyContent   $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '$jsonKeyContent  final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generateGeneralPropertyContent(
@@ -936,8 +881,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   ) {
     final includeIfNullString = generateIncludeIfNullString();
 
-    var jsonKeyContent =
-        "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString";
+    var jsonKeyContent = "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString";
 
     var typeName = '';
 
@@ -973,23 +917,18 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     jsonKeyContent += unknownEnumValue.jsonKey;
     jsonKeyContent += dateToJsonValue;
 
-    if ((prop.type == 'bool' || prop.type == 'boolean') &&
-        prop.defaultValue != null) {
+    if ((prop.type == 'bool' || prop.type == 'boolean') && prop.defaultValue != null) {
       jsonKeyContent += ', defaultValue: ${prop.defaultValue})\n';
-    } else if (defaultValues
-        .any((DefaultValueMap element) => element.typeName == typeName)) {
-      final defaultValue = defaultValues.firstWhere(
-          (DefaultValueMap element) => element.typeName == typeName);
-      jsonKeyContent +=
-          ', defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n';
+    } else if (defaultValues.any((DefaultValueMap element) => element.typeName == typeName)) {
+      final defaultValue = defaultValues.firstWhere((DefaultValueMap element) => element.typeName == typeName);
+      jsonKeyContent += ', defaultValue: ${generateDefaultValueFromMap(defaultValue)})\n';
     } else {
       jsonKeyContent += ')\n';
     }
 
-    typeName =
-        nullable(typeName, className, requiredProperties, propertyKey, prop);
+    typeName = nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent   $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByType(
@@ -1198,8 +1137,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   }
 
   static String _mapBasicTypeToDartType(String basicType, String format) {
-    if (basicType.toLowerCase() == kString &&
-        (format == 'date-time' || format == 'datetime')) {
+    if (basicType.toLowerCase() == kString && (format == 'date-time' || format == 'datetime')) {
       return 'DateTime';
     }
     switch (basicType.toLowerCase()) {
@@ -1237,14 +1175,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     entityMap.forEach((key, value) {
       var fieldName = generateFieldName(
-        getParameterName(
-            getValidatedParameterName(key).asParameterName(), propertyNames),
+        getParameterName(getValidatedParameterName(key).asParameterName(), propertyNames),
       );
 
       propertyNames.add(fieldName);
 
-      if (options.nullableModels.contains(className) ||
-          !requiredProperties.contains(key) || options.allNotRequired) {
+      if (options.nullableModels.contains(className) || !requiredProperties.contains(key) || options.allNotRequired) {
         results += '\t\tthis.$fieldName,\n';
       } else {
         results += '\t\t$kRequired this.$fieldName,\n';
@@ -1278,7 +1214,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       requiredProperties: requiredProperties,
     );
 
-    final generatedProperties = generatePropertiesContent(
+    var generatedProperties = generatePropertiesContent(
       root,
       properties,
       schemas,
@@ -1291,11 +1227,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       allClasses,
     );
 
-    final validatedClassName =
-        '${getValidatedClassName(className)}${options.modelPostfix}';
+    final validatedClassName = '${getValidatedClassName(className)}${options.modelPostfix}';
 
-    final copyWithMethod =
-        generateCopyWithContent(generatedProperties, validatedClassName);
+    final copyWithMethod = generateCopyWithContent(generatedProperties, validatedClassName);
 
     final getHashContent = generateGetHashContent(
       generatedProperties,
@@ -1308,6 +1242,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       validatedClassName,
       options,
     );
+
+    if (options.allNotFinal) {
+      generatedProperties = generatedProperties.replaceAll('final', '');
+    }
 
     final toStringOverride = options.overrideToString
         ? '''
@@ -1348,8 +1286,7 @@ $copyWithMethod
   }
 
   String generateToJson(SwaggerSchema schema, String validatedClassName) {
-    if (options.generateToJsonFor.isEmpty ||
-        options.generateToJsonFor.contains(validatedClassName)) {
+    if (options.generateToJsonFor.isEmpty || options.generateToJsonFor.contains(validatedClassName)) {
       return '''
 \tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
 \tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
@@ -1360,17 +1297,14 @@ $copyWithMethod
   }
 
   String generateCreateToJson(SwaggerSchema schema, String validatedClassName) {
-    if (options.generateToJsonFor.isEmpty ||
-        options.generateToJsonFor.contains(validatedClassName)) {
+    if (options.generateToJsonFor.isEmpty || options.generateToJsonFor.contains(validatedClassName)) {
       return '';
     }
 
     return ', createToJson: false';
   }
 
-  List<String> _getRequired(
-      SwaggerSchema schema, Map<String, SwaggerSchema> schemas,
-      [int recursionCount = 5]) {
+  List<String> _getRequired(SwaggerSchema schema, Map<String, SwaggerSchema> schemas, [int recursionCount = 5]) {
     final required = <String>{};
     if (recursionCount == 0) {
       return required.toList();
@@ -1380,9 +1314,7 @@ $copyWithMethod
         final parentName = interface.ref.split('/').last.pascalCase;
         final parentSchema = schemas[parentName];
 
-        required.addAll(parentSchema != null
-            ? _getRequired(parentSchema, schemas, recursionCount - 1)
-            : []);
+        required.addAll(parentSchema != null ? _getRequired(parentSchema, schemas, recursionCount - 1) : []);
       }
       required.addAll(interface.required);
     }
@@ -1411,7 +1343,7 @@ $copyWithMethod
     }
 
     final splittedProperties = RegExp(
-      ' .+ (.+);',
+      'final .+ (.+);',
     ).allMatches(generatedProperties).map((e) => e.group(1)!);
 
     if (splittedProperties.isEmpty) {
@@ -1433,10 +1365,9 @@ $copyWithMethod
     ''';
   }
 
-  String generateCopyWithContent(
-      String generatedProperties, String validatedClassName) {
+  String generateCopyWithContent(String generatedProperties, String validatedClassName) {
     final splittedCopyWithProperties = RegExp(
-      ' (.+) (.+);',
+      'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       var type = e.group(1)!;
       if (!type.endsWith('?') && type != kDynamic) {
@@ -1446,7 +1377,7 @@ $copyWithMethod
     });
 
     final splittedCopyWithWrappedProperties = RegExp(
-      ' (.+) (.+);',
+      'final (.+) (.+);',
     ).allMatches(generatedProperties).map((e) {
       return 'Wrapped<${e.group(1)!}>? ${e.group(2)!}';
     });
@@ -1455,22 +1386,17 @@ $copyWithMethod
       return '';
     }
 
-    final spittedCopyWithPropertiesJoined =
-        splittedCopyWithProperties.join(', ');
+    final spittedCopyWithPropertiesJoined = splittedCopyWithProperties.join(', ');
 
-    final spittedCopyWithWrappedPropertiesJoined =
-        splittedCopyWithWrappedProperties.join(', ');
+    final spittedCopyWithWrappedPropertiesJoined = splittedCopyWithWrappedProperties.join(', ');
 
-    final splittedCopyWithPropertiesNamesContent = splittedCopyWithProperties
+    final splittedCopyWithPropertiesNamesContent =
+        splittedCopyWithProperties.map((e) => e.substring(e.indexOf(' ') + 1)).map((e) => '$e: $e ?? this.$e').join(',\n');
+
+    final splittedCopyWithWrappedPropertiesNamesContent = splittedCopyWithWrappedProperties
         .map((e) => e.substring(e.indexOf(' ') + 1))
-        .map((e) => '$e: $e ?? this.$e')
+        .map((e) => '$e: ($e != null ? $e.value : this.$e)')
         .join(',\n');
-
-    final splittedCopyWithWrappedPropertiesNamesContent =
-        splittedCopyWithWrappedProperties
-            .map((e) => e.substring(e.indexOf(' ') + 1))
-            .map((e) => '$e: ($e != null ? $e.value : this.$e)')
-            .join(',\n');
 
     final copyWith =
         '$validatedClassName copyWith({$spittedCopyWithPropertiesJoined}) { return $validatedClassName($splittedCopyWithPropertiesNamesContent); }';
@@ -1491,14 +1417,10 @@ $copyWithMethod
     }
 
     final propertiesHash = RegExp(
-      ' .+ (.+);',
-    )
-        .allMatches(generatedProperties)
-        .map((e) => e.group(1)!)
-        .map((e) => 'const DeepCollectionEquality().hash($e)');
+      'final .+ (.+);',
+    ).allMatches(generatedProperties).map((e) => e.group(1)!).map((e) => 'const DeepCollectionEquality().hash($e)');
 
-    final allHashComponents =
-        [...propertiesHash, 'runtimeType.hashCode'].join(' ^\n');
+    final allHashComponents = [...propertiesHash, 'runtimeType.hashCode'].join(' ^\n');
 
     return '''
 @override
