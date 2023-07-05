@@ -3,6 +3,7 @@
 * Bump `package:http` to `^1.0.0`
 * Bump minimum dart version to `^3.0.0`
 * Fixed #625 generation of query enum parameters
+* Fixed some issues
 
 # 2.11.8
 

@@ -588,7 +588,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                 .firstWhereOrNull((e) => e.value == parameter)
                 ?.key ??
             '';
-        final b = 0;
         return getValidatedClassName(neededKey).asEnum();
       }
 
