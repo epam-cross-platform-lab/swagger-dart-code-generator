@@ -554,6 +554,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     String propertyKey,
     SwaggerSchema prop,
   ) {
+    if(typeName.isEmpty) {
+      return kObject.pascalCase.makeNullable();
+    }
+    
     if (options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey) ||
         prop.isNullable == true) {
