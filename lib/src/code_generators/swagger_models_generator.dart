@@ -251,7 +251,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required bool generateEnumsMethods,
   }) {
     final allEnumsString = generateEnumsMethods
-        ? allEnums.map((e) => e.generateFromJsonToJson()).join()
+        ? allEnums
+            .map((e) => e.generateFromJsonToJson(options.enumsCaseSensitive))
+            .join()
         : '';
 
     final allEnumListNames = getAllListEnumNames(root);
