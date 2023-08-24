@@ -143,10 +143,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           return;
         }
 
-        if (options.addBasePathToRequests) {
-          path = '${swaggerRoot.basePath}$path';
-        }
-
         final methodName = _getRequestMethodName(
           requestType: requestType,
           swaggerRequest: swaggerRequest,
@@ -197,6 +193,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               .any((p0) => p0.call([]).toString().contains('symbol=Part'));
         });
 
+        var annotationPath = path;
+        if (options.addBasePathToRequests) {
+          annotationPath = '${swaggerRoot.basePath}$path';
+        }
+
         final method = Method((m) => m
           ..optionalParameters.addAll(parameters)
           ..docs.add(_getCommentsForMethod(
@@ -206,7 +207,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           ))
           ..name = methodName
           ..annotations.addAll(_getMethodAnnotation(
-              requestType, path, hasOptionalBody, isMultipart))
+              requestType, annotationPath, hasOptionalBody, isMultipart))
           ..returns = Reference(returns));
 
         final allModels = _getAllMethodModels(
