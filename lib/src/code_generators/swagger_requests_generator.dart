@@ -1037,9 +1037,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final arrayType = [itemsRef, itemsOriginalRef, itemsType, kObject]
           .firstWhere((element) => element?.isNotEmpty == true)!;
 
-      final mappedArrayType = kBasicTypesMap[arrayType] ?? arrayType;
+      final mappedArrayType = kBasicTypesMap[arrayType];
 
-      if (mappedArrayType.isEmpty) {
+      if (mappedArrayType == null) {
         return null;
       }
 
