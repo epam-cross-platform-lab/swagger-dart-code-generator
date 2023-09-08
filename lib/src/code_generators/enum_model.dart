@@ -100,8 +100,12 @@ const $name(this.value);
     return '$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
   }
 
-  String generateFromJsonToJson() {
+  String generateFromJsonToJson([bool caseSensitive = true]) {
     final type = isInteger ? 'int' : 'String';
+
+    String enumParse = caseSensitive
+        ? 'return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown'
+        : 'return enums.$name.values.firstWhereOrNull((e) => e.value.toString().toLowerCase() == ${name.camelCase}?.toString()?.toLowerCase()) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown';
 
     return '''
 $type? ${name.camelCase}ToJson(enums.$name? ${name.camelCase}) {
@@ -113,7 +117,7 @@ enums.$name ${name.camelCase}FromJson(
   [enums.$name? defaultValue,]
   ) {
 
-return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown;
+$enumParse;
 }
 
 enums.$name? ${name.camelCase}NullableFromJson(

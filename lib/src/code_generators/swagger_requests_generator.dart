@@ -783,24 +783,28 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         // otherwise no request scheme is defined, we provide every param as a separate param.
         schema?.properties.forEach((key, value) {
-          if ((value.type == 'string' && value.format == 'binary') ||
-              value.type == 'file') {
-            final isRequired = schema!.required.contains(key);
-            final typeName =
-                _mapParameterName(value.type, value.format, modelPostfix);
+          isBinary(SwaggerSchema? value) =>
+              (value?.type == 'string' && value?.format == 'binary') ||
+              value?.type == 'file';
+          if ((isBinary(value) ||
+              value.type == 'array' && isBinary(value.items))) {
+            final isRequired =
+                value.type == 'array' || schema!.required.contains(key);
+            String typeRef = isRequired
+                ? options.multipartFileType
+                : options.multipartFileType.makeNullable();
+
+            if (value.type == 'array') {
+              typeRef = 'List<$typeRef>';
+            }
+
             result.add(
               Parameter(
                 (p) => p
                   ..name = key
                   ..named = true
                   ..required = isRequired
-                  ..type = Reference(
-                    isRequired
-                        ? options.multipartFileType
-                        : options.multipartFileType.makeNullable(),
-                  )
-                  ..type = Reference(typeName.makeNullable())
-                  ..named = true
+                  ..type = Reference(typeRef)
                   ..annotations.add(
                     refer(kPartFile.pascalCase).call([]),
                   ),
