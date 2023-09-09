@@ -51,10 +51,12 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       msEnum: json['x-ms-enum'] == null
           ? null
           : MsEnum.fromJson(json['x-ms-enum'] as Map<String, dynamic>),
+      rawJson: json['rawJson'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
     <String, dynamic>{
+      'rawJson': instance.rawJson,
       'type': instance.type,
       'format': instance.format,
       'default': instance.defaultValue,
