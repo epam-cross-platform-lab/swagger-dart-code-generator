@@ -24,7 +24,10 @@ class SwaggerSchema {
     this.isNullable = false,
     this.hasAdditionalProperties = false,
     this.msEnum,
+    this.rawJson
   });
+
+  Map<String, dynamic>? rawJson;
 
   @JsonKey(name: 'type', defaultValue: '')
   String type;
@@ -98,9 +101,11 @@ class SwaggerSchema {
   bool hasAdditionalProperties;
 
   List<String>? enumNames;
+  
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerSchemaFromJson(json)
+        ..rawJson = json
         ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
             ?.map((e) => e as String)
             .toList()

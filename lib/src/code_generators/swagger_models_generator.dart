@@ -1009,7 +1009,32 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     typeName =
         nullable(typeName, className, requiredProperties, propertyKey, prop);
 
-    return '\t$jsonKeyContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
+    var jsonCustomAnnotationContent = '';
+
+    var rawJson = prop.rawJson;
+    if (null != rawJson){
+      for(var customAnnotation in options.customAnnotations)
+      {
+        if (rawJson.containsKey(customAnnotation.swaggerKey))
+        {
+          var jsonPropKeyValue = rawJson[customAnnotation.swaggerKey];
+          if (null != jsonPropKeyValue){
+            jsonCustomAnnotationContent +=
+              "\t@${customAnnotation.typeName}(";
+            if (jsonPropKeyValue is String)
+            {
+              jsonCustomAnnotationContent += "'${jsonPropKeyValue}'";
+            } else {
+              jsonCustomAnnotationContent += "${jsonPropKeyValue}";
+            }
+            jsonCustomAnnotationContent += ")\n";
+          }
+        }
+      }
+    }
+
+
+    return '\t$jsonKeyContent$jsonCustomAnnotationContent final $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByType(
