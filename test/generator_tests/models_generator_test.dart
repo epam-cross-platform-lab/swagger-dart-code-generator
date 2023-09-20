@@ -320,7 +320,8 @@ void main() {
         [],
       );
 
-      expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
+      expect(
+          result, contains('toJson: petToJson, fromJson: petNullableFromJson'));
     });
   });
 
