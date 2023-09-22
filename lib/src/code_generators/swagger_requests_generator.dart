@@ -1231,7 +1231,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final pathText = path.split('/').map((e) => e.pascalCase).join();
         final requestText = method.pascalCase;
 
-        return '$pathText$requestText\$Response';
+        return getValidatedClassName('$pathText$requestText\$Response');
       }
 
       return kBasicTypesMap[contentSchemaType];

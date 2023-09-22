@@ -214,7 +214,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         }
         final responses = request.responses;
 
-        final neededResponse = responses['200'];
+        final neededResponse = responses['200'] ?? responses['201'];
 
         final neededSchema =
             neededResponse?.schema ?? neededResponse?.content?.schema;
