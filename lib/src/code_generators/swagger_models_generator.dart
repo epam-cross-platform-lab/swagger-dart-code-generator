@@ -426,6 +426,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName = kDynamic;
     }
 
+    final propertyKey = propertyName.replaceAll('\$', '\\\$');
+
     final unknownEnumValue = generateEnumValue(
       allEnumNames: allEnumNames,
       allEnumListNames: allEnumListNames,
@@ -433,6 +435,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName: typeName.toString(),
       defaultValue: prop.defaultValue,
       isList: false,
+      isNullable: isNullable(typeName, [], propertyKey, prop),
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
@@ -442,8 +445,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     if (typeName != kDynamic) {
       typeName += '?';
     }
-
-    final propertyKey = propertyName.replaceAll('\$', '\\\$');
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
@@ -457,6 +458,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     required String typeName,
     required dynamic defaultValue,
     required bool isList,
+    required bool isNullable,
     String className = '',
   }) {
     final validatedTypeName = getValidatedClassName(typeName);
@@ -487,7 +489,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
                 : 'ListFromJson';
         toJsonSuffix = 'ListToJson';
       } else {
-        fromJsonSuffix = 'FromJson';
+        fromJsonSuffix = isNullable ? 'NullableFromJson' : 'FromJson';
         toJsonSuffix = 'ToJson';
       }
       final fromJsonFunction = '$fromJsonPrefix$fromJsonSuffix';
@@ -519,7 +521,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
               '$validatedTypeName.${defaultValueCamelCase.substring(0, defaultValueCamelCase.indexOf('('))}';
         }
 
-        if (options.classesWithNullabeLists.contains(className) && isList) {
+        if ((options.classesWithNullabeLists.contains(className) && isList) ||
+            isNullable) {
           returnType = '$returnType?';
         }
 
@@ -549,6 +552,13 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return '';
   }
 
+  bool isNullable(String className, Iterable<String> requiredProperties,
+      String propertyKey, SwaggerSchema prop) {
+    return options.nullableModels.contains(className) ||
+        !requiredProperties.contains(propertyKey) ||
+        prop.isNullable == true;
+  }
+
   String nullable(
     String typeName,
     String className,
@@ -556,9 +566,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     String propertyKey,
     SwaggerSchema prop,
   ) {
-    if (options.nullableModels.contains(className) ||
-        !requiredProperties.contains(propertyKey) ||
-        prop.isNullable == true) {
+    if (typeName.isEmpty) {
+      return kObject.pascalCase.makeNullable();
+    }
+
+    if (isNullable(className, requiredProperties, propertyKey, prop)) {
       return typeName.makeNullable();
     }
     return typeName;
@@ -603,6 +615,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName: typeName,
       defaultValue: prop.defaultValue,
       isList: false,
+      isNullable: isNullable(className, requiredProperties, propertyKey, prop),
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
@@ -662,6 +675,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName: typeName,
       defaultValue: prop.defaultValue,
       isList: false,
+      isNullable: isNullable(className, requiredProperties, propertyKey, prop),
     );
 
     final jsonKeyContent =
@@ -719,6 +733,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       defaultValue: prop.defaultValue,
       className: className,
       isList: false,
+      isNullable: isNullable(className, requiredProperties, propertyKey, prop),
     );
 
     if (allEnumListNames.contains(typeName)) {
@@ -768,6 +783,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName: enumName,
       defaultValue: prop.defaultValue,
       isList: false,
+      isNullable: isNullable(className, requiredProperties, propertyKey, prop),
     );
 
     final includeIfNullString = generateIncludeIfNullString();
@@ -898,6 +914,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName: typeName,
       defaultValue: prop.defaultValue,
       isList: true,
+      isNullable: false,
     );
 
     final includeIfNullString = generateIncludeIfNullString();
@@ -968,6 +985,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName: typeName,
       defaultValue: prop.defaultValue,
       isList: false,
+      isNullable: isNullable(className, requiredProperties, propertyKey, prop),
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
@@ -1327,7 +1345,7 @@ String toString() => jsonEncode(this);
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true $createToJson)
 class $validatedClassName{
-\t$validatedClassName($generatedConstructorProperties);\n
+\tconst $validatedClassName($generatedConstructorProperties);\n
 \t$fromJson\n
 \t$toJson\n
 $generatedProperties

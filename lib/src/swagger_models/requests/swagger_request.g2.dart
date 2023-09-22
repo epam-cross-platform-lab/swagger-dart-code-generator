@@ -63,6 +63,7 @@ Map<String, dynamic> _$RequestBodyToJson(RequestBody instance) =>
 
 RequestContent _$RequestContentFromJson(Map<String, dynamic> json) =>
     RequestContent(
+      isMultipart: json['isMultipart'] as bool?,
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
@@ -71,4 +72,5 @@ RequestContent _$RequestContentFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$RequestContentToJson(RequestContent instance) =>
     <String, dynamic>{
       'schema': instance.schema,
+      'isMultipart': instance.isMultipart,
     };

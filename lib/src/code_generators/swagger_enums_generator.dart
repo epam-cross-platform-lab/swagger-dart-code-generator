@@ -76,7 +76,7 @@ abstract class SwaggerEnumsGenerator extends SwaggerGeneratorBase {
       ...enumsFromRequestBodies,
     ];
 
-    return result;
+    return result.unique((e) => e.name);
   }
 
   String generateFromMap(
@@ -132,7 +132,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     definedParameters.forEach((key, swaggerRequestParameter) {
       final enumValues = swaggerRequestParameter.schema?.enumValues ??
           swaggerRequestParameter.items?.enumValues ??
-          [];
+          swaggerRequestParameter.enumValues;
 
       final enumNames = swaggerRequestParameter.schema?.enumNames ?? [];
 
@@ -389,5 +389,14 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     }
 
     return generateEnumsContentFromModelProperties(properties, className);
+  }
+}
+
+extension Unique<E, Id> on List<E> {
+  List<E> unique([Id Function(E element)? id, bool inplace = true]) {
+    final ids = <Id>{};
+    var list = inplace ? this : List<E>.from(this);
+    list.retainWhere((x) => ids.add(id != null ? id(x) : x as Id));
+    return list;
   }
 }

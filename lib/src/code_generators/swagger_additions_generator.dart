@@ -70,15 +70,13 @@ import 'package:chopper/chopper.dart' as chopper;''';
     final enumsExport =
         hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
 
-    if (hasModels && !separateModels) {
-      result.writeln("""
+    result.writeln("""
 // ignore_for_file: type=lint
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 ${options.overrideToString ? "import 'dart:convert';" : ''}
 """);
-    }
 
     if (hasModels && separateModels) {
       result.write("import '$swaggerFileName.models.swagger.dart';");

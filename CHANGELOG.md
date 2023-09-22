@@ -4,7 +4,7 @@
 * Bump minimum dart version to `^3.0.0`
 * Fixed #625 generation of query enum parameters
 
-# 2.11.8
+# 2.11.11
 
 * Fixed generation of fields of some models
 

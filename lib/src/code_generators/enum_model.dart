@@ -120,6 +120,16 @@ enums.$name ${name.camelCase}FromJson(
 $enumParse;
 }
 
+enums.$name? ${name.camelCase}NullableFromJson(
+  Object? ${name.camelCase},
+  [enums.$name? defaultValue,]
+  ) {
+    if(${name.camelCase} == null){
+      return null;
+    }
+    return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue;
+}
+
 
 List<$type> ${name.camelCase}ListToJson(
     List<enums.$name>? ${name.camelCase}) {
