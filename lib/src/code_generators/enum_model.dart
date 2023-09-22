@@ -105,7 +105,7 @@ const $name(this.value);
 
     String enumParse = caseSensitive
         ? 'return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown'
-        : 'return enums.$name.values.firstWhereOrNull((e) => e.value.toString().toLowerCase() == ${name.camelCase}?.toString()?.toLowerCase()) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown';
+        : 'return enums.$name.values.firstWhereOrNull((e) => e.value.toString().toLowerCase() == ${name.camelCase}?.toString().toLowerCase()) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown';
 
     return '''
 $type? ${name.camelCase}ToJson(enums.$name? ${name.camelCase}) {
