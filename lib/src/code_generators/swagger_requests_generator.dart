@@ -1204,6 +1204,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     final contentSchemaType = content.schema?.type ?? '';
     if (contentSchemaType.isNotEmpty == true) {
+      if (contentSchemaType == 'string' &&
+          content.schema?.format == 'date-time') {
+        return 'DateTime';
+      }
       return kBasicTypesMap[contentSchemaType];
     }
 

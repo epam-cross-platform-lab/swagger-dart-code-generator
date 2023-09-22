@@ -1345,7 +1345,7 @@ String toString() => jsonEncode(this);
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true $createToJson)
 class $validatedClassName{
-\t$validatedClassName($generatedConstructorProperties);\n
+\tconst $validatedClassName($generatedConstructorProperties);\n
 \t$fromJson\n
 \t$toJson\n
 $generatedProperties
