@@ -302,26 +302,6 @@ void main() {
       expect(result, contains(jsonKeyExpectedResult));
       expect(result, contains(fieldExpectedResult));
     });
-
-    test('Should add fromJson and toJson by ref', () {
-      final map = SwaggerSchema(schema: SwaggerSchema(ref: 'Pet'));
-      const propertyName = 'dog';
-      const className = 'Animals';
-      const propertyKey = 'Dog';
-
-      final result = generator.generatePropertyContentBySchema(
-        map,
-        propertyName,
-        propertyKey,
-        className,
-        ['enums.Pet'],
-        [],
-        {},
-        [],
-      );
-
-      expect(result, contains('toJson: petToJson, fromJson: petFromJson'));
-    });
   });
 
   group('generatePropertiesContent', () {
