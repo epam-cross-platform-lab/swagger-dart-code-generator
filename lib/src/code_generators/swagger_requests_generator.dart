@@ -164,6 +164,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           responses: swaggerRequest.responses,
           path: path,
           methodName: methodName,
+          method: requestType,
           modelPostfix: options.modelPostfix,
           swaggerRoot: swaggerRoot,
           overridenResponses: options.responseOverrideValueMap
@@ -1133,6 +1134,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String modelPostfix,
     required SwaggerRoot swaggerRoot,
     required String requestName,
+    required String path,
+    required String method,
   }) {
     final content = swaggerResponse.content;
 
@@ -1223,6 +1226,14 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           content.schema?.format == kDateTimeFormat) {
         return kDateTimeType;
       }
+
+      if (content.schema?.properties.isNotEmpty == true) {
+        final pathText = path.split('/').map((e) => e.pascalCase).join();
+        final requestText = method.pascalCase;
+
+        return '$pathText$requestText\$Response';
+      }
+
       return kBasicTypesMap[contentSchemaType];
     }
 
@@ -1240,6 +1251,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String methodName,
     required String modelPostfix,
     required SwaggerRoot swaggerRoot,
+    required String method,
   }) {
     if (overridenResponses.containsKey(path)) {
       return overridenResponses[path]!.overriddenValue;
@@ -1270,6 +1282,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           modelPostfix: modelPostfix,
           swaggerRoot: swaggerRoot,
           requestName: methodName,
+          path: path,
+          method: method,
         ) ??
         '';
 
