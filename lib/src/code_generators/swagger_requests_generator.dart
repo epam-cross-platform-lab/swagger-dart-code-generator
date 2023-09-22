@@ -632,6 +632,17 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       if (parameter.schema!.items != null || parameter.schema!.type == kArray) {
         return (parameter.schema!.ref.getRef() + modelPostfix).asList();
       }
+
+      final ref = parameter.schema?.ref;
+
+      if (ref != null) {
+        final neededSchema = root.allSchemas[ref.getUnformattedRef()];
+
+        if (kBasicTypesMap.containsKey(neededSchema?.type)) {
+          return kBasicTypesMap[neededSchema?.type]!;
+        }
+      }
+
       return (parameter.schema!.ref.getRef() + modelPostfix);
     } else if (parameter.schema?.type == kArray &&
         parameter.schema?.items?.type.isNotEmpty == true) {
