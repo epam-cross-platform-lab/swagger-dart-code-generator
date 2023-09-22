@@ -58,6 +58,7 @@ const kPath = 'path';
 const kOptionalBody = 'optionalBody';
 const kFormData = 'formData';
 const kMultipart = 'multipart';
+const kDateTimeFormat = 'date-time';
 
 const kDefaultBodyParameter = 'Object';
 const kField = 'Field';
@@ -89,6 +90,8 @@ const kEnum = 'enum';
 const kBody = 'body';
 const kPartFile = 'partFile';
 const kPart = 'part';
+
+const kDateTimeType = 'DateTime';
 
 const kDynamic = 'dynamic';
 
