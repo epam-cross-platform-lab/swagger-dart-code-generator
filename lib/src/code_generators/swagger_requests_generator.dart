@@ -233,6 +233,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   ) {
     final results = <String>[];
 
+    response = response.replaceAll('?', '');
+
     ///Models from parameters
     for (var parameter in request.parameters) {
       final ref = parameter.anyRef;
