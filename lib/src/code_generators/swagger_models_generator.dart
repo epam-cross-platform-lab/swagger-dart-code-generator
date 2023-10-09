@@ -1110,6 +1110,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       final basicTypesMap = generateBasicTypesMapFromSchemas(root);
 
+      if (options.genAttributeNames && propertyName.isNotEmpty) {
+        results.add(generatePropertyAttrName(propertyName));
+      }
+
       propertyName = getValidatedParameterName(propertyName).asParameterName();
 
       if (propertyName.isEmpty) {
@@ -1117,10 +1121,6 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       }
 
       propertyName = getParameterName(propertyName, propertyNames);
-
-      if (options.genAttributeNames) {
-        results.add(generatePropertyAttrName(propertyName));
-      }
 
       propertyNames.add(propertyName);
       if (prop.type.isNotEmpty) {
