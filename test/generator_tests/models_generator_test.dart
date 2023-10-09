@@ -218,6 +218,7 @@ void main() {
         [],
         [],
         {},
+        className,
       );
 
       expect(result, contains(classExpectedResult));
@@ -240,6 +241,7 @@ void main() {
         [],
         [],
         {},
+        className,
       );
 
       expect(result, contains(classExpectedResult));

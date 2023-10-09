@@ -37,6 +37,8 @@ class GeneratorOptions {
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
+    this.genAttributeNames = false,
+    this.genTableNames = false,
   });
 
   /// Build options from a JSON map.
@@ -135,6 +137,12 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: [])
   final List<String> excludePaths;
+
+  @JsonKey(defaultValue: false)
+  final bool genAttributeNames;
+
+  @JsonKey(defaultValue: false)
+  final bool genTableNames;
 
   /// Convert this options instance to JSON.
   Map<String, dynamic> toJson() => _$GeneratorOptionsToJson(this);

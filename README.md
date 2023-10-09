@@ -96,6 +96,8 @@ targets:
 | `overriden_models` | `-` | `false` | List of manually written models that will replace the generated one. These models will not be generated. |
 | `use_path_for_request_names` | `true` | `false` | Can be false only if all requests has unique `operationId`. It gives readable names for requests. |
 | `addBasePathToRequests` | `true` | `false` | Add swagger base path to all request path. |
+| `gen_attribute_names` | `false` | `false` | Generate for all model attributes a static const attrXXX with the name. |
+| `gen_table_names` | `false` | `false` | Add the tablename to the model file with static const tablename. |
 
 
 It's important to remember that, by default, [build](https://github.com/dart-lang/build) will follow [Dart's package layout conventions](https://dart.dev/tools/pub/package-layout), meaning that only some folders will be considered to parse the input files. So, if you want to reference files from a folder other than `lib/`, make sure you've included it on `sources`:

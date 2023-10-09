@@ -37,6 +37,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
+    String tableName,
   ) {
     if (options.overridenModels.contains(getValidatedClassName(className))) {
       return '';
@@ -115,6 +116,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           allEnumNames,
           allEnumListNames,
           allClasses,
+          tableName,
         );
 
         return 'typedef $className = List<$itemClassName>; $resultClass';
@@ -133,6 +135,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       allEnumNames,
       allEnumListNames,
       allClasses,
+      tableName,
     );
   }
 
@@ -286,6 +289,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         allEnums.map((e) => e.name).toList(),
         allEnumListNames,
         classes,
+        className,
       );
     }).join('\n');
 
@@ -408,6 +412,12 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     return ', includeIfNull: ${options.includeIfNull}';
+  }
+
+  String generatePropertyAttrName(
+    String propertyName,
+  ) {
+    return '\tstatic const attr${propertyName.pascalCase} = \'$propertyName\';\n';
   }
 
   String generatePropertyContentByDefault(
@@ -1108,6 +1118,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       propertyName = getParameterName(propertyName, propertyNames);
 
+      if (options.genAttributeNames) {
+        results.add(generatePropertyAttrName(propertyName));
+      }
+
       propertyNames.add(propertyName);
       if (prop.type.isNotEmpty) {
         results.add(generatePropertyContentByType(
@@ -1284,6 +1298,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
+    String tableName,
   ) {
     final properties = getModelProperties(schema, schemas, allClasses);
 
@@ -1329,6 +1344,10 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       options,
     );
 
+    final tableNameConstant = options.genTableNames
+        ? '\nstatic const tableName = \'$tableName\';\n'
+        : '';
+
     final toStringOverride = options.overrideToString
         ? '''
 @override
@@ -1350,6 +1369,7 @@ class $validatedClassName{
 \t$toJson\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
+$tableNameConstant
 
 $equalsOverride
 

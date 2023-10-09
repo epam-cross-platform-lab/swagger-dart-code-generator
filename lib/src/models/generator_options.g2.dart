@@ -7,6 +7,8 @@ part of 'generator_options.dart';
 // **************************************************************************
 
 GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
+      genAttributeNames: json['gen_attribute_names'] as bool? ?? false,
+      genTableNames: json['gen_table_names'] as bool? ?? false,
       withBaseUrl: json['with_base_url'] as bool? ?? true,
       addBasePathToRequests:
           json['add_base_path_to_requests'] as bool? ?? false,
@@ -88,6 +90,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
+      'gen_attribute_names': instance.genAttributeNames,
+      'gen_table_names': instance.genTableNames,
       'use_path_for_request_names': instance.usePathForRequestNames,
       'with_base_url': instance.withBaseUrl,
       'add_base_path_to_requests': instance.addBasePathToRequests,
