@@ -105,7 +105,6 @@ class SwaggerSchema {
             ?.map((e) => e as String)
             .toList()
         ..isNullable = (json[kIsNullable] ??
-            json[kIsNullable] ??
             json[kNullable] ??
             false) as bool;
 

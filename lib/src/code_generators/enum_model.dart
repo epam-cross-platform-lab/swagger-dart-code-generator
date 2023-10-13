@@ -108,8 +108,12 @@ const $name(this.value);
         : 'return enums.$name.values.firstWhereOrNull((e) => e.value.toString().toLowerCase() == ${name.camelCase}?.toString().toLowerCase()) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown';
 
     return '''
-$type? ${name.camelCase}ToJson(enums.$name? ${name.camelCase}) {
+$type? ${name.camelCase}NullableToJson(enums.$name? ${name.camelCase}) {
   return ${name.camelCase}?.value;
+}
+
+$type? ${name.camelCase}ToJson(enums.$name ${name.camelCase}) {
+  return ${name.camelCase}.value;
 }
 
 enums.$name ${name.camelCase}FromJson(

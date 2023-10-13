@@ -1,3 +1,7 @@
+# 2.11.11
+
+* Fixes some stuff related to generation DateTime, reponse types and parameters types
+
 # 2.11.10
 
 * Bump `package:http` to `^1.0.0`

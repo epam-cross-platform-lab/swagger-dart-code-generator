@@ -84,12 +84,14 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               .toList() ??
           [],
       multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
+      nullableFields: json['nullable_fields'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'use_path_for_request_names': instance.usePathForRequestNames,
       'with_base_url': instance.withBaseUrl,
+      'nullable_fields': instance.nullableFields,
       'add_base_path_to_requests': instance.addBasePathToRequests,
       'page_width': instance.pageWidth,
       'override_to_string': instance.overrideToString,
