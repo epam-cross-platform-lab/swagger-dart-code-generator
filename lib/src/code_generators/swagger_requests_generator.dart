@@ -233,8 +233,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   ) {
     final results = <String>[];
 
-    response = response.replaceAll('?', '');
-
     ///Models from parameters
     for (var parameter in request.parameters) {
       final ref = parameter.anyRef;
@@ -259,7 +257,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
             if (!kBasicTypes.contains(itemsType) &&
                 schema?.items?.properties != null) {
-              final itemClassName = '$response\$Item';
+              final itemClassName = '${response.replaceAll('?', '')}\$Item';
 
               results.add(itemClassName);
             }

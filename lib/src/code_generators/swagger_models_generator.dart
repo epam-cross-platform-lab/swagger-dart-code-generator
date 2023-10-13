@@ -494,7 +494,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       }
       final fromJsonFunction = '$fromJsonPrefix$fromJsonSuffix';
       jsonKey =
-          ', toJson: $enumNameCamelCase${isNullable && !isList  ? 'Nullable$toJsonSuffix' : toJsonSuffix}, fromJson: $fromJsonFunction, $defaultValueSuffix';
+          ', toJson: $enumNameCamelCase${isNullable && !isList ? 'Nullable$toJsonSuffix' : toJsonSuffix}, fromJson: $fromJsonFunction, $defaultValueSuffix';
 
       if (defaultValue != null) {
         var returnType = '';
@@ -657,7 +657,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
             .length >
         1) {
       typeName = kDynamic;
-    } else {
+    } else if (allOf.first.ref.isNotEmpty) {
       var className = allOf.first.ref.getRef();
 
       if (allEnumNames.contains(className)) {
@@ -665,6 +665,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       }
 
       typeName = getValidatedClassName(className);
+    } else if (allOf.first.type.isNotEmpty &&
+        kBasicTypesMap.containsKey(allOf.first.type)) {
+      typeName = kBasicTypesMap[allOf.first.type]!;
+    } else {
+      typeName = kDynamic;
     }
 
     if (basicTypesMap.containsKey(typeName)) {
@@ -762,7 +767,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     final propertySchema = allClasses[prop.ref.getUnformattedRef()];
 
-    if (propertySchema?.isNullable == true) {
+    if (propertySchema?.isNullable == true || isPropertyNullable) {
       typeName = typeName.makeNullable();
     }
 

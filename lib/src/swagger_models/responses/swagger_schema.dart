@@ -106,7 +106,7 @@ class SwaggerSchema {
             .toList()
         ..isNullable = (json[kIsNullable] ??
             json[kNullable] ??
-            true) as bool;
+            false) as bool;
 
   Map<String, dynamic> toJson() => {
         ..._$SwaggerSchemaToJson(this),
