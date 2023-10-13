@@ -1,3 +1,9 @@
+# 2.11.12
+
+* Added generation of const constructors
+* Added support of required not nullable properties ([#650](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/650))
+* Fixed generation of String responses in converter ([#631](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/631))
+
 # 2.11.11
 
 * Fixes some stuff related to generation DateTime, reponse types and parameters types
