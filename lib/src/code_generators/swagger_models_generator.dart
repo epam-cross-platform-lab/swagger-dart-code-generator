@@ -415,6 +415,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     String propertyName,
     List<String> allEnumNames,
     List<String> allEnumListNames,
+    List<String> requiredProperties,
   ) {
     var typeName = '';
 
@@ -443,6 +444,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final includeIfNullString = generateIncludeIfNullString();
 
     if (typeName != kDynamic && (prop.isNullable || options.nullableFields)) {
+      typeName = typeName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
 
@@ -558,8 +564,15 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     String propertyKey,
     SwaggerSchema prop,
   ) {
-    return options.nullableModels.contains(className) ||
-        prop.isNullable == true;
+    if (options.nullableModels.contains(className) || prop.isNullable == true) {
+      return true;
+    }
+
+    if (requiredProperties.contains(propertyKey)) {
+      return false;
+    }
+
+    return options.nullableFields;
   }
 
   String nullable(
@@ -627,8 +640,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      typeName = typeName.makeNullable();
     }
 
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
@@ -692,8 +709,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      typeName = typeName.makeNullable();
     }
 
     return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
@@ -761,8 +782,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      typeName = typeName.makeNullable();
     }
 
     final propertySchema = allClasses[prop.ref.getUnformattedRef()];
@@ -808,8 +833,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     var enumPropertyName = className.capitalize + key.capitalize;
 
     if (prop.isNullable || options.nullableFields) {
-      enumPropertyName = nullable(
-          enumPropertyName, className, requiredProperties, propertyKey, prop);
+      enumPropertyName = enumPropertyName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      enumPropertyName = enumPropertyName.makeNullable();
     }
 
     return '''
@@ -913,7 +942,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, String> basicTypesMap,
-    List<String> requiredParameters,
+    List<String> requiredProperties,
     Map<String, SwaggerSchema> allClasses,
   ) {
     final typeName = _generateListPropertyTypeName(
@@ -958,8 +987,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     var listPropertyName = 'List<$typeName>';
 
     if (prop.isNullable || options.nullableFields) {
-      listPropertyName = nullable(
-          listPropertyName, className, requiredParameters, propertyKey, prop);
+      listPropertyName = listPropertyName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      listPropertyName = listPropertyName.makeNullable();
     }
 
     return '$jsonKeyContent  final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
@@ -1029,8 +1062,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     }
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
+    }
+
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      typeName = typeName.makeNullable();
     }
 
     return '\t$jsonKeyContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
@@ -1189,6 +1226,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           propertyName,
           allEnumNames,
           allEnumListNames,
+          requiredProperties,
         ));
       }
     }
@@ -1291,10 +1329,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           options.nullableFields ||
           value.isNullable;
 
-      if (isNullableProperty) {
-        results += '\t\tthis.$fieldName,\n';
-      } else {
+      final isRequiredProperty = requiredProperties.contains(key);
+
+      if (isRequiredProperty || !isNullableProperty) {
         results += '\t\t$kRequired this.$fieldName,\n';
+      } else {
+        results += '\t\tthis.$fieldName,\n';
       }
     });
 

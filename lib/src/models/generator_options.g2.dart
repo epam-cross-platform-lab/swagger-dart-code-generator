@@ -84,7 +84,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               .toList() ??
           [],
       multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
-      nullableFields: json['nullable_fields'] as bool? ?? false,
+      nullableFields: json['nullable_fields'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>

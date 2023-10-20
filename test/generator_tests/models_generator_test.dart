@@ -12,12 +12,14 @@ void main() {
     GeneratorOptions(
       inputFolder: '',
       outputFolder: '',
+      nullableFields: false,
     ),
   );
   final generator2 = SwaggerModelsGeneratorV2(
     GeneratorOptions(
       inputFolder: '',
       outputFolder: '',
+      nullableFields: false,
     ),
   );
 
@@ -165,6 +167,7 @@ void main() {
         propertyName,
         [],
         [],
+        [],
       );
 
       expect(result, contains(jsonKeyExpendedResult));
@@ -182,6 +185,7 @@ void main() {
         propertyName,
         [],
         [],
+        [],
       );
 
       expect(result, contains(', includeIfNull: false'));
@@ -193,6 +197,7 @@ void main() {
       final result = generator.generatePropertyContentByDefault(
         propertyEntryMap,
         propertyName,
+        [],
         [],
         [],
       );

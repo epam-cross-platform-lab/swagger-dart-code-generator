@@ -639,7 +639,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       if (ref != null) {
         final neededSchema = root.allSchemas[ref.getUnformattedRef()];
 
-        if (kBasicTypesMap.containsKey(neededSchema?.type)) {
+        if (neededSchema?.type != 'object' && kBasicTypesMap.containsKey(neededSchema?.type)) {
           return kBasicTypesMap[neededSchema?.type]!;
         }
       }
