@@ -21,7 +21,7 @@ class SwaggerSchema {
     this.required = const [],
     this.description = '',
     this.enumNames,
-    this.isNullable = false,
+    this.isNullable = true,
     this.hasAdditionalProperties = false,
     this.msEnum,
   });
@@ -76,7 +76,7 @@ class SwaggerSchema {
   @JsonKey(name: 'properties', defaultValue: {})
   Map<String, SwaggerSchema> properties;
 
-  @JsonKey(name: 'nullable', defaultValue: false)
+  @JsonKey(name: 'nullable', defaultValue: true)
   bool isNullable;
 
   @JsonKey(name: 'schema')
@@ -106,7 +106,7 @@ class SwaggerSchema {
             .toList()
         ..isNullable = (json[kIsNullable] ??
             json[kNullable] ??
-            false) as bool;
+            true) as bool;
 
   Map<String, dynamic> toJson() => {
         ..._$SwaggerSchemaToJson(this),
