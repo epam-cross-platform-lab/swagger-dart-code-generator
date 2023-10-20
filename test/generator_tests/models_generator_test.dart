@@ -165,6 +165,7 @@ void main() {
         propertyName,
         [],
         [],
+        [],
       );
 
       expect(result, contains(jsonKeyExpendedResult));
@@ -182,6 +183,7 @@ void main() {
         propertyName,
         [],
         [],
+        [],
       );
 
       expect(result, contains(', includeIfNull: false'));
@@ -193,6 +195,7 @@ void main() {
       final result = generator.generatePropertyContentByDefault(
         propertyEntryMap,
         propertyName,
+        [],
         [],
         [],
       );
