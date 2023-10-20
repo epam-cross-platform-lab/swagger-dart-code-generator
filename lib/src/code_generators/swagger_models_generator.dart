@@ -564,8 +564,15 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     String propertyKey,
     SwaggerSchema prop,
   ) {
-    return options.nullableModels.contains(className) ||
-        prop.isNullable == true;
+    if (options.nullableModels.contains(className) || prop.isNullable == true) {
+      return true;
+    }
+
+    if (requiredProperties.contains(propertyKey)) {
+      return false;
+    }
+
+    return options.nullableFields;
   }
 
   String nullable(
@@ -633,8 +640,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
     }
 
     if (requiredProperties.isNotEmpty &&
@@ -703,8 +709,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
     }
 
     if (requiredProperties.isNotEmpty &&
@@ -777,8 +782,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
     }
 
     if (requiredProperties.isNotEmpty &&
@@ -829,8 +833,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     var enumPropertyName = className.capitalize + key.capitalize;
 
     if (prop.isNullable || options.nullableFields) {
-      enumPropertyName = nullable(
-          enumPropertyName, className, requiredProperties, propertyKey, prop);
+      enumPropertyName = enumPropertyName.makeNullable();
     }
 
     if (requiredProperties.isNotEmpty &&
@@ -984,8 +987,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     var listPropertyName = 'List<$typeName>';
 
     if (prop.isNullable || options.nullableFields) {
-      listPropertyName = nullable(
-          listPropertyName, className, requiredProperties, propertyKey, prop);
+      listPropertyName = listPropertyName.makeNullable();
     }
 
     if (requiredProperties.isNotEmpty &&
@@ -1060,8 +1062,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     }
 
     if (prop.isNullable || options.nullableFields) {
-      typeName =
-          nullable(typeName, className, requiredProperties, propertyKey, prop);
+      typeName = typeName.makeNullable();
     }
 
     if (requiredProperties.isNotEmpty &&
@@ -1330,9 +1331,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       final isRequiredProperty = requiredProperties.contains(key);
 
-      if(isRequiredProperty || !isNullableProperty) {
+      if (isRequiredProperty || !isNullableProperty) {
         results += '\t\t$kRequired this.$fieldName,\n';
-      }else{
+      } else {
         results += '\t\tthis.$fieldName,\n';
       }
     });

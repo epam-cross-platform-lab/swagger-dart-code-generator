@@ -37,7 +37,7 @@ class GeneratorOptions {
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
-    this.nullableFields = false,
+    this.nullableFields = true,
   });
 
   /// Build options from a JSON map.
@@ -50,7 +50,7 @@ class GeneratorOptions {
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;
 
-  @JsonKey(defaultValue: false)
+  @JsonKey(defaultValue: true)
   final bool nullableFields;
 
   @JsonKey(defaultValue: false)
