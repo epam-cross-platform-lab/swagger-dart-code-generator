@@ -12,12 +12,14 @@ void main() {
     GeneratorOptions(
       inputFolder: '',
       outputFolder: '',
+      nullableFields: false,
     ),
   );
   final generator2 = SwaggerModelsGeneratorV2(
     GeneratorOptions(
       inputFolder: '',
       outputFolder: '',
+      nullableFields: false,
     ),
   );
 
