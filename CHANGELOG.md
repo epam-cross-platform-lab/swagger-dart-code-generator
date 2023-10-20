@@ -1,3 +1,7 @@
+# 2.11.13
+
+* Fixed different issues
+
 # 2.11.12
 
 * Added generation of const constructors
