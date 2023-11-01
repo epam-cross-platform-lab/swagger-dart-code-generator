@@ -448,8 +448,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     var allModelsString = '';
 
     allModels.toSet().forEach((model) {
+      final validatedName = getValidatedClassName(model);
       allModelsString +=
-          'generatedMapping.putIfAbsent($model, () => $model.fromJsonFactory);\n';
+          'generatedMapping.putIfAbsent($validatedName, () => $validatedName.fromJsonFactory);\n';
     });
 
     return Code(

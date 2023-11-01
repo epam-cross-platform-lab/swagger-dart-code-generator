@@ -44,7 +44,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       enumNames: (json['enumNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      isNullable: json['nullable'] as bool? ?? false,
+      isNullable: json['nullable'] as bool? ?? true,
       hasAdditionalProperties: json['additionalProperties'] == null
           ? false
           : _additionalsFromJson(json['additionalProperties']),

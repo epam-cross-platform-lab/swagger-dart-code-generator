@@ -198,8 +198,14 @@ class \$JsonSerializableConverter extends chopper.JsonConverter {
       return chopper.Response(response.base, null, error: response.error);
     }
 
-    if(ResultType == String) {
+    if (ResultType == String) {
       return response.copyWith();
+    }
+
+    if (ResultType == DateTime) {
+      return response.copyWith(
+          body: DateTime.parse((response.body as String).replaceAll('"', ''))
+              as ResultType);
     }
 
     final jsonRes = await super.convertResponse(response);
