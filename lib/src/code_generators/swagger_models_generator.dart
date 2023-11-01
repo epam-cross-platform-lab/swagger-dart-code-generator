@@ -443,7 +443,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     final includeIfNullString = generateIncludeIfNullString();
 
-    if (typeName != kDynamic && prop.isNullable) {
+    if (typeName != kDynamic &&
+        (prop.isNullable || options.nullableModels.contains(typeName))) {
       typeName = typeName.makeNullable();
     }
 
@@ -635,7 +636,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
-    if (prop.isNullable && !requiredProperties.contains(propertyKey)) {
+    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+        !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
 
@@ -699,7 +701,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if (prop.isNullable && !requiredProperties.contains(propertyKey)) {
+    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+        !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
 
@@ -744,7 +747,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName += options.modelPostfix;
     }
 
-    final isPropertyNullable = refSchema?.isNullable == true ||
+    final isPropertyNullable = options.nullableModels.contains(className) ||
+        refSchema?.isNullable == true ||
         isNullable(className, requiredProperties, propertyKey, prop);
 
     final unknownEnumValue = generateEnumValue(
@@ -767,13 +771,16 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if (prop.isNullable && !requiredProperties.contains(propertyKey)) {
+    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+        !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
 
     final propertySchema = allClasses[prop.ref.getUnformattedRef()];
 
-    if (propertySchema?.isNullable == true || isPropertyNullable) {
+    if (propertySchema?.isNullable == true ||
+        isPropertyNullable ||
+        options.nullableModels.contains(className)) {
       typeName = typeName.makeNullable();
     }
 
@@ -813,7 +820,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var enumPropertyName = className.capitalize + key.capitalize;
 
-    if (prop.isNullable && !requiredProperties.contains(propertyKey)) {
+    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+        !requiredProperties.contains(propertyKey)) {
       enumPropertyName = enumPropertyName.makeNullable();
     }
 
@@ -962,7 +970,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var listPropertyName = 'List<$typeName>';
 
-    if (prop.isNullable && !requiredProperties.contains(propertyKey)) {
+    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+        !requiredProperties.contains(propertyKey)) {
       listPropertyName = listPropertyName.makeNullable();
     }
 
@@ -1012,6 +1021,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       defaultValue: prop.defaultValue,
       isList: false,
       isNullable: isNullable(className, requiredProperties, propertyKey, prop),
+      className: className,
     );
 
     final dateToJsonValue = generateToJsonForDate(prop);
@@ -1032,7 +1042,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       jsonKeyContent += ')\n';
     }
 
-    if (prop.isNullable && !requiredProperties.contains(propertyKey)) {
+    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+        !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
 
