@@ -453,6 +453,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName = typeName.makeNullable();
     }
 
+    if (requiredProperties.isNotEmpty &&
+        !requiredProperties.contains(propertyKey)) {
+      typeName = typeName.makeNullable();
+    }
+
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';

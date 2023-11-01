@@ -1,9 +1,8 @@
-# 2.11.13
-
+# 2.12.1
 * Fixed return type nullability ([#670](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/670))
 * Fixed generation of DateTime return types
 
-# 2.12.1
+# 2.11.13
 
 * Fixed different issues
 
