@@ -3,6 +3,7 @@ import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
@@ -226,15 +227,28 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           final requestText = operation.pascalCase;
 
           results['$pathText$requestText\$Response'] = neededSchema;
-        } else {
-          if (neededSchema?.type == kArray) {
-            final itemsSchema = neededSchema?.items;
+        } else if (neededSchema != null &&
+            neededSchema.title.isNotEmpty &&
+            neededSchema.allOf.isNotEmpty) {
+          final properties = <String, SwaggerSchema>{};
 
-            if (itemsSchema?.properties.isNotEmpty == true) {
-              final pathText = key.split('/').map((e) => e.pascalCase).join();
-              final requestText = operation.pascalCase;
-              results['$pathText$requestText\$Response'] = neededSchema!;
+          for (final allOf in neededSchema.allOf) {
+            properties.addAll(allOf.properties);
+
+            if (allOf.ref.isNotEmpty) {
+              final schema = root.allSchemas[allOf.ref.getUnformattedRef()];
+              properties.addAll(schema?.properties ?? {});
             }
+          }
+
+          results[neededSchema.title] = SwaggerSchema(properties: properties);
+        } else if (neededSchema?.type == kArray) {
+          final itemsSchema = neededSchema?.items;
+
+          if (itemsSchema?.properties.isNotEmpty == true) {
+            final pathText = key.split('/').map((e) => e.pascalCase).join();
+            final requestText = operation.pascalCase;
+            results['$pathText$requestText\$Response'] = neededSchema!;
           }
         }
       });

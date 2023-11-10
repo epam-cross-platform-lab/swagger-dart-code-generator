@@ -640,7 +640,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       if (ref != null) {
         final neededSchema = root.allSchemas[ref.getUnformattedRef()];
 
-        if (neededSchema?.type != 'object' && kBasicTypesMap.containsKey(neededSchema?.type)) {
+        if (neededSchema?.type != 'object' &&
+            kBasicTypesMap.containsKey(neededSchema?.type)) {
           return kBasicTypesMap[neededSchema?.type]!;
         }
       }
@@ -1148,6 +1149,14 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final ref = content.ref;
       final type = ref.getRef().withPostfix(modelPostfix);
       return kBasicTypesMap[type] ?? type;
+    }
+
+    final contentSchema = content.schema;
+
+    if (contentSchema != null &&
+        contentSchema.allOf.isNotEmpty == true &&
+        contentSchema.title.isNotEmpty) {
+      return contentSchema.title;
     }
 
     final schemaRef = content.schema?.ref ?? '';

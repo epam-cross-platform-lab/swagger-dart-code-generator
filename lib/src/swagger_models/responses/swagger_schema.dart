@@ -24,10 +24,14 @@ class SwaggerSchema {
     this.isNullable = true,
     this.hasAdditionalProperties = false,
     this.msEnum,
+    this.title = '',
   });
 
   @JsonKey(name: 'type', defaultValue: '')
   String type;
+
+  @JsonKey(name: 'title', defaultValue: '')
+  String title;
 
   @JsonKey(name: 'format', defaultValue: '')
   String format;
@@ -104,9 +108,7 @@ class SwaggerSchema {
         ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
             ?.map((e) => e as String)
             .toList()
-        ..isNullable = (json[kIsNullable] ??
-            json[kNullable] ??
-            false) as bool;
+        ..isNullable = (json[kIsNullable] ?? json[kNullable] ?? false) as bool;
 
   Map<String, dynamic> toJson() => {
         ..._$SwaggerSchemaToJson(this),
