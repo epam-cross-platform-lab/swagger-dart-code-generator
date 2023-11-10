@@ -1,3 +1,9 @@
+# 2.12.2
+
+* Fixed generation of `nullable` and `required` fields ([#650](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/650))
+* Fixed generation of `putIfAbsent` for some models ([#665](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/665))
+* Fixed generation of some border-cased models ([#669](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/669))
+
 # 2.12.1
 * Fixed return type nullability ([#670](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/670))
 * Fixed generation of DateTime return types
