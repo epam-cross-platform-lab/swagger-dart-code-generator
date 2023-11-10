@@ -458,7 +458,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     final includeIfNullString = generateIncludeIfNullString();
 
     if (typeName != kDynamic &&
-        (prop.isNullable || options.nullableModels.contains(typeName))) {
+        (prop.isNullable == true ||
+            options.nullableModels.contains(typeName))) {
       typeName = typeName.makeNullable();
     }
 
@@ -588,7 +589,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       return false;
     }
 
-    return options.nullableModels.contains(className) || prop.isNullable;
+    return options.nullableModels.contains(className) ||
+        prop.isNullable == true;
   }
 
   String nullable(
@@ -655,7 +657,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
-    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+    if ((prop.isNullable == true ||
+            options.nullableModels.contains(className)) &&
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -720,7 +723,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+    if ((prop.isNullable == true ||
+            options.nullableModels.contains(className)) &&
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -790,7 +794,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+    if ((prop.isNullable == true ||
+            options.nullableModels.contains(className)) &&
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -839,7 +844,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var enumPropertyName = className.capitalize + key.capitalize;
 
-    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+    if ((prop.isNullable == true ||
+            options.nullableModels.contains(className)) &&
         !requiredProperties.contains(propertyKey)) {
       enumPropertyName = enumPropertyName.makeNullable();
     }
@@ -989,7 +995,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     var listPropertyName = 'List<$typeName>';
 
-    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+    if ((prop.isNullable == true ||
+            options.nullableModels.contains(className)) &&
         !requiredProperties.contains(propertyKey)) {
       listPropertyName = listPropertyName.makeNullable();
     }
@@ -1061,7 +1068,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       jsonKeyContent += ')\n';
     }
 
-    if ((prop.isNullable || options.nullableModels.contains(className)) &&
+    if (prop.isNullable == true ||
+        options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
@@ -1321,8 +1329,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
       propertyNames.add(fieldName);
 
-      final isNullableProperty =
-          options.nullableModels.contains(className) || value.isNullable;
+      final isNullableProperty = options.nullableModels.contains(className) ||
+          value.isNullable == true || !requiredProperties.contains(key);
 
       final isRequiredProperty = requiredProperties.contains(key);
 

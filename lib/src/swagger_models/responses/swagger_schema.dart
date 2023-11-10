@@ -21,7 +21,7 @@ class SwaggerSchema {
     this.required = const [],
     this.description = '',
     this.enumNames,
-    this.isNullable = true,
+    this.isNullable,
     this.hasAdditionalProperties = false,
     this.msEnum,
     this.title = '',
@@ -80,8 +80,8 @@ class SwaggerSchema {
   @JsonKey(name: 'properties', defaultValue: {})
   Map<String, SwaggerSchema> properties;
 
-  @JsonKey(name: 'nullable', defaultValue: true)
-  bool isNullable;
+  @JsonKey(name: 'nullable', defaultValue: null)
+  bool? isNullable;
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
