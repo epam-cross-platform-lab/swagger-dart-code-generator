@@ -266,9 +266,7 @@ void main() {
     });
 
     test('Should return validate constructor property', () {
-      final map = <String, SwaggerSchema>{
-        'Animal': SwaggerSchema()
-      };
+      final map = <String, SwaggerSchema>{'Animal': SwaggerSchema()};
       const expectedResult = 'this.animal';
       final result = generator.generateConstructorPropertiesContent(
         className: '',
