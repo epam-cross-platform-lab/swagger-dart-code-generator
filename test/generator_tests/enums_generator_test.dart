@@ -4,7 +4,6 @@ import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
 import 'package:test/test.dart';
 
-
 void main() {
   final generator = SwaggerEnumsGeneratorV3(
     GeneratorOptions(

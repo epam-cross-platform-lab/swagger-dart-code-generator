@@ -223,7 +223,7 @@ class SwaggerDartCodeGenerator implements Builder {
       allEnums,
       options,
     );
-    
+
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
       models.contains('@JsonSerializable'),

@@ -266,9 +266,7 @@ void main() {
     });
 
     test('Should return validate constructor property', () {
-      final map = <String, SwaggerSchema>{
-        'Animal': SwaggerSchema()
-      };
+      final map = <String, SwaggerSchema>{'Animal': SwaggerSchema()};
       const expectedResult = 'this.animal';
       final result = generator.generateConstructorPropertiesContent(
         className: '',
@@ -315,7 +313,7 @@ void main() {
 
       const className = 'Animals';
       const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
-      const fieldExpectedResult = 'final Pet animals';
+      const fieldExpectedResult = 'final Pet? animals';
       final result = generator.generatePropertiesContent(
         SwaggerRoot.empty,
         map,
@@ -420,7 +418,7 @@ void main() {
       const jsonKeyExpectedResult =
           "@JsonKey(name: 'Dog', defaultValue: <Object>[])";
 
-      const propertyExpectedResult = 'final List<Object> dog';
+      const propertyExpectedResult = 'final List<Object>? dog';
       final result = generator.generateListPropertyContent(
         propertyName,
         propertyKey,
@@ -480,7 +478,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<TestOriginalRef> dog;'));
+      expect(result, contains('final List<TestOriginalRef>? dog;'));
     });
 
     test('Should return List<Object> by ref', () {
@@ -503,7 +501,7 @@ void main() {
         {},
       );
 
-      expect(result, contains('final List<TestObject> dog;'));
+      expect(result, contains('final List<TestObject>? dog;'));
     });
   });
 
