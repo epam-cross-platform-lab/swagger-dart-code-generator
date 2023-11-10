@@ -43,20 +43,16 @@ dev_dependencies:
 
 Then run:
 ```shell
-pub packages get
+dart pub get
 ```
 or
 ```shell
-flutter packages get
+flutter pub get
 ```
 
 Now SwaggerGenerator will generate the API files for you by running:
 ```shell
-pub run build_runner build
-```
-or
-```shell
-flutter pub run build_runner build
+dart run build_runner build
 ```
 
 ## **Configuration**
