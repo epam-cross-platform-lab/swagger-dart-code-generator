@@ -1178,7 +1178,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       var typeName =
           getValidatedClassName(schemaRef.getRef()).withPostfix(modelPostfix);
 
-      if (neededSchema.isNullable) {
+      if (neededSchema.isNullable == true) {
         typeName = typeName.makeNullable();
       }
 
