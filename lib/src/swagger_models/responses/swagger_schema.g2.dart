@@ -41,6 +41,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
           ? const []
           : _requiredFromJson(json['required']),
       description: json['description'] as String? ?? '',
+      title: json['title'] as String? ?? '',
       enumNames: (json['enumNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -71,6 +72,7 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'oneOf': instance.oneOf,
       'anyOf': instance.anyOf,
       'allOf': instance.allOf,
+      'title': instance.title,
       'additionalProperties': instance.hasAdditionalProperties,
       'enumNames': instance.enumNames,
     };
