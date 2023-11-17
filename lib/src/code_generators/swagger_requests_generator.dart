@@ -359,20 +359,22 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
   Method _getPrivateMethod(Method method) {
     final parameters = method.optionalParameters.map((p) {
+      Parameter result = p;
+
       if (p.type!.symbol!.startsWith('enums.')) {
         if (p.annotations
             .any((p0) => p0.code.toString().contains('symbol=Body'))) {
-          return p.copyWith(type: Reference('dynamic'));
+          result = result.copyWith(type: Reference('dynamic'));
         } else {
-          return p.copyWith(type: Reference('String?'));
+          result = result.copyWith(type: Reference('String?'));
         }
       }
 
       if (p.annotations.first.code.toString().contains('symbol=Header')) {
         if (p.type?.symbol?.startsWith('List<') == true) {
-          return p.copyWith(type: Reference('Iterable<String>?'));
+          result = result.copyWith(type: Reference('Iterable<String>?'));
         }
-        return p.copyWith(type: Reference('String?'));
+        result = result.copyWith(type: Reference('String?'));
       }
 
       if (p.type!.symbol!.startsWith('List')) {
@@ -381,14 +383,21 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         if (listType.startsWith('enums.')) {
           if (p.annotations
               .any((p0) => p0.code.toString().contains('symbol=Body'))) {
-            return p.copyWith(type: Reference('dynamic'));
+            result = result.copyWith(type: Reference('dynamic'));
           } else {
-            return p.copyWith(type: Reference('List<Object?>?'));
+            result = result.copyWith(type: Reference('List<Object?>?'));
           }
         }
       }
 
-      return p;
+      if (p.annotations.first.code
+          .toString()
+          .contains('symbol=ExplodedQuery')) {
+        result = result.copyWith(
+            annotations: [refer('Query()')], type: Reference('String?'));
+      }
+
+      return result;
     });
 
     return Method(
@@ -425,6 +434,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     List<String> allModels,
   ) {
     final parametersListString = parameters.map((p) {
+      final isExposed = p.annotations.firstOrNull?.code
+              .toString()
+              .contains('symbol=ExplodedQuery') ??
+          false;
+
       if (p.type!.symbol!.startsWith('enums.')) {
         return '${p.name} : ${p.name}?.value?.toString()';
       }
@@ -442,7 +456,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       if (p.type!.symbol!.startsWith('List<enums.')) {
         final typeName = p.type!.symbol!;
         final name = typeName.substring(11, typeName.length - 2).camelCase;
-        return '${p.name} : ${name}ListToJson(${p.name})';
+
+        if (isExposed) {
+          return '${p.name} : ${name}ExplodedListToJson(${p.name})';
+        } else {
+          return '${p.name} : ${name}ListToJson(${p.name})';
+        }
       }
 
       return '${p.name} : ${p.name}';
@@ -528,6 +547,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             .call([literalString(parameter.name.replaceAll('\$', ''))]);
       case kBody:
         return refer(kBody.pascalCase).call([]);
+      case kQuery:
+        return refer(parameter.explode ? kExplodedQuery : kQuery.pascalCase)
+            .call([]);
       default:
         //https://github.com/lejard-h/chopper/issues/295
         return refer(parameter.inParameter.pascalCase)
@@ -595,6 +617,15 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                 ?.key ??
             '';
         return getValidatedClassName(neededKey).asEnum();
+      }
+
+      if (parameter.type == kArray) {
+        final result = _getEnumParameterTypeName(
+            parameterName: parameter.name,
+            path: path,
+            requestType: requestType);
+
+        return result.asList();
       }
 
       return _getEnumParameterTypeName(

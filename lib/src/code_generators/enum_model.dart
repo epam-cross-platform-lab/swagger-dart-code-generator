@@ -134,6 +134,12 @@ enums.$name? ${name.camelCase}NullableFromJson(
     return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue;
 }
 
+String ${name.camelCase}ExplodedListToJson(
+    List<enums.$name>? ${name.camelCase}) {
+
+    return ${name.camelCase}?.map((e) => e.value!).join(',') ?? '';
+}
+
 
 List<$type> ${name.camelCase}ListToJson(
     List<enums.$name>? ${name.camelCase}) {
