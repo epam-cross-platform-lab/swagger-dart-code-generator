@@ -55,7 +55,9 @@ abstract class SwaggerGeneratorBase {
       return '\$$result';
     }
 
-    return result.replaceFirst(options.cutFromModelNames, '');
+    return result
+        .replaceFirst(options.cutFromModelNames, '')
+        .replaceAll('\$\$', '\$');
   }
 
   String generateEnumName(String className, String enumName) {

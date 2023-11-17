@@ -161,10 +161,10 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           schema.items?.properties.isNotEmpty == true;
 
       properties.forEach((propertyKey, propSchema) {
-        final itemPart = shouldUseItemsProperties ? '\$Item' : '';
+        final itemPart = shouldUseItemsProperties ? '\$Item\$' : '\$';
 
-        final innerClassName =
-            '${getValidatedClassName(classKey)}$itemPart\$${getValidatedClassName(propertyKey)}';
+        final innerClassName = getValidatedClassName(
+            '${getValidatedClassName(classKey)}$itemPart${getValidatedClassName(propertyKey)}');
 
         if (propSchema.properties.isNotEmpty) {
           result[innerClassName] = propSchema;
@@ -174,6 +174,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         if (items != null && items.properties.isNotEmpty) {
           propSchema.type = 'object';
+
           result['$innerClassName\$Item'] = items;
         }
       });
@@ -363,7 +364,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     if (parameter == null) return 'Object';
 
     if (parameter.properties.isNotEmpty) {
-      return '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix';
+      return getValidatedClassName(
+          '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}$modelPostfix');
     }
 
     if (parameter.items?.properties.isNotEmpty == true) {
