@@ -27,12 +27,14 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
       ref: json[r'$ref'] as String? ?? '',
       key: json['key'] as String? ?? '',
       enumValuesObj: json['enum'] as List<dynamic>? ?? [],
+      explode: json['explode'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$SwaggerRequestParameterToJson(
         SwaggerRequestParameter instance) =>
     <String, dynamic>{
       'in': instance.inParameter,
+      'explode': instance.explode,
       'name': instance.name,
       'description': instance.description,
       'required': instance.isRequired,
