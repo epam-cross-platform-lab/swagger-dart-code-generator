@@ -34,7 +34,7 @@ class GeneratorOptions {
     this.overrideEqualsAndHashcode = true,
     this.overrideToString = true,
     this.pageWidth,
-    this.overridenModels = const {},
+    this.overridenModels = const [],
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
   });
@@ -67,8 +67,8 @@ class GeneratorOptions {
   @JsonKey(defaultValue: true)
   final bool withConverter;
 
-  @JsonKey(defaultValue: {})
-  final Map<String, List<String>> overridenModels;
+  @JsonKey(defaultValue: [])
+  final List<OverridenModelsItem> overridenModels;
 
   @JsonKey(defaultValue: [])
   final List<String> generateToJsonFor;
@@ -194,4 +194,25 @@ class DefaultHeaderValueMap {
 
   factory DefaultHeaderValueMap.fromJson(Map<String, dynamic> json) =>
       _$DefaultHeaderValueMapFromJson(json);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class OverridenModelsItem {
+  @JsonKey()
+  final String fileName;
+  @JsonKey()
+  final List<String> overridenModels;
+  @JsonKey()
+  final String importUrl;
+
+  OverridenModelsItem({
+    required this.fileName,
+    required this.overridenModels,
+    required this.importUrl,
+  });
+
+  Map<String, dynamic> toJson() => _$OverridenModelsItemToJson(this);
+
+  factory OverridenModelsItem.fromJson(Map<String, dynamic> json) =>
+      _$OverridenModelsItemFromJson(json);
 }

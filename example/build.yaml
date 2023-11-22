@@ -27,7 +27,11 @@ targets:
           additional_headers:
             - "Cache-Control"
           overriden_models:
-            - "Order"
+            - file_name: "pet_service_json"
+              import_url: "../overriden_models.dart"
+              overriden_models:
+                - "Pet"
+                - "Order"
           separate_models: false
           enums_case_sensitive: false
           cut_from_model_names: "ModelRenameV3"

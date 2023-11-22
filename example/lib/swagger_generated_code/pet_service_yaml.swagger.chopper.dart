@@ -58,7 +58,7 @@ class _$PetServiceYaml extends PetServiceYaml {
 
   @override
   Future<Response<List<Pet>>> _petFindByStatusGet({
-    required String? status,
+    required List<Object?>? status,
     String? cacheControl,
   }) {
     final Uri $url = Uri.parse('/pet/findByStatus');

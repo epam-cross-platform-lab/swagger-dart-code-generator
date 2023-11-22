@@ -63,22 +63,6 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   additionalResultPath =
       _getAdditionalResultPath(options).replaceAll('\\', '/');
 
-  if (options.overridenModels.isNotEmpty) {
-    for (final fileName in options.overridenModels.keys) {
-      final path = normalize('${options.outputFolder}${fileName}_overriden.dart');
-
-      if (!Directory(options.outputFolder).existsSync()) {
-        Directory(options.outputFolder).createSync();
-      }
-
-      if (!File(path).existsSync()) {
-        File(path).createSync();
-        File(path).writeAsString(
-            '//Put your overriden models here (${options.overridenModels[fileName]?.join(',')})');
-      }
-    }
-  }
-
   File(additionalResultPath).createSync();
 
   var out = normalize(options.outputFolder);
