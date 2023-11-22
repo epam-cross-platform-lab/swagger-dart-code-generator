@@ -76,7 +76,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       overrideToString: json['override_to_string'] as bool? ?? true,
       pageWidth: json['page_width'] as int?,
       overridenModels: (json['overriden_models'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => OverridenModelsItem.fromJson(
+                  Map<String, dynamic>.from(e as Map)))
               .toList() ??
           [],
       generateToJsonFor: (json['generate_to_json_for'] as List<dynamic>?)
@@ -162,4 +163,21 @@ Map<String, dynamic> _$DefaultHeaderValueMapToJson(
     <String, dynamic>{
       'header_name': instance.headerName,
       'default_value': instance.defaultValue,
+    };
+
+OverridenModelsItem _$OverridenModelsItemFromJson(Map<String, dynamic> json) =>
+    OverridenModelsItem(
+      fileName: json['file_name'] as String,
+      overridenModels: (json['overriden_models'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      importUrl: json['import_url'] as String,
+    );
+
+Map<String, dynamic> _$OverridenModelsItemToJson(
+        OverridenModelsItem instance) =>
+    <String, dynamic>{
+      'file_name': instance.fileName,
+      'overriden_models': instance.overridenModels,
+      'import_url': instance.importUrl,
     };

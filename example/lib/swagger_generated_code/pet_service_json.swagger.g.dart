@@ -7,7 +7,7 @@ part of 'pet_service_json.swagger.dart';
 // **************************************************************************
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
-      id: json['id'] as num?,
+      id: json['id'] as int?,
       name: json['name'] as String? ?? '',
     );
 
@@ -26,7 +26,7 @@ Map<String, dynamic> _$CategoryToJson(Category instance) {
 }
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      id: json['id'] as num?,
+      id: json['id'] as int?,
       username: json['username'] as String? ?? '',
       firstName: json['firstName'] as String? ?? '',
       lastName: json['lastName'] as String? ?? '',
@@ -57,7 +57,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
 }
 
 Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
-      id: json['id'] as num?,
+      id: json['id'] as int?,
       name: json['name'] as String? ?? '',
     );
 
@@ -72,39 +72,6 @@ Map<String, dynamic> _$TagToJson(Tag instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
-  return val;
-}
-
-Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
-      id: json['id'] as num?,
-      category: json['category'] == null
-          ? null
-          : Category.fromJson(json['category'] as Map<String, dynamic>),
-      name: json['name'] as String? ?? '',
-      photoUrls: (json['photoUrls'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      tags: (json['tags'] as List<dynamic>?)
-          ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      status: petStatusFromJson(json['status']),
-    );
-
-Map<String, dynamic> _$PetToJson(Pet instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('category', instance.category?.toJson());
-  writeNotNull('name', instance.name);
-  writeNotNull('photoUrls', instance.photoUrls);
-  writeNotNull('tags', instance.tags?.map((e) => e.toJson()).toList());
-  writeNotNull('status', petStatusToJson(instance.status));
   return val;
 }
 
