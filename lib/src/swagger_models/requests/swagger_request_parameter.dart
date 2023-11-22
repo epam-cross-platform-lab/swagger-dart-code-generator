@@ -19,7 +19,6 @@ class SwaggerRequestParameter {
     this.schema,
     this.ref = '',
     this.key = '',
-    this.explode = false,
     this.enumValuesObj = const [],
   });
 
@@ -28,9 +27,6 @@ class SwaggerRequestParameter {
 
   @JsonKey(name: 'name', defaultValue: '')
   String name;
-
-  @JsonKey(name: 'explode', defaultValue: false)
-  bool explode;
 
   @JsonKey(name: 'description', defaultValue: '')
   String description;
