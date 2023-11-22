@@ -1,3 +1,8 @@
+# 2.13.1
+
+* ***Breaking*** Changed Overriden Models usage ([#550](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/550))
+* Fixed generation of allOf request bodies ([#680](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/680))
+
 # 2.12.2
 
 * Fixed generation of `nullable` and `required` fields ([#650](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/650))
