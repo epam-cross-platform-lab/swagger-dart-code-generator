@@ -49,9 +49,9 @@ class SwaggerAdditionsGenerator extends SwaggerGeneratorBase {
     final chopperPartImport =
         buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
 
-    final overridenModels = options.overridenModels.isEmpty
-        ? ''
-        : 'import \'overriden_models.dart\';';
+    final overridenModels = options.overridenModels.containsKey(swaggerFileName)
+        ? 'import \'${swaggerFileName}_overriden.dart\';'
+        : '';
 
     final chopperImports = buildOnlyModels
         ? ''

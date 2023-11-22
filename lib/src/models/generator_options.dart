@@ -34,7 +34,7 @@ class GeneratorOptions {
     this.overrideEqualsAndHashcode = true,
     this.overrideToString = true,
     this.pageWidth,
-    this.overridenModels = const [],
+    this.overridenModels = const {},
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
   });
@@ -67,8 +67,8 @@ class GeneratorOptions {
   @JsonKey(defaultValue: true)
   final bool withConverter;
 
-  @JsonKey(defaultValue: [])
-  final List<String> overridenModels;
+  @JsonKey(defaultValue: {})
+  final Map<String, List<String>> overridenModels;
 
   @JsonKey(defaultValue: [])
   final List<String> generateToJsonFor;

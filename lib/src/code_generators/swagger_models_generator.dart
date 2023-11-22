@@ -38,8 +38,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     List<String> allEnumNames,
     List<String> allEnumListNames,
     Map<String, SwaggerSchema> allClasses,
+    String fileName,
   ) {
-    if (options.overridenModels.contains(getValidatedClassName(className))) {
+    if (options.overridenModels[fileName]
+            ?.contains(getValidatedClassName(className)) ==
+        true) {
       return '';
     }
 
@@ -101,8 +104,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
         final itemClassName = '$className\$Item';
 
-        if (options.overridenModels
-            .contains(getValidatedClassName(itemClassName))) {
+        if (options.overridenModels[fileName]
+                ?.contains(getValidatedClassName(itemClassName)) ==
+            true) {
           return '';
         }
 
@@ -288,7 +292,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       if (classes['enum'] != null) {
         return '';
       }
-
+      
       final currentClass = classes[className]!;
 
       return generateModelClassContent(
@@ -301,6 +305,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         allEnums.map((e) => e.name).toList(),
         allEnumListNames,
         classes,
+        fileName,
       );
     }).join('\n');
 
