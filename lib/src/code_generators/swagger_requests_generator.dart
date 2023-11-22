@@ -918,6 +918,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           typeName = _mapParameterName(schema.items!.type, schema.items!.format,
                   options.modelPostfix)
               .asList();
+        } else if (schema.allOf.length == 1 &&
+            schema.allOf.first.ref.isNotEmpty) {
+          typeName = getValidatedClassName(schema.allOf.first.ref.getRef());
         } else {
           typeName = _getRequestBodyTypeName(
             schema: schema,
