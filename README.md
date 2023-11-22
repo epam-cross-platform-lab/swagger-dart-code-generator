@@ -89,7 +89,7 @@ targets:
 | `cut_from_model_names` | `-` | `false` | If your model names are long and contain a lot of duplicated words, for example `DbUsersModelsV3GeneralUserModel`, you can cut off duplicated part, using `cut_from_model_names : DbUsersModelsV3`. Also, you can use regex expressions in this parameter. |
 | `nullable_models` | `-` | `false` | List of model names should have force-nullable properties. Example of usage in [build.yaml](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/blob/master/example/build.yaml). |
 | `override_equals_and_hashcode` | `-` | `true` | If need to decrease app size - you can disable generation of `hashcode` and `Equals` method. |
-| `overriden_models` | `-` | `false` | List of manually written models that will replace the generated one. These models will not be generated. |
+| `overriden_models` | `-` | `false` | List of manually written models that will replace the generated one. Can be different for each file. See example [here](#overriden-models-implementation) |
 | `use_path_for_request_names` | `true` | `false` | Can be false only if all requests has unique `operationId`. It gives readable names for requests. |
 | `addBasePathToRequests` | `true` | `false` | Add swagger base path to all request path. |
 
@@ -128,6 +128,25 @@ targets:
             - '\/cars\/get'
           include_paths:
             - '\/popular\/cars'
+```
+
+### **Overriden Models Implementation**
+
+```yaml
+      swagger_dart_code_generator:
+        options:
+          input_folder: "input_folder/"
+          output_folder: "lib/swagger_generated_code/"
+          overriden_models:
+            - file_name: "pet_service_json"
+              import_url: "../overriden_models.dart"
+              overriden_models:
+                - "Pet"
+                - "Order"
+            - file_name: "pet_service_swagger"
+              import_url: "../overriden_models_another.dart"
+              overriden_models:
+                - "Result"
 ```
 
 ### **Response Override Value Map for requests generation**
