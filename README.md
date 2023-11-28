@@ -91,7 +91,9 @@ targets:
 | `override_equals_and_hashcode` | `-` | `true` | If need to decrease app size - you can disable generation of `hashcode` and `Equals` method. |
 | `overriden_models` | `-` | `false` | List of manually written models that will replace the generated one. Can be different for each file. See example [here](#overriden-models-implementation) |
 | `use_path_for_request_names` | `true` | `false` | Can be false only if all requests has unique `operationId`. It gives readable names for requests. |
-| `addBasePathToRequests` | `true` | `false` | Add swagger base path to all request path. |
+| `add_base_path_to_requests` | `false` | `false` | Add swagger base path to all request path. |
+| `multipart_file_type` | `List<int>` | `false` | Allow to override the generated class for multipart file (See #605). |
+
 
 
 It's important to remember that, by default, [build](https://github.com/dart-lang/build) will follow [Dart's package layout conventions](https://dart.dev/tools/pub/package-layout), meaning that only some folders will be considered to parse the input files. So, if you want to reference files from a folder other than `lib/`, make sure you've included it on `sources`:
