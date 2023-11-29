@@ -37,6 +37,7 @@ class GeneratorOptions {
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
+    this.urlencodedFileType = 'Map<String, String>',
   });
 
   /// Build options from a JSON map.
@@ -63,6 +64,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: 'List<int>')
   final String multipartFileType;
+
+  @JsonKey(defaultValue: 'Map<String, String>')
+  final String urlencodedFileType;
 
   @JsonKey(defaultValue: true)
   final bool withConverter;

@@ -194,6 +194,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
               .any((p0) => p0.call([]).toString().contains('symbol=Part'));
         });
 
+        final isUrlencoded = parameters.any((p) =>
+            p.type != null &&
+            p.type!.symbol == options.urlencodedFileType);
+
         var annotationPath = path;
         if (options.addBasePathToRequests) {
           annotationPath = '${swaggerRoot.basePath}$path';
@@ -207,8 +211,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             componentsParameters: swaggerRoot.components?.parameters ?? {},
           ))
           ..name = methodName
-          ..annotations.addAll(_getMethodAnnotation(
-              requestType, annotationPath, hasOptionalBody, isMultipart))
+          ..annotations.addAll(_getMethodAnnotation(requestType, annotationPath,
+              hasOptionalBody, isMultipart, isUrlencoded))
           ..returns = Reference(returns));
 
         final allModels = _getAllMethodModels(
@@ -479,20 +483,22 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         '$allModelsString\nreturn _$publicMethodName($parametersListString);');
   }
 
-  List<Expression> _getMethodAnnotation(
-    String requestType,
-    String path,
-    bool hasOptionalBody,
-    bool isMultipart,
-  ) {
+  List<Expression> _getMethodAnnotation(String requestType, String path,
+      bool hasOptionalBody, bool isMultipart, bool isUrlencoded) {
     return [
       refer(requestType.pascalCase).call(
         [],
         {
           kPath: literalString(path),
-          if (hasOptionalBody) 'optionalBody': refer(true.toString()),
+          if (hasOptionalBody && !isUrlencoded)
+            'optionalBody': refer(true.toString()),
+          if (isUrlencoded)
+            'headers': refer('{contentTypeKey: formEncodedHeaders}')
         },
       ),
+      if (isUrlencoded)
+        refer(kFactoryConverter.pascalCase).call(
+            [], {'request': refer('FormUrlEncodedConverter.requestFactory')}),
       if (isMultipart)
         refer(kMultipart.pascalCase).call(
           [],
@@ -882,6 +888,33 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           }
         });
 
+        return result.distinctParameters();
+      }
+
+      // URLENCODED REQUESTS
+      if (requestBody.content?.isUrlencoded == true) {
+        var schema = requestBody.content?.schema;
+
+        if (schema?.ref.isNotEmpty == true) {
+          schema = root.allSchemas[schema?.ref.getUnformattedRef()];
+        }
+
+        // in case a scheme for the request is defined, we use only one param const kBody and the type of this param will be the scheme as class.
+        result.add(
+          Parameter(
+            (p) => p
+              ..name = kBody
+              ..named = true
+              ..required = true
+              ..type = Reference(options.urlencodedFileType)
+              ..named = true
+              ..annotations.add(
+                refer(kBody.pascalCase).call([]),
+              ),
+          ),
+        );
+
+        // early return
         return result.distinctParameters();
       }
 

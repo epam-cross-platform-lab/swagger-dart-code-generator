@@ -94,7 +94,7 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
     final multipart = map['application/x-www-form-urlencoded']['schema']
         as Map<String, dynamic>;
     return RequestContent(
-        isMultipart: true, schema: SwaggerSchema.fromJson(multipart));
+        isUrlencoded: true, schema: SwaggerSchema.fromJson(multipart));
   }
 
   final content = map.values.first as Map<String, dynamic>;
@@ -106,6 +106,7 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
 class RequestContent {
   RequestContent({
     this.isMultipart,
+    this.isUrlencoded,
     this.schema,
   });
 
@@ -113,6 +114,7 @@ class RequestContent {
   final SwaggerSchema? schema;
 
   final bool? isMultipart;
+  final bool? isUrlencoded;
 
   Map<String, dynamic> toJson() => _$RequestContentToJson(this);
 
