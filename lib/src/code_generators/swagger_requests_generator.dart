@@ -189,6 +189,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             ['post', 'put', 'patch'].contains(requestType) &&
                 swaggerRequest.parameters.none((p) => p.inParameter == kBody);
 
+        final isFormUrlEncoded =
+            swaggerRequest.requestBody?.content?.isFormUrlEncoded ?? false;
+
         final isMultipart = parameters.any((p) {
           return p.annotations
               .any((p0) => p0.call([]).toString().contains('symbol=Part'));
@@ -208,7 +211,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           ))
           ..name = methodName
           ..annotations.addAll(_getMethodAnnotation(
-              requestType, annotationPath, hasOptionalBody, isMultipart))
+            requestType,
+            annotationPath,
+            hasOptionalBody,
+            isMultipart,
+            isFormUrlEncoded,
+          ))
           ..returns = Reference(returns));
 
         final allModels = _getAllMethodModels(
@@ -468,7 +476,23 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     String path,
     bool hasOptionalBody,
     bool isMultipart,
+    bool isFormUrlEncoded,
   ) {
+    if (isFormUrlEncoded) {
+      return [
+        refer(requestType.pascalCase).call(
+          [],
+          {
+            kPath: literalString(path),
+            'headers': refer('{contentTypeKey: formEncodedHeaders}'),
+          },
+        ),
+        refer('FactoryConverter').call(
+          [refer('request: FormUrlEncodedConverter.requestFactory')],
+          {},
+        ),
+      ];
+    }
     return [
       refer(requestType.pascalCase).call(
         [],
@@ -767,8 +791,23 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final requestBody = swaggerRequest.requestBody;
 
     if (requestBody != null) {
-      // MULTIPART REQUESTS
-      if (requestBody.content?.isMultipart == true) {
+      // FORM URLENCODED
+      if (requestBody.content?.isFormUrlEncoded == true) {
+        result.add(
+          Parameter(
+            (p) => p
+              ..name = kBody
+              ..named = true
+              ..required = true
+              ..type = Reference(kMapStringDynamic)
+              ..named = true
+              ..annotations.add(
+                refer(kPart.pascalCase).call([]),
+              ),
+          ),
+        );
+      } else if (requestBody.content?.isMultipart == true) {
+        // MULTIPART REQUESTS
         var schema = requestBody.content?.schema;
 
         if (schema?.ref.isNotEmpty == true) {
@@ -864,70 +903,70 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         });
 
         return result.distinctParameters();
-      }
+      } else {
+// OTHER REQUESTS EXCEPT MULTIPART
+        var typeName = '';
 
-      // OTHER REQUESTS EXCEPT MULTIPART
-      var typeName = '';
+        if (requestBody.hasRef) {
+          final ref = requestBody.ref;
+          typeName = ref.getRef();
 
-      if (requestBody.hasRef) {
-        final ref = requestBody.ref;
-        typeName = ref.getRef();
+          if (root.components?.requestBodies
+                  .containsKey(ref.getUnformattedRef()) ==
+              true) {
+            typeName = getValidatedClassName(
+                '${ref.getUnformattedRef()}\$RequestBody');
+          }
 
-        if (root.components?.requestBodies
-                .containsKey(ref.getUnformattedRef()) ==
-            true) {
-          typeName =
-              getValidatedClassName('${ref.getUnformattedRef()}\$RequestBody');
+          final requestBodyRef =
+              root.components?.requestBodies[ref.getRef()]?.ref ?? '';
+
+          if (requestBodyRef.isNotEmpty) {
+            typeName = requestBodyRef.getRef();
+          }
+
+          typeName = getValidatedClassName(typeName);
         }
 
-        final requestBodyRef =
-            root.components?.requestBodies[ref.getRef()]?.ref ?? '';
+        final schema = requestBody.content?.schema;
 
-        if (requestBodyRef.isNotEmpty) {
-          typeName = requestBodyRef.getRef();
+        if (schema != null) {
+          if (schema.format == kBinary || schema.oneOf.isNotEmpty) {
+            typeName = kObject.pascalCase;
+          } else if (schema.items?.type.isNotEmpty == true) {
+            typeName = _mapParameterName(schema.items!.type,
+                    schema.items!.format, options.modelPostfix)
+                .asList();
+          } else if (schema.allOf.length == 1 &&
+              schema.allOf.first.ref.isNotEmpty) {
+            typeName = getValidatedClassName(schema.allOf.first.ref.getRef());
+          } else {
+            typeName = _getRequestBodyTypeName(
+              schema: schema,
+              modelPostfix: options.modelPostfix,
+              root: root,
+              requestPath: path + requestType.pascalCase,
+            );
+          }
         }
 
-        typeName = getValidatedClassName(typeName);
+        result.add(
+          Parameter(
+            (p) => p
+              ..name = kBody
+              ..named = true
+              ..required = true
+              ..type = Reference(
+                (typeName.isNotEmpty ? typeName : kObject.pascalCase)
+                    .makeNullable(),
+              )
+              ..named = true
+              ..annotations.add(
+                refer(kBody.pascalCase).call([]),
+              ),
+          ),
+        );
       }
-
-      final schema = requestBody.content?.schema;
-
-      if (schema != null) {
-        if (schema.format == kBinary || schema.oneOf.isNotEmpty) {
-          typeName = kObject.pascalCase;
-        } else if (schema.items?.type.isNotEmpty == true) {
-          typeName = _mapParameterName(schema.items!.type, schema.items!.format,
-                  options.modelPostfix)
-              .asList();
-        } else if (schema.allOf.length == 1 &&
-            schema.allOf.first.ref.isNotEmpty) {
-          typeName = getValidatedClassName(schema.allOf.first.ref.getRef());
-        } else {
-          typeName = _getRequestBodyTypeName(
-            schema: schema,
-            modelPostfix: options.modelPostfix,
-            root: root,
-            requestPath: path + requestType.pascalCase,
-          );
-        }
-      }
-
-      result.add(
-        Parameter(
-          (p) => p
-            ..name = kBody
-            ..named = true
-            ..required = true
-            ..type = Reference(
-              (typeName.isNotEmpty ? typeName : kObject.pascalCase)
-                  .makeNullable(),
-            )
-            ..named = true
-            ..annotations.add(
-              refer(kBody.pascalCase).call([]),
-            ),
-        ),
-      );
     }
 
     return result.distinctParameters();

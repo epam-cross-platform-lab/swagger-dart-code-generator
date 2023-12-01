@@ -85,7 +85,9 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
     final multipart =
         map['multipart/form-data']['schema'] as Map<String, dynamic>;
     return RequestContent(
-        isMultipart: true, schema: SwaggerSchema.fromJson(multipart));
+      isFormUrlEncoded: true,
+      schema: SwaggerSchema.fromJson(multipart),
+    );
   }
 
   if (map.containsKey('application/x-www-form-urlencoded') &&
@@ -94,7 +96,10 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
     final multipart = map['application/x-www-form-urlencoded']['schema']
         as Map<String, dynamic>;
     return RequestContent(
-        isMultipart: true, schema: SwaggerSchema.fromJson(multipart));
+      isMultipart: true,
+      isFormUrlEncoded: true,
+      schema: SwaggerSchema.fromJson(multipart),
+    );
   }
 
   final content = map.values.first as Map<String, dynamic>;
@@ -106,11 +111,14 @@ RequestContent? _contentFromJson(Map<String, dynamic>? map) {
 class RequestContent {
   RequestContent({
     this.isMultipart,
+    this.isFormUrlEncoded = false,
     this.schema,
   });
 
   @JsonKey(name: 'schema')
   final SwaggerSchema? schema;
+
+  final bool isFormUrlEncoded;
 
   final bool? isMultipart;
 
