@@ -2,6 +2,7 @@
 
 * Fixed generation key word parameter names ([#685](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/685))
 
+
 # 2.13.1
 
 * ***Breaking*** Changed Overriden Models usage ([#550](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/550))
