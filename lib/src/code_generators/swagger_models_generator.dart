@@ -781,7 +781,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     final isPropertyNullable = options.nullableModels.contains(className) ||
         refSchema?.isNullable == true ||
-        !requiredProperties.contains(propertyName);
+        !requiredProperties.contains(propertyKey);
 
     final unknownEnumValue = generateEnumValue(
       allEnumNames: allEnumNames,
