@@ -390,13 +390,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         }
       }
 
-      if (p.annotations.first.code
-          .toString()
-          .contains('symbol=ExplodedQuery')) {
-        result = result.copyWith(
-            annotations: [refer('Query()')], type: Reference('String?'));
-      }
-
       return result;
     });
 
@@ -434,11 +427,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     List<String> allModels,
   ) {
     final parametersListString = parameters.map((p) {
-      final isExposed = p.annotations.firstOrNull?.code
-              .toString()
-              .contains('symbol=ExplodedQuery') ??
-          false;
-
       if (p.type!.symbol!.startsWith('enums.')) {
         return '${p.name} : ${p.name}?.value?.toString()';
       }
@@ -457,11 +445,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final typeName = p.type!.symbol!;
         final name = typeName.substring(11, typeName.length - 2).camelCase;
 
-        if (isExposed) {
-          return '${p.name} : ${name}ExplodedListToJson(${p.name})';
-        } else {
-          return '${p.name} : ${name}ListToJson(${p.name})';
-        }
+        return '${p.name} : ${name}ListToJson(${p.name})';
       }
 
       return '${p.name} : ${p.name}';
@@ -547,9 +531,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             .call([literalString(parameter.name.replaceAll('\$', ''))]);
       case kBody:
         return refer(kBody.pascalCase).call([]);
-      case kQuery:
-        return refer(parameter.explode ? kExplodedQuery : kQuery.pascalCase)
-            .call([]);
       default:
         //https://github.com/lejard-h/chopper/issues/295
         return refer(parameter.inParameter.pascalCase)
