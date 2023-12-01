@@ -378,7 +378,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     if (parameter.items?.properties.isNotEmpty == true) {
-      return 'List<${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}\$Item$modelPostfix>';
+      final parameterNameCombination =
+          '${getValidatedClassName(className)}\$${getValidatedClassName(parameterName)}\$Item$modelPostfix';
+      return 'List<${getValidatedClassName(parameterNameCombination)}>';
     }
 
     if (parameter.hasRef) {
