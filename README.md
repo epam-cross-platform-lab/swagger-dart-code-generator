@@ -93,6 +93,7 @@ targets:
 | `use_path_for_request_names` | `true` | `false` | Can be false only if all requests has unique `operationId`. It gives readable names for requests. |
 | `add_base_path_to_requests` | `false` | `false` | Add swagger base path to all request path. |
 | `multipart_file_type` | `List<int>` | `false` | Allow to override the generated class for multipart file (See #605). |
+| `override_to_string` | `bool` | `true` | Overrides `toString()` method using `jsonEncode(this)` |
 
 
 
