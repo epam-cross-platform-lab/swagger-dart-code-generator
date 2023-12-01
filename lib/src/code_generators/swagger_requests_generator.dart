@@ -531,8 +531,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             .call([literalString(parameter.name.replaceAll('\$', ''))]);
       case kBody:
         return refer(kBody.pascalCase).call([]);
-      case kQuery:
-        return refer(kQuery.pascalCase).call([]);
       default:
         //https://github.com/lejard-h/chopper/issues/295
         return refer(parameter.inParameter.pascalCase)
