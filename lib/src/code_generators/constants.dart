@@ -59,6 +59,7 @@ const kOptionalBody = 'optionalBody';
 const kFormData = 'formData';
 const kMultipart = 'multipart';
 const kDateTimeFormat = 'date-time';
+const kFactoryConverter = 'factoryConverter';
 
 const kDefaultBodyParameter = 'Object';
 const kField = 'Field';
@@ -102,6 +103,7 @@ const kEnumNames = 'x-enumNames';
 const kEnumVarnames = 'x-enum-varnames';
 const kIsNullable = 'x-nullable';
 const kNullable = 'nullable';
+const kUrlencoded = 'urlencoded';
 
 const kServiceHeader = '''
 // **************************************************************************
