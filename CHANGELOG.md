@@ -1,5 +1,9 @@
 # 2.13.2
 
+* Some fixes and improvements
+
+# 2.13.2
+
 * Fixed generation key word parameter names ([#685](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/685))
 
 
