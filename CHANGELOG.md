@@ -1,3 +1,8 @@
+# 2.13.4
+
+* Make `readOnly` and `writeOnly` fields as `nullable` and `not required` ([#487](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/487))
+* Added support of `DateTime` query parameters ([#694](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/694))
+
 # 2.13.3
 
 * Some fixes and improvements
