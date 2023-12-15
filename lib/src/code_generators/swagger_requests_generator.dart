@@ -195,8 +195,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         });
 
         final isUrlencoded = parameters.any((p) =>
-            p.type != null &&
-            p.type!.symbol == options.urlencodedFileType);
+            p.type != null && p.type!.symbol == options.urlencodedFileType);
 
         var annotationPath = path;
         if (options.addBasePathToRequests) {

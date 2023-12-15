@@ -25,7 +25,15 @@ class SwaggerSchema {
     this.hasAdditionalProperties = false,
     this.msEnum,
     this.title = '',
+    this.readOnly = false,
+    this.writeOnly = false,
   });
+
+  @JsonKey(name: 'readOnly', defaultValue: false)
+  bool readOnly;
+
+  @JsonKey(name: 'writeOnly', defaultValue: false)
+  bool writeOnly;
 
   @JsonKey(name: 'type', defaultValue: '')
   String type;
@@ -82,6 +90,8 @@ class SwaggerSchema {
 
   @JsonKey(name: 'nullable', defaultValue: null)
   bool? isNullable;
+
+  bool get shouldBeNullable => isNullable == true || readOnly || writeOnly;
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
