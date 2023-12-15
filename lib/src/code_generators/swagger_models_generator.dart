@@ -667,8 +667,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
 
-    if ((prop.shouldBeNullable || options.nullableModels.contains(className)) &&
-        !requiredProperties.contains(propertyKey)) {
+    if (prop.shouldBeNullable ||
+        (options.nullableModels.contains(className) &&
+            !requiredProperties.contains(propertyKey))) {
       typeName = typeName.makeNullable();
     }
 
@@ -780,7 +781,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName += options.modelPostfix;
     }
 
-    final isPropertyNullable = options.nullableModels.contains(className) ||
+    final isPropertyNullable = prop.shouldBeNullable ||
+        options.nullableModels.contains(className) ||
         refSchema?.shouldBeNullable == true ||
         !requiredProperties.contains(propertyKey);
 
@@ -804,7 +806,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
-    if ((prop.shouldBeNullable || options.nullableModels.contains(className)) &&
+    if (prop.shouldBeNullable ||
+        options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
