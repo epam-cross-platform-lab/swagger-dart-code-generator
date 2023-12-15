@@ -28,6 +28,7 @@ abstract class PetServiceJson extends ChopperService {
     ChopperClient? client,
     http.Client? httpClient,
     Authenticator? authenticator,
+    ErrorConverter? errorConverter,
     Converter? converter,
     Uri? baseUrl,
     Iterable<dynamic>? interceptors,
@@ -42,6 +43,7 @@ abstract class PetServiceJson extends ChopperService {
         interceptors: interceptors ?? [],
         client: httpClient,
         authenticator: authenticator,
+        errorConverter: errorConverter,
         baseUrl: baseUrl ?? Uri.parse('http://petstore.swagger.io/v2'));
     return _$PetServiceJson(newClient);
   }
@@ -101,7 +103,7 @@ abstract class PetServiceJson extends ChopperService {
   ///@param status Status values that need to be considered for filter
   @Get(path: '/pet/findByStatus')
   Future<chopper.Response<List<Pet>>> _petFindByStatusGet({
-    @Query() required List<Object?>? status,
+    @Query('status') required List<Object?>? status,
     @Header('Cache-Control') String? cacheControl,
   });
 
@@ -121,7 +123,7 @@ abstract class PetServiceJson extends ChopperService {
   ///@param tags Tags to filter by
   @Get(path: '/pet/findByTags')
   Future<chopper.Response<List<Pet>>> _petFindByTagsGet({
-    @Query() required List<String>? tags,
+    @Query('tags') required List<String>? tags,
     @Header('Cache-Control') String? cacheControl,
   });
 
@@ -387,8 +389,8 @@ abstract class PetServiceJson extends ChopperService {
   ///@param password The password for login in clear text
   @Get(path: '/user/login')
   Future<chopper.Response<String>> _userLoginGet({
-    @Query() required String? username,
-    @Query() required String? password,
+    @Query('username') required String? username,
+    @Query('password') required String? password,
     @Header('Cache-Control') String? cacheControl,
   });
 
