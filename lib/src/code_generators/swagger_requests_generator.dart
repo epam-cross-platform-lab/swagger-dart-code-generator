@@ -100,6 +100,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
           (p) => p
             ..named = true
+            ..type = Reference('ErrorConverter?')
+            ..name = 'errorConverter',
+        ))
+        ..optionalParameters.add(Parameter(
+          (p) => p
+            ..named = true
             ..type = Reference('Converter?')
             ..name = 'converter',
         ))
@@ -1382,6 +1388,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       interceptors: interceptors ?? [],
       client: httpClient,
       authenticator: authenticator,
+      errorConverter: errorConverter,
       $baseUrlString);
     return _\$$className(newClient);
 ''';
