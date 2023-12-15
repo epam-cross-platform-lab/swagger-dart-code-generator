@@ -1,3 +1,7 @@
+# 2.13.5
+
+* Added `ErrorConverter` to create method
+
 # 2.13.4
 
 * Make `readOnly` and `writeOnly` fields as `nullable` and `not required` ([#487](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/487))
