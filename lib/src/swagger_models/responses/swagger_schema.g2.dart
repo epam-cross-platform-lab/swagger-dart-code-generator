@@ -42,6 +42,8 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
           : _requiredFromJson(json['required']),
       description: json['description'] as String? ?? '',
       title: json['title'] as String? ?? '',
+      readOnly: json['readOnly'] as bool? ?? false,
+      writeOnly: json['writeOnly'] as bool? ?? false,
       enumNames: (json['enumNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -73,6 +75,8 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'anyOf': instance.anyOf,
       'allOf': instance.allOf,
       'title': instance.title,
+      'readOnly': instance.readOnly,
+      'writeOnly': instance.writeOnly,
       'additionalProperties': instance.hasAdditionalProperties,
       'enumNames': instance.enumNames,
     };
