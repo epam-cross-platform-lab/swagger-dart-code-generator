@@ -12,6 +12,7 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
       inParameter: json['in'] as String? ?? '',
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      format: json['format'] as String? ?? null,
       isRequired: json['required'] as bool? ?? false,
       type: json['type'] as String? ?? '',
       item: json['item'] == null
@@ -35,6 +36,7 @@ Map<String, dynamic> _$SwaggerRequestParameterToJson(
       'in': instance.inParameter,
       'name': instance.name,
       'description': instance.description,
+      'format': instance.format,
       'required': instance.isRequired,
       r'$ref': instance.ref,
       'type': instance.type,

@@ -20,10 +20,14 @@ class SwaggerRequestParameter {
     this.ref = '',
     this.key = '',
     this.enumValuesObj = const [],
+    this.format,
   });
 
   @JsonKey(name: 'in', defaultValue: '')
   String inParameter;
+
+  @JsonKey(name: 'format', defaultValue: null)
+  String? format;
 
   @JsonKey(name: 'name', defaultValue: '')
   String name;
