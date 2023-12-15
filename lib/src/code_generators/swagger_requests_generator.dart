@@ -592,7 +592,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required List<EnumModel> allEnums,
     required Map<String, SwaggerRequestParameter> definedParameters,
   }) {
-    final format = parameter.schema?.format ?? '';
+    final format = parameter.format ?? parameter.schema?.format ?? '';
 
     if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true ||
@@ -691,6 +691,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }
 
   String _mapParameterName(String name, String format, String modelPostfix) {
+    if (name == kString && format == kDateTimeFormat) {
+      return kDateTimeType;
+    }
+
     if (name == kArray) {
       return 'List?';
     }
