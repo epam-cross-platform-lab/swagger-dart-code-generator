@@ -81,7 +81,7 @@ class GeneratorOptions {
   final List<String> additionalHeaders;
 
   @JsonKey(defaultValue: [])
-  List<String> inputUrls;
+  List<InputUrl> inputUrls;
 
   @JsonKey(defaultValue: [])
   List<String> nullableModels;
@@ -198,6 +198,25 @@ class DefaultHeaderValueMap {
 
   factory DefaultHeaderValueMap.fromJson(Map<String, dynamic> json) =>
       _$DefaultHeaderValueMapFromJson(json);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class InputUrl {
+  InputUrl({
+    required this.url,
+    this.fileName,
+  });
+
+  @JsonKey()
+  final String url;
+
+  @JsonKey()
+  final String? fileName;
+
+  Map<String, dynamic> toJson() => _$InputUrlToJson(this);
+
+  factory InputUrl.fromJson(Map<String, dynamic> json) =>
+      _$InputUrlFromJson(json);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

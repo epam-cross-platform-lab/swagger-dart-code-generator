@@ -1,3 +1,11 @@
+# 2.13.5
+
+* ***Breaking*** Added ability to rename downloaded swagger files ([#558](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/558))
+
+# 2.14.1
+
+* Added `ErrorConverter` to create method
+
 # 2.13.4
 
 * Make `readOnly` and `writeOnly` fields as `nullable` and `not required` ([#487](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/487))
