@@ -59,7 +59,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               .toList() ??
           [],
       inputUrls: (json['input_urls'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map(
+                  (e) => InputUrl.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList() ??
           [],
       nullableModels: (json['nullable_models'] as List<dynamic>?)
@@ -85,6 +86,8 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               .toList() ??
           [],
       multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
+      urlencodedFileType:
+          json['urlencoded_file_type'] as String? ?? 'Map<String, String>',
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -96,6 +99,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'override_to_string': instance.overrideToString,
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,
       'multipart_file_type': instance.multipartFileType,
+      'urlencoded_file_type': instance.urlencodedFileType,
       'with_converter': instance.withConverter,
       'overriden_models': instance.overridenModels,
       'generate_to_json_for': instance.generateToJsonFor,
@@ -163,6 +167,16 @@ Map<String, dynamic> _$DefaultHeaderValueMapToJson(
     <String, dynamic>{
       'header_name': instance.headerName,
       'default_value': instance.defaultValue,
+    };
+
+InputUrl _$InputUrlFromJson(Map<String, dynamic> json) => InputUrl(
+      url: json['url'] as String,
+      fileName: json['file_name'] as String?,
+    );
+
+Map<String, dynamic> _$InputUrlToJson(InputUrl instance) => <String, dynamic>{
+      'url': instance.url,
+      'file_name': instance.fileName,
     };
 
 OverridenModelsItem _$OverridenModelsItemFromJson(Map<String, dynamic> json) =>
