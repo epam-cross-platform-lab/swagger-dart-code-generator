@@ -27,6 +27,7 @@ class SwaggerSchema {
     this.title = '',
     this.readOnly = false,
     this.writeOnly = false,
+    this.deprecated = false,
   });
 
   @JsonKey(name: 'readOnly', defaultValue: false)
@@ -37,6 +38,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'type', defaultValue: '')
   String type;
+
+  @JsonKey(name: 'deprecated', defaultValue: false)
+  bool deprecated;
 
   @JsonKey(name: 'title', defaultValue: '')
   String title;

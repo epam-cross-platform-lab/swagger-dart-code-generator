@@ -437,13 +437,14 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     return ', includeIfNull: ${options.includeIfNull}';
   }
 
-  String generatePropertyContentByDefault(
-    SwaggerSchema prop,
-    String propertyName,
-    List<String> allEnumNames,
-    List<String> allEnumListNames,
-    List<String> requiredProperties,
-  ) {
+  String generatePropertyContentByDefault({
+    required SwaggerSchema prop,
+    required String propertyName,
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required List<String> requiredProperties,
+    required bool isDeprecated,
+  }) {
     var typeName = '';
 
     if (prop.hasOriginalRef) {
@@ -487,8 +488,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
+    final deprecatedContent = isDeprecated ? '@deprecated\n' : '';
 
-    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   JsonEnumValue generateEnumValue({
@@ -666,6 +668,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey}$dateToJsonValue)\n";
+    final deprecatedContent =
+        propertySchema.deprecated ? kDeprecatedAnnotation : '';
 
     if (prop.shouldBeNullable ||
         (options.nullableModels.contains(className) &&
@@ -673,7 +677,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonKeyContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String _validatePropertyKey(String key) {
@@ -734,13 +738,15 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
+    final deprecatedContent = prop.deprecated ? kDeprecatedAnnotation : '';
+
     if (prop.shouldBeNullable ||
         options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByRef(
@@ -806,6 +812,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString${unknownEnumValue.jsonKey})\n";
 
+    final deprecatedContent =
+        refSchema?.deprecated == true ? kDeprecatedAnnotation : '';
+
     if (prop.shouldBeNullable ||
         options.nullableModels.contains(className) ||
         !requiredProperties.contains(propertyKey)) {
@@ -826,18 +835,19 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName += '?';
     }
 
-    return '\t$jsonKeyContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
-  String generateEnumPropertyContent(
-    String key,
-    String className,
-    String propertyKey,
-    List<String> allEnumNames,
-    List<String> allEnumListNames,
-    SwaggerSchema prop,
-    List<String> requiredProperties,
-  ) {
+  String generateEnumPropertyContent({
+    required String key,
+    required String className,
+    required String propertyKey,
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required SwaggerSchema prop,
+    required List<String> requiredProperties,
+    required bool isDeprecated,
+  }) {
     final enumName = getValidatedClassName(generateEnumName(className, key));
 
     allEnumNames.add(enumName);
@@ -863,6 +873,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     return '''
   @JsonKey(${unknownEnumValue.jsonKey.substring(2)}$includeIfNullString)
+  ${isDeprecated ? kDeprecatedAnnotation : ''}
   final $enumPropertyName ${generateFieldName(key)};
 
   ${unknownEnumValue.fromJson}''';
@@ -953,18 +964,19 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return typeName;
   }
 
-  String generateListPropertyContent(
-    String propertyName,
-    String propertyKey,
-    String className,
-    SwaggerSchema prop,
-    List<String> classesWithNullableLists,
-    List<String> allEnumNames,
-    List<String> allEnumListNames,
-    Map<String, String> basicTypesMap,
-    List<String> requiredProperties,
-    Map<String, SwaggerSchema> allClasses,
-  ) {
+  String generateListPropertyContent({
+    required String propertyName,
+    required String propertyKey,
+    required String className,
+    required SwaggerSchema prop,
+    required List<String> classesWithNullableLists,
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required Map<String, String> basicTypesMap,
+    required List<String> requiredProperties,
+    required Map<String, SwaggerSchema> allClasses,
+    required bool isDeprecated,
+  }) {
     final typeName = _generateListPropertyTypeName(
       allEnumListNames: allEnumListNames,
       allEnumNames: allEnumNames,
@@ -1004,6 +1016,8 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           "@JsonKey(name: '$validatedPropertyKey'$includeIfNullString${unknownEnumValue.jsonKey})\n";
     }
 
+    final deprecatedContent = isDeprecated ? kDeprecatedAnnotation : '';
+
     var listPropertyName = 'List<$typeName>';
 
     if (prop.shouldBeNullable ||
@@ -1012,23 +1026,26 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       listPropertyName = listPropertyName.makeNullable();
     }
 
-    return '$jsonKeyContent  final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '$jsonKeyContent$deprecatedContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
-  String generateGeneralPropertyContent(
-    String propertyName,
-    String propertyKey,
-    String className,
-    List<DefaultValueMap> defaultValues,
-    SwaggerSchema prop,
-    List<String> allEnumNames,
-    List<String> allEnumListNames,
-    List<String> requiredProperties,
-  ) {
+  String generateGeneralPropertyContent({
+    required String propertyName,
+    required String propertyKey,
+    required String className,
+    required List<DefaultValueMap> defaultValues,
+    required SwaggerSchema prop,
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required List<String> requiredProperties,
+    required bool isDeprecated,
+  }) {
     final includeIfNullString = generateIncludeIfNullString();
 
     var jsonKeyContent =
         "@JsonKey(name: '${_validatePropertyKey(propertyKey)}'$includeIfNullString";
+
+    final isDeprecatedContent = isDeprecated ? kDeprecatedAnnotation : '';
 
     var typeName = '';
 
@@ -1085,7 +1102,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonKeyContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$isDeprecatedContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByType(
@@ -1100,41 +1117,45 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     Map<String, String> basicTypesMap,
     List<String> requiredProperties,
     Map<String, SwaggerSchema> allClasses,
+    bool isDeprecated,
   ) {
     switch (prop.type) {
       case 'array':
         return generateListPropertyContent(
-          propertyName,
-          propertyKey,
-          className,
-          prop,
-          classesWithNullableLists,
-          allEnumsNames,
-          allEnumListNames,
-          basicTypesMap,
-          requiredProperties,
-          allClasses,
+          propertyName: propertyName,
+          propertyKey: propertyKey,
+          className: className,
+          prop: prop,
+          classesWithNullableLists: classesWithNullableLists,
+          allEnumNames: allEnumsNames,
+          allEnumListNames: allEnumListNames,
+          basicTypesMap: basicTypesMap,
+          requiredProperties: requiredProperties,
+          allClasses: allClasses,
+          isDeprecated: isDeprecated,
         );
       case 'enum':
         return generateEnumPropertyContent(
-          propertyName,
-          className,
-          propertyKey,
-          allEnumsNames,
-          allEnumListNames,
-          prop,
-          requiredProperties,
+          key: propertyName,
+          className: className,
+          propertyKey: propertyKey,
+          allEnumNames: allEnumsNames,
+          allEnumListNames: allEnumListNames,
+          prop: prop,
+          requiredProperties: requiredProperties,
+          isDeprecated: isDeprecated,
         );
       default:
         return generateGeneralPropertyContent(
-          propertyName,
-          propertyKey,
-          className,
-          defaultValues,
-          prop,
-          allEnumsNames,
-          allEnumListNames,
-          requiredProperties,
+          propertyName: propertyName,
+          propertyKey: propertyKey,
+          className: className,
+          defaultValues: defaultValues,
+          prop: prop,
+          allEnumNames: allEnumsNames,
+          allEnumListNames: allEnumListNames,
+          requiredProperties: requiredProperties,
+          isDeprecated: isDeprecated,
         );
     }
   }
@@ -1198,6 +1219,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
           basicTypesMap,
           requiredProperties,
           allClasses,
+          prop.deprecated,
         ));
       } else if (prop.allOf.isNotEmpty) {
         results.add(
@@ -1237,11 +1259,12 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         ));
       } else {
         results.add(generatePropertyContentByDefault(
-          prop,
-          propertyName,
-          allEnumNames,
-          allEnumListNames,
-          requiredProperties,
+          prop: prop,
+          propertyName: propertyName,
+          allEnumNames: allEnumNames,
+          allEnumListNames: allEnumListNames,
+          requiredProperties: requiredProperties,
+          isDeprecated: prop.deprecated,
         ));
       }
     }

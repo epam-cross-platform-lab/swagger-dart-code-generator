@@ -18,6 +18,7 @@ class SwaggerRequest {
     this.produces = const [],
     this.security = const [],
     this.requestBody,
+    this.deprecated = false,
   });
 
   @JsonKey(name: 'summary', defaultValue: '')
@@ -25,6 +26,9 @@ class SwaggerRequest {
 
   @JsonKey(name: 'description', defaultValue: '')
   String description;
+
+  @JsonKey(name: 'deprecated', defaultValue: false)
+  bool deprecated;
 
   @JsonKey(name: 'operationId', defaultValue: '')
   String operationId;

@@ -60,6 +60,7 @@ const kFormData = 'formData';
 const kMultipart = 'multipart';
 const kDateTimeFormat = 'date-time';
 const kFactoryConverter = 'factoryConverter';
+const kDeprecatedAnnotation = '@deprecated';
 
 const kDefaultBodyParameter = 'Object';
 const kField = 'Field';

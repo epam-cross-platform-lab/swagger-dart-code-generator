@@ -11,6 +11,7 @@ SwaggerRequest _$SwaggerRequestFromJson(Map<String, dynamic> json) =>
       summary: json['summary'] as String? ?? '',
       description: json['description'] as String? ?? '',
       operationId: json['operationId'] as String? ?? '',
+      deprecated: json['deprecated'] as bool? ?? false,
       consumes: (json['consumes'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -42,6 +43,7 @@ Map<String, dynamic> _$SwaggerRequestToJson(SwaggerRequest instance) =>
       'summary': instance.summary,
       'description': instance.description,
       'operationId': instance.operationId,
+      'deprecated': instance.deprecated,
       'consumes': instance.consumes,
       'produces': instance.produces,
       'responses': instance.responses,
