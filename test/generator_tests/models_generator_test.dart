@@ -453,7 +453,7 @@ void main() {
         className: className,
         prop: map,
         classesWithNullableLists: [],
-        allEnumNames: [],
+        allEnumNames: ['Dog'],
         allEnumListNames: [],
         basicTypesMap: {},
         requiredProperties: [],
