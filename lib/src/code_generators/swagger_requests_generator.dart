@@ -216,8 +216,14 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             componentsParameters: swaggerRoot.components?.parameters ?? {},
           ))
           ..name = methodName
-          ..annotations.addAll(_getMethodAnnotation(requestType, annotationPath,
-              hasOptionalBody, isMultipart, isUrlencoded))
+          ..annotations.addAll(_getMethodAnnotation(
+            requestType: requestType,
+            path: annotationPath,
+            hasOptionalBody: hasOptionalBody,
+            isMultipart: isMultipart,
+            isUrlencoded: isUrlencoded,
+            isDeprecated: swaggerRequest.deprecated,
+          ))
           ..returns = Reference(returns));
 
         final allModels = _getAllMethodModels(
@@ -227,7 +233,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         );
 
         final privateMethod = _getPrivateMethod(method);
-        final publicMethod = _getPublicMethod(method, allModels);
+        final publicMethod = _getPublicMethod(
+          method,
+          allModels,
+          swaggerRequest.deprecated,
+        );
         methods.addAll([publicMethod, privateMethod]);
       });
     });
@@ -412,7 +422,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     );
   }
 
-  Method _getPublicMethod(Method method, List<String> allModels) {
+  Method _getPublicMethod(
+      Method method, List<String> allModels, bool isDeprecated) {
     final parameters =
         method.optionalParameters.map((p) => p.copyWith(annotations: []));
 
@@ -422,6 +433,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..docs.addAll(method.docs)
         ..name = method.name
         ..returns = method.returns
+        ..annotations.addAll([if (isDeprecated) refer('deprecated')])
         ..body = _generatePublicMethodCode(
           method.optionalParameters,
           method.name!,
@@ -472,9 +484,16 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         '$allModelsString\nreturn _$publicMethodName($parametersListString);');
   }
 
-  List<Expression> _getMethodAnnotation(String requestType, String path,
-      bool hasOptionalBody, bool isMultipart, bool isUrlencoded) {
+  List<Expression> _getMethodAnnotation({
+    required String requestType,
+    required String path,
+    required bool hasOptionalBody,
+    required bool isMultipart,
+    required bool isUrlencoded,
+    required bool isDeprecated,
+  }) {
     return [
+      if (isDeprecated) refer('deprecated'),
       refer(requestType.pascalCase).call(
         [],
         {
