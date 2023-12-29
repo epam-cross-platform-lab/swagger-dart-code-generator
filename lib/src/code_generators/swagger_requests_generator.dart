@@ -362,6 +362,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     } else if (successResponse?.content?.schema?.properties.isNotEmpty ==
         true) {
       results.add(response);
+    } else if (successResponse?.content?.schema?.allOf.isNotEmpty == true &&
+        successResponse?.content?.schema?.title.isNotEmpty == true) {
+      results.add(response);
     }
 
     return results.where((element) => _isValidModelName(element)).toList();
