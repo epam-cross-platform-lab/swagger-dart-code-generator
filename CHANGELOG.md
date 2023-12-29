@@ -2,6 +2,8 @@
 
 * ***Breaking*** Added ability to rename downloaded swagger files ([#558](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/558))
 
+* Added support of deprecated fields and methods ([#699](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/699))
+
 # 2.13.5
 
 * Added `ErrorConverter` to create method
