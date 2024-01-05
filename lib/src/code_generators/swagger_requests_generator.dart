@@ -1115,9 +1115,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required Map<String, SwaggerResponse> responses,
   }) {
     return responses.entries
-        .where((responseEntry) =>
-            successResponseCodes.contains(responseEntry.key) ||
-            successDescriptions.contains(responseEntry.value.description))
+        .where((responseEntry) {
+          final code = int.tryParse(responseEntry.key) ?? 0;
+
+          return code ~/ 100 == 2 ||
+              successDescriptions.contains(responseEntry.value.description);
+        })
         .map((e) => e.value)
         .toList();
   }
