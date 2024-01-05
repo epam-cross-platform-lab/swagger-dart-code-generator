@@ -108,6 +108,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
+  @deprecated
   Future<chopper.Response<List<Pet>>> petFindByTagsGet({
     required List<String>? tags,
     dynamic cacheControl,
@@ -120,6 +121,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Finds Pets by tags
   ///@param tags Tags to filter by
+  @deprecated
   @Get(path: '/pet/findByTags')
   Future<chopper.Response<List<Pet>>> _petFindByTagsGet({
     @Query('tags') required List<String>? tags,
