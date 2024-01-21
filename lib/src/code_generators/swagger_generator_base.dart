@@ -61,7 +61,7 @@ abstract class SwaggerGeneratorBase {
   }
 
   String generateEnumName(String className, String enumName) {
-    return getValidatedClassName('${className.capitalize}_$enumName');
+    return getValidatedClassName('${className.capitalize}_${enumName}_generated');
   }
 
   String generateRequestEnumName(

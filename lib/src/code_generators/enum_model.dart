@@ -101,6 +101,9 @@ const $name(this.value);
       result = '\$$result';
     }
 
+    if (result == 'value') {
+      result = 'enumValue';
+    }
     return '$result(${isInteger ? fieldValue : '\'${_normalizeJsonKeyString(fieldValue)}\''})';
   }
 
