@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 
-part 'swagger_schema.g2.dart';
+part 'swagger_schema.g.dart';
 
 @JsonSerializable()
 class SwaggerSchema {

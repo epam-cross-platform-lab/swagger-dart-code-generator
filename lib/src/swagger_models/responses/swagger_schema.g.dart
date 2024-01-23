@@ -41,25 +41,29 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
           ? const []
           : _requiredFromJson(json['required']),
       description: json['description'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      readOnly: json['readOnly'] as bool? ?? false,
-      writeOnly: json['writeOnly'] as bool? ?? false,
-      deprecated: json['deprecated'] as bool? ?? false,
       enumNames: (json['enumNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      isNullable: json['nullable'] as bool? ?? null,
+      isNullable: json['nullable'] as bool?,
       hasAdditionalProperties: json['additionalProperties'] == null
           ? false
           : _additionalsFromJson(json['additionalProperties']),
       msEnum: json['x-ms-enum'] == null
           ? null
           : MsEnum.fromJson(json['x-ms-enum'] as Map<String, dynamic>),
+      title: json['title'] as String? ?? '',
+      readOnly: json['readOnly'] as bool? ?? false,
+      writeOnly: json['writeOnly'] as bool? ?? false,
+      deprecated: json['deprecated'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
     <String, dynamic>{
+      'readOnly': instance.readOnly,
+      'writeOnly': instance.writeOnly,
       'type': instance.type,
+      'deprecated': instance.deprecated,
+      'title': instance.title,
       'format': instance.format,
       'default': instance.defaultValue,
       'originalRef': instance.originalRef,
@@ -75,10 +79,6 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'oneOf': instance.oneOf,
       'anyOf': instance.anyOf,
       'allOf': instance.allOf,
-      'title': instance.title,
-      'readOnly': instance.readOnly,
-      'writeOnly': instance.writeOnly,
-      'deprecated': instance.deprecated,
       'additionalProperties': instance.hasAdditionalProperties,
       'enumNames': instance.enumNames,
     };

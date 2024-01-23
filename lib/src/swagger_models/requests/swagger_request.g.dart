@@ -11,7 +11,6 @@ SwaggerRequest _$SwaggerRequestFromJson(Map<String, dynamic> json) =>
       summary: json['summary'] as String? ?? '',
       description: json['description'] as String? ?? '',
       operationId: json['operationId'] as String? ?? '',
-      deprecated: json['deprecated'] as bool? ?? false,
       consumes: (json['consumes'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -36,14 +35,15 @@ SwaggerRequest _$SwaggerRequestFromJson(Map<String, dynamic> json) =>
       requestBody: json['requestBody'] == null
           ? null
           : RequestBody.fromJson(json['requestBody'] as Map<String, dynamic>),
+      deprecated: json['deprecated'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$SwaggerRequestToJson(SwaggerRequest instance) =>
     <String, dynamic>{
       'summary': instance.summary,
       'description': instance.description,
-      'operationId': instance.operationId,
       'deprecated': instance.deprecated,
+      'operationId': instance.operationId,
       'consumes': instance.consumes,
       'produces': instance.produces,
       'responses': instance.responses,
@@ -66,6 +66,7 @@ Map<String, dynamic> _$RequestBodyToJson(RequestBody instance) =>
 RequestContent _$RequestContentFromJson(Map<String, dynamic> json) =>
     RequestContent(
       isMultipart: json['isMultipart'] as bool?,
+      isUrlencoded: json['isUrlencoded'] as bool?,
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
@@ -75,4 +76,5 @@ Map<String, dynamic> _$RequestContentToJson(RequestContent instance) =>
     <String, dynamic>{
       'schema': instance.schema,
       'isMultipart': instance.isMultipart,
+      'isUrlencoded': instance.isUrlencoded,
     };

@@ -95,6 +95,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'use_path_for_request_names': instance.usePathForRequestNames,
+      'generate_first_succeed_response': instance.generateFirstSucceedResponse,
       'with_base_url': instance.withBaseUrl,
       'add_base_path_to_requests': instance.addBasePathToRequests,
       'page_width': instance.pageWidth,
@@ -127,7 +128,6 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'import_paths': instance.importPaths,
       'custom_return_type': instance.customReturnType,
       'exclude_paths': instance.excludePaths,
-      'generate_first_succeed_response': instance.generateFirstSucceedResponse,
     };
 
 DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) =>

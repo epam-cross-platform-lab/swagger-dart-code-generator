@@ -3,7 +3,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/requests/paramete
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_items.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 
-part 'swagger_request_parameter.g2.dart';
+part 'swagger_request_parameter.g.dart';
 
 @JsonSerializable()
 class SwaggerRequestParameter {

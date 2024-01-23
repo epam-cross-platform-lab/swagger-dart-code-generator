@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 
-part 'swagger_response.g2.dart';
+part 'swagger_response.g.dart';
 
 @JsonSerializable()
 class SwaggerResponse {

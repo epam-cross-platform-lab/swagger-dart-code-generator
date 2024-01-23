@@ -4,7 +4,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger
 import '../responses/swagger_response.dart';
 import 'swagger_request_parameter.dart';
 
-part 'swagger_request.g2.dart';
+part 'swagger_request.g.dart';
 
 @JsonSerializable()
 class SwaggerRequest {

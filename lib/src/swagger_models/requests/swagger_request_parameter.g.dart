@@ -12,7 +12,6 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
       inParameter: json['in'] as String? ?? '',
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      format: json['format'] as String? ?? null,
       isRequired: json['required'] as bool? ?? false,
       type: json['type'] as String? ?? '',
       item: json['item'] == null
@@ -28,15 +27,16 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
       ref: json[r'$ref'] as String? ?? '',
       key: json['key'] as String? ?? '',
       enumValuesObj: json['enum'] as List<dynamic>? ?? [],
+      format: json['format'] as String?,
     );
 
 Map<String, dynamic> _$SwaggerRequestParameterToJson(
         SwaggerRequestParameter instance) =>
     <String, dynamic>{
       'in': instance.inParameter,
+      'format': instance.format,
       'name': instance.name,
       'description': instance.description,
-      'format': instance.format,
       'required': instance.isRequired,
       r'$ref': instance.ref,
       'type': instance.type,
