@@ -1,19 +1,20 @@
 name: example
-description: A new Flutter project.
-
-version: 1.0.0+1
+description: A sample command-line application.
+version: 1.0.0
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.2.3
 
 dependencies:
-  chopper: ^6.1.1
+  chopper: ^7.1.0+1
+  collection: ^1.18.0
+  http: ^1.2.0
   json_annotation: ^4.8.0
 
 dev_dependencies:
   swagger_dart_code_generator:
     path: ../
-  chopper_generator: ^6.0.0
+  chopper_generator: ^7.1.1
   build_runner: ^2.3.3
   json_serializable: ^6.6.1
-  lints: ^2.1.1
+  lints: ^3.0.0

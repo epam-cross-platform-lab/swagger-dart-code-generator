@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
@@ -8,9 +9,8 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_component
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_info.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_path.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_tag.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_root.g2.dart';
+part 'swagger_root.g.dart';
 
 @JsonSerializable()
 class SwaggerRoot {

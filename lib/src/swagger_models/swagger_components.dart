@@ -1,9 +1,9 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request_parameter.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 
-part 'swagger_components.g2.dart';
+part 'swagger_components.g.dart';
 
 @JsonSerializable()
 class SwaggerComponents {

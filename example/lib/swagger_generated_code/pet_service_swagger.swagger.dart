@@ -987,8 +987,9 @@ enums.OrderStatus? orderStatusNullableFromJson(
   if (orderStatus == null) {
     return null;
   }
-  return enums.OrderStatus.values
-          .firstWhereOrNull((e) => e.value == orderStatus) ??
+  return enums.OrderStatus.values.firstWhereOrNull((e) =>
+          e.value.toString().toLowerCase() ==
+          orderStatus.toString().toLowerCase()) ??
       defaultValue;
 }
 
@@ -1052,7 +1053,9 @@ enums.PetStatus? petStatusNullableFromJson(
   if (petStatus == null) {
     return null;
   }
-  return enums.PetStatus.values.firstWhereOrNull((e) => e.value == petStatus) ??
+  return enums.PetStatus.values.firstWhereOrNull((e) =>
+          e.value.toString().toLowerCase() ==
+          petStatus.toString().toLowerCase()) ??
       defaultValue;
 }
 
@@ -1118,8 +1121,9 @@ enums.PetFindByStatusGetStatus? petFindByStatusGetStatusNullableFromJson(
   if (petFindByStatusGetStatus == null) {
     return null;
   }
-  return enums.PetFindByStatusGetStatus.values
-          .firstWhereOrNull((e) => e.value == petFindByStatusGetStatus) ??
+  return enums.PetFindByStatusGetStatus.values.firstWhereOrNull((e) =>
+          e.value.toString().toLowerCase() ==
+          petFindByStatusGetStatus.toString().toLowerCase()) ??
       defaultValue;
 }
 
