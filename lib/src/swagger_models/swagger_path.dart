@@ -12,10 +12,10 @@ class SwaggerPath {
     this.parameters = const [],
   });
 
-  @JsonKey(name: 'requests', defaultValue: {})
+  @JsonKey(name: 'requests')
   Map<String, SwaggerRequest> requests;
 
-  @JsonKey(name: 'parameters', defaultValue: [])
+  @JsonKey(name: 'parameters')
   List<SwaggerRequestParameter> parameters;
 
   Map<String, dynamic> toJson() => _$SwaggerPathToJson(this);

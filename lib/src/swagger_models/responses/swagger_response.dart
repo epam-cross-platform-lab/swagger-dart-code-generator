@@ -14,19 +14,19 @@ class SwaggerResponse {
     this.ref = '',
   });
 
-  @JsonKey(name: '\$ref', defaultValue: '')
+  @JsonKey(name: '\$ref')
   String ref;
 
-  @JsonKey(name: 'description', defaultValue: '')
+  @JsonKey(name: 'description')
   String description;
 
-  @JsonKey(name: 'type', defaultValue: '')
+  @JsonKey(name: 'type')
   String type;
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
 
-  @JsonKey(name: 'enumValue', defaultValue: [])
+  @JsonKey(name: 'enumValue')
   List<String> enumValue;
 
   @JsonKey(name: 'content', fromJson: _mapContent)
@@ -58,10 +58,10 @@ class Content {
     this.schema,
   });
 
-  @JsonKey(name: 'responseType', defaultValue: '')
+  @JsonKey(name: 'responseType')
   final String responseType;
 
-  @JsonKey(name: 'type', defaultValue: '')
+  @JsonKey(name: 'type')
   final String type;
 
   @JsonKey(name: 'items')
@@ -70,7 +70,7 @@ class Content {
   @JsonKey(name: 'schema')
   final SwaggerSchema? schema;
 
-  @JsonKey(name: 'ref', defaultValue: '')
+  @JsonKey(name: 'ref')
   final String ref;
 
   bool get hasRef => ref.isNotEmpty;

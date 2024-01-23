@@ -45,103 +45,38 @@ class GeneratorOptions {
   factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
       _$GeneratorOptionsFromJson(json);
 
-  @JsonKey(defaultValue: true)
   final bool usePathForRequestNames;
-
-  @JsonKey(defaultValue: true)
   final bool generateFirstSucceedResponse;
-
-  @JsonKey(defaultValue: true)
   final bool withBaseUrl;
-
-  @JsonKey(defaultValue: false)
   final bool addBasePathToRequests;
-
-  @JsonKey(defaultValue: null)
   final int? pageWidth;
-
-  @JsonKey(defaultValue: true)
   final bool overrideToString;
-
-  @JsonKey(defaultValue: true)
   final bool overrideEqualsAndHashcode;
-
-  @JsonKey(defaultValue: 'List<int>')
   final String multipartFileType;
-
-  @JsonKey(defaultValue: 'Map<String, String>')
   final String urlencodedFileType;
-
-  @JsonKey(defaultValue: true)
   final bool withConverter;
-
-  @JsonKey(defaultValue: [])
   final List<OverridenModelsItem> overridenModels;
-
-  @JsonKey(defaultValue: [])
   final List<String> generateToJsonFor;
-
-  @JsonKey(defaultValue: [])
   final List<String> additionalHeaders;
-
-  @JsonKey(defaultValue: [])
-  List<InputUrl> inputUrls;
-
-  @JsonKey(defaultValue: [])
-  List<String> nullableModels;
-
-  @JsonKey(defaultValue: false)
+  final List<InputUrl> inputUrls;
+  final List<String> nullableModels;
   final bool separateModels;
-
-  @JsonKey(defaultValue: true)
   final bool useRequiredAttributeForHeaders;
-
-  @JsonKey(defaultValue: false)
   final bool ignoreHeaders;
-
-  @JsonKey(defaultValue: false)
   final bool enumsCaseSensitive;
-
-  @JsonKey(defaultValue: null)
   final bool? includeIfNull;
-
-  @JsonKey(defaultValue: '')
   final String inputFolder;
-
-  @JsonKey(defaultValue: '')
   final String outputFolder;
-
-  @JsonKey(defaultValue: [])
   final List<String> classesWithNullabeLists;
-
-  @JsonKey(defaultValue: '')
   final String cutFromModelNames;
-
-  @JsonKey(defaultValue: false)
   final bool buildOnlyModels;
-
-  @JsonKey(defaultValue: '')
   final String modelPostfix;
-
-  @JsonKey(defaultValue: <DefaultValueMap>[])
   final List<DefaultValueMap> defaultValuesMap;
-
-  @JsonKey(defaultValue: <DefaultHeaderValueMap>[])
   final List<DefaultHeaderValueMap> defaultHeaderValuesMap;
-
-  @JsonKey(defaultValue: <ResponseOverrideValueMap>[])
   final List<ResponseOverrideValueMap> responseOverrideValueMap;
-
-  @JsonKey(defaultValue: [])
   final List<String> includePaths;
-
-  @JsonKey(defaultValue: [])
   final List<String> importPaths;
-
-  @JsonKey(defaultValue: '')
   final String customReturnType;
-
-  @JsonKey(defaultValue: [])
   final List<String> excludePaths;
 
   /// Convert this options instance to JSON.

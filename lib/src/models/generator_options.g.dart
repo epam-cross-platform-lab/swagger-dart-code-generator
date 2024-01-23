@@ -17,28 +17,28 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
           (json['classes_with_nullabe_lists'] as List<dynamic>?)
                   ?.map((e) => e as String)
                   .toList() ??
-              [],
+              const [],
       buildOnlyModels: json['build_only_models'] as bool? ?? false,
       defaultValuesMap: (json['default_values_map'] as List<dynamic>?)
               ?.map((e) =>
                   DefaultValueMap.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList() ??
-          [],
+          const <DefaultValueMap>[],
       defaultHeaderValuesMap:
           (json['default_header_values_map'] as List<dynamic>?)
                   ?.map((e) => DefaultHeaderValueMap.fromJson(
                       Map<String, dynamic>.from(e as Map)))
                   .toList() ??
-              [],
+              const <DefaultHeaderValueMap>[],
       responseOverrideValueMap:
           (json['response_override_value_map'] as List<dynamic>?)
                   ?.map((e) => ResponseOverrideValueMap.fromJson(
                       Map<String, dynamic>.from(e as Map)))
                   .toList() ??
-              [],
-      inputFolder: json['input_folder'] as String? ?? '',
-      outputFolder: json['output_folder'] as String? ?? '',
-      enumsCaseSensitive: json['enums_case_sensitive'] as bool? ?? false,
+              const <ResponseOverrideValueMap>[],
+      inputFolder: json['input_folder'] as String,
+      outputFolder: json['output_folder'] as String,
+      enumsCaseSensitive: json['enums_case_sensitive'] as bool? ?? true,
       useRequiredAttributeForHeaders:
           json['use_required_attribute_for_headers'] as bool? ?? true,
       usePathForRequestNames:
@@ -49,29 +49,29 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       includePaths: (json['include_paths'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       importPaths: (json['import_paths'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       excludePaths: (json['exclude_paths'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       inputUrls: (json['input_urls'] as List<dynamic>?)
               ?.map(
                   (e) => InputUrl.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList() ??
-          [],
+          const [],
       nullableModels: (json['nullable_models'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       cutFromModelNames: json['cut_from_model_names'] as String? ?? '',
       additionalHeaders: (json['additional_headers'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       overrideEqualsAndHashcode:
           json['override_equals_and_hashcode'] as bool? ?? true,
       overrideToString: json['override_to_string'] as bool? ?? true,
@@ -80,11 +80,11 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => OverridenModelsItem.fromJson(
                   Map<String, dynamic>.from(e as Map)))
               .toList() ??
-          [],
+          const [],
       generateToJsonFor: (json['generate_to_json_for'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
       urlencodedFileType:
           json['urlencoded_file_type'] as String? ?? 'Map<String, String>',

@@ -11,12 +11,12 @@ SwaggerPath _$SwaggerPathFromJson(Map<String, dynamic> json) => SwaggerPath(
             (k, e) =>
                 MapEntry(k, SwaggerRequest.fromJson(e as Map<String, dynamic>)),
           ) ??
-          {},
+          const {},
       parameters: (json['parameters'] as List<dynamic>?)
               ?.map((e) =>
                   SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          [],
+          const [],
     );
 
 Map<String, dynamic> _$SwaggerPathToJson(SwaggerPath instance) =>

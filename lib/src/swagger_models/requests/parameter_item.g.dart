@@ -11,7 +11,7 @@ ParameterItem _$ParameterItemFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String? ?? '',
       enumValues:
           (json['enum'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              [],
+              const [],
       defaultValue: json['default'] as String? ?? '',
     );
 

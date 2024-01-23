@@ -16,7 +16,7 @@ SwaggerResponse _$SwaggerResponseFromJson(Map<String, dynamic> json) =>
       enumValue: (json['enumValue'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       content: _mapContent(json['content'] as Map<String, dynamic>?),
       ref: json[r'$ref'] as String? ?? '',
     );

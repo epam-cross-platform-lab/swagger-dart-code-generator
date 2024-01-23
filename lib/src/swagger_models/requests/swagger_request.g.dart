@@ -14,21 +14,21 @@ SwaggerRequest _$SwaggerRequestFromJson(Map<String, dynamic> json) =>
       consumes: (json['consumes'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       responses: (json['responses'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(
                 k, SwaggerResponse.fromJson(e as Map<String, dynamic>)),
           ) ??
-          {},
+          const {},
       parameters: (json['parameters'] as List<dynamic>?)
               ?.map((e) =>
                   SwaggerRequestParameter.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          [],
+          const [],
       produces: (json['produces'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          [],
+          const [],
       security: json['security'] == null
           ? const []
           : _securityFromJson(json['security'] as List?),

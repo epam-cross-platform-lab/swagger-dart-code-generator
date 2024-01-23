@@ -11,10 +11,10 @@ class SwaggerTag {
   factory SwaggerTag.fromJson(Map<String, dynamic> json) =>
       _$SwaggerTagFromJson(json);
 
-  @JsonKey(name: 'name', defaultValue: '')
+  @JsonKey(name: 'name')
   String name;
 
-  @JsonKey(name: 'description', defaultValue: '')
+  @JsonKey(name: 'description')
   String description;
 
   Map<String, dynamic> toJson() => _$SwaggerTagToJson(this);

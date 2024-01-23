@@ -10,12 +10,12 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
     SwaggerSchema(
       type: json['type'] as String? ?? '',
       originalRef: json['originalRef'] as String? ?? '',
-      enumValuesObj: json['enum'] as List<dynamic>? ?? [],
+      enumValuesObj: json['enum'] as List<dynamic>? ?? const [],
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
             (k, e) =>
                 MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
           ) ??
-          {},
+          const {},
       items: json['items'] == null
           ? null
           : SwaggerSchema.fromJson(json['items'] as Map<String, dynamic>),
@@ -28,15 +28,15 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       oneOf: (json['oneOf'] as List<dynamic>?)
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          [],
+          const [],
       anyOf: (json['anyOf'] as List<dynamic>?)
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          [],
+          const [],
       allOf: (json['allOf'] as List<dynamic>?)
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          [],
+          const [],
       required: json['required'] == null
           ? const []
           : _requiredFromJson(json['required']),

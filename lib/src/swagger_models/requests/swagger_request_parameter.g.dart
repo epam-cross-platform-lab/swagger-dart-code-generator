@@ -26,7 +26,7 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
       ref: json[r'$ref'] as String? ?? '',
       key: json['key'] as String? ?? '',
-      enumValuesObj: json['enum'] as List<dynamic>? ?? [],
+      enumValuesObj: json['enum'] as List<dynamic>? ?? const [],
       format: json['format'] as String?,
     );
 
