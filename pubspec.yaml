@@ -26,7 +26,7 @@ dependencies:
   path: ^1.8.0
   markdown: ">=5.0.0 <8.0.0"
   recase: ^4.0.0
-  json_annotation: ^4.4.0
+  json_annotation: ^4.8.1
   universal_io: ^2.0.4
   collection: ^1.15.0
   dart_style: ^2.2.1
