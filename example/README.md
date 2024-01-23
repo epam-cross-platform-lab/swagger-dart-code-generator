@@ -5,6 +5,7 @@ Please check real [example](https://github.com/epam-cross-platform-lab/swagger-d
 ## Getting Started
 
 ### Step1
+
 Put your .swagger or .json files to any folder. Example below.
 
 ```
@@ -13,12 +14,13 @@ PROJECT_ROOT/swaggers/movies_api_service.swagger
 ```
 
 ### Step 2
+
 Add input folder and output folder to **build.yaml**. Also set sources field.
 
 ```
 targets:
   $default:
-    sources:     
+    sources:
       - swaggers/**
       - lib/**
     builders:
@@ -32,6 +34,7 @@ targets:
 ```
 
 ### Step 4
+
 Set optional build parameters if it's needed.
 
 ```
@@ -42,12 +45,13 @@ exclude_paths:
 ```
 
 ### Step 5
+
 Run build command
 
-
 ```
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### Final step
+
 Enjoy generated code!
