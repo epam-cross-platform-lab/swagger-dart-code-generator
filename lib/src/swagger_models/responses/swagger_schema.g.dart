@@ -15,7 +15,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
             (k, e) =>
                 MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
           ) ??
-          const {},
+          {},
       items: json['items'] == null
           ? null
           : SwaggerSchema.fromJson(json['items'] as Map<String, dynamic>),
