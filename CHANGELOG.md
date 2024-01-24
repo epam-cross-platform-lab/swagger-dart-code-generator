@@ -1,3 +1,10 @@
+# 2.15.0
+
+* Changed option `enums_case_sensitive` to correctly default to `true` as stated in documentation
+* Fixed option `enums_case_sensitive` to work with nullable deserializers when set to `false`
+* Modernized `example/`
+* Bump `package:json_annotation` to `^4.8.1`
+
 # 2.14.2
 
 * Added option `generate_first_succeed_response` to generate first succeed response or `dynamic` ([#703](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/703))

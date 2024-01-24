@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'swagger_request_items.g2.dart';
+part 'swagger_request_items.g.dart';
 
 @JsonSerializable()
 class SwaggerRequestItems {
