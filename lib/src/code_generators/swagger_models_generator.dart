@@ -145,31 +145,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     );
   }
 
-  Map<String, SwaggerSchema> getAllOfProperties(
-    SwaggerSchema schema,
-    Map<String, SwaggerSchema> classes,
-  ) {
-    final properties = schema.properties;
-    for (var element in schema.allOf) {
-      properties.addAll(element.properties);
-
-      if (element.ref.isNotEmpty) {
-        final neededClass = classes[element.ref.getUnformattedRef()];
-        properties.addAll(neededClass?.properties ?? {});
-
-        if (neededClass != null) {
-          properties.addAll(getAllOfProperties(neededClass, classes));
-        }
-      } else {
-        for (var allOf in element.allOf) {
-          properties.addAll(getAllOfProperties(allOf, classes));
-        }
-      }
-    }
-
-    return properties;
-  }
-
   Map<String, SwaggerSchema> getClassesFromInnerClasses(
     Map<String, SwaggerSchema> classes,
   ) {
@@ -180,10 +155,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         ...schema.properties,
         ...schema.items?.properties ?? {},
       };
-
-      final allOfProperties = getAllOfProperties(schema, classes);
-
-      properties.addAll(allOfProperties);
 
       for (var element in schema.allOf) {
         properties.addAll(element.properties);
