@@ -1478,7 +1478,7 @@ $copyWithMethod
       final propertyName = discriminator.propertyName;
       final responseVar = validatedClassName.camelCase;
 
-      return 'static $validatedClassName _\$${validatedClassName}FromJsonFix(Map<String, dynamic> json) { return $validatedClassName.fromJson(json);}\n\n'
+      return 'static $validatedClassName _\$${validatedClassName}FromJson(Map<String, dynamic> json) { return $validatedClassName.fromJson(json);}\n\n'
           '${discriminator.mapping.entries.map((entry) => '${entry.value.getRef()}? ${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase};').join('\n')}'
           '\n\n'
           'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
@@ -1495,7 +1495,7 @@ $copyWithMethod
   String generateToJson(SwaggerSchema schema, String validatedClassName) {
     final hasMapping = schema.discriminator?.mapping.isNotEmpty ?? false;
     if (hasMapping) {
-      return 'static Map<String, dynamic> _\$${validatedClassName}ToJsonFix($validatedClassName instance) { return instance.toJson();}\n\n'
+      return 'static Map<String, dynamic> _\$${validatedClassName}ToJson($validatedClassName instance) { return instance.toJson();}\n\n'
         'Map<String, dynamic> toJson() =>'
           '_\$${validatedClassName}ToJson(this)'
       '\t\t\t${schema.discriminator!.mapping.entries.map(
