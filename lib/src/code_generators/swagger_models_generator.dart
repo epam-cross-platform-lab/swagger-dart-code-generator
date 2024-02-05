@@ -1541,7 +1541,7 @@ $copyWithMethod
   String generateToJson(SwaggerSchema schema, String validatedClassName) {
     final hasMapping = schema.discriminator?.mapping.isNotEmpty ?? false;
     if (hasMapping) {
-      return 'static Map<String, dynamic> _\$${validatedClassName}ToJsonFix($validatedClassName instance) { return instance.toJson();}\n\n'
+      return 'static Map<String, dynamic> _\$${validatedClassName}ToJsonFix($validatedClassName instance) { return Map<String, dynamic>();}\n\n'
         'Map<String, dynamic> toJson() =>'
           '_\$${validatedClassName}ToJson(this)'
       '\t\t\t${schema.discriminator!.mapping.entries.map(
