@@ -21,6 +21,14 @@ void main() {
     ),
   );
 
+  final generator3 = SwaggerModelsGeneratorV2(
+    GeneratorOptions(
+      inputFolder: '',
+      outputFolder: '',
+      overrideEqualsAndHashcode: false,
+    ),
+  );
+
   group('generateDefaultValueFromMap', () {
     test('Should return default value', () {
       const defaultValue = 'true';
@@ -511,6 +519,65 @@ void main() {
       );
 
       expect(result, contains('final List<TestObject>? dog;'));
+    });
+  });
+
+  group('generateEqualsOverride', () {
+    test(
+        "Should not return generated equals due to overrideEqualsAndHashcode set to false",
+        () {
+      const className = 'Animals';
+      final result = generator3.generateEqualsOverride(
+        "final String foo;",
+        className,
+        generator3.options,
+      );
+
+      expect(result, isEmpty);
+    });
+
+    test("Should not return generated equals due to empty properties", () {
+      const className = 'Animals';
+      final result = generator3.generateEqualsOverride(
+        "",
+        className,
+        generator3.options,
+      );
+
+      expect(result, isEmpty);
+    });
+
+    test("Should not return generated equals due to non-formatted properties",
+        () {
+      const className = 'Animals';
+      final result = generator3.generateEqualsOverride(
+        "not_a_property",
+        className,
+        generator3.options,
+      );
+
+      expect(result, isEmpty);
+    });
+
+    test("Should return generated equals", () {
+      const className = 'Animals';
+      final expected = '''
+@override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is Animals &&
+            (identical(other.foo, foo) ||
+                const DeepCollectionEquality().equals(other.foo, foo))
+    );
+  }
+    ''';
+      final result = generator.generateEqualsOverride(
+        "final String foo;",
+        className,
+        generator.options,
+      );
+
+      expect(result, expected);
     });
   });
 
