@@ -1656,7 +1656,7 @@ $allHashComponents;
       final allOfSchema = allClasses[allOf.ref.getUnformattedRef()];
 
       if (allOfSchema != null) {
-        final properties = allOfSchema.properties;
+        final properties = Map.from(allOfSchema.properties);
         for (final allOf in allOfSchema.allOf) {
           properties.addAll(allOf.properties);
         }

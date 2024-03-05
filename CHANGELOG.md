@@ -1,3 +1,7 @@
+# 2.15.1
+
+* Fixed some issues
+
 # 2.15.0
 
 * Changed option `enums_case_sensitive` to correctly default to `true` as stated in documentation
