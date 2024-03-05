@@ -1551,7 +1551,7 @@ $copyWithMethod
 
     return '''
 @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is $validatedClassName &&
             $checks);
