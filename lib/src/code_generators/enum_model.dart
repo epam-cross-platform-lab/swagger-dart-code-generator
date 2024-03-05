@@ -20,6 +20,10 @@ class EnumModel {
   @override
   String toString() => _getEnumContent();
 
+  static String _normalizeJsonKeyString(String jsonKey) {
+    return jsonKey.replaceAll("\$", "\\\$").replaceAll('\'', '\\\'');
+  }
+
   String _getEnumContent() {
     final resultStrings = <String>[];
 
@@ -42,10 +46,10 @@ class EnumModel {
 
       if (isInteger) {
         resultStrings.add(
-            "\t@JsonValue(${value.replaceAll("\$", "\\\$")})\n\t$validatedValue");
+            "\t@JsonValue(${_normalizeJsonKeyString(value)})\n\t$validatedValue");
       } else {
         resultStrings.add(
-            "\t@JsonValue('${value.replaceAll("\$", "\\\$")}')\n\t$validatedValue");
+            "\t@JsonValue('${_normalizeJsonKeyString(value)}')\n\t$validatedValue");
       }
     }
 
@@ -97,7 +101,7 @@ const $name(this.value);
       result = '\$$result';
     }
 
-    return '$result(${isInteger ? fieldValue : '\'$fieldValue\''})';
+    return '$result(${isInteger ? fieldValue : '\'${_normalizeJsonKeyString(fieldValue)}\''})';
   }
 
   String generateFromJsonToJson([bool caseSensitive = true]) {
