@@ -1,3 +1,7 @@
+# 2.15.2
+
+* Fixed generation of some complex `allOf` chains
+
 # 2.15.1
 
 * Fixed some issues
