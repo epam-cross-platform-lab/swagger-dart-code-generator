@@ -1676,6 +1676,29 @@ $allHashComponents;
       final schema = schemas[refString.getUnformattedRef()];
 
       if (schema != null) {
+        if (schema.allOf.isNotEmpty) {
+          final refs =
+              allOf.where((element) => element.ref.isNotEmpty).toList();
+
+          for (var allOf in refs) {
+            final allOfSchema = allClasses[allOf.ref.getUnformattedRef()];
+
+            if (allOfSchema != null) {
+              currentProperties.addAll(Map.from(allOfSchema.properties));
+              for (final allOf in allOfSchema.allOf) {
+                currentProperties.addAll(allOf.properties);
+
+                if (allOf.ref.isNotEmpty) {
+                  final oneMoreModel =
+                      allClasses[allOf.ref.getUnformattedRef()];
+                  currentProperties.addAll(oneMoreModel?.properties ?? {});
+                }
+              }
+            }
+
+            currentProperties.addAll(allOfSchema?.properties ?? {});
+          }
+        }
         final moreProperties = schema.properties;
 
         currentProperties.addAll(moreProperties);
