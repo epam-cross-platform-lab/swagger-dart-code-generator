@@ -1,10 +1,6 @@
 name: swagger_dart_code_generator
 
-<<<<<<< HEAD
 version: 2.15.2
-=======
-version: 2.15.1
->>>>>>> master
 
 homepage: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
 repository: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator
