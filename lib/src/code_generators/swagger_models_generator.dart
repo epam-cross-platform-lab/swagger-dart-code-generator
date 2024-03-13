@@ -440,6 +440,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   String generatePropertyContentByDefault({
     required SwaggerSchema prop,
     required String propertyName,
+    required String propertyKey,
     required List<String> allEnumNames,
     required List<String> allEnumListNames,
     required List<String> requiredProperties,
@@ -455,7 +456,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName = kDynamic;
     }
 
-    final propertyKey = propertyName.replaceAll('\$', '\\\$');
+    propertyKey = propertyKey.replaceAll('\$', '\\\$');
 
     final unknownEnumValue = generateEnumValue(
       allEnumNames: allEnumNames,
@@ -1261,6 +1262,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         results.add(generatePropertyContentByDefault(
           prop: prop,
           propertyName: propertyName,
+          propertyKey: propertyKey,
           allEnumNames: allEnumNames,
           allEnumListNames: allEnumListNames,
           requiredProperties: requiredProperties,
