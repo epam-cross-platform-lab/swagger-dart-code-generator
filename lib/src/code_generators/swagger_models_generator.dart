@@ -440,6 +440,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   String generatePropertyContentByDefault({
     required SwaggerSchema prop,
     required String propertyName,
+    required String propertyKey,
     required List<String> allEnumNames,
     required List<String> allEnumListNames,
     required List<String> requiredProperties,
@@ -455,7 +456,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       typeName = kDynamic;
     }
 
-    final propertyKey = propertyName.replaceAll('\$', '\\\$');
+    propertyKey = propertyKey.replaceAll('\$', '\\\$');
 
     final unknownEnumValue = generateEnumValue(
       allEnumNames: allEnumNames,
@@ -1261,6 +1262,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         results.add(generatePropertyContentByDefault(
           prop: prop,
           propertyName: propertyName,
+          propertyKey: propertyKey,
           allEnumNames: allEnumNames,
           allEnumListNames: allEnumListNames,
           requiredProperties: requiredProperties,
@@ -1676,6 +1678,29 @@ $allHashComponents;
       final schema = schemas[refString.getUnformattedRef()];
 
       if (schema != null) {
+        if (schema.allOf.isNotEmpty) {
+          final refs =
+              allOf.where((element) => element.ref.isNotEmpty).toList();
+
+          for (var allOf in refs) {
+            final allOfSchema = allClasses[allOf.ref.getUnformattedRef()];
+
+            if (allOfSchema != null) {
+              currentProperties.addAll(Map.from(allOfSchema.properties));
+              for (final allOf in allOfSchema.allOf) {
+                currentProperties.addAll(allOf.properties);
+
+                if (allOf.ref.isNotEmpty) {
+                  final oneMoreModel =
+                      allClasses[allOf.ref.getUnformattedRef()];
+                  currentProperties.addAll(oneMoreModel?.properties ?? {});
+                }
+              }
+            }
+
+            currentProperties.addAll(allOfSchema?.properties ?? {});
+          }
+        }
         final moreProperties = schema.properties;
 
         currentProperties.addAll(moreProperties);

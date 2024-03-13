@@ -171,6 +171,7 @@ void main() {
       final result = generator.generatePropertyContentByDefault(
         prop: propertyEntryMap,
         propertyName: propertyName,
+        propertyKey: propertyName,
         allEnumNames: [],
         allEnumListNames: [],
         requiredProperties: [],
@@ -190,6 +191,7 @@ void main() {
       )).generatePropertyContentByDefault(
         prop: propertyEntryMap,
         propertyName: propertyName,
+        propertyKey: propertyName,
         allEnumNames: [],
         allEnumListNames: [],
         requiredProperties: [],
@@ -205,6 +207,7 @@ void main() {
       final result = generator.generatePropertyContentByDefault(
         prop: propertyEntryMap,
         propertyName: propertyName,
+        propertyKey: propertyName,
         allEnumNames: [],
         allEnumListNames: [],
         requiredProperties: [],
@@ -377,7 +380,7 @@ void main() {
       };
 
       const className = 'Animals';
-      const jsonKeyExpectedResult = "\t@JsonKey(name: 'animals')\n";
+      const jsonKeyExpectedResult = "\t@JsonKey(name: 'Animals')\n";
       const fieldExpectedResult = 'final Pet animals';
       final result = generator.generatePropertiesContent(
         SwaggerRoot.empty,
@@ -402,7 +405,7 @@ void main() {
       };
 
       const className = 'Animals';
-      const jsonKeyExpectedResult = "\t@JsonKey(name: '\\\$with')\n";
+      const jsonKeyExpectedResult = "\t@JsonKey(name: 'with')\n";
       const fieldExpectedResult = 'final Pet \$with';
       final result = generator.generatePropertiesContent(
         SwaggerRoot.empty,
@@ -618,6 +621,7 @@ void main() {
   group('Tests for additionalProperties', () {
     test('Should generate dynamic map type', () {
       final map = SwaggerRoot.parse(objectWithadditionalProperties);
+
       final result = generator.generate(
         root: map,
         fileName: 'fileName',
