@@ -112,12 +112,11 @@ class SwaggerSchema {
       isNullable == true ||
           readOnly ||
           writeOnly ||
-          (type is List && (type as List).contains('nullable'));
+          (type is List && (type as List).contains('null'));
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
 
-  @JsonKey(name: 'oneOf')
   List<SwaggerSchema> oneOf;
 
   @JsonKey(name: 'anyOf')
