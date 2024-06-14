@@ -346,7 +346,9 @@ $dateToJson
 
     final overridenModels = options.overridenModels.isEmpty
         ? ''
-        : 'import \'overriden_models.dart\';';
+        : options.overridenModels
+            .map((e) => 'import \'${e.importUrl}\';')
+            .join('\n');
 
     return '''
 // ignore_for_file: type=lint
