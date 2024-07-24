@@ -7,9 +7,9 @@ part of 'some_file_name.swagger.dart';
 // **************************************************************************
 
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
-      id: json['id'] as int?,
-      petId: json['petId'] as int?,
-      quantity: json['quantity'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      petId: (json['petId'] as num?)?.toInt(),
+      quantity: (json['quantity'] as num?)?.toInt(),
       shipDate: json['shipDate'] == null
           ? null
           : DateTime.parse(json['shipDate'] as String),
@@ -36,7 +36,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) {
 }
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String? ?? '',
     );
 
@@ -55,14 +55,14 @@ Map<String, dynamic> _$CategoryToJson(Category instance) {
 }
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       username: json['username'] as String? ?? '',
       firstName: json['firstName'] as String? ?? '',
       lastName: json['lastName'] as String? ?? '',
       email: json['email'] as String? ?? '',
       password: json['password'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
-      userStatus: json['userStatus'] as int?,
+      userStatus: (json['userStatus'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) {
@@ -86,7 +86,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
 }
 
 Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String? ?? '',
     );
 
@@ -105,7 +105,7 @@ Map<String, dynamic> _$TagToJson(Tag instance) {
 }
 
 Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       category: json['category'] == null
           ? null
           : Category.fromJson(json['category'] as Map<String, dynamic>),
@@ -138,7 +138,7 @@ Map<String, dynamic> _$PetToJson(Pet instance) {
 }
 
 ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
-      code: json['code'] as int?,
+      code: (json['code'] as num?)?.toInt(),
       type: json['type'] as String? ?? '',
       message: json['message'] as String? ?? '',
     );

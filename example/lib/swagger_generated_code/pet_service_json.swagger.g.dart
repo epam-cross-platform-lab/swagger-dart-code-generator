@@ -7,7 +7,7 @@ part of 'pet_service_json.swagger.dart';
 // **************************************************************************
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String? ?? '',
     );
 
@@ -26,14 +26,14 @@ Map<String, dynamic> _$CategoryToJson(Category instance) {
 }
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       username: json['username'] as String? ?? '',
       firstName: json['firstName'] as String? ?? '',
       lastName: json['lastName'] as String? ?? '',
       email: json['email'] as String? ?? '',
       password: json['password'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
-      userStatus: json['userStatus'] as int?,
+      userStatus: (json['userStatus'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) {
@@ -57,7 +57,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
 }
 
 Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String? ?? '',
     );
 
@@ -76,7 +76,7 @@ Map<String, dynamic> _$TagToJson(Tag instance) {
 }
 
 ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
-      code: json['code'] as int?,
+      code: (json['code'] as num?)?.toInt(),
       type: json['type'] as String? ?? '',
       message: json['message'] as String? ?? '',
     );
