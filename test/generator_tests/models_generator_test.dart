@@ -127,6 +127,29 @@ void main() {
 
       expect(result, contains(expectedResult));
     });
+
+    test('Should return Uuid', () {
+      final generator = SwaggerModelsGeneratorV2(
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          importPaths: [
+            'package:uuid/uuid.dart',
+          ],
+          overriddenFormats: {
+            'uuid': FormattedStringOverride(type: 'Uuid', deserialize: 'parse')
+          }
+        ),
+      );
+      const className = 'Person';
+      const parameterName = 'id';
+      final parameter = SwaggerSchema(type: 'string', format: 'uuid');
+      const expectedResult = 'Uuid';
+      final result = generator.getParameterTypeName(
+          className, parameterName, parameter, '', null);
+
+      expect(result, contains(expectedResult));
+    });
   });
 
   group('generateFieldName', () {
@@ -630,5 +653,78 @@ void main() {
 
       expect(result, contains('final Map<String,dynamic>? metadata'));
     });
+  });
+
+  group('Tests for overridden format types', () {
+    test('Should include deserialize function in JsonKey annotation', () {
+      final map = SwaggerRoot.parse(schemasWithUuidsInProperties);
+      final generator = SwaggerModelsGeneratorV3(
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          overriddenFormats: {
+            'uuid': FormattedStringOverride(
+              type: 'Uuid',
+              deserialize: 'Uuid.parse',
+            ),
+          },
+        ),
+      );
+
+      final result = generator.generate(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
+
+      expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
+      expect(result, contains('''
+class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String> {
+  const _\$UuidJsonConverter();
+
+  @override
+  fromJson(json) => Uuid.parse(json);
+
+  @override
+  toJson(json) => json.toString();
+}
+'''));
+    });
+    });
+
+    test('Should include serialize/deserialize functions in JsonKey annotation', () {
+      final map = SwaggerRoot.parse(schemasWithUuidsInProperties);
+      final generator = SwaggerModelsGeneratorV3(
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          overriddenFormats: {
+            'uuid': FormattedStringOverride(
+              type: 'Uuid',
+              deserialize: 'customUuidParse',
+              serialize: 'customUuidToString',
+            ),
+          },
+        ),
+      );
+
+      final result = generator.generate(
+        root: map,
+        fileName: 'fileName',
+        allEnums: [],
+      );
+
+      expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
+      expect(result, contains('''
+class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String> {
+  const _\$UuidJsonConverter();
+
+  @override
+  fromJson(json) => customUuidParse(json);
+
+  @override
+  toJson(json) => customUuidToString(json);
+}
+'''));
   });
 }

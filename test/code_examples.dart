@@ -834,3 +834,56 @@ const objectWithadditionalProperties = '''
   }
 }
 ''';
+
+const String schemasWithUuidsInProperties = '''
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Some service",
+    "version": "1.0"
+  },
+  "components": {
+    "responses": {
+      "SpaResponse": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": [
+                "showPageAvailable"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Some description"
+                },
+                "showPageAvailable": {
+                  "type": "boolean",
+                  "description": "Flag indicating showPage availability"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SpaSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Some description"
+          },
+          "showPageAvailable": {
+            "type": "boolean",
+            "description": "Flag indicating showPage availability"
+          }
+        }
+      }
+    }
+  }
+}
+''';

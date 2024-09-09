@@ -34,6 +34,7 @@ class GeneratorOptions {
     this.overrideEqualsAndHashcode = true,
     this.overrideToString = true,
     this.pageWidth,
+    this.overriddenFormats = const {},
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
@@ -55,6 +56,7 @@ class GeneratorOptions {
   final String multipartFileType;
   final String urlencodedFileType;
   final bool withConverter;
+  final Map<String, FormattedStringOverride> overriddenFormats;
   final List<OverridenModelsItem> overridenModels;
   final List<String> generateToJsonFor;
   final List<String> additionalHeaders;
@@ -177,4 +179,25 @@ class OverridenModelsItem {
 
   factory OverridenModelsItem.fromJson(Map<String, dynamic> json) =>
       _$OverridenModelsItemFromJson(json);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class FormattedStringOverride {
+  @JsonKey()
+  final String type;
+  @JsonKey()
+  final String deserialize;
+  @JsonKey(defaultValue: '')
+  final String serialize;
+
+  factory FormattedStringOverride.fromJson(Map<String, dynamic> json) =>
+      _$FormattedStringOverrideFromJson(json);
+
+  FormattedStringOverride({
+    required this.type,
+    required this.deserialize,
+    this.serialize = '',
+  });
+
+  Map<String, dynamic> toJson() => _$FormattedStringOverrideToJson(this);
 }

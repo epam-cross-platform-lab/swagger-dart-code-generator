@@ -75,7 +75,14 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       overrideEqualsAndHashcode:
           json['override_equals_and_hashcode'] as bool? ?? true,
       overrideToString: json['override_to_string'] as bool? ?? true,
-      pageWidth: json['page_width'] as int?,
+      pageWidth: (json['page_width'] as num?)?.toInt(),
+      overriddenFormats: (json['overridden_formats'] as Map?)?.map(
+            (k, e) => MapEntry(
+                k as String,
+                FormattedStringOverride.fromJson(
+                    Map<String, dynamic>.from(e as Map))),
+          ) ??
+          const {},
       overridenModels: (json['overriden_models'] as List<dynamic>?)
               ?.map((e) => OverridenModelsItem.fromJson(
                   Map<String, dynamic>.from(e as Map)))
@@ -104,6 +111,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'multipart_file_type': instance.multipartFileType,
       'urlencoded_file_type': instance.urlencodedFileType,
       'with_converter': instance.withConverter,
+      'overridden_formats': instance.overriddenFormats,
       'overriden_models': instance.overridenModels,
       'generate_to_json_for': instance.generateToJsonFor,
       'additional_headers': instance.additionalHeaders,
@@ -128,7 +136,6 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'import_paths': instance.importPaths,
       'custom_return_type': instance.customReturnType,
       'exclude_paths': instance.excludePaths,
-      'generate_first_succeed_response': instance.generateFirstSucceedResponse,
     };
 
 DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) =>
@@ -198,4 +205,20 @@ Map<String, dynamic> _$OverridenModelsItemToJson(
       'file_name': instance.fileName,
       'overriden_models': instance.overridenModels,
       'import_url': instance.importUrl,
+    };
+
+FormattedStringOverride _$FormattedStringOverrideFromJson(
+        Map<String, dynamic> json) =>
+    FormattedStringOverride(
+      type: json['type'] as String,
+      deserialize: json['deserialize'] as String,
+      serialize: json['serialize'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$FormattedStringOverrideToJson(
+        FormattedStringOverride instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'deserialize': instance.deserialize,
+      'serialize': instance.serialize,
     };
