@@ -76,7 +76,7 @@ targets:
 | `use_required_attribute_for_headers` | `true` | `false` | If this option is false, generator will not add @required attribute to headers. |
 | `with_converter` | `true` | `false` | If option is true, combination of all mappings will be generated. |
 | `ignore_headers` | `false` | `false` | If option is true, headers will not be generated. |
-| `additional_headers` | `false` | `false` | List of additional headers, not specified in Swagger. Example of usage: [build.yaml](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/blob/master/example/build.yaml)
+| `additional_headers` | `false` | `false` | List of additional headers, not specified in Swagger. Example of usage: [build.yaml](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/blob/master/example/build.yaml)                                                                                                                                                                                                          
 | `enums_case_sensitive` | `true` | `false` | If value is false, 'enumValue' will be defined like Enum.enumValue even it's json key equals 'ENUMVALUE' |
 | `include_paths` | `[]` | `false` | List<String> of Regex If not empty - includes only paths matching reges |
 | `exclude_paths` | `[]` | `false` | List<String> of Regex If not empty -exclude paths matching reges |
@@ -96,6 +96,7 @@ targets:
 | `override_to_string` | `bool` | `true` | Overrides `toString()` method using `jsonEncode(this)` |
 | `generate_first_succeed_response` | `true` | `false` | If request has multiple success responses, first one will be generated. Otherwice - `dynamic` |
 | `multipart_file_type` | `List<int>` | `false` | Type if input parameter of Multipart request |
+| `overridden_formats` | `-` | `{}` | A map of custom types that are used for string properties with a given [format](https://json-schema.org/understanding-json-schema/reference/string#built-in-formats). See example [here](#overriden-formats-implementation) |
 
 
 
@@ -152,6 +153,23 @@ targets:
               import_url: "../overriden_models_another.dart"
               overriden_models:
                 - "Result"
+```
+
+### **Overriden Formats Implementation**
+
+```yaml
+      swagger_dart_code_generator:
+        options:
+          input_folder: "input_folder/"
+          output_folder: "lib/swagger_generated_code/"
+          import_paths:
+            - "package:uuid/uuid.dart"
+          overridden_formats:
+            uuid:
+              type: Uuid
+              deserialize: Uuid.parse
+              # optional - default is toString()
+              serialize: myCustomUuidSerializeFunction
 ```
 
 ### **Response Override Value Map for requests generation**
