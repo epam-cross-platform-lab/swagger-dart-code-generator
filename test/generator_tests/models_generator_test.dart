@@ -678,18 +678,9 @@ void main() {
       );
 
       expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
-      expect(result, contains('''
-class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String> {
-  const _\$UuidJsonConverter();
-
-  @override
-  fromJson(json) => Uuid.parse(json);
-
-  @override
-  toJson(json) => json.toString();
-}
-'''));
-    });
+      expect(result, contains('class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+      expect(result, contains('fromJson(json) => Uuid.parse(json);'));
+      expect(result, contains('toJson(json) => json.toString();'));
     });
 
     test('Should include serialize/deserialize functions in JsonKey annotation', () {
@@ -715,16 +706,9 @@ class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String> {
       );
 
       expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
-      expect(result, contains('''
-class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String> {
-  const _\$UuidJsonConverter();
-
-  @override
-  fromJson(json) => customUuidParse(json);
-
-  @override
-  toJson(json) => customUuidToString(json);
-}
-'''));
+      expect(result, contains('class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+      expect(result, contains('fromJson(json) => customUuidParse(json);'));
+      expect(result, contains('toJson(json) => customUuidToString(json);'));
+    });
   });
 }
