@@ -96,7 +96,7 @@ targets:
 | `override_to_string` | `bool` | `true` | Overrides `toString()` method using `jsonEncode(this)` |
 | `generate_first_succeed_response` | `true` | `false` | If request has multiple success responses, first one will be generated. Otherwice - `dynamic` |
 | `multipart_file_type` | `List<int>` | `false` | Type if input parameter of Multipart request |
-| `scalars` | `-` | `{}` | A map of custom types that are used for string properties with a given [format](https://json-schema.org/understanding-json-schema/reference/string#built-in-formats). See example [here](#overriden-formats-implementation) |
+| `scalars` | `-` | `{}` | A map of custom types that are used for string properties with a given [format](https://swagger.io/docs/specification/data-models/data-types/#format). See example [here](#overriden-formats-implementation) |
 
 
 
