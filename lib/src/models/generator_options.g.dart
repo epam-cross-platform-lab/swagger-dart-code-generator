@@ -76,11 +76,9 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
           json['override_equals_and_hashcode'] as bool? ?? true,
       overrideToString: json['override_to_string'] as bool? ?? true,
       pageWidth: (json['page_width'] as num?)?.toInt(),
-      overriddenFormats: (json['overridden_formats'] as Map?)?.map(
-            (k, e) => MapEntry(
-                k as String,
-                FormattedStringOverride.fromJson(
-                    Map<String, dynamic>.from(e as Map))),
+      scalars: (json['scalars'] as Map?)?.map(
+            (k, e) => MapEntry(k as String,
+                CustomScalar.fromJson(Map<String, dynamic>.from(e as Map))),
           ) ??
           const {},
       overridenModels: (json['overriden_models'] as List<dynamic>?)
@@ -111,7 +109,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'multipart_file_type': instance.multipartFileType,
       'urlencoded_file_type': instance.urlencodedFileType,
       'with_converter': instance.withConverter,
-      'overridden_formats': instance.overriddenFormats,
+      'scalars': instance.scalars,
       'overriden_models': instance.overridenModels,
       'generate_to_json_for': instance.generateToJsonFor,
       'additional_headers': instance.additionalHeaders,
@@ -207,16 +205,13 @@ Map<String, dynamic> _$OverridenModelsItemToJson(
       'import_url': instance.importUrl,
     };
 
-FormattedStringOverride _$FormattedStringOverrideFromJson(
-        Map<String, dynamic> json) =>
-    FormattedStringOverride(
+CustomScalar _$CustomScalarFromJson(Map<String, dynamic> json) => CustomScalar(
       type: json['type'] as String,
       deserialize: json['deserialize'] as String,
       serialize: json['serialize'] as String? ?? '',
     );
 
-Map<String, dynamic> _$FormattedStringOverrideToJson(
-        FormattedStringOverride instance) =>
+Map<String, dynamic> _$CustomScalarToJson(CustomScalar instance) =>
     <String, dynamic>{
       'type': instance.type,
       'deserialize': instance.deserialize,

@@ -397,9 +397,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       case 'boolean':
         return 'bool';
       case 'string':
-        final override = options.overriddenFormats[parameter.format];
-        if (override != null) {
-          return override.type;
+        final scalar = options.scalars[parameter.format];
+        if (scalar != null) {
+          return scalar.type;
         } else if (parameter.format == 'date-time' || parameter.format == 'date') {
           return 'DateTime';
         } else if (parameter.isEnum) {
@@ -442,7 +442,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   }
 
   String generatePropertyJsonConverterAnnotation(SwaggerSchema schema) {
-    final override = schema.type == 'string' ? options.overriddenFormats[schema.format] : null;
+    final override = schema.type == 'string' ? options.scalars[schema.format] : null;
     if (override == null) {
       return '';
     }
@@ -451,13 +451,13 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
   }
 
   String generateJsonConverters() {
-    if (options.overriddenFormats.isEmpty) {
+    if (options.scalars.isEmpty) {
       return '';
     }
 
     var result = '';
 
-    for (final MapEntry(:key, :value) in options.overriddenFormats.entries) {
+    for (final MapEntry(:key, :value) in options.scalars.entries) {
       final className = '_\$${key.pascalCase}JsonConverter';
 
       result += '''
@@ -1362,9 +1362,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   static String _mapBasicTypeToDartType(String basicType, String format, GeneratorOptions options) {
     switch (basicType.toLowerCase()) {
       case 'string':
-        final override = options.overriddenFormats[format];
-        if (override != null) {
-          return override.type;
+        final scalar = options.scalars[format];
+        if (scalar != null) {
+          return scalar.type;
         } else if (format == 'date-time' || format == 'datetime') {
           return kDateTimeType;
         } else {

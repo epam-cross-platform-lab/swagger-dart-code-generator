@@ -136,8 +136,8 @@ void main() {
           importPaths: [
             'package:uuid/uuid.dart',
           ],
-          overriddenFormats: {
-            'uuid': FormattedStringOverride(type: 'Uuid', deserialize: 'parse')
+          scalars: {
+            'uuid': CustomScalar(type: 'Uuid', deserialize: 'parse')
           }
         ),
       );
@@ -662,8 +662,8 @@ void main() {
         GeneratorOptions(
           inputFolder: '',
           outputFolder: '',
-          overriddenFormats: {
-            'uuid': FormattedStringOverride(
+          scalars: {
+            'uuid': CustomScalar(
               type: 'Uuid',
               deserialize: 'Uuid.parse',
             ),
@@ -689,8 +689,8 @@ void main() {
         GeneratorOptions(
           inputFolder: '',
           outputFolder: '',
-          overriddenFormats: {
-            'uuid': FormattedStringOverride(
+          scalars: {
+            'uuid': CustomScalar(
               type: 'Uuid',
               deserialize: 'customUuidParse',
               serialize: 'customUuidToString',

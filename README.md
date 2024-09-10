@@ -96,7 +96,7 @@ targets:
 | `override_to_string` | `bool` | `true` | Overrides `toString()` method using `jsonEncode(this)` |
 | `generate_first_succeed_response` | `true` | `false` | If request has multiple success responses, first one will be generated. Otherwice - `dynamic` |
 | `multipart_file_type` | `List<int>` | `false` | Type if input parameter of Multipart request |
-| `overridden_formats` | `-` | `{}` | A map of custom types that are used for string properties with a given [format](https://json-schema.org/understanding-json-schema/reference/string#built-in-formats). See example [here](#overriden-formats-implementation) |
+| `scalars` | `-` | `{}` | A map of custom types that are used for string properties with a given [format](https://json-schema.org/understanding-json-schema/reference/string#built-in-formats). See example [here](#overriden-formats-implementation) |
 
 
 
@@ -155,7 +155,7 @@ targets:
                 - "Result"
 ```
 
-### **Overriden Formats Implementation**
+### **Scalars Implementation**
 
 ```yaml
       swagger_dart_code_generator:
@@ -164,7 +164,7 @@ targets:
           output_folder: "lib/swagger_generated_code/"
           import_paths:
             - "package:uuid/uuid.dart"
-          overridden_formats:
+          scalars:
             uuid:
               type: Uuid
               deserialize: Uuid.parse
