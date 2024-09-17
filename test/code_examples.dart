@@ -858,6 +858,13 @@ const String schemasWithUuidsInProperties = '''
                   "format": "uuid",
                   "description": "Some description"
                 },
+                "list": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
                 "showPageAvailable": {
                   "type": "boolean",
                   "description": "Flag indicating showPage availability"

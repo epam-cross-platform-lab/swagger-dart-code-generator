@@ -447,7 +447,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return '';
     }
 
-    return '\n@_\$${schema.format.pascalCase}JsonConverter()';
+    return '@_\$${schema.format.pascalCase}JsonConverter()';
   }
 
   String generateJsonConverters() {
@@ -1017,6 +1017,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     required Map<String, SwaggerSchema> allClasses,
     required bool isDeprecated,
   }) {
+    final jsonConverterAnnotation = prop.items == null ? '' : generatePropertyJsonConverterAnnotation(prop.items!);
     final typeName = _generateListPropertyTypeName(
       allEnumListNames: allEnumListNames,
       allEnumNames: allEnumNames,
@@ -1066,7 +1067,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       listPropertyName = listPropertyName.makeNullable();
     }
 
-    return '$jsonKeyContent$deprecatedContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generateGeneralPropertyContent({

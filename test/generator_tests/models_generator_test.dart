@@ -678,6 +678,7 @@ void main() {
       );
 
       expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
+      expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'list', defaultValue: <Uuid>\[\]\)\s*final List<Uuid>\? list;''')));
       expect(result, contains('class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
       expect(result, contains('fromJson(json) => Uuid.parse(json);'));
       expect(result, contains('toJson(json) => json.toString();'));
