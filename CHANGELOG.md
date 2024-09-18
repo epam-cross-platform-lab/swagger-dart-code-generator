@@ -1,3 +1,7 @@
+# 2.15.4
+
+* Different fixes and improvements
+
 # 2.15.3
 
 * Fixed generation of keywords in JsonKeys ([#734](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/734))
