@@ -118,7 +118,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
           (p) => p
             ..named = true
-            ..type = Reference('Iterable<dynamic>?')
+            ..type = Reference('List<Interceptor>?')
             ..name = 'interceptors',
         ))
         ..body = Code(body),
@@ -173,9 +173,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           method: requestType,
           modelPostfix: options.modelPostfix,
           swaggerRoot: swaggerRoot,
-          overridenResponses: options.responseOverrideValueMap
-              .asMap()
-              .map((key, value) => MapEntry(value.url, value)),
+          overridenResponses: Map.fromEntries(
+            options.responseOverrideValueMap
+              .where((v) => v.method.isEmpty || v.method == requestType)
+              .map((v) => MapEntry(v.url, v)),
+          ),
         );
 
         final String returns;

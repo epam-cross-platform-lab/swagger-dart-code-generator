@@ -28,7 +28,7 @@ In general case for each .swagger file three outputs will be created. </br>
 The generated code uses the following packages in run-time:
 ```yaml
 dependencies:
-  chopper: ^6.1.1
+  chopper: ^8.0.0
   json_annotation: ^4.8.0
 ```
 
@@ -36,7 +36,7 @@ Add the following to your `pubspec.yaml` file to be able to do code generation:
 ```yaml
 dev_dependencies:
   build_runner: ^2.3.3
-  chopper_generator: ^6.0.0
+  chopper_generator: ^8.0.0
   json_serializable: ^6.6.1
   swagger_dart_code_generator: ^2.10.4
 ```
@@ -76,7 +76,7 @@ targets:
 | `use_required_attribute_for_headers` | `true` | `false` | If this option is false, generator will not add @required attribute to headers. |
 | `with_converter` | `true` | `false` | If option is true, combination of all mappings will be generated. |
 | `ignore_headers` | `false` | `false` | If option is true, headers will not be generated. |
-| `additional_headers` | `false` | `false` | List of additional headers, not specified in Swagger. Example of usage: [build.yaml](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/blob/master/example/build.yaml)
+| `additional_headers` | `false` | `false` | List of additional headers, not specified in Swagger. Example of usage: [build.yaml](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/blob/master/example/build.yaml) |
 | `enums_case_sensitive` | `true` | `false` | If value is false, 'enumValue' will be defined like Enum.enumValue even it's json key equals 'ENUMVALUE' |
 | `include_paths` | `[]` | `false` | List<String> of Regex If not empty - includes only paths matching reges |
 | `exclude_paths` | `[]` | `false` | List<String> of Regex If not empty -exclude paths matching reges |
@@ -96,6 +96,7 @@ targets:
 | `override_to_string` | `bool` | `true` | Overrides `toString()` method using `jsonEncode(this)` |
 | `generate_first_succeed_response` | `true` | `false` | If request has multiple success responses, first one will be generated. Otherwice - `dynamic` |
 | `multipart_file_type` | `List<int>` | `false` | Type if input parameter of Multipart request |
+| `scalars` | `-` | `{}` | A map of custom types that are used for string properties with a given [format](https://swagger.io/docs/specification/data-models/data-types/#format). See example [here](#overriden-formats-implementation) |
 
 
 
@@ -152,6 +153,23 @@ targets:
               import_url: "../overriden_models_another.dart"
               overriden_models:
                 - "Result"
+```
+
+### **Scalars Implementation**
+
+```yaml
+      swagger_dart_code_generator:
+        options:
+          input_folder: "input_folder/"
+          output_folder: "lib/swagger_generated_code/"
+          import_paths:
+            - "package:uuid/uuid.dart"
+          scalars:
+            uuid:
+              type: Uuid
+              deserialize: Uuid.parse
+              # optional - default is toString()
+              serialize: myCustomUuidSerializeFunction
 ```
 
 ### **Response Override Value Map for requests generation**

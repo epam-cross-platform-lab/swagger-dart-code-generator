@@ -30,7 +30,7 @@ abstract class PetServiceSwagger extends ChopperService {
     ErrorConverter? errorConverter,
     Converter? converter,
     Uri? baseUrl,
-    Iterable<dynamic>? interceptors,
+    List<Interceptor>? interceptors,
   }) {
     if (client != null) {
       return _$PetServiceSwagger(client);
@@ -504,7 +504,7 @@ class Order {
   static const fromJsonFactory = _$OrderFromJson;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is Order &&
             (identical(other.id, id) ||
@@ -592,7 +592,7 @@ class Category {
   static const fromJsonFactory = _$CategoryFromJson;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is Category &&
             (identical(other.id, id) ||
@@ -660,7 +660,7 @@ class User {
   static const fromJsonFactory = _$UserFromJson;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is User &&
             (identical(other.id, id) ||
@@ -763,7 +763,7 @@ class Tag {
   static const fromJsonFactory = _$TagFromJson;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is Tag &&
             (identical(other.id, id) ||
@@ -830,7 +830,7 @@ class Pet {
   static const fromJsonFactory = _$PetFromJson;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is Pet &&
             (identical(other.id, id) ||
@@ -920,7 +920,7 @@ class ApiResponse {
   static const fromJsonFactory = _$ApiResponseFromJson;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other is ApiResponse &&
             (identical(other.code, code) ||
