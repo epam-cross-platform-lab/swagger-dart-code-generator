@@ -1478,7 +1478,14 @@ $copyWithMethod
       final propertyName = discriminator.propertyName;
       final responseVar = validatedClassName.camelCase;
 
-      return 'static $validatedClassName _\$${validatedClassName}FromJson(Map<String, dynamic> json) { return $validatedClassName.fromJson(json);}\n\n'
+      return 'static $validatedClassName? _\$${validatedClassName}FromJson(Map<String, dynamic> json) { '
+          '\ttry { '
+          'return $validatedClassName.fromJson(json);'
+          '} catch(_) {'
+          '\t\tprint(\'GenerateError in $validatedClassName\');'
+          '\t\treturn null;'
+          '}'
+          '}\n\n'
           '${discriminator.mapping.entries.map((entry) => '${entry.value.getRef()}? ${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase};').join('\n')}'
           '\n\n'
           'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
@@ -1493,8 +1500,8 @@ $copyWithMethod
         '\ttry { '
         '\t\treturn _\$${validatedClassName}FromJson(json);'
         '\t} catch(_) { '
-        '\t\tprint(\'Error in $validatedClassName\');'
-        '\t\treturn null;'
+        '\t\tprint(\'GenerateError in $validatedClassName\');'
+        '\t\treturn _\$${validatedClassName}FromJson(json);'
         '\t} '
         '}';
   }
