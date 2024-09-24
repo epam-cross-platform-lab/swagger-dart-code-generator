@@ -1489,7 +1489,14 @@ $copyWithMethod
           '\treturn $responseVar;'
           '}';
     }
-    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
+    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) { '
+        '\ttry { '
+        '\t\treturn _\$${validatedClassName}FromJson(json);'
+        '\t} catch(_) { '
+        '\t\tprint(\'Error in $validatedClassName\');'
+        '\t\treturn null;'
+        '\t} '
+        '}';
   }
 
   String generateToJson(SwaggerSchema schema, String validatedClassName) {
