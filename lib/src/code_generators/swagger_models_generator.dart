@@ -1483,7 +1483,7 @@ $copyWithMethod
           'return $validatedClassName.fromJson(json);'
           '} catch(_) {'
           '\t\tFLog.info(text:\'GenerateError in $validatedClassName\');'
-          '\t\treturn $validatedClassName.fromJson(json);'
+          '\t\trethrow;'
           '}'
           '}\n\n'
           '${discriminator.mapping.entries.map((entry) => '${entry.value.getRef()}? ${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase};').join('\n')}'
@@ -1501,7 +1501,7 @@ $copyWithMethod
         '\t\treturn _\$${validatedClassName}FromJson(json);'
         '\t} catch(_) { '
         '\t\tFLog.info(text: \'GenerateError in $validatedClassName\');'
-        '\t\treturn _\$${validatedClassName}FromJson(json);'
+        '\t\trethrow;'
         '\t} '
         '}';
   }
