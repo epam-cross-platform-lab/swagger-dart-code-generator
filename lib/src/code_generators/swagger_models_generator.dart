@@ -1478,12 +1478,12 @@ $copyWithMethod
       final propertyName = discriminator.propertyName;
       final responseVar = validatedClassName.camelCase;
 
-      return 'static $validatedClassName? _\$${validatedClassName}FromJson(Map<String, dynamic> json) { '
+      return 'static $validatedClassName _\$${validatedClassName}FromJson(Map<String, dynamic> json) { '
           '\ttry { '
           'return $validatedClassName.fromJson(json);'
           '} catch(_) {'
-          '\t\tprint(\'GenerateError in $validatedClassName\');'
-          '\t\treturn null;'
+          '\t\tFLog.info(text:\'GenerateError in $validatedClassName\');'
+          '\t\treturn $validatedClassName.fromJson(json);'
           '}'
           '}\n\n'
           '${discriminator.mapping.entries.map((entry) => '${entry.value.getRef()}? ${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase};').join('\n')}'
@@ -1491,7 +1491,7 @@ $copyWithMethod
           'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
           '\t\tvar $responseVar = $validatedClassName();'
           '\t\tswitch (json[\'$propertyName\']) {'
-          '\t\t\t${discriminator.mapping.entries.map((entry) => 'case \'${entry.key}\': $responseVar.${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase} = _\$${entry.value.split('/').last.pascalCase}FromJson(json); break;').join('\n')}'          
+          '\t\t\t${discriminator.mapping.entries.map((entry) => 'case \'${entry.key}\': try { $responseVar.${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase} = _\$${entry.value.split('/').last.pascalCase}FromJson(json); } catch(_) {} break;').join('\n')}'
           '\t\t}'
           '\treturn $responseVar;'
           '}';
@@ -1500,7 +1500,7 @@ $copyWithMethod
         '\ttry { '
         '\t\treturn _\$${validatedClassName}FromJson(json);'
         '\t} catch(_) { '
-        '\t\tprint(\'GenerateError in $validatedClassName\');'
+        '\t\tFLog.info(text: \'GenerateError in $validatedClassName\');'
         '\t\treturn _\$${validatedClassName}FromJson(json);'
         '\t} '
         '}';
