@@ -1478,18 +1478,32 @@ $copyWithMethod
       final propertyName = discriminator.propertyName;
       final responseVar = validatedClassName.camelCase;
 
-      return 'static $validatedClassName _\$${validatedClassName}FromJson(Map<String, dynamic> json) { return $validatedClassName.fromJson(json);}\n\n'
+      return 'static $validatedClassName _\$${validatedClassName}FromJson(Map<String, dynamic> json) { '
+          '\ttry { '
+          'return $validatedClassName.fromJson(json);'
+          '} catch(_) {'
+          '\t\tFLog.info(text:\'GenerateError in $validatedClassName\');'
+          '\t\trethrow;'
+          '}'
+          '}\n\n'
           '${discriminator.mapping.entries.map((entry) => '${entry.value.getRef()}? ${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase};').join('\n')}'
           '\n\n'
           'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
           '\t\tvar $responseVar = $validatedClassName();'
           '\t\tswitch (json[\'$propertyName\']) {'
-          '\t\t\t${discriminator.mapping.entries.map((entry) => 'case \'${entry.key}\': $responseVar.${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase} = _\$${entry.value.split('/').last.pascalCase}FromJson(json); break;').join('\n')}'          
+          '\t\t\t${discriminator.mapping.entries.map((entry) => 'case \'${entry.key}\': try { $responseVar.${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase} = _\$${entry.value.split('/').last.pascalCase}FromJson(json); } catch(_) {} break;').join('\n')}'
           '\t\t}'
           '\treturn $responseVar;'
           '}';
     }
-    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
+    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) { '
+        '\ttry { '
+        '\t\treturn _\$${validatedClassName}FromJson(json);'
+        '\t} catch(_) { '
+        '\t\tFLog.info(text: \'GenerateError in $validatedClassName\');'
+        '\t\trethrow;'
+        '\t} '
+        '}';
   }
 
   String generateToJson(SwaggerSchema schema, String validatedClassName) {
