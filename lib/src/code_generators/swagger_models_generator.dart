@@ -348,7 +348,8 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       return 'enums.$result';
     }
 
-    if (exceptionWords.contains(result.camelCase) ||
+    if ((isEnum ? exceptionWordsInEnum : exceptionWords)
+            .contains(result.camelCase) ||
         kBasicTypes.contains(result.camelCase)) {
       return '\$$result';
     }

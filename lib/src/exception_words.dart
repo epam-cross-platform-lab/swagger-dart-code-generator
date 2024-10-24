@@ -55,6 +55,7 @@ List<String> exceptionWords = <String>[
   'try',
   'client',
   'hashCode',
-  'value',
   'override',
 ];
+
+List<String> exceptionWordsInEnum = <String>[...exceptionWords, 'value'];
