@@ -89,7 +89,7 @@ const $name(this.value);
 
     result = result.lower;
 
-    if (exceptionWords.contains(result)) {
+    if (exceptionWordsInEnum.contains(result)) {
       result = '\$$result';
     }
 
