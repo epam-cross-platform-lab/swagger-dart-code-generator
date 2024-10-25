@@ -134,10 +134,10 @@ void main() {
           inputFolder: '',
           outputFolder: '',
           importPaths: [
-            'package:uuid/uuid.dart',
+          'package:uuid/uuid.dart',
           ],
           scalars: {
-            'uuid': CustomScalar(type: 'Uuid', deserialize: 'parse')
+          'uuid': CustomScalar(type: 'Uuid', deserialize: 'parse')
           }
         ),
       );
@@ -183,6 +183,13 @@ void main() {
       final result = generator.generateFieldName(name);
 
       expect(result, contains(expectedResult));
+    });
+
+    test('Should NOT return \$value', () {
+      const name = 'value';
+      const output = 'value';
+      final result = generator.generateFieldName(name);
+      expect(result, contains(output));
     });
   });
 
