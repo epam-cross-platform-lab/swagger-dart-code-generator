@@ -40,6 +40,7 @@ class GeneratorOptions {
     this.multipartFileType = 'List<int>',
     this.urlencodedFileType = 'Map<String, String>',
     this.generateFirstSucceedResponse = true,
+    this.customAnnotations = const[],
   });
 
   /// Build options from a JSON map.
@@ -81,6 +82,8 @@ class GeneratorOptions {
   final String customReturnType;
   final List<String> excludePaths;
 
+  @JsonKey(defaultValue: <CustomAnnotationMap>[])
+  final List<CustomAnnotationMap> customAnnotations;
   /// Convert this options instance to JSON.
   Map<String, dynamic> toJson() => _$GeneratorOptionsToJson(this);
 }
@@ -200,4 +203,22 @@ class CustomScalar {
   });
 
   Map<String, dynamic> toJson() => _$CustomScalarToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class CustomAnnotationMap {
+  CustomAnnotationMap({required this.typeName, required this.swaggerKey});
+
+  /// Build a default value map from a JSON map.
+  factory CustomAnnotationMap.fromJson(Map<String, dynamic> json) =>
+      _$CustomAnnotationMapFromJson(json);
+
+  @JsonKey(defaultValue: '')
+  final String typeName;
+
+  @JsonKey(defaultValue: '')
+  final String swaggerKey;
+
+  /// Convert this default value map instance to JSON.
+  Map<String, dynamic> toJson() => _$CustomAnnotationMapToJson(this);
 }

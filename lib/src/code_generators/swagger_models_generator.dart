@@ -526,11 +526,30 @@ class $className implements json.JsonConverter<${value.type}, String> {
       typeName = typeName.makeNullable();
     }
 
+    var jsonCustomAnnotationContent = '';
+    var rawJson = prop.rawJson;
+    if (null != rawJson) {
+      for (var customAnnotation in options.customAnnotations) {
+        if (rawJson.containsKey(customAnnotation.swaggerKey)) {
+          var jsonPropKeyValue = rawJson[customAnnotation.swaggerKey];
+          if (null != jsonPropKeyValue) {
+            jsonCustomAnnotationContent += "\t@${customAnnotation.typeName}(";
+            if (jsonPropKeyValue is String) {
+              jsonCustomAnnotationContent += "'$jsonPropKeyValue'";
+            } else {
+              jsonCustomAnnotationContent += "$jsonPropKeyValue";
+            }
+            jsonCustomAnnotationContent += ")\n";
+          }
+        }
+      }
+    }
+
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     final deprecatedContent = isDeprecated ? '@deprecated\n' : '';
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   JsonEnumValue generateEnumValue({
@@ -875,7 +894,26 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName += '?';
     }
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
+    var jsonCustomAnnotationContent = '';
+    var rawJson = prop.rawJson;
+    if (null != rawJson) {
+      for (var customAnnotation in options.customAnnotations) {
+        if (rawJson.containsKey(customAnnotation.swaggerKey)) {
+          var jsonPropKeyValue = rawJson[customAnnotation.swaggerKey];
+          if (null != jsonPropKeyValue) {
+            jsonCustomAnnotationContent += "\t@${customAnnotation.typeName}(";
+            if (jsonPropKeyValue is String) {
+              jsonCustomAnnotationContent += "'$jsonPropKeyValue'";
+            } else {
+              jsonCustomAnnotationContent += "$jsonPropKeyValue";
+            }
+            jsonCustomAnnotationContent += ")\n";
+          }
+        }
+      }
+    }
+
+    return '\t$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generateEnumPropertyContent({
@@ -1066,8 +1104,26 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         !requiredProperties.contains(propertyKey)) {
       listPropertyName = listPropertyName.makeNullable();
     }
-
-    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    
+    var jsonCustomAnnotationContent = '';
+    var rawJson = prop.rawJson;
+    if (null != rawJson) {
+      for (var customAnnotation in options.customAnnotations) {
+        if (rawJson.containsKey(customAnnotation.swaggerKey)) {
+          var jsonPropKeyValue = rawJson[customAnnotation.swaggerKey];
+          if (null != jsonPropKeyValue) {
+            jsonCustomAnnotationContent += "\t@${customAnnotation.typeName}(";
+            if (jsonPropKeyValue is String) {
+              jsonCustomAnnotationContent += "'$jsonPropKeyValue'";
+            } else {
+              jsonCustomAnnotationContent += "$jsonPropKeyValue";
+            }
+            jsonCustomAnnotationContent += ")\n";
+          }
+        }
+      }
+    }
+    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generateGeneralPropertyContent({
@@ -1144,7 +1200,26 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonConverterAnnotation$jsonKeyContent$isDeprecatedContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
+    var jsonCustomAnnotationContent = '';
+    var rawJson = prop.rawJson;
+    if (null != rawJson) {
+      for (var customAnnotation in options.customAnnotations) {
+        if (rawJson.containsKey(customAnnotation.swaggerKey)) {
+          var jsonPropKeyValue = rawJson[customAnnotation.swaggerKey];
+          if (null != jsonPropKeyValue) {
+            jsonCustomAnnotationContent += "\t@${customAnnotation.typeName}(";
+            if (jsonPropKeyValue is String) {
+              jsonCustomAnnotationContent += "'$jsonPropKeyValue'";
+            } else {
+              jsonCustomAnnotationContent += "$jsonPropKeyValue";
+            }
+            jsonCustomAnnotationContent += ")\n";
+          }
+        }
+      }
+    }
+
+    return '\t$jsonConverterAnnotation$jsonKeyContent$isDeprecatedContent$jsonCustomAnnotationContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByType(

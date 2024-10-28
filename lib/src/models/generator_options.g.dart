@@ -95,6 +95,11 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
           json['urlencoded_file_type'] as String? ?? 'Map<String, String>',
       generateFirstSucceedResponse:
           json['generate_first_succeed_response'] as bool? ?? true,
+      customAnnotations: (json['custom_annotations'] as List<dynamic>?)
+              ?.map((e) => CustomAnnotationMap.fromJson(
+                  Map<String, dynamic>.from(e as Map)))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
@@ -134,6 +139,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'import_paths': instance.importPaths,
       'custom_return_type': instance.customReturnType,
       'exclude_paths': instance.excludePaths,
+      'custom_annotations': instance.customAnnotations,
     };
 
 DefaultValueMap _$DefaultValueMapFromJson(Map<String, dynamic> json) =>
@@ -216,4 +222,14 @@ Map<String, dynamic> _$CustomScalarToJson(CustomScalar instance) =>
       'type': instance.type,
       'deserialize': instance.deserialize,
       'serialize': instance.serialize,
+    };
+
+CustomAnnotationMap _$CustomAnnotationMapFromJson(Map<String, dynamic> json) => CustomAnnotationMap(
+      typeName: json['type_name'] as String? ?? '',
+      swaggerKey: json['swagger_key'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$CustomAnnotationMapToJson(CustomAnnotationMap instance) => <String, dynamic>{
+      'type_name': instance.typeName,
+      'swagger_key': instance.swaggerKey,
     };

@@ -19,6 +19,9 @@ targets:
             - url: "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/input_folder/pet_service_json.json"
               file_name: "some_file_name.json"
             - url: "https://raw.githubusercontent.com/epam-cross-platform-lab/swagger-dart-code-generator/master/example/input_folder/pet_service_yaml.yaml"
+          custom_annotations:
+            - type_name: 'SomeCustomAnnotations'
+              swagger_key: 'some_custom_annotations'
           with_base_url: true
           with_converter: true
           use_path_for_request_names: true
