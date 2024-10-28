@@ -349,5 +349,5 @@ $overridenModels
 Future<String> _download(String url) async {
   var response = await http.get(Uri.parse(url));
 
-  return response.body;
+  return utf8.decode(response.bodyBytes);
 }
