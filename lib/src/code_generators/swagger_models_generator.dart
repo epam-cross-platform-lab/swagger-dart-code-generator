@@ -322,6 +322,35 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
 
     return converters + results + allEnumsString;
   }
+      static String convertUtf8ToAscii(String input) {
+    const diacriticsMap = {
+      'ą': 'a',
+      'ć': 'c',
+      'ę': 'e',
+      'ł': 'l',
+      'ń': 'n',
+      'ó': 'o',
+      'ś': 's',
+      'ź': 'z',
+      'ż': 'z',
+      'Ą': 'A',
+      'Ć': 'C',
+      'Ę': 'E',
+      'Ł': 'L',
+      'Ń': 'N',
+      'Ó': 'O',
+      'Ś': 'S',
+      'Ź': 'Z',
+      'Ż': 'Z'
+    };
+
+    var output = StringBuffer();
+    for (var char in input.split('')) {
+      output.write(diacriticsMap[char] ?? char);
+    }
+
+    return output.toString();
+  }
 
   static String getValidatedParameterName(String parameterName) {
     if (parameterName.isEmpty) {
@@ -334,6 +363,9 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       parameterName = parameterName.substring(6);
     }
 
+    final decodedString = convertUtf8ToAscii(parameterName);
+    parameterName = decodedString;
+    
     final words = parameterName.split('\$');
 
     final result = words
