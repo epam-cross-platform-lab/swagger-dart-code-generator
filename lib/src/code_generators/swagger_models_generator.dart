@@ -1066,7 +1066,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         !requiredProperties.contains(propertyKey)) {
       listPropertyName = listPropertyName.makeNullable();
     }
-    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generateGeneralPropertyContent({
@@ -1143,7 +1143,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
     
-    return '\t$jsonConverterAnnotation$jsonKeyContent$isDeprecatedContent  final $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonConverterAnnotation$jsonKeyContent$isDeprecatedContent  $typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByType(
