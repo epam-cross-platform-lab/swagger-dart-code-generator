@@ -636,7 +636,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return getValidatedClassName(neededKey).asEnum();
       }
 
-      if (parameter.type == kArray) {
+      if (parameter.type == kArray || parameter.schema?.type == kArray) {
         final result = _getEnumParameterTypeName(
             parameterName: parameter.name,
             path: path,
