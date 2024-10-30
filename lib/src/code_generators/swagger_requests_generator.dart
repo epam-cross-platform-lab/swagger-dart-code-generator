@@ -960,7 +960,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       final schema = requestBody.content?.schema;
 
       if (schema != null) {
-        if (schema.format == kBinary || schema.oneOf.isNotEmpty) {
+        if (schema.oneOf.length == 1) {
+          final oneOfRef = schema.oneOf.first.ref.getUnformattedRef();
+          typeName = getValidatedClassName(oneOfRef);
+        } else if (schema.format == kBinary || schema.oneOf.isNotEmpty) {
           typeName = kObject.pascalCase;
         } else if (schema.items?.type.isNotEmpty == true) {
           typeName = _mapParameterName(schema.items!.type, schema.items!.format,
