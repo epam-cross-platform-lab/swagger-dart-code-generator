@@ -94,6 +94,7 @@ targets:
 | `add_base_path_to_requests` | `false` | `false` | Add swagger base path to all request path. |
 | `multipart_file_type` | `List<int>` | `false` | Allow to override the generated class for multipart file (See #605). |
 | `override_to_string` | `bool` | `true` | Overrides `toString()` method using `jsonEncode(this)` |
+| `generate_first_succeed_response` | `bool` | `true` | If request has multiple success responses, first one will be generated. Otherwice - `dynamic` |
 
 
 

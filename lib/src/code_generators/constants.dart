@@ -1,9 +1,3 @@
-const List<String> successResponseCodes = [
-  '200',
-  '201',
-  '202',
-];
-
 const List<String> kKeyClasses = [
   'Response',
   'Request',

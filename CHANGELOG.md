@@ -1,3 +1,7 @@
+# 2.14.2
+
+* Added option `generate_first_succeed_response` to generate first succeed response or `dynamic` ([#703](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/703))
+
 # 2.14.1
 
 * ***Breaking*** Added ability to rename downloaded swagger files ([#558](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/558))

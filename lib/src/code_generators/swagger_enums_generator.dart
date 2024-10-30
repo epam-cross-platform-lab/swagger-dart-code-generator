@@ -156,17 +156,20 @@ ${allEnums.map((e) => e.toString()).join('\n')}
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
       swaggerPath.requests
           .forEach((String requestType, SwaggerRequest swaggerRequest) {
-        final successResponse = SwaggerRequestsGenerator.getSuccessedResponse(
+        final successResponses = SwaggerRequestsGenerator.getSuccessedResponses(
             responses: swaggerRequest.responses);
-        final successResponseSchema =
-            successResponse?.schema ?? successResponse?.content?.schema;
 
-        if (successResponseSchema != null) {
-          final responseEnums = generateEnumsFromSchemaMap({
-            '${path.pascalCase}${requestType.pascalCase}\$$kResponse':
-                successResponseSchema
-          });
-          result.addAll(responseEnums);
+        for (final successResponse in successResponses) {
+          final successResponseSchema =
+              successResponse.schema ?? successResponse.content?.schema;
+
+          if (successResponseSchema != null) {
+            final responseEnums = generateEnumsFromSchemaMap({
+              '${path.pascalCase}${requestType.pascalCase}\$$kResponse':
+                  successResponseSchema
+            });
+            result.addAll(responseEnums);
+          }
         }
 
         final parameters = [

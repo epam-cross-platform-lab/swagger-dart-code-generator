@@ -38,6 +38,7 @@ class GeneratorOptions {
     this.generateToJsonFor = const [],
     this.multipartFileType = 'List<int>',
     this.urlencodedFileType = 'Map<String, String>',
+    this.generateFirstSucceedResponse = true,
   });
 
   /// Build options from a JSON map.
@@ -46,6 +47,9 @@ class GeneratorOptions {
 
   @JsonKey(defaultValue: true)
   final bool usePathForRequestNames;
+
+  @JsonKey(defaultValue: true)
+  final bool generateFirstSucceedResponse;
 
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;
