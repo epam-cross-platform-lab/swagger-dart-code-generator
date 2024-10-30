@@ -353,9 +353,9 @@ ${allEnums.map((e) => e.toString()).join('\n')}
       );
 
       if (propertiesContainer != null) {
-        properties = propertiesContainer.properties;
+        properties = Map.from(propertiesContainer.properties);
       } else {
-        properties = schema.properties;
+        properties = Map.from(schema.properties);
       }
 
       var allOfRef = allOf.firstWhereOrNull((e) => e.hasRef);
