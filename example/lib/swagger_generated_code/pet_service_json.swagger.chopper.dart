@@ -1,6 +1,6 @@
 //Generated code
 
-part of 'pet_service_swagger.swagger.dart';
+part of 'pet_service_json.swagger.dart';
 
 // **************************************************************************
 // ChopperGenerator
@@ -8,14 +8,14 @@ part of 'pet_service_swagger.swagger.dart';
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-final class _$PetServiceSwagger extends PetServiceSwagger {
-  _$PetServiceSwagger([ChopperClient? client]) {
+final class _$PetServiceJson extends PetServiceJson {
+  _$PetServiceJson([ChopperClient? client]) {
     if (client == null) return;
     this.client = client;
   }
 
   @override
-  final Type definitionType = PetServiceSwagger;
+  final Type definitionType = PetServiceJson;
 
   @override
   Future<Response<dynamic>> _petPost({

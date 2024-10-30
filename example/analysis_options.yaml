@@ -1,15 +1,1 @@
-# https://www.dartlang.org/guides/language/analysis-options
-
 include: package:lints/recommended.yaml
-
-analyzer:
-  language:
-    strict-casts: true
-  exclude:
-    - example/**/*.dart
-    - lib/**/*.g2.dart
-linter:
-  rules:
-    - type_annotate_public_apis
-    - void_checks
-    - unnecessary_new

@@ -107,9 +107,9 @@ const $name(this.value);
   String generateFromJsonToJson([bool caseSensitive = true]) {
     final type = isInteger ? 'int' : 'String';
 
-    String enumParse = caseSensitive
-        ? 'return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown'
-        : 'return enums.$name.values.firstWhereOrNull((e) => e.value.toString().toLowerCase() == ${name.camelCase}?.toString().toLowerCase()) ?? defaultValue ?? enums.$name.swaggerGeneratedUnknown';
+    String enumParse(bool nullCheck) => caseSensitive
+        ? 'return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue'
+        : 'return enums.$name.values.firstWhereOrNull((e) => e.value.toString().toLowerCase() == ${name.camelCase}${nullCheck ? '?' : ''}.toString().toLowerCase()) ?? defaultValue';
 
     return '''
 $type? ${name.camelCase}NullableToJson(enums.$name? ${name.camelCase}) {
@@ -125,7 +125,7 @@ enums.$name ${name.camelCase}FromJson(
   [enums.$name? defaultValue,]
   ) {
 
-$enumParse;
+${enumParse(true)} ?? enums.$name.swaggerGeneratedUnknown;
 }
 
 enums.$name? ${name.camelCase}NullableFromJson(
@@ -135,7 +135,7 @@ enums.$name? ${name.camelCase}NullableFromJson(
     if(${name.camelCase} == null){
       return null;
     }
-    return enums.$name.values.firstWhereOrNull((e) => e.value == ${name.camelCase}) ?? defaultValue;
+    ${enumParse(false)};
 }
 
 String ${name.camelCase}ExplodedListToJson(

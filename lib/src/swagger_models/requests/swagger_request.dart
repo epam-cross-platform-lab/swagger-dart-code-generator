@@ -4,7 +4,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger
 import '../responses/swagger_response.dart';
 import 'swagger_request_parameter.dart';
 
-part 'swagger_request.g2.dart';
+part 'swagger_request.g.dart';
 
 @JsonSerializable()
 class SwaggerRequest {
@@ -21,31 +21,31 @@ class SwaggerRequest {
     this.deprecated = false,
   });
 
-  @JsonKey(name: 'summary', defaultValue: '')
+  @JsonKey(name: 'summary')
   String summary;
 
-  @JsonKey(name: 'description', defaultValue: '')
+  @JsonKey(name: 'description')
   String description;
 
-  @JsonKey(name: 'deprecated', defaultValue: false)
+  @JsonKey(name: 'deprecated')
   bool deprecated;
 
-  @JsonKey(name: 'operationId', defaultValue: '')
+  @JsonKey(name: 'operationId')
   String operationId;
 
-  @JsonKey(name: 'consumes', defaultValue: [])
+  @JsonKey(name: 'consumes')
   List<String> consumes;
 
-  @JsonKey(name: 'produces', defaultValue: [])
+  @JsonKey(name: 'produces')
   List<String> produces;
 
-  @JsonKey(name: 'responses', defaultValue: {})
+  @JsonKey(name: 'responses')
   Map<String, SwaggerResponse> responses;
 
   @JsonKey(name: 'security', fromJson: _securityFromJson)
   List<String> security;
 
-  @JsonKey(name: 'parameters', defaultValue: [])
+  @JsonKey(name: 'parameters')
   List<SwaggerRequestParameter> parameters;
 
   @JsonKey(name: 'requestBody')
@@ -62,7 +62,7 @@ class RequestBody {
   @JsonKey(name: 'content', fromJson: _contentFromJson)
   RequestContent? content;
 
-  @JsonKey(name: '\$ref', defaultValue: '')
+  @JsonKey(name: '\$ref')
   String ref;
 
   bool get hasRef => ref.isNotEmpty;
