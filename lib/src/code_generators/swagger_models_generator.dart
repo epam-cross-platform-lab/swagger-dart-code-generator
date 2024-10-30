@@ -717,7 +717,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\t$typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String _validatePropertyKey(String key) {
