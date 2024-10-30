@@ -1,6 +1,9 @@
-* ***Breaking*** Added support of Chopper 8.0
+# 3.0.1
+
+* Different fixes and improvements
 
 # 3.0.0
+* ***Breaking*** Added support of Chopper 8.0
 
 * Fixed generation of keywords in JsonKeys ([#734](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/734))
 
