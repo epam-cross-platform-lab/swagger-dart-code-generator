@@ -19,7 +19,7 @@ description: Have you been turned into a problem with writing code for Http
   functionality you have been looking for.
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.3.2 <4.0.0"
 
 
 dependencies:
@@ -27,17 +27,17 @@ dependencies:
   path: ^1.8.0
   markdown: ">=5.0.0 <8.0.0"
   recase: ^4.0.0
-  json_annotation: ^4.4.0
+  json_annotation: ^4.9.0
   universal_io: ^2.0.4
-  collection: ^1.15.0
+  collection: ^1.18.0
   dart_style: ^2.2.1
   code_builder: ^4.1.0
-  http: ^1.0.0
+  http: ^1.2.2
   yaml: ^3.1.0
 
 dev_dependencies:
-  build_runner: ^2.1.7
-  json_serializable: ^6.1.4
+  build_runner: ^2.4.9
+  json_serializable: ^6.8.0
   remove_from_coverage: ^2.0.0
-  test: ^1.20.1
-  lints: ^2.0.1
+  test: ^1.24.9
+  lints: ^4.0.0
