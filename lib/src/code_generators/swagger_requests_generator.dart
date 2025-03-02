@@ -1316,8 +1316,11 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final requestText = requestName.pascalCase;
 
         final typeName = getValidatedClassName('$requestText\$Response');
-
-        return typeName.asList();
+        // don't return as List
+        // fix: List<List>> issue when building using json_schema 
+        // and type: 'array' with 'items'. 
+        // ResolvePs https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/711)
+        return typeName;
       } else if (itemsType.isNotEmpty) {
         final parameterType = _mapParameterName(itemsType, itemsFormat, '');
         return parameterType.asList();
