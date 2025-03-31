@@ -1,3 +1,4 @@
+// dart format width=80
 //Generated code
 
 part of 'some_file_name.swagger.dart';

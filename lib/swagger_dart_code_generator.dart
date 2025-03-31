@@ -125,6 +125,7 @@ class SwaggerDartCodeGenerator implements Builder {
 
   DartFormatter get formatter {
     _formatter ??= DartFormatter(
+      languageVersion: DartFormatter.latestLanguageVersion,
       pageWidth: options.pageWidth,
     );
 

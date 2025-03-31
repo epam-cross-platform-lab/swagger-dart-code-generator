@@ -11,19 +11,10 @@ Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
       name: json['name'] as String? ?? '',
     );
 
-Map<String, dynamic> _$CategoryToJson(Category instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  return val;
-}
+Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+    };
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
       id: (json['id'] as num?)?.toInt(),
@@ -36,44 +27,26 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       userStatus: (json['userStatus'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$UserToJson(User instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('username', instance.username);
-  writeNotNull('firstName', instance.firstName);
-  writeNotNull('lastName', instance.lastName);
-  writeNotNull('email', instance.email);
-  writeNotNull('password', instance.password);
-  writeNotNull('phone', instance.phone);
-  writeNotNull('userStatus', instance.userStatus);
-  return val;
-}
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.username case final value?) 'username': value,
+      if (instance.firstName case final value?) 'firstName': value,
+      if (instance.lastName case final value?) 'lastName': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.password case final value?) 'password': value,
+      if (instance.phone case final value?) 'phone': value,
+      if (instance.userStatus case final value?) 'userStatus': value,
+    };
 
 Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String? ?? '',
     );
 
-Map<String, dynamic> _$TagToJson(Tag instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  return val;
-}
+Map<String, dynamic> _$TagToJson(Tag instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+    };
 
 ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
       code: (json['code'] as num?)?.toInt(),
@@ -81,17 +54,9 @@ ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
       message: json['message'] as String? ?? '',
     );
 
-Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('code', instance.code);
-  writeNotNull('type', instance.type);
-  writeNotNull('message', instance.message);
-  return val;
-}
+Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) =>
+    <String, dynamic>{
+      if (instance.code case final value?) 'code': value,
+      if (instance.type case final value?) 'type': value,
+      if (instance.message case final value?) 'message': value,
+    };
