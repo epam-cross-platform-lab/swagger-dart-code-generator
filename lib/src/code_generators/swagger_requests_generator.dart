@@ -473,7 +473,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   }) {
     return [
       if (isDeprecated) refer('deprecated'),
-      refer(requestType.toUpperCase()).call(
+      refer(requestType.pascalCase).call(
         [],
         {
           kPath: literalString(path),
