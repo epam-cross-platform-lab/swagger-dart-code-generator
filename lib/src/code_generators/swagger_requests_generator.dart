@@ -115,7 +115,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..optionalParameters.add(Parameter(
           (p) => p
             ..named = true
-            ..type = Reference('List<Interceptor>?')
+            ..type = Reference('List<dynamic>?')
             ..name = 'interceptors',
         ))
         ..body = Code(body),
