@@ -37,19 +37,20 @@ class GeneratorOptions {
     this.scalars = const {},
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
+    this.includeNullQueryVars = false,
     this.multipartFileType = 'List<int>',
     this.urlencodedFileType = 'Map<String, String>',
     this.generateFirstSucceedResponse = true,
   });
 
   /// Build options from a JSON map.
-  factory GeneratorOptions.fromJson(Map<String, dynamic> json) =>
-      _$GeneratorOptionsFromJson(json);
+  factory GeneratorOptions.fromJson(Map<String, dynamic> json) => _$GeneratorOptionsFromJson(json);
 
   final bool usePathForRequestNames;
   final bool generateFirstSucceedResponse;
   final bool withBaseUrl;
   final bool addBasePathToRequests;
+  final bool includeNullQueryVars;
   final int? pageWidth;
   final bool overrideToString;
   final bool overrideEqualsAndHashcode;
@@ -90,8 +91,7 @@ class DefaultValueMap {
   DefaultValueMap({required this.typeName, required this.defaultValue});
 
   /// Build a default value map from a JSON map.
-  factory DefaultValueMap.fromJson(Map<String, dynamic> json) =>
-      _$DefaultValueMapFromJson(json);
+  factory DefaultValueMap.fromJson(Map<String, dynamic> json) => _$DefaultValueMapFromJson(json);
 
   @JsonKey(defaultValue: '')
   final String typeName;
@@ -156,8 +156,7 @@ class InputUrl {
 
   Map<String, dynamic> toJson() => _$InputUrlToJson(this);
 
-  factory InputUrl.fromJson(Map<String, dynamic> json) =>
-      _$InputUrlFromJson(json);
+  factory InputUrl.fromJson(Map<String, dynamic> json) => _$InputUrlFromJson(json);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -190,8 +189,7 @@ class CustomScalar {
   @JsonKey(defaultValue: '')
   final String serialize;
 
-  factory CustomScalar.fromJson(Map<String, dynamic> json) =>
-      _$CustomScalarFromJson(json);
+  factory CustomScalar.fromJson(Map<String, dynamic> json) => _$CustomScalarFromJson(json);
 
   CustomScalar({
     required this.type,
