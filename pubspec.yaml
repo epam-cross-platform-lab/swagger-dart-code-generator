@@ -23,7 +23,6 @@ environment:
 
 dependencies:
   build: 2.4.2
-  path: 1.9.1
   markdown: 7.3.0
   recase: 4.1.0
   json_annotation: 4.9.0
