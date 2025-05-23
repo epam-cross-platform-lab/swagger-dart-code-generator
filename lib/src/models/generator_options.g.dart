@@ -90,6 +90,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      includeNullQueryVars: json['include_null_query_vars'] as bool? ?? false,
       multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
       urlencodedFileType:
           json['urlencoded_file_type'] as String? ?? 'Map<String, String>',
@@ -103,6 +104,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
       'generate_first_succeed_response': instance.generateFirstSucceedResponse,
       'with_base_url': instance.withBaseUrl,
       'add_base_path_to_requests': instance.addBasePathToRequests,
+      'include_null_query_vars': instance.includeNullQueryVars,
       'page_width': instance.pageWidth,
       'override_to_string': instance.overrideToString,
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,

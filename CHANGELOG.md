@@ -1,3 +1,7 @@
+# 3.0.3
+
+* Added new generation option `include_null_query_vars`
+
 # 3.0.2
 
 * Updated dependencies to latest ones
