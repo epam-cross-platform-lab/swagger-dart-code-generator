@@ -1,3 +1,7 @@
+# 3.0.2
+
+* Fixes List<List<T>> generation for json_schemas of type: 'array' [[#711](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/711)]
+
 # 3.0.1
 
 * Different fixes and improvements
