@@ -34,8 +34,7 @@ String normal(String path) {
 
 Iterable<FileSystemEntity> _getInputFolderFilesList(GeneratorOptions options) {
   return Directory(normalize(options.inputFolder)).listSync().where(
-      (FileSystemEntity file) =>
-          _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
+      (FileSystemEntity file) => _inputFileExtensions.any((ending) => file.path.endsWith(ending)));
 }
 
 String _getAdditionalResultPath(GeneratorOptions options) {
@@ -47,8 +46,8 @@ String _getAdditionalResultPath(GeneratorOptions options) {
 
   if (options.inputUrls.isNotEmpty) {
     final firstUrl = options.inputUrls.first;
-    final path = normalize(
-        '${options.inputFolder}${firstUrl.fileName ?? getFileNameBase(firstUrl.url)}');
+    final path =
+        normalize('${options.inputFolder}${firstUrl.fileName ?? getFileNameBase(firstUrl.url)}');
     File(path).createSync();
     return path;
   }
@@ -61,8 +60,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
 
   final filesList = _getInputFolderFilesList(options);
 
-  additionalResultPath =
-      _getAdditionalResultPath(options).replaceAll('\\', '/');
+  additionalResultPath = _getAdditionalResultPath(options).replaceAll('\\', '/');
 
   File(additionalResultPath).createSync();
 
@@ -90,21 +88,16 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
   }
 
   for (var inputUrl in options.inputUrls) {
-    if (fileNames
-        .contains(getFileNameBase(inputUrl.fileName ?? inputUrl.url))) {
+    if (fileNames.contains(getFileNameBase(inputUrl.fileName ?? inputUrl.url))) {
       continue;
     }
 
-    final name =
-        removeFileExtension(getFileNameBase(inputUrl.fileName ?? inputUrl.url));
+    final name = removeFileExtension(getFileNameBase(inputUrl.fileName ?? inputUrl.url));
 
     result[additionalResultPath]!.add(join(out, '$name$_outputFileExtension'));
-    result[additionalResultPath]!
-        .add(join(out, '$name$_outputEnumsFileExtension'));
-    result[additionalResultPath]!
-        .add(join(out, '$name$_outputModelsFileExtension'));
-    result[additionalResultPath]!
-        .add(join(out, '$name$_outputResponsesFileExtension'));
+    result[additionalResultPath]!.add(join(out, '$name$_outputEnumsFileExtension'));
+    result[additionalResultPath]!.add(join(out, '$name$_outputModelsFileExtension'));
+    result[additionalResultPath]!.add(join(out, '$name$_outputResponsesFileExtension'));
   }
 
   ///Register additional outputs in first input
@@ -132,9 +125,9 @@ class SwaggerDartCodeGenerator implements Builder {
 
   DartFormatter get formatter {
     _formatter ??= DartFormatter(
+      pageWidth: options.pageWidth,
       languageVersion: DartFormatter.latestLanguageVersion,
-      pageWidth: options.pageWidth);
-   
+    );
 
     return _formatter!;
   }
@@ -236,30 +229,22 @@ class SwaggerDartCodeGenerator implements Builder {
 
     final dateToJson = codeGenerator.generateDateToJson(options);
 
-    final copyAssetId = AssetId(
-        buildStep.inputId.package,
-        join(options.outputFolder,
-            '$fileNameWithoutExtension$_outputFileExtension'));
+    final copyAssetId = AssetId(buildStep.inputId.package,
+        join(options.outputFolder, '$fileNameWithoutExtension$_outputFileExtension'));
 
     if (!options.separateModels || !options.buildOnlyModels) {
       await buildStep.writeAsString(
           copyAssetId,
-          _generateFileContent(
-              imports,
-              requests,
-              options.separateModels ? '' : models,
-              customDecoder,
-              options.separateModels ? '' : dateToJson));
+          _generateFileContent(imports, requests, options.separateModels ? '' : models,
+              customDecoder, options.separateModels ? '' : dateToJson));
     }
 
     if (enums.isNotEmpty) {
       ///Write enums
       final formatterEnums = _tryFormatCode(enums);
 
-      final enumsAssetId = AssetId(
-          buildStep.inputId.package,
-          join(options.outputFolder,
-              '$fileNameWithoutExtension$_outputEnumsFileExtension'));
+      final enumsAssetId = AssetId(buildStep.inputId.package,
+          join(options.outputFolder, '$fileNameWithoutExtension$_outputEnumsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formatterEnums);
     }
@@ -273,17 +258,15 @@ class SwaggerDartCodeGenerator implements Builder {
         enums.isNotEmpty,
       ));
 
-      final enumsAssetId = AssetId(
-          buildStep.inputId.package,
-          join(options.outputFolder,
-              '$fileNameWithoutExtension$_outputModelsFileExtension'));
+      final enumsAssetId = AssetId(buildStep.inputId.package,
+          join(options.outputFolder, '$fileNameWithoutExtension$_outputModelsFileExtension'));
 
       await buildStep.writeAsString(enumsAssetId, formattedModels);
     }
   }
 
-  String _generateFileContent(String imports, String requests, String models,
-      String customDecoder, String dateToJson) {
+  String _generateFileContent(
+      String imports, String requests, String models, String customDecoder, String dateToJson) {
     final result = """
 $imports
 
@@ -311,12 +294,11 @@ $dateToJson
     }
   }
 
-  Future<void> _generateAdditionalFiles(AssetId inputId, BuildStep buildStep,
-      bool hasModels, List<String> allFiles) async {
+  Future<void> _generateAdditionalFiles(
+      AssetId inputId, BuildStep buildStep, bool hasModels, List<String> allFiles) async {
     final codeGenerator = SwaggerCodeGenerator();
 
-    final indexAssetId =
-        AssetId(inputId.package, join(options.outputFolder, _indexFileName));
+    final indexAssetId = AssetId(inputId.package, join(options.outputFolder, _indexFileName));
 
     final imports = codeGenerator.generateIndexes(allFiles, options);
 
@@ -325,11 +307,9 @@ $dateToJson
     }
 
     if (options.withConverter && !options.buildOnlyModels) {
-      final mappingAssetId = AssetId(
-          inputId.package, join(options.outputFolder, _mappingFileName));
+      final mappingAssetId = AssetId(inputId.package, join(options.outputFolder, _mappingFileName));
 
-      final mapping =
-          codeGenerator.generateConverterMappings(hasModels, options);
+      final mapping = codeGenerator.generateConverterMappings(hasModels, options);
 
       await buildStep.writeAsString(mappingAssetId, formatter.format(mapping));
     }
@@ -341,15 +321,12 @@ $dateToJson
     String dateToJson,
     bool hasEnums,
   ) {
-    final enumsImport = hasEnums
-        ? "import '$fileNameWithoutExtension.enums.swagger.dart' as enums;"
-        : '';
+    final enumsImport =
+        hasEnums ? "import '$fileNameWithoutExtension.enums.swagger.dart' as enums;" : '';
 
     final overridenModels = options.overridenModels.isEmpty
         ? ''
-        : options.overridenModels
-            .map((e) => 'import \'${e.importUrl}\';')
-            .join('\n');
+        : options.overridenModels.map((e) => 'import \'${e.importUrl}\';').join('\n');
 
     return '''
 // ignore_for_file: type=lint

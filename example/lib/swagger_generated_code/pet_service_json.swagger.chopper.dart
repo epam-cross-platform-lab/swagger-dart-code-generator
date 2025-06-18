@@ -34,6 +34,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -54,6 +55,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -74,6 +76,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       parameters: $params,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<List<Pet>, Pet>($request);
   }
@@ -94,6 +97,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       parameters: $params,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<List<Pet>, Pet>($request);
   }
@@ -114,6 +118,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<Pet, Pet>($request);
   }
@@ -139,6 +144,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -159,6 +165,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -184,6 +191,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<ApiResponse, ApiResponse>($request);
   }
@@ -203,6 +211,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<Object, Object>($request);
   }
@@ -223,6 +232,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<Order, Order>($request);
   }
@@ -241,6 +251,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<Order, Order>($request);
   }
@@ -259,6 +270,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -279,6 +291,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -299,6 +312,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -319,6 +333,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -343,6 +358,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       parameters: $params,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<String, String>($request);
   }
@@ -358,6 +374,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -376,6 +393,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<User, User>($request);
   }
@@ -397,6 +415,7 @@ final class _$PetServiceJson extends PetServiceJson {
       client.baseUrl,
       body: $body,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }
@@ -415,6 +434,7 @@ final class _$PetServiceJson extends PetServiceJson {
       $url,
       client.baseUrl,
       headers: $headers,
+      includeNullQueryVars: true,
     );
     return client.send<dynamic, dynamic>($request);
   }

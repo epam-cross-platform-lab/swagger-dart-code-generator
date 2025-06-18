@@ -59,7 +59,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
-  @Post(path: '/pet')
+  @POST(path: '/pet', includeNullQueryVars: true)
   Future<chopper.Response> _petPost({
     @Body() required Pet? body,
     @Header('Cache-Control') String? cacheControl,
@@ -75,7 +75,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
-  @Put(path: '/pet')
+  @PUT(path: '/pet', includeNullQueryVars: true)
   Future<chopper.Response> _petPut({
     @Body() required Pet? body,
     @Header('Cache-Control') String? cacheControl,
@@ -97,7 +97,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
-  @Get(path: '/pet/findByStatus')
+  @GET(path: '/pet/findByStatus', includeNullQueryVars: true)
   Future<chopper.Response<List<Pet>>> _petFindByStatusGet({
     @Query('status') required List<Object?>? status,
     @Header('Cache-Control') String? cacheControl,
@@ -121,7 +121,7 @@ abstract class SomeFileName extends ChopperService {
   ///Finds Pets by tags
   ///@param tags Tags to filter by
   @deprecated
-  @Get(path: '/pet/findByTags')
+  @GET(path: '/pet/findByTags', includeNullQueryVars: true)
   Future<chopper.Response<List<Pet>>> _petFindByTagsGet({
     @Query('tags') required List<String>? tags,
     @Header('Cache-Control') String? cacheControl,
@@ -145,7 +145,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Find pet by ID
   ///@param petId ID of pet to return
-  @Get(path: '/pet/{petId}')
+  @GET(path: '/pet/{petId}', includeNullQueryVars: true)
   Future<chopper.Response<Pet>> _petPetIdGet({
     @Path('petId') required int? petId,
     @Header('api_key') String? apiKey,
@@ -174,7 +174,7 @@ abstract class SomeFileName extends ChopperService {
   ///@param petId ID of pet that needs to be updated
   ///@param name Updated name of the pet
   ///@param status Updated status of the pet
-  @Post(path: '/pet/{petId}', optionalBody: true)
+  @POST(path: '/pet/{petId}', optionalBody: true, includeNullQueryVars: true)
   Future<chopper.Response> _petPetIdPost({
     @Path('petId') required int? petId,
     @Field('name') String? name,
@@ -200,7 +200,7 @@ abstract class SomeFileName extends ChopperService {
   ///Deletes a pet
   ///@param api_key
   ///@param petId Pet id to delete
-  @Delete(path: '/pet/{petId}')
+  @DELETE(path: '/pet/{petId}', includeNullQueryVars: true)
   Future<chopper.Response> _petPetIdDelete({
     @Header('api_key') String? apiKey,
     @Path('petId') required int? petId,
@@ -234,7 +234,11 @@ abstract class SomeFileName extends ChopperService {
   ///@param petId ID of pet to update
   ///@param additionalMetadata Additional data to pass to server
   ///@param file file to upload
-  @Post(path: '/pet/{petId}/uploadImage', optionalBody: true)
+  @POST(
+    path: '/pet/{petId}/uploadImage',
+    optionalBody: true,
+    includeNullQueryVars: true,
+  )
   Future<chopper.Response<ApiResponse>> _petPetIdUploadImagePost({
     @Path('petId') required int? petId,
     @Field('additionalMetadata') String? additionalMetadata,
@@ -254,7 +258,7 @@ abstract class SomeFileName extends ChopperService {
   }
 
   ///Returns pet inventories by status
-  @Get(path: '/store/inventory')
+  @GET(path: '/store/inventory', includeNullQueryVars: true)
   Future<chopper.Response<Object>> _storeInventoryGet({
     @Header('api_key') String? apiKey,
     @Header('Cache-Control') String? cacheControl,
@@ -273,7 +277,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
-  @Post(path: '/store/order')
+  @POST(path: '/store/order', includeNullQueryVars: true)
   Future<chopper.Response<Order>> _storeOrderPost({
     @Body() required Order? body,
     @Header('Cache-Control') String? cacheControl,
@@ -295,7 +299,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
-  @Get(path: '/store/order/{orderId}')
+  @GET(path: '/store/order/{orderId}', includeNullQueryVars: true)
   Future<chopper.Response<Order>> _storeOrderOrderIdGet({
     @Path('orderId') required int? orderId,
     @Header('Cache-Control') String? cacheControl,
@@ -315,7 +319,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
-  @Delete(path: '/store/order/{orderId}')
+  @DELETE(path: '/store/order/{orderId}', includeNullQueryVars: true)
   Future<chopper.Response> _storeOrderOrderIdDelete({
     @Path('orderId') required int? orderId,
     @Header('Cache-Control') String? cacheControl,
@@ -334,7 +338,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Create user
   ///@param body Created user object
-  @Post(path: '/user')
+  @POST(path: '/user', includeNullQueryVars: true)
   Future<chopper.Response> _userPost({
     @Body() required User? body,
     @Header('Cache-Control') String? cacheControl,
@@ -354,7 +358,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Creates list of users with given input array
   ///@param body List of user object
-  @Post(path: '/user/createWithArray')
+  @POST(path: '/user/createWithArray', includeNullQueryVars: true)
   Future<chopper.Response> _userCreateWithArrayPost({
     @Body() required List<User>? body,
     @Header('Cache-Control') String? cacheControl,
@@ -374,7 +378,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Creates list of users with given input array
   ///@param body List of user object
-  @Post(path: '/user/createWithList')
+  @POST(path: '/user/createWithList', includeNullQueryVars: true)
   Future<chopper.Response> _userCreateWithListPost({
     @Body() required List<User>? body,
     @Header('Cache-Control') String? cacheControl,
@@ -398,7 +402,7 @@ abstract class SomeFileName extends ChopperService {
   ///Logs user into the system
   ///@param username The user name for login
   ///@param password The password for login in clear text
-  @Get(path: '/user/login')
+  @GET(path: '/user/login', includeNullQueryVars: true)
   Future<chopper.Response<String>> _userLoginGet({
     @Query('username') required String? username,
     @Query('password') required String? password,
@@ -411,7 +415,7 @@ abstract class SomeFileName extends ChopperService {
   }
 
   ///Logs out current logged in user session
-  @Get(path: '/user/logout')
+  @GET(path: '/user/logout', includeNullQueryVars: true)
   Future<chopper.Response> _userLogoutGet({
     @Header('Cache-Control') String? cacheControl,
   });
@@ -432,7 +436,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
-  @Get(path: '/user/{username}')
+  @GET(path: '/user/{username}', includeNullQueryVars: true)
   Future<chopper.Response<User>> _userUsernameGet({
     @Path('username') required String? username,
     @Header('Cache-Control') String? cacheControl,
@@ -458,7 +462,7 @@ abstract class SomeFileName extends ChopperService {
   ///Updated user
   ///@param username name that need to be updated
   ///@param body Updated user object
-  @Put(path: '/user/{username}')
+  @PUT(path: '/user/{username}', includeNullQueryVars: true)
   Future<chopper.Response> _userUsernamePut({
     @Path('username') required String? username,
     @Body() required User? body,
@@ -479,7 +483,7 @@ abstract class SomeFileName extends ChopperService {
 
   ///Delete user
   ///@param username The name that needs to be deleted
-  @Delete(path: '/user/{username}')
+  @DELETE(path: '/user/{username}', includeNullQueryVars: true)
   Future<chopper.Response> _userUsernameDelete({
     @Path('username') required String? username,
     @Header('Cache-Control') String? cacheControl,
