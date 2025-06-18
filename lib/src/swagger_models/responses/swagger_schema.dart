@@ -28,6 +28,7 @@ class SwaggerSchema {
     this.readOnly = false,
     this.writeOnly = false,
     this.deprecated = false,
+    this.rawJson,
   }) : _type = type;
 
   @JsonKey(name: 'readOnly')
@@ -35,6 +36,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'writeOnly')
   bool writeOnly;
+
+  @JsonKey(name: 'rawJson')
+  Map<String, dynamic>? rawJson;
 
   @JsonKey(name: 'type')
   dynamic _type;
@@ -132,6 +136,7 @@ class SwaggerSchema {
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerSchemaFromJson(json)
+        ..rawJson = json
         ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
             ?.map((e) => e as String)
             .toList()

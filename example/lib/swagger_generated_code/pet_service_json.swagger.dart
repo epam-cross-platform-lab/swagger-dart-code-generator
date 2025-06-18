@@ -553,6 +553,7 @@ class User {
   @JsonKey(name: 'phone', includeIfNull: false, defaultValue: '')
   final String? phone;
   @JsonKey(name: 'userStatus', includeIfNull: false)
+  @SomeCustomAnnotations('ski-ba-bop-ba-dop-bop')
   final int? userStatus;
   static const fromJsonFactory = _$UserFromJson;
 

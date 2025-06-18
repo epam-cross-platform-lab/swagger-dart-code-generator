@@ -55,12 +55,14 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
           readOnly: json['readOnly'] as bool? ?? false,
           writeOnly: json['writeOnly'] as bool? ?? false,
           deprecated: json['deprecated'] as bool? ?? false,
+          rawJson: json['rawJson'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
     <String, dynamic>{
           'readOnly': instance.readOnly,
           'writeOnly': instance.writeOnly,
+          'rawJson': instance.rawJson,
           'type': instance.type,
           'deprecated': instance.deprecated,
           'title': instance.title,
