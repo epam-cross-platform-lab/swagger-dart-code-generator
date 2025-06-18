@@ -29,7 +29,7 @@ dependencies:
   json_annotation: ^4.8.1
   universal_io: ^2.0.4
   collection: ^1.15.0
-  dart_style: ^3.0.0
+  dart_style: ^3.0.1
   code_builder: ^4.1.0
   http: ^1.0.0
   yaml: ^3.1.0
