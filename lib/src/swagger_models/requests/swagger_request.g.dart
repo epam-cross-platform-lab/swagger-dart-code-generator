@@ -36,6 +36,9 @@ SwaggerRequest _$SwaggerRequestFromJson(Map<String, dynamic> json) =>
           ? null
           : RequestBody.fromJson(json['requestBody'] as Map<String, dynamic>),
       deprecated: json['deprecated'] as bool? ?? false,
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              [],
     );
 
 Map<String, dynamic> _$SwaggerRequestToJson(SwaggerRequest instance) =>
@@ -50,6 +53,7 @@ Map<String, dynamic> _$SwaggerRequestToJson(SwaggerRequest instance) =>
       'security': instance.security,
       'parameters': instance.parameters,
       'requestBody': instance.requestBody,
+      'tags': instance.tags,
     };
 
 RequestBody _$RequestBodyFromJson(Map<String, dynamic> json) => RequestBody(
