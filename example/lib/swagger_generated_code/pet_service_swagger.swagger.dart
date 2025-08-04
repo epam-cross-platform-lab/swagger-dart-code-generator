@@ -1,4 +1,5 @@
 // ignore_for_file: type=lint
+// ignore_for_file: unused_element_parameter
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
@@ -13,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show MultipartFile;
 import 'package:chopper/chopper.dart' as chopper;
 import 'pet_service_swagger.enums.swagger.dart' as enums;
+import 'pet_service_swagger.metadata.swagger.dart';
 export 'pet_service_swagger.enums.swagger.dart';
 
 part 'pet_service_swagger.swagger.chopper.dart';
@@ -63,6 +65,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _petPost({
     @Body() required Pet? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Add a new pet to the store',
+      description: '',
+      operationId: 'addPet',
+      consumes: ["application/json", "application/xml"],
+      produces: ["application/xml", "application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///Update an existing pet
@@ -79,6 +92,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _petPut({
     @Body() required Pet? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Update an existing pet',
+      description: '',
+      operationId: 'updatePet',
+      consumes: ["application/json", "application/xml"],
+      produces: ["application/xml", "application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///Finds Pets by status
@@ -101,6 +125,18 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response<List<Pet>>> _petFindByStatusGet({
     @Query('status') required List<Object?>? status,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Finds Pets by status',
+      description:
+          'Multiple status values can be provided with comma separated strings',
+      operationId: 'findPetsByStatus',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///Finds Pets by tags
@@ -125,6 +161,18 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response<List<Pet>>> _petFindByTagsGet({
     @Query('tags') required List<String>? tags,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Finds Pets by tags',
+      description:
+          'Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing.',
+      operationId: 'findPetsByTags',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: true,
+    ),
   });
 
   ///Find pet by ID
@@ -150,6 +198,17 @@ abstract class PetServiceSwagger extends ChopperService {
     @Path('petId') required int? petId,
     @Header('api_key') String? apiKey,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Find pet by ID',
+      description: 'Returns a single pet',
+      operationId: 'getPetById',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: ["api_key"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///Updates a pet in the store with form data
@@ -180,6 +239,17 @@ abstract class PetServiceSwagger extends ChopperService {
     @Field('name') String? name,
     @Field('status') String? status,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Updates a pet in the store with form data',
+      description: '',
+      operationId: 'updatePetWithForm',
+      consumes: ["application/x-www-form-urlencoded"],
+      produces: ["application/xml", "application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///Deletes a pet
@@ -205,6 +275,17 @@ abstract class PetServiceSwagger extends ChopperService {
     @Header('api_key') String? apiKey,
     @Path('petId') required int? petId,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Deletes a pet',
+      description: '',
+      operationId: 'deletePet',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///uploads an image
@@ -244,6 +325,17 @@ abstract class PetServiceSwagger extends ChopperService {
     @Field('additionalMetadata') String? additionalMetadata,
     @Field('file') List<int>? file,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'uploads an image',
+      description: '',
+      operationId: 'uploadFile',
+      consumes: ["multipart/form-data"],
+      produces: ["application/json"],
+      security: ["petstore_auth"],
+      tags: ["pet"],
+      deprecated: false,
+    ),
   });
 
   ///Returns pet inventories by status
@@ -262,6 +354,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response<Object>> _storeInventoryGet({
     @Header('api_key') String? apiKey,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Returns pet inventories by status',
+      description: 'Returns a map of status codes to quantities',
+      operationId: 'getInventory',
+      consumes: [],
+      produces: ["application/json"],
+      security: ["api_key"],
+      tags: ["store"],
+      deprecated: false,
+    ),
   });
 
   ///Place an order for a pet
@@ -281,6 +384,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response<Order>> _storeOrderPost({
     @Body() required Order? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Place an order for a pet',
+      description: '',
+      operationId: 'placeOrder',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["store"],
+      deprecated: false,
+    ),
   });
 
   ///Find purchase order by ID
@@ -303,6 +417,18 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response<Order>> _storeOrderOrderIdGet({
     @Path('orderId') required int? orderId,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Find purchase order by ID',
+      description:
+          'For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions',
+      operationId: 'getOrderById',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["store"],
+      deprecated: false,
+    ),
   });
 
   ///Delete purchase order by ID
@@ -323,6 +449,18 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _storeOrderOrderIdDelete({
     @Path('orderId') required int? orderId,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Delete purchase order by ID',
+      description:
+          'For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors',
+      operationId: 'deleteOrder',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["store"],
+      deprecated: false,
+    ),
   });
 
   ///Create user
@@ -342,6 +480,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _userPost({
     @Body() required User? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Create user',
+      description: 'This can only be done by the logged in user.',
+      operationId: 'createUser',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Creates list of users with given input array
@@ -362,6 +511,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _userCreateWithArrayPost({
     @Body() required List<User>? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Creates list of users with given input array',
+      description: '',
+      operationId: 'createUsersWithArrayInput',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Creates list of users with given input array
@@ -382,6 +542,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _userCreateWithListPost({
     @Body() required List<User>? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Creates list of users with given input array',
+      description: '',
+      operationId: 'createUsersWithListInput',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Logs user into the system
@@ -407,6 +578,17 @@ abstract class PetServiceSwagger extends ChopperService {
     @Query('username') required String? username,
     @Query('password') required String? password,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Logs user into the system',
+      description: '',
+      operationId: 'loginUser',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Logs out current logged in user session
@@ -418,6 +600,17 @@ abstract class PetServiceSwagger extends ChopperService {
   @GET(path: '/user/logout', includeNullQueryVars: true)
   Future<chopper.Response> _userLogoutGet({
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Logs out current logged in user session',
+      description: '',
+      operationId: 'logoutUser',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Get user by user name
@@ -440,6 +633,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response<User>> _userUsernameGet({
     @Path('username') required String? username,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Get user by user name',
+      description: '',
+      operationId: 'getUserByName',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Updated user
@@ -467,6 +671,17 @@ abstract class PetServiceSwagger extends ChopperService {
     @Path('username') required String? username,
     @Body() required User? body,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Updated user',
+      description: 'This can only be done by the logged in user.',
+      operationId: 'updateUser',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 
   ///Delete user
@@ -487,6 +702,17 @@ abstract class PetServiceSwagger extends ChopperService {
   Future<chopper.Response> _userUsernameDelete({
     @Path('username') required String? username,
     @Header('Cache-Control') String? cacheControl,
+    @chopper.Tag()
+    SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
+      summary: 'Delete user',
+      description: 'This can only be done by the logged in user.',
+      operationId: 'deleteUser',
+      consumes: [],
+      produces: ["application/xml", "application/json"],
+      security: [],
+      tags: ["user"],
+      deprecated: false,
+    ),
   });
 }
 
@@ -1220,7 +1446,7 @@ List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatusListFromJson(
 }
 
 List<enums.PetFindByStatusGetStatus>?
-    petFindByStatusGetStatusNullableListFromJson(
+petFindByStatusGetStatusNullableListFromJson(
   List? petFindByStatusGetStatus, [
   List<enums.PetFindByStatusGetStatus>? defaultValue,
 ]) {
@@ -1294,8 +1520,9 @@ class $JsonSerializableConverter extends chopper.JsonConverter {
 
     if (ResultType == DateTime) {
       return response.copyWith(
-        body: DateTime.parse((response.body as String).replaceAll('"', ''))
-            as ResultType,
+        body:
+            DateTime.parse((response.body as String).replaceAll('"', ''))
+                as ResultType,
       );
     }
 

@@ -22,6 +22,7 @@ const String _outputFileExtension = '.swagger.dart';
 const String _outputEnumsFileExtension = '.enums.swagger.dart';
 const String _outputModelsFileExtension = '.models.swagger.dart';
 const String _outputResponsesFileExtension = '.responses.swagger.dart';
+const String _outputMetaDataFileExtension = '.metadata.swagger.dart';
 const String _indexFileName = 'client_index.dart';
 const String _mappingFileName = 'client_mapping.dart';
 
@@ -87,6 +88,7 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
     result[url]!.add(join(out, '$name$_outputEnumsFileExtension'));
     result[url]!.add(join(out, '$name$_outputModelsFileExtension'));
     result[url]!.add(join(out, '$name$_outputResponsesFileExtension'));
+    result[url]!.add(join(out, '$name$_outputMetaDataFileExtension'));
   }
 
   for (var inputUrl in options.inputUrls) {
@@ -105,6 +107,8 @@ Map<String, List<String>> _generateExtensions(GeneratorOptions options) {
         .add(join(out, '$name$_outputModelsFileExtension'));
     result[additionalResultPath]!
         .add(join(out, '$name$_outputResponsesFileExtension'));
+    result[additionalResultPath]!
+        .add(join(out, '$name$_outputMetaDataFileExtension'));
   }
 
   ///Register additional outputs in first input
@@ -231,6 +235,8 @@ class SwaggerDartCodeGenerator implements Builder {
       allEnums,
     );
 
+    final metadata = codeGenerator.generateMetaData(options);
+
     final customDecoder = codeGenerator.generateCustomJsonConverter(
         removeFileExtension(fileNameWithExtension), options);
 
@@ -280,6 +286,15 @@ class SwaggerDartCodeGenerator implements Builder {
 
       await buildStep.writeAsString(enumsAssetId, formattedModels);
     }
+
+    ///Write metadata file
+    final formattedMetadata =
+        _tryFormatCode(_generateMetaDataFileContent(metadata));
+    final metadataAssetId = AssetId(
+        buildStep.inputId.package,
+        join(options.outputFolder,
+            '$fileNameWithoutExtension$_outputMetaDataFileExtension'));
+    await buildStep.writeAsString(metadataAssetId, formattedMetadata);
   }
 
   String _generateFileContent(String imports, String requests, String models,
@@ -366,6 +381,14 @@ $overridenModels
     $models
 
     $dateToJson
+    ''';
+  }
+
+  String _generateMetaDataFileContent(String metadata) {
+    return '''
+// ignore_for_file: type=lint
+
+$metadata
     ''';
   }
 }

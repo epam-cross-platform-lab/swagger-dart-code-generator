@@ -106,3 +106,6 @@ const kServiceHeader = '''
 // SwaggerChopperGenerator
 // **************************************************************************
   ''';
+
+const kSwaggerMetaData = 'SwaggerMetaData';
+const kSwaggerMetaDataParameter = 'swaggerMetaData';

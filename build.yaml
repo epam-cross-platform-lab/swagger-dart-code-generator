@@ -8,7 +8,7 @@ builders:
     import: "package:swagger_dart_code_generator/swagger_dart_code_generator.dart"
     builder_factories: ["swaggerCodeBuilder"]
     build_extensions:
-      "$lib$": [".swagger.dart", ".models.dart", ".converter.dart"]
+      "$lib$": [".swagger.dart", ".models.dart", ".converter.dart", ".metadata.swagger.dart"]
     build_to: source
     auto_apply: dependents
     runs_before: ["chopper_generator", "json_serializable"]

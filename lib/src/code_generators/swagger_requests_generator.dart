@@ -235,7 +235,21 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           returnTypeName,
         );
 
-        final privateMethod = _getPrivateMethod(method);
+        // Add SwaggerMetaData parameter
+        final metaDataParameter = Parameter(
+          (p) => p
+            ..name = kSwaggerMetaDataParameter
+            ..annotations.add(refer('chopper.Tag').call([]))
+            ..named = true
+            ..required = false
+            ..type = Reference(kSwaggerMetaData)
+            ..defaultTo = _getDefaultMetaDataValue(swaggerRequest),
+        );
+
+        final privateMethod = _getPrivateMethod(
+          (method.toBuilder()..optionalParameters.add(metaDataParameter))
+              .build(),
+        );
         final publicMethod = _getPublicMethod(
           method,
           allModels,
@@ -1437,6 +1451,23 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     return _\$$className(newClient);
 ''';
     return chopperClientBody;
+  }
+
+  Code _getDefaultMetaDataValue(SwaggerRequest swaggerRequest) {
+    final tagsString = swaggerRequest.tags.map((tag) => '"$tag"').join(', ');
+    final tagsList = tagsString.isNotEmpty ? '[$tagsString]' : '[]';
+
+    return Code('''
+const ${kSwaggerMetaData}(
+  summary: '${swaggerRequest.summary.replaceAll("'", "\\'")}',
+  description: '${swaggerRequest.description.replaceAll("'", "\\'")}',
+  operationId: '${swaggerRequest.operationId}',
+  consumes: ${swaggerRequest.consumes.map((c) => '"$c"').join(', ').isEmpty ? '[]' : '[${swaggerRequest.consumes.map((c) => '"$c"').join(', ')}]'},
+  produces: ${swaggerRequest.produces.map((p) => '"$p"').join(', ').isEmpty ? '[]' : '[${swaggerRequest.produces.map((p) => '"$p"').join(', ')}]'},
+  security: ${swaggerRequest.security.map((s) => '"$s"').join(', ').isEmpty ? '[]' : '[${swaggerRequest.security.map((s) => '"$s"').join(', ')}]'},
+  tags: $tagsList,
+  deprecated: ${swaggerRequest.deprecated},
+)''');
   }
 }
 
