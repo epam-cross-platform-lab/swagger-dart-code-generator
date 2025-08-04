@@ -52,11 +52,16 @@ void main() {
       );
 
       expect(result2, contains('Future<chopper.Response<CarModel>>'));
-      expect(result, contains('Future<chopper.Response<String>> carsSchemaRefBodyGet'));
-      expect(result, contains('Future<chopper.Response<CarModel>> carsSchemaRefBodyPost'));
-      expect(result, contains('Future<chopper.Response<int>> carsReturnTypeTestsGet'));
-      expect(result, contains('Future<chopper.Response<int>> carsReturnTypeTestsPost'));
-      expect(result, contains('Future<chopper.Response<int>> carsReturnTypeTestsPut'));
+      expect(result,
+          contains('Future<chopper.Response<String>> carsSchemaRefBodyGet'));
+      expect(result,
+          contains('Future<chopper.Response<CarModel>> carsSchemaRefBodyPost'));
+      expect(result,
+          contains('Future<chopper.Response<int>> carsReturnTypeTestsGet'));
+      expect(result,
+          contains('Future<chopper.Response<int>> carsReturnTypeTestsPost'));
+      expect(result,
+          contains('Future<chopper.Response<int>> carsReturnTypeTestsPut'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsGet'));
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
       expect(result,

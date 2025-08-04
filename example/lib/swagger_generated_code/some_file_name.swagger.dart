@@ -1220,7 +1220,7 @@ List<enums.PetFindByStatusGetStatus> petFindByStatusGetStatusListFromJson(
 }
 
 List<enums.PetFindByStatusGetStatus>?
-petFindByStatusGetStatusNullableListFromJson(
+    petFindByStatusGetStatusNullableListFromJson(
   List? petFindByStatusGetStatus, [
   List<enums.PetFindByStatusGetStatus>? defaultValue,
 ]) {
@@ -1294,9 +1294,8 @@ class $JsonSerializableConverter extends chopper.JsonConverter {
 
     if (ResultType == DateTime) {
       return response.copyWith(
-        body:
-            DateTime.parse((response.body as String).replaceAll('"', ''))
-                as ResultType,
+        body: DateTime.parse((response.body as String).replaceAll('"', ''))
+            as ResultType,
       );
     }
 
