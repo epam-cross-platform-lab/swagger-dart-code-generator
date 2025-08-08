@@ -724,6 +724,112 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return key.replaceAll('\$', '\\\$');
   }
 
+  String generatePropertyContentByAnyOf({
+    required SwaggerSchema prop,
+    required String propertyName,
+    required String propertyKey,
+    required String className, // Name of the class containing this property
+    required List<String> allEnumNames,
+    required List<String> allEnumListNames,
+    required List<String> requiredProperties,
+    required bool isDeprecated,
+  }) {
+    final anyOfSchemas = prop.anyOf;
+
+    if (anyOfSchemas.isEmpty) {
+      return generatePropertyContentByDefault(
+        prop: prop,
+        propertyName: propertyName,
+        propertyKey: propertyKey,
+        allEnumNames: allEnumNames,
+        allEnumListNames: allEnumListNames,
+        requiredProperties: requiredProperties,
+        isDeprecated: isDeprecated,
+      );
+    }
+
+    List<SwaggerSchema> nonNullSchemas = [];
+    bool isExplicitlyNullableInAnyOf = false;
+
+    for (final subSchema in anyOfSchemas) {
+      if (subSchema.type.toLowerCase() == 'null') {
+        isExplicitlyNullableInAnyOf = true;
+      } else {
+        nonNullSchemas.add(subSchema);
+      }
+    }
+
+    SwaggerSchema resolvedSchemaForDetails;
+    String baseTypeName;
+
+    if (nonNullSchemas.isEmpty) {
+      baseTypeName = kDynamic;
+      resolvedSchemaForDetails = SwaggerSchema(type: kObject);
+    } else if (nonNullSchemas.length == 1) {
+      resolvedSchemaForDetails = nonNullSchemas.first;
+      baseTypeName = getParameterTypeName(
+        className,
+        propertyName,
+        resolvedSchemaForDetails,
+        options.modelPostfix,
+        resolvedSchemaForDetails.ref.isNotEmpty ? resolvedSchemaForDetails.ref.getUnformattedRef() : null,
+      );
+    } else {
+      baseTypeName = kDynamic;
+      resolvedSchemaForDetails = SwaggerSchema(type: kObject);
+    }
+
+    String finalTypeName = getValidatedClassName(baseTypeName); // Ensure class name validation
+    bool makeTypeNullable = isExplicitlyNullableInAnyOf;
+
+    if (!requiredProperties.contains(propertyKey)) {
+      makeTypeNullable = true;
+    }
+
+    if (finalTypeName != kDynamic &&
+        (prop.shouldBeNullable || options.nullableModels.contains(finalTypeName))) {
+      makeTypeNullable = true;
+    }
+
+    if (makeTypeNullable && finalTypeName != kDynamic && !finalTypeName.endsWith('?')) {
+      finalTypeName = finalTypeName.makeNullable();
+    }
+
+    // Ensure 'finalTypeName' for enums or model post-fixes if not basic or dynamic
+    if (allEnumNames.contains(finalTypeName.replaceAll('?', ''))) {
+      finalTypeName = finalTypeName.startsWith('enums.') ? finalTypeName : 'enums.$finalTypeName';
+    } else if (baseTypeName != kDynamic && !kBasicTypesMap.containsKey(baseTypeName.replaceAll('?', '')) && !finalTypeName.endsWith(options.modelPostfix) && !finalTypeName.endsWith('${options.modelPostfix}?')) {
+      if (finalTypeName.endsWith('?')) {
+        finalTypeName = '${finalTypeName.substring(0, finalTypeName.length - 1)}${options.modelPostfix}?';
+      } else {
+        finalTypeName += options.modelPostfix;
+      }
+    }
+
+
+    propertyKey = propertyKey.replaceAll('\$', '\\\$');
+
+    final unknownEnumValue = generateEnumValue(
+      allEnumNames: allEnumNames,
+      allEnumListNames: allEnumListNames,
+      propertyName: propertyName,
+      typeName: finalTypeName,
+      defaultValue: resolvedSchemaForDetails.defaultValue,
+      isList: resolvedSchemaForDetails.type == kArray,
+      isNullable: finalTypeName == kDynamic || finalTypeName.endsWith('?'), // Corrected nullability check
+      className: className,
+    );
+
+    final dateToJsonValue = generateToJsonForDate(resolvedSchemaForDetails);
+    final includeIfNullString = generateIncludeIfNullString();
+
+    final jsonKeyContent =
+        "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
+    final deprecatedContent = isDeprecated ? '@deprecated\n' : '';
+
+    return '\t$jsonKeyContent$deprecatedContent\tfinal $finalTypeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+  }
+
   String generatePropertyContentByAllOf({
     required SwaggerSchema prop,
     required String propertyKey,
@@ -1274,6 +1380,19 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
             propertyName: propertyName,
             basicTypesMap: basicTypesMap,
             requiredProperties: requiredProperties,
+          ),
+        );
+      } else if (prop.anyOf.isNotEmpty) {
+        results.add(
+          generatePropertyContentByAnyOf(
+            prop: prop,
+            allEnumListNames: allEnumListNames,
+            className: className,
+            allEnumNames: allEnumNames,
+            propertyKey: propertyKey,
+            propertyName: propertyName,
+            requiredProperties: requiredProperties,
+            isDeprecated: prop.deprecated,
           ),
         );
       } else if (prop.hasRef) {
