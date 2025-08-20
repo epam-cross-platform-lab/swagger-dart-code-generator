@@ -6,15 +6,15 @@ environment:
   sdk: ^3.2.3
 
 dependencies:
-  chopper: 8.1.0
+  chopper: 8.3.0
   collection: 1.19.1
-  http: 1.3.0
+  http: 1.5.0
   json_annotation: 4.9.0
 
 dev_dependencies:
   swagger_dart_code_generator:
     path: ../
-  chopper_generator: 8.1.0
-  build_runner: 2.4.15
-  json_serializable: 6.9.5
+  chopper_generator: 8.3.0
+  build_runner: 2.7.0
+  json_serializable: 6.10.0
   lints: 5.1.1
