@@ -134,10 +134,7 @@ final class _$PetServiceSwagger extends PetServiceSwagger {
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-    final $body = <String, dynamic>{
-      'name': name,
-      'status': status,
-    };
+    final $body = <String, dynamic>{'name': name, 'status': status};
     final Request $request = Request(
       'POST',
       $url,
