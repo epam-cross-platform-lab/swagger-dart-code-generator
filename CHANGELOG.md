@@ -1,3 +1,8 @@
+# 3.0.4
+
+* Updated libraries
+* Regenerated example
+
 # 3.0.3
 
 * Added new generation option `include_null_query_vars`

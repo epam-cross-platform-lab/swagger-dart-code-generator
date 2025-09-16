@@ -7,56 +7,54 @@ part of 'pet_service_json.swagger.dart';
 // **************************************************************************
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
-      id: (json['id'] as num?)?.toInt(),
-      name: json['name'] as String? ?? '',
-    );
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String? ?? '',
+);
 
 Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
-      if (instance.id case final value?) 'id': value,
-      if (instance.name case final value?) 'name': value,
-    };
+  'id': ?instance.id,
+  'name': ?instance.name,
+};
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      id: (json['id'] as num?)?.toInt(),
-      username: json['username'] as String? ?? '',
-      firstName: json['firstName'] as String? ?? '',
-      lastName: json['lastName'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      password: json['password'] as String? ?? '',
-      phone: json['phone'] as String? ?? '',
-      userStatus: (json['userStatus'] as num?)?.toInt(),
-    );
+  id: (json['id'] as num?)?.toInt(),
+  username: json['username'] as String? ?? '',
+  firstName: json['firstName'] as String? ?? '',
+  lastName: json['lastName'] as String? ?? '',
+  email: json['email'] as String? ?? '',
+  password: json['password'] as String? ?? '',
+  phone: json['phone'] as String? ?? '',
+  userStatus: (json['userStatus'] as num?)?.toInt(),
+);
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      if (instance.id case final value?) 'id': value,
-      if (instance.username case final value?) 'username': value,
-      if (instance.firstName case final value?) 'firstName': value,
-      if (instance.lastName case final value?) 'lastName': value,
-      if (instance.email case final value?) 'email': value,
-      if (instance.password case final value?) 'password': value,
-      if (instance.phone case final value?) 'phone': value,
-      if (instance.userStatus case final value?) 'userStatus': value,
-    };
+  'id': ?instance.id,
+  'username': ?instance.username,
+  'firstName': ?instance.firstName,
+  'lastName': ?instance.lastName,
+  'email': ?instance.email,
+  'password': ?instance.password,
+  'phone': ?instance.phone,
+  'userStatus': ?instance.userStatus,
+};
 
-Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
-      id: (json['id'] as num?)?.toInt(),
-      name: json['name'] as String? ?? '',
-    );
+Tag _$TagFromJson(Map<String, dynamic> json) =>
+    Tag(id: (json['id'] as num?)?.toInt(), name: json['name'] as String? ?? '');
 
 Map<String, dynamic> _$TagToJson(Tag instance) => <String, dynamic>{
-      if (instance.id case final value?) 'id': value,
-      if (instance.name case final value?) 'name': value,
-    };
+  'id': ?instance.id,
+  'name': ?instance.name,
+};
 
 ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
-      code: (json['code'] as num?)?.toInt(),
-      type: json['type'] as String? ?? '',
-      message: json['message'] as String? ?? '',
-    );
+  code: (json['code'] as num?)?.toInt(),
+  type: json['type'] as String? ?? '',
+  message: json['message'] as String? ?? '',
+);
 
 Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) =>
     <String, dynamic>{
-      if (instance.code case final value?) 'code': value,
-      if (instance.type case final value?) 'type': value,
-      if (instance.message case final value?) 'message': value,
+      'code': ?instance.code,
+      'type': ?instance.type,
+      'message': ?instance.message,
     };
