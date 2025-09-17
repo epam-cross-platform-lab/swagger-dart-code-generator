@@ -28,17 +28,17 @@ In general case for each .swagger file three outputs will be created. </br>
 The generated code uses the following packages in run-time:
 ```yaml
 dependencies:
-  chopper: ^8.0.0
-  json_annotation: ^4.8.0
+  chopper: ^8.0.3
+  json_annotation: ^4.9.0
 ```
 
 Add the following to your `pubspec.yaml` file to be able to do code generation:
 ```yaml
 dev_dependencies:
-  build_runner: ^2.3.3
-  chopper_generator: ^8.0.0
-  json_serializable: ^6.6.1
-  swagger_dart_code_generator: ^2.10.4
+  build_runner: ^2.4.9
+  chopper_generator: ^8.0.3
+  json_serializable: ^6.8.0
+  swagger_dart_code_generator: ^3.0.1
 ```
 
 Then run:
