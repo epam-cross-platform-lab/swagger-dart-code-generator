@@ -232,7 +232,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
         if (neededSchema != null &&
             neededSchema.type == kObject &&
             neededSchema.properties.isNotEmpty) {
-          final pathText = key.split('/').map((e) => e.pascalCase).join();
+          final pathText = key
+              .split('/')
+              .map((e) => e.replaceAll('}', '').replaceAll('{', ''))
+              .map((e) => e.pascalCase)
+              .join();
           final requestText = operation.pascalCase;
 
           results['$pathText$requestText\$Response'] = neededSchema;
@@ -255,7 +259,11 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
           final itemsSchema = neededSchema?.items;
 
           if (itemsSchema?.properties.isNotEmpty == true) {
-            final pathText = key.split('/').map((e) => e.pascalCase).join();
+            final pathText = key
+                .split('/')
+                .map((e) => e.replaceAll('}', '').replaceAll('{', ''))
+                .map((e) => e.pascalCase)
+                .join();
             final requestText = operation.pascalCase;
             results['$pathText$requestText\$Response'] = neededSchema!;
           }
