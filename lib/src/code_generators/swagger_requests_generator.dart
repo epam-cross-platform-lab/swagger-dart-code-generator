@@ -703,7 +703,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     definedParameters.addAll(root.components?.parameters ?? {});
 
     final securityParameters =
-        swaggerRequest.security.map((e) => root.securityDefinitions[e]).whereNotNull();
+        swaggerRequest.security.map((e) => root.securityDefinitions[e]).nonNulls;
 
     final additionalHeaders = options.additionalHeaders.map((e) => SwaggerRequestParameter(
           inParameter: 'header',
