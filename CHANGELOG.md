@@ -1,4 +1,4 @@
-# 3.0.4
+# 4.0.0
 
 * Updated libraries
 * Regenerated example
