@@ -79,6 +79,7 @@ import 'package:chopper/chopper.dart' as chopper;''';
     result.writeln("""
 // coverage:ignore-file
 // ignore_for_file: type=lint
+// ignore_for_file: unused_element_parameter
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
@@ -98,6 +99,12 @@ ${options.overrideToString ? "import 'dart:convert';" : ''}
     if (enumsImport.isNotEmpty) {
       result.write(enumsImport);
     }
+
+    // Add metadata import
+    if (!buildOnlyModels) {
+      result.write("import '$swaggerFileName.metadata.swagger.dart';");
+    }
+
     for (var element in options.importPaths) {
       result.write('import \'$element\';');
     }
