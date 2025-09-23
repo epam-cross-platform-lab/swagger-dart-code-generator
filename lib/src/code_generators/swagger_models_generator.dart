@@ -842,7 +842,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         !kBasicTypesMap.containsKey(baseTypeName.replaceAll('?', '')) &&
         !finalTypeNameWithoutNull.endsWith(options.modelPostfix)) {
       if (finalTypeName.endsWith('?')) {
-        finalTypeName = '${finalTypeNameWithoutNull}${options.modelPostfix}?';
+        finalTypeName = '$finalTypeNameWithoutNull${options.modelPostfix}?';
       } else {
         finalTypeName += options.modelPostfix;
       }

@@ -13,7 +13,8 @@ SwaggerResponse _$SwaggerResponseFromJson(Map<String, dynamic> json) =>
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
-      enumValue: (json['enumValue'] as List<dynamic>?)
+      enumValue:
+          (json['enumValue'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -32,21 +33,21 @@ Map<String, dynamic> _$SwaggerResponseToJson(SwaggerResponse instance) =>
     };
 
 Content _$ContentFromJson(Map<String, dynamic> json) => Content(
-      items: json['items'] == null
-          ? null
-          : SwaggerSchema.fromJson(json['items'] as Map<String, dynamic>),
-      ref: json['ref'] as String? ?? '',
-      responseType: json['responseType'] as String? ?? '',
-      type: json['type'] as String? ?? '',
-      schema: json['schema'] == null
-          ? null
-          : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
-    );
+  items: json['items'] == null
+      ? null
+      : SwaggerSchema.fromJson(json['items'] as Map<String, dynamic>),
+  ref: json['ref'] as String? ?? '',
+  responseType: json['responseType'] as String? ?? '',
+  type: json['type'] as String? ?? '',
+  schema: json['schema'] == null
+      ? null
+      : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$ContentToJson(Content instance) => <String, dynamic>{
-      'responseType': instance.responseType,
-      'type': instance.type,
-      'items': instance.items,
-      'schema': instance.schema,
-      'ref': instance.ref,
-    };
+  'responseType': instance.responseType,
+  'type': instance.type,
+  'items': instance.items,
+  'schema': instance.schema,
+  'ref': instance.ref,
+};
