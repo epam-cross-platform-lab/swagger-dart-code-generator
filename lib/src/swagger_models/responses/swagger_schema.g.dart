@@ -11,7 +11,8 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       type: json['type'] ?? '',
       originalRef: json['originalRef'] as String? ?? '',
       enumValuesObj: json['enum'] as List<dynamic>? ?? const [],
-      properties: (json['properties'] as Map<String, dynamic>?)?.map(
+      properties:
+          (json['properties'] as Map<String, dynamic>?)?.map(
             (k, e) =>
                 MapEntry(k, SwaggerSchema.fromJson(e as Map<String, dynamic>)),
           ) ??
@@ -25,15 +26,18 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
-      oneOf: (json['oneOf'] as List<dynamic>?)
+      oneOf:
+          (json['oneOf'] as List<dynamic>?)
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      anyOf: (json['anyOf'] as List<dynamic>?)
+      anyOf:
+          (json['anyOf'] as List<dynamic>?)
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      allOf: (json['allOf'] as List<dynamic>?)
+      allOf:
+          (json['allOf'] as List<dynamic>?)
               ?.map((e) => SwaggerSchema.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -84,21 +88,19 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
     };
 
 MsEnum _$MsEnumFromJson(Map<String, dynamic> json) => MsEnum(
-      values: (json['values'] as List<dynamic>?)
-              ?.map((e) => MsEnumValue.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-    );
+  values:
+      (json['values'] as List<dynamic>?)
+          ?.map((e) => MsEnumValue.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
 
 Map<String, dynamic> _$MsEnumToJson(MsEnum instance) => <String, dynamic>{
-      'values': instance.values,
-    };
+  'values': instance.values,
+};
 
-MsEnumValue _$MsEnumValueFromJson(Map<String, dynamic> json) => MsEnumValue(
-      value: json['value'] ?? const [],
-    );
+MsEnumValue _$MsEnumValueFromJson(Map<String, dynamic> json) =>
+    MsEnumValue(value: json['value'] ?? const []);
 
 Map<String, dynamic> _$MsEnumValueToJson(MsEnumValue instance) =>
-    <String, dynamic>{
-      'value': instance.value,
-    };
+    <String, dynamic>{'value': instance.value};
