@@ -1,3 +1,7 @@
+# 4.0.2
+
+* Various fixes
+
 # 4.0.1
 
 * Fix missing 'import_paths' for Scalars when 'separate_models' is enabled
