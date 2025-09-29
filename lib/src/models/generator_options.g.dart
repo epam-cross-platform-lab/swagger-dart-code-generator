@@ -239,3 +239,13 @@ Map<String, dynamic> _$CustomScalarToJson(CustomScalar instance) =>
       'deserialize': instance.deserialize,
       'serialize': instance.serialize,
     };
+
+CustomAnnotationMap _$CustomAnnotationMapFromJson(Map<String, dynamic> json) => CustomAnnotationMap(
+      typeName: json['type_name'] as String? ?? '',
+      swaggerKey: json['swagger_key'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$CustomAnnotationMapToJson(CustomAnnotationMap instance) => <String, dynamic>{
+      'type_name': instance.typeName,
+      'swagger_key': instance.swaggerKey,
+    };
