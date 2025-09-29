@@ -373,7 +373,7 @@ $dateToJson
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
 import 'dart:convert';
-
+${options.importPaths.map((e) => "import '$e';").join('\n')}
 $enumsImport
 $overridenModels
 
