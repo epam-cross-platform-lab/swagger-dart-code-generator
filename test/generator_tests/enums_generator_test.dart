@@ -38,6 +38,19 @@ void main() {
 
       expect(result, contains(output));
     });
+
+    test('Should return \$value if name is value', () {
+      const name = 'value';
+      const output = '\$value';
+      final result = EnumModel.getValidatedEnumFieldName(
+        name,
+        name,
+        false,
+        [],
+      );
+      expect(result, contains(output));
+    });
+
   });
 
   group('getOriginalOrOverriddenRequestParameter', () {

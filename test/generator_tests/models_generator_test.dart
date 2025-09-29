@@ -179,6 +179,13 @@ void main() {
 
       expect(result, contains(expectedResult));
     });
+
+    test('Should NOT return \$value', () {
+      const name = 'value';
+      const output = 'value';
+      final result = generator.generateFieldName(name);
+      expect(result, contains(output));
+    });
   });
 
   group('generatePropertyContentByDefault', () {
