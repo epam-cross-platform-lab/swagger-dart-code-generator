@@ -1,3 +1,8 @@
+# 4.0.1
+
+* Fix missing 'import_paths' for Scalars when 'separate_models' is enabled
+* Fix other issues on generation
+
 # 4.0.0
 
 * Updated libraries
