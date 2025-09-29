@@ -1,6 +1,16 @@
+# 4.0.0
+
+* Updated libraries
+* Regenerated example
+
+# 3.0.3
+
+* Added new generation option `include_null_query_vars`
+
 # 3.0.2
 
-* Fixes List<List<T>> generation for json_schemas of type: 'array' [[#711](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/711)]
+* Updated dependencies to latest ones
+* * Fixes List<List<T>> generation for json_schemas of type: 'array' [[#711](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/711)]
 
 # 3.0.1
 
