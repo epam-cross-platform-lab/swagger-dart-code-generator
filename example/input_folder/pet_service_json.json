@@ -939,7 +939,8 @@
         "userStatus": {
           "type": "integer",
           "format": "int32",
-          "description": "User Status"
+          "description": "User Status",
+          "some_custom_annotations": "ski-ba-bop-ba-dop-bop"
         }
       },
       "xml": {

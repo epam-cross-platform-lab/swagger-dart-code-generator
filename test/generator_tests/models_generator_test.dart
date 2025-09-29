@@ -130,16 +130,11 @@ void main() {
 
     test('Should return Uuid', () {
       final generator = SwaggerModelsGeneratorV2(
-        GeneratorOptions(
-          inputFolder: '',
-          outputFolder: '',
-          importPaths: [
+        GeneratorOptions(inputFolder: '', outputFolder: '', importPaths: [
           'package:uuid/uuid.dart',
-          ],
-          scalars: {
+        ], scalars: {
           'uuid': CustomScalar(type: 'Uuid', deserialize: 'parse')
-          }
-        ),
+        }),
       );
       const className = 'Person';
       const parameterName = 'id';
@@ -684,14 +679,24 @@ void main() {
         allEnums: [],
       );
 
-      expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
-      expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'list', defaultValue: <Uuid>\[\]\)\s*final List<Uuid>\? list;''')));
-      expect(result, contains('class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+      expect(
+          result,
+          contains(RegExp(
+              r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
+      expect(
+          result,
+          contains(RegExp(
+              r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'list', defaultValue: <Uuid>\[\]\)\s*final List<Uuid>\? list;''')));
+      expect(
+          result,
+          contains(
+              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
       expect(result, contains('fromJson(json) => Uuid.parse(json);'));
       expect(result, contains('toJson(json) => json.toString();'));
     });
 
-    test('Should include serialize/deserialize functions in JsonKey annotation', () {
+    test('Should include serialize/deserialize functions in JsonKey annotation',
+        () {
       final map = SwaggerRoot.parse(schemasWithUuidsInProperties);
       final generator = SwaggerModelsGeneratorV3(
         GeneratorOptions(
@@ -713,8 +718,14 @@ void main() {
         allEnums: [],
       );
 
-      expect(result, contains(RegExp(r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
-      expect(result, contains('class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+      expect(
+          result,
+          contains(RegExp(
+              r'''@_\$UuidJsonConverter\(\)\s*@JsonKey\(name: 'id'\)\s*final Uuid\? id;''')));
+      expect(
+          result,
+          contains(
+              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
       expect(result, contains('fromJson(json) => customUuidParse(json);'));
       expect(result, contains('toJson(json) => customUuidToString(json);'));
     });

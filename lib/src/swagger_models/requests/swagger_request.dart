@@ -19,6 +19,7 @@ class SwaggerRequest {
     this.security = const [],
     this.requestBody,
     this.deprecated = false,
+    this.tags = const [],
   });
 
   @JsonKey(name: 'summary')
@@ -50,6 +51,9 @@ class SwaggerRequest {
 
   @JsonKey(name: 'requestBody')
   RequestBody? requestBody;
+
+  @JsonKey(name: 'tags', defaultValue: [])
+  List<String> tags;
 
   Map<String, dynamic> toJson() => _$SwaggerRequestToJson(this);
 
