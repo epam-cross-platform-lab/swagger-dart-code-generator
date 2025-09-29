@@ -89,8 +89,8 @@ class SwaggerSchema {
 
   List<String> get enumValues {
     final values = (msEnum?.values.isNotEmpty == true
-        ? msEnum?.values.map((e) => e.value)
-        : enumValuesObj) ??
+            ? msEnum?.values.map((e) => e.value)
+            : enumValuesObj) ??
         [];
 
     return values.map((e) => e.toString()).toList();
@@ -114,9 +114,9 @@ class SwaggerSchema {
 
   bool get shouldBeNullable =>
       isNullable == true ||
-          readOnly ||
-          writeOnly ||
-          (_type is List && (_type as List).contains('null'));
+      readOnly ||
+      writeOnly ||
+      (_type is List && (_type as List).contains('null'));
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
@@ -143,9 +143,9 @@ class SwaggerSchema {
         ..isNullable = (json[kIsNullable] ?? json[kNullable] ?? false) as bool;
 
   Map<String, dynamic> toJson() => {
-    ..._$SwaggerSchemaToJson(this),
-    if (enumNames != null) kEnumNames: enumNames,
-  };
+        ..._$SwaggerSchemaToJson(this),
+        if (enumNames != null) kEnumNames: enumNames,
+      };
 }
 
 bool _additionalsFromJson(dynamic value) => value != false;

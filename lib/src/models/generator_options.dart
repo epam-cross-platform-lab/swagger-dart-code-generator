@@ -37,6 +37,7 @@ class GeneratorOptions {
     this.scalars = const {},
     this.overridenModels = const [],
     this.generateToJsonFor = const [],
+    this.includeNullQueryVars = false,
     this.multipartFileType = 'List<int>',
     this.urlencodedFileType = 'Map<String, String>',
     this.generateFirstSucceedResponse = true,
@@ -51,6 +52,7 @@ class GeneratorOptions {
   final bool generateFirstSucceedResponse;
   final bool withBaseUrl;
   final bool addBasePathToRequests;
+  final bool includeNullQueryVars;
   final int? pageWidth;
   final bool overrideToString;
   final bool overrideEqualsAndHashcode;

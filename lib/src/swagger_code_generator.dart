@@ -3,6 +3,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/swagger_addition
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_enums_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/swagger_meta_data_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_enums_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v3/swagger_enums_generator_v3.dart';
@@ -98,6 +99,9 @@ class SwaggerCodeGenerator {
         allEnums: allEnums,
       );
 
+  String generateMetaData(GeneratorOptions options) =>
+      _getSwaggerMetaDataGenerator(options).generate();
+
   String generateCustomJsonConverter(
           String fileName, GeneratorOptions options) =>
       _getSwaggerAdditionsGenerator(options)
@@ -127,4 +131,9 @@ class SwaggerCodeGenerator {
     GeneratorOptions options,
   ) =>
       SwaggerRequestsGenerator(options);
+
+  SwaggerMetaDataGenerator _getSwaggerMetaDataGenerator(
+    GeneratorOptions options,
+  ) =>
+      SwaggerMetaDataGenerator(options);
 }
