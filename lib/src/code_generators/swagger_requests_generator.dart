@@ -1250,7 +1250,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         final requestText = requestName.pascalCase;
 
         final typeName = getValidatedClassName('$requestText\$Response');
-
         return typeName;
       } else if (itemsType.isNotEmpty) {
         final parameterType = _mapParameterName(itemsType, itemsFormat, '');
