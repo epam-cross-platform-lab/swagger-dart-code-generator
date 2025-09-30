@@ -503,7 +503,7 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
       final className = '_\$${key.pascalCase}JsonConverter';
 
       result += '''
-class $className implements json.JsonConverter<${value.type}, String> {
+class $className implements json.JsonConverter<${value.type}, dynamic> {
   const $className();
 
   @override
