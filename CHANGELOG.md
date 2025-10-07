@@ -1,3 +1,26 @@
+# 4.0.2
+
+* Various fixes
+
+# 4.0.1
+
+* Fix missing 'import_paths' for Scalars when 'separate_models' is enabled
+* Fix other issues on generation
+
+# 4.0.0
+
+* Updated libraries
+* Regenerated example
+
+# 3.0.3
+
+* Added new generation option `include_null_query_vars`
+
+# 3.0.2
+
+* Updated dependencies to latest ones
+* * Fixes List<List<T>> generation for json_schemas of type: 'array' [[#711](https://github.com/epam-cross-platform-lab/swagger-dart-code-generator/issues/711)]
+
 # 3.0.1
 
 * Different fixes and improvements

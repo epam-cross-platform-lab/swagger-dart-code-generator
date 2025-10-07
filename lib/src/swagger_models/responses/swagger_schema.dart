@@ -28,6 +28,7 @@ class SwaggerSchema {
     this.readOnly = false,
     this.writeOnly = false,
     this.deprecated = false,
+    this.rawJson,
   }) : _type = type;
 
   @JsonKey(name: 'readOnly')
@@ -35,6 +36,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'writeOnly')
   bool writeOnly;
+
+  @JsonKey(name: 'rawJson')
+  Map<String, dynamic>? rawJson;
 
   @JsonKey(name: 'type')
   dynamic _type;
@@ -85,8 +89,8 @@ class SwaggerSchema {
 
   List<String> get enumValues {
     final values = (msEnum?.values.isNotEmpty == true
-        ? msEnum?.values.map((e) => e.value)
-        : enumValuesObj) ??
+            ? msEnum?.values.map((e) => e.value)
+            : enumValuesObj) ??
         [];
 
     return values.map((e) => e.toString()).toList();
@@ -132,15 +136,16 @@ class SwaggerSchema {
 
   factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
       _$SwaggerSchemaFromJson(json)
+        ..rawJson = json
         ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
             ?.map((e) => e as String)
             .toList()
         ..isNullable = (json[kIsNullable] ?? json[kNullable] ?? false) as bool;
 
   Map<String, dynamic> toJson() => {
-    ..._$SwaggerSchemaToJson(this),
-    if (enumNames != null) kEnumNames: enumNames,
-  };
+        ..._$SwaggerSchemaToJson(this),
+        if (enumNames != null) kEnumNames: enumNames,
+      };
 }
 
 bool _additionalsFromJson(dynamic value) => value != false;
