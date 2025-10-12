@@ -23,7 +23,10 @@ const kBasicTypes = [
   kMap,
 ];
 
-const kBasicSwaggerTypes = [...kBasicTypes, 'number'];
+const kBasicSwaggerTypes = [
+  ...kBasicTypes,
+  'number',
+];
 
 const kMap = 'Map';
 const kMapStringDynamic = 'Map<String,dynamic>';
