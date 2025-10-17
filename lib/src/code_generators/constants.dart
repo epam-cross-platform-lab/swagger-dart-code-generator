@@ -41,6 +41,7 @@ const kString = 'string';
 const kInteger = 'integer';
 const kInt64 = 'int64';
 const kNum = 'num';
+const kFile = 'file';
 const kUndefinedParameter = 'undefinedParameter';
 
 const kIntegerTypes = [kInteger, kInt64, kNum];
@@ -72,7 +73,6 @@ const kBasicTypesMap = <String, String>{
   'boolean': 'bool',
   'bool': 'bool',
   'string': 'String',
-  'file': 'List<int>',
   'number': 'num',
   'object': 'Object',
   'num': 'num',
