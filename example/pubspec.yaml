@@ -15,6 +15,6 @@ dev_dependencies:
   swagger_dart_code_generator:
     path: ../
   chopper_generator: 8.4.0
-  build_runner: 2.8.0
+  build_runner: 2.10.1
   json_serializable: 6.11.1
   lints: 6.0.0

@@ -1,3 +1,8 @@
+# 4.1.0
+
+* Updated dependencies
+* Fixed some border cases
+
 # 4.0.2
 
 * Various fixes
