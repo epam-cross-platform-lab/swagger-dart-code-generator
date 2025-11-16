@@ -591,7 +591,7 @@ class $className implements json.JsonConverter<${value.type}, dynamic> {
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     final deprecatedContent = isDeprecated ? '@deprecated\n' : '';
 
-    return '\t$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent\t$typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   JsonEnumValue generateEnumValue({
@@ -778,7 +778,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\t$typeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String _validatePropertyKey(String key) {
@@ -993,7 +993,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       typeName = typeName.makeNullable();
     }
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $typeName $propertyName;${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\t$typeName $propertyName;${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByRef(
@@ -1140,7 +1140,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     return '''
   @JsonKey(${unknownEnumValue.jsonKey.substring(2)}$includeIfNullString)
   ${isDeprecated ? kDeprecatedAnnotation : ''}
-  final $enumPropertyName ${generateFieldName(key)};
+  $enumPropertyName ${generateFieldName(key)};
 
   ${unknownEnumValue.fromJson}''';
   }
@@ -1313,7 +1313,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         }
       }
     }
-    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent final $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '$jsonConverterAnnotation$jsonKeyContent$deprecatedContent$jsonCustomAnnotationContent $listPropertyName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generateGeneralPropertyContent({
@@ -1770,6 +1770,8 @@ String toString() => jsonEncode(this);
 '''
         : '';
 
+    final hasMapping = schema.discriminator?.mapping.isNotEmpty ?? false;
+
     final fromJson = generatedFromJson(schema, validatedClassName);
 
     final toJson = generateToJson(schema, validatedClassName);
@@ -1779,9 +1781,9 @@ String toString() => jsonEncode(this);
     final generatedClass = '''
 @JsonSerializable(explicitToJson: true $createToJson)
 class $validatedClassName{
-\tconst $validatedClassName($generatedConstructorProperties);\n
-\t$fromJson\n
-\t$toJson\n
+\t $validatedClassName($generatedConstructorProperties);\n
+\t$fromJson${hasMapping ? '' : ''}\n
+\t$toJson${hasMapping ? '' : ''}\n
 $generatedProperties
 \tstatic const fromJsonFactory = _\$${validatedClassName}FromJson;
 
@@ -1798,19 +1800,50 @@ $copyWithMethod
   }
 
   String generatedFromJson(SwaggerSchema schema, String validatedClassName) {
-    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) => _\$${validatedClassName}FromJson(json);';
+    final hasMapping = schema.discriminator?.mapping.isNotEmpty ?? false;
+    if (hasMapping) {
+      final discriminator = schema.discriminator!;
+      final propertyName = discriminator.propertyName;
+      final responseVar = validatedClassName.camelCase;
+
+      return 'static $validatedClassName _\$${validatedClassName}FromJson(Map<String, dynamic> json) { '
+          '\ttry { '
+          'return $validatedClassName.fromJson(json);'
+          '} catch(_) {'
+          '\t\tFLog.info(text:\'GenerateError in $validatedClassName\');'
+          '\t\trethrow;'
+          '}'
+          '}\n\n'
+          '${discriminator.mapping.entries.map((entry) => '${entry.value.getRef()}? ${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase};').join('\n')}'
+          '\n\n'
+          'factory $validatedClassName.fromJson(Map<String, dynamic> json) {'
+          '\t\tvar $responseVar = $validatedClassName();'
+          '\t\tswitch (json[\'$propertyName\']) {'
+          '\t\t\t${discriminator.mapping.entries.map((entry) => 'case \'${entry.key}\': try { $responseVar.${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase} = _\$${entry.value.split('/').last.pascalCase}FromJson(json); } catch(_) {} break;').join('\n')}'
+          '\t\t}'
+          '\treturn $responseVar;'
+          '}';
+    }
+    return 'factory $validatedClassName.fromJson(Map<String, dynamic> json) { '
+        '\ttry { '
+        '\t\treturn _\$${validatedClassName}FromJson(json);'
+        '\t} catch(_) { '
+        '\t\tFLog.info(text: \'GenerateError in $validatedClassName\');'
+        '\t\trethrow;'
+        '\t} '
+        '}';
   }
 
   String generateToJson(SwaggerSchema schema, String validatedClassName) {
-    if (options.generateToJsonFor.isEmpty ||
-        options.generateToJsonFor.contains(validatedClassName)) {
-      return '''
-\tstatic const toJsonFactory = _\$${validatedClassName}ToJson;
-\tMap<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);
-''';
+    final hasMapping = schema.discriminator?.mapping.isNotEmpty ?? false;
+    if (hasMapping) {
+      return 'static Map<String, dynamic> _\$${validatedClassName}ToJson($validatedClassName instance) { return Map<String, dynamic>();}\n\n'
+          'Map<String, dynamic> toJson() =>'
+          '_\$${validatedClassName}ToJson(this)'
+          '\t\t\t${schema.discriminator!.mapping.entries.map(
+              (entry) => '\n..addAll(${entry.key == 'dynamic' ? 'dynamicField' : entry.key.camelCase}?.toJson() ?? {})').join('\n')};';
     }
-
-    return '';
+    return 'Map<String, dynamic> toJson() => _\$${validatedClassName}ToJson(this);';
   }
 
   String generateCreateToJson(SwaggerSchema schema, String validatedClassName) {
