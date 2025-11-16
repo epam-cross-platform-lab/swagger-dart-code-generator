@@ -928,7 +928,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     final deprecatedContent = isDeprecated ? '@deprecated\n' : '';
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $finalTypeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonKeyContent$deprecatedContent\t$finalTypeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByAllOf({
