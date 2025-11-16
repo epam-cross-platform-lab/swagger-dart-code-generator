@@ -23,6 +23,7 @@ class SwaggerSchema {
     this.enumNames,
     this.isNullable,
     this.hasAdditionalProperties = false,
+    this.additionalPropertiesSchema,
     this.msEnum,
     this.discriminator,
     this.title = '',
@@ -134,18 +135,28 @@ class SwaggerSchema {
   @JsonKey(name: 'allOf')
   List<SwaggerSchema> allOf;
 
-  @JsonKey(name: 'additionalProperties', fromJson: _additionalsFromJson)
+  @JsonKey(name: 'additionalProperties', fromJson: _additionalsFromJson, includeToJson: false)
   bool hasAdditionalProperties;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  SwaggerSchema? additionalPropertiesSchema;
 
   List<String>? enumNames;
 
-  factory SwaggerSchema.fromJson(Map<String, dynamic> json) =>
-      _$SwaggerSchemaFromJson(json)
-        ..rawJson = json
-        ..enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
-            ?.map((e) => e as String)
-            .toList()
-        ..isNullable = (json[kIsNullable] ?? json[kNullable] ?? false) as bool;
+  factory SwaggerSchema.fromJson(Map<String, dynamic> json) {
+    final instance = _$SwaggerSchemaFromJson(json);
+    final additionalProps = json['additionalProperties'];
+    if (additionalProps != null && additionalProps != false && additionalProps != true) {
+      if (additionalProps is Map<String, dynamic>) {
+        instance.additionalPropertiesSchema = SwaggerSchema.fromJson(additionalProps);
+      }
+    }
+    instance.enumNames = ((json[kEnumNames] ?? json[kEnumVarnames]) as List?)
+        ?.map((e) => e as String)
+        .toList();
+    instance.isNullable = (json[kIsNullable] ?? json[kNullable] ?? false) as bool;
+    return instance;
+  }
 
   Map<String, dynamic> toJson() => {
         ..._$SwaggerSchemaToJson(this),

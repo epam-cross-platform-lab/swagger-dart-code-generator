@@ -1339,7 +1339,26 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     var typeName = '';
 
     if (prop.hasAdditionalProperties && prop.type == 'object') {
-      typeName = kMapStringDynamic;
+      // Check if additionalProperties has a specific schema (not just true/false)
+      // Exclude enum types from additionalPropertiesSchema
+      if (prop.additionalPropertiesSchema != null &&
+          !prop.additionalPropertiesSchema!.isEnum) {
+        var valueTypeName = getParameterTypeName(
+          className,
+          propertyKey,
+          prop.additionalPropertiesSchema,
+          options.modelPostfix,
+          null,
+        );
+        // Double-check that the resolved type name is not an enum
+        if (!allEnumNames.contains(valueTypeName)) {
+          typeName = 'Map<String, $valueTypeName>';
+        } else {
+          typeName = kMapStringDynamic;
+        }
+      } else {
+        typeName = kMapStringDynamic;
+      }
     } else if (prop.hasRef) {
       typeName = prop.ref.split('/').last.pascalCase + options.modelPostfix;
     } else {
