@@ -19,7 +19,7 @@ description: Have you been turned into a problem with writing code for Http
   functionality you have been looking for.
 
 environment:
-  sdk: ">=3.8.0 <4.0.0"
+  sdk: ">=3.6.2 <4.0.0"
 
 dependencies:
   build: ^4.0.2
