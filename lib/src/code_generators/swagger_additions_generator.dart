@@ -65,6 +65,7 @@ final Map<Type, Object Function(Map<String, dynamic>)> $mappingVariableName = {}
 
 import 'client_mapping.dart';
 import 'dart:async';
+import 'package:arnac/core/logger/model/flog/flog.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show MultipartFile;
 import 'package:chopper/chopper.dart' as chopper;''';

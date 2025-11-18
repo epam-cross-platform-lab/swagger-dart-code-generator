@@ -101,6 +101,10 @@ const $name(this.value);
       result = '\$$result';
     }
 
+    if (result == 'value') {
+      result = 'enumValue';
+    }
+
     return '$result(${isInteger ? fieldValue : '\'${_normalizeJsonKeyString(fieldValue)}\''})';
   }
 
@@ -145,9 +149,17 @@ enums.$name? ${name.camelCase}NullableFromJson(
 String ${name.camelCase}ExplodedListToJson(
     List<enums.$name>? ${name.camelCase}) {
 
-    return ${name.camelCase}?.map((e) => e.value!).join(',') ?? '';
+    if (${name.camelCase} == null) {
+      return '';
+    }
+    String sValues = '';
+    for (final e in ${name.camelCase}!) {
+      if (e.value != null) {
+        sValues += e.value!.toString() + ',';
+      }
+    }
+    return sValues;
 }
-
 
 List<$type> ${name.camelCase}ListToJson(
     List<enums.$name>? ${name.camelCase}) {
@@ -157,9 +169,13 @@ List<$type> ${name.camelCase}ListToJson(
     return [];
   }
 
-  return ${name.camelCase}
-      .map((e) => e.value!)
-      .toList();
+    List<$type> listValues = [];
+    for (final e in ${name.camelCase}!) {
+      if (e.value != null) {
+        listValues.add(e.value!);
+      }
+    }
+    return listValues;
 }
 
 List<enums.$name> ${name.camelCase}ListFromJson(
