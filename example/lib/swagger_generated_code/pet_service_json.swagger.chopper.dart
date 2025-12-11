@@ -20,7 +20,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _petPost({
-    required Pet? body,
+    required Pet body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -52,7 +52,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _petPut({
-    required Pet? body,
+    required Pet body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -117,7 +117,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<List<Pet>>> _petFindByTagsGet({
-    required List<String>? tags,
+    required List<String> tags,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description:
@@ -150,7 +150,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<Pet>> _petPetIdGet({
-    required int? petId,
+    required int petId,
     String? apiKey,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -182,7 +182,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _petPetIdPost({
-    required int? petId,
+    required int petId,
     String? name,
     String? status,
     String? cacheControl,
@@ -217,7 +217,7 @@ final class _$PetServiceJson extends PetServiceJson {
   @override
   Future<Response<dynamic>> _petPetIdDelete({
     String? apiKey,
-    required int? petId,
+    required int petId,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -248,7 +248,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<ApiResponse>> _petPetIdUploadImagePost({
-    required int? petId,
+    required int petId,
     String? additionalMetadata,
     List<int>? file,
     String? cacheControl,
@@ -267,15 +267,17 @@ final class _$PetServiceJson extends PetServiceJson {
     final Map<String, String> $headers = {
       if (cacheControl != null) 'Cache-Control': cacheControl,
     };
-    final $body = <String, dynamic>{
-      'additionalMetadata': additionalMetadata,
-      'file': file,
-    };
+    final $body = <String, dynamic>{'additionalMetadata': additionalMetadata};
+    final List<PartValue> $parts = <PartValue>[
+      PartValueFile<List<int>?>('file', file),
+    ];
     final Request $request = Request(
       'POST',
       $url,
       client.baseUrl,
       body: $body,
+      parts: $parts,
+      multipart: true,
       headers: $headers,
       tag: swaggerMetaData,
       includeNullQueryVars: true,
@@ -316,7 +318,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<Order>> _storeOrderPost({
-    required Order? body,
+    required Order body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -348,7 +350,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<Order>> _storeOrderOrderIdGet({
-    required int? orderId,
+    required int orderId,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description:
@@ -379,7 +381,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _storeOrderOrderIdDelete({
-    required int? orderId,
+    required int orderId,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description:
@@ -410,7 +412,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _userPost({
-    required User? body,
+    required User body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: 'This can only be done by the logged in user.',
@@ -442,7 +444,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _userCreateWithArrayPost({
-    required List<User>? body,
+    required List<User> body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -474,7 +476,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _userCreateWithListPost({
-    required List<User>? body,
+    required List<User> body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -506,8 +508,8 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<String>> _userLoginGet({
-    required String? username,
-    required String? password,
+    required String username,
+    required String password,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -571,7 +573,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<User>> _userUsernameGet({
-    required String? username,
+    required String username,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: '',
@@ -601,8 +603,8 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _userUsernamePut({
-    required String? username,
-    required User? body,
+    required String username,
+    required User body,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: 'This can only be done by the logged in user.',
@@ -634,7 +636,7 @@ final class _$PetServiceJson extends PetServiceJson {
 
   @override
   Future<Response<dynamic>> _userUsernameDelete({
-    required String? username,
+    required String username,
     String? cacheControl,
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
       description: 'This can only be done by the logged in user.',

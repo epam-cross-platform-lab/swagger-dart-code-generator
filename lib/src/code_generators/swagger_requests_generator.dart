@@ -540,18 +540,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
   Expression _getParameterAnnotation(SwaggerRequestParameter parameter) {
     switch (parameter.inParameter) {
       case kFormData:
-        if (parameter.type == kFile) {
-          return refer(
-            kPartFile.pascalCase,
-          ).call([literalString(parameter.name.replaceAll('\$', ''))]);
-        }
-
-        if (parameter.type == kArray && parameter.items?.type == kFile) {
-          return refer(
-            kPartFile.pascalCase,
-          ).call([literalString(parameter.name.replaceAll('\$', ''))]);
-        }
-
         return refer(kField).call([literalString(parameter.name.replaceAll('\$', ''))]);
       case kBody:
         return refer(kBody.pascalCase).call([]);
@@ -709,10 +697,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       return 'List?';
     }
 
-    if (name == kFile) {
-      return options.multipartFileType;
-    }
-
     final result = kBasicTypesMap[name] ?? '';
 
     if (result.isEmpty) {
@@ -775,7 +759,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
                   modelPostfix: modelPostfix,
                   allEnums: allEnums,
                   root: root,
-                ).makeNullable(required: isRequired),
+                ).makeNullable(),
               )
               ..named = true
               ..annotations.add(_getParameterAnnotation(swaggerParameter))

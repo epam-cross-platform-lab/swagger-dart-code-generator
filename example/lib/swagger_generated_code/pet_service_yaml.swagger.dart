@@ -54,7 +54,7 @@ abstract class PetServiceYaml extends ChopperService {
 
   ///Add a new pet to the store
   ///@param body Pet object that needs to be added to the store
-  Future<chopper.Response> petPost({required Pet? body, dynamic cacheControl}) {
+  Future<chopper.Response> petPost({required Pet body, dynamic cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
     return _petPost(body: body, cacheControl: cacheControl?.toString());
@@ -64,7 +64,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body Pet object that needs to be added to the store
   @POST(path: '/pet', includeNullQueryVars: true)
   Future<chopper.Response> _petPost({
-    @Body() required Pet? body,
+    @Body() required Pet body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -81,7 +81,7 @@ abstract class PetServiceYaml extends ChopperService {
 
   ///Update an existing pet
   ///@param body Pet object that needs to be added to the store
-  Future<chopper.Response> petPut({required Pet? body, dynamic cacheControl}) {
+  Future<chopper.Response> petPut({required Pet body, dynamic cacheControl}) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
     return _petPut(body: body, cacheControl: cacheControl?.toString());
@@ -91,7 +91,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body Pet object that needs to be added to the store
   @PUT(path: '/pet', includeNullQueryVars: true)
   Future<chopper.Response> _petPut({
-    @Body() required Pet? body,
+    @Body() required Pet body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -109,13 +109,13 @@ abstract class PetServiceYaml extends ChopperService {
   ///Finds Pets by status
   ///@param status Status values that need to be considered for filter
   Future<chopper.Response<List<Pet>>> petFindByStatusGet({
-    required List<enums.PetFindByStatusGetStatus>? status,
+    required List<enums.PetFindByStatusGetStatus> status,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
 
     return _petFindByStatusGet(
-      status: petFindByStatusGetStatusListToJson(status),
+      status: petFindByStatusGetStatuListToJson(status),
       cacheControl: cacheControl?.toString(),
     );
   }
@@ -144,7 +144,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param tags Tags to filter by
   @deprecated
   Future<chopper.Response<List<Pet>>> petFindByTagsGet({
-    required List<String>? tags,
+    required List<String> tags,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(Pet, () => Pet.fromJsonFactory);
@@ -160,7 +160,7 @@ abstract class PetServiceYaml extends ChopperService {
   @deprecated
   @GET(path: '/pet/findByTags', includeNullQueryVars: true)
   Future<chopper.Response<List<Pet>>> _petFindByTagsGet({
-    @Query('tags') required List<String>? tags,
+    @Query('tags') required List<String> tags,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -179,7 +179,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Find pet by ID
   ///@param petId ID of pet to return
   Future<chopper.Response<Pet>> petPetIdGet({
-    required int? petId,
+    required int petId,
     dynamic apiKey,
     dynamic cacheControl,
   }) {
@@ -196,7 +196,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param petId ID of pet to return
   @GET(path: '/pet/{petId}', includeNullQueryVars: true)
   Future<chopper.Response<Pet>> _petPetIdGet({
-    @Path('petId') required int? petId,
+    @Path('petId') required int petId,
     @Header('api_key') String? apiKey,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
@@ -217,7 +217,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param name Updated name of the pet
   ///@param status Updated status of the pet
   Future<chopper.Response> petPetIdPost({
-    required int? petId,
+    required int petId,
     String? name,
     String? status,
     dynamic cacheControl,
@@ -236,7 +236,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param status Updated status of the pet
   @POST(path: '/pet/{petId}', optionalBody: true, includeNullQueryVars: true)
   Future<chopper.Response> _petPetIdPost({
-    @Path('petId') required int? petId,
+    @Path('petId') required int petId,
     @Field('name') String? name,
     @Field('status') String? status,
     @Header('Cache-Control') String? cacheControl,
@@ -258,7 +258,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param petId Pet id to delete
   Future<chopper.Response> petPetIdDelete({
     String? apiKey,
-    required int? petId,
+    required int petId,
     dynamic cacheControl,
   }) {
     return _petPetIdDelete(
@@ -274,7 +274,7 @@ abstract class PetServiceYaml extends ChopperService {
   @DELETE(path: '/pet/{petId}', includeNullQueryVars: true)
   Future<chopper.Response> _petPetIdDelete({
     @Header('api_key') String? apiKey,
-    @Path('petId') required int? petId,
+    @Path('petId') required int petId,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -294,7 +294,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param additionalMetadata Additional data to pass to server
   ///@param file file to upload
   Future<chopper.Response<ApiResponse>> petPetIdUploadImagePost({
-    required int? petId,
+    required int petId,
     String? additionalMetadata,
     List<int>? file,
     dynamic cacheControl,
@@ -321,10 +321,11 @@ abstract class PetServiceYaml extends ChopperService {
     optionalBody: true,
     includeNullQueryVars: true,
   )
+  @Multipart()
   Future<chopper.Response<ApiResponse>> _petPetIdUploadImagePost({
-    @Path('petId') required int? petId,
+    @Path('petId') required int petId,
     @Field('additionalMetadata') String? additionalMetadata,
-    @Field('file') List<int>? file,
+    @PartFile('file') List<int>? file,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -371,7 +372,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Place an order for a pet
   ///@param body order placed for purchasing the pet
   Future<chopper.Response<Order>> storeOrderPost({
-    required Order? body,
+    required Order body,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(Order, () => Order.fromJsonFactory);
@@ -383,7 +384,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body order placed for purchasing the pet
   @POST(path: '/store/order', includeNullQueryVars: true)
   Future<chopper.Response<Order>> _storeOrderPost({
-    @Body() required Order? body,
+    @Body() required Order body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -401,7 +402,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Find purchase order by ID
   ///@param orderId ID of pet that needs to be fetched
   Future<chopper.Response<Order>> storeOrderOrderIdGet({
-    required int? orderId,
+    required int orderId,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(Order, () => Order.fromJsonFactory);
@@ -416,7 +417,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param orderId ID of pet that needs to be fetched
   @GET(path: '/store/order/{orderId}', includeNullQueryVars: true)
   Future<chopper.Response<Order>> _storeOrderOrderIdGet({
-    @Path('orderId') required int? orderId,
+    @Path('orderId') required int orderId,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -435,7 +436,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Delete purchase order by ID
   ///@param orderId ID of the order that needs to be deleted
   Future<chopper.Response> storeOrderOrderIdDelete({
-    required int? orderId,
+    required int orderId,
     dynamic cacheControl,
   }) {
     return _storeOrderOrderIdDelete(
@@ -448,7 +449,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param orderId ID of the order that needs to be deleted
   @DELETE(path: '/store/order/{orderId}', includeNullQueryVars: true)
   Future<chopper.Response> _storeOrderOrderIdDelete({
-    @Path('orderId') required int? orderId,
+    @Path('orderId') required int orderId,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -467,7 +468,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Create user
   ///@param body Created user object
   Future<chopper.Response> userPost({
-    required User? body,
+    required User body,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(User, () => User.fromJsonFactory);
@@ -479,7 +480,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body Created user object
   @POST(path: '/user', includeNullQueryVars: true)
   Future<chopper.Response> _userPost({
-    @Body() required User? body,
+    @Body() required User body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -497,7 +498,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Creates list of users with given input array
   ///@param body List of user object
   Future<chopper.Response> userCreateWithArrayPost({
-    required List<User>? body,
+    required List<User> body,
     dynamic cacheControl,
   }) {
     return _userCreateWithArrayPost(
@@ -510,7 +511,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body List of user object
   @POST(path: '/user/createWithArray', includeNullQueryVars: true)
   Future<chopper.Response> _userCreateWithArrayPost({
-    @Body() required List<User>? body,
+    @Body() required List<User> body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -528,7 +529,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Creates list of users with given input array
   ///@param body List of user object
   Future<chopper.Response> userCreateWithListPost({
-    required List<User>? body,
+    required List<User> body,
     dynamic cacheControl,
   }) {
     return _userCreateWithListPost(
@@ -541,7 +542,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body List of user object
   @POST(path: '/user/createWithList', includeNullQueryVars: true)
   Future<chopper.Response> _userCreateWithListPost({
-    @Body() required List<User>? body,
+    @Body() required List<User> body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -560,8 +561,8 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param username The user name for login
   ///@param password The password for login in clear text
   Future<chopper.Response<String>> userLoginGet({
-    required String? username,
-    required String? password,
+    required String username,
+    required String password,
     dynamic cacheControl,
   }) {
     return _userLoginGet(
@@ -576,8 +577,8 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param password The password for login in clear text
   @GET(path: '/user/login', includeNullQueryVars: true)
   Future<chopper.Response<String>> _userLoginGet({
-    @Query('username') required String? username,
-    @Query('password') required String? password,
+    @Query('username') required String username,
+    @Query('password') required String password,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -617,7 +618,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Get user by user name
   ///@param username The name that needs to be fetched. Use user1 for testing.
   Future<chopper.Response<User>> userUsernameGet({
-    required String? username,
+    required String username,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(User, () => User.fromJsonFactory);
@@ -632,7 +633,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param username The name that needs to be fetched. Use user1 for testing.
   @GET(path: '/user/{username}', includeNullQueryVars: true)
   Future<chopper.Response<User>> _userUsernameGet({
-    @Path('username') required String? username,
+    @Path('username') required String username,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -651,8 +652,8 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param username name that need to be updated
   ///@param body Updated user object
   Future<chopper.Response> userUsernamePut({
-    required String? username,
-    required User? body,
+    required String username,
+    required User body,
     dynamic cacheControl,
   }) {
     generatedMapping.putIfAbsent(User, () => User.fromJsonFactory);
@@ -669,8 +670,8 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param body Updated user object
   @PUT(path: '/user/{username}', includeNullQueryVars: true)
   Future<chopper.Response> _userUsernamePut({
-    @Path('username') required String? username,
-    @Body() required User? body,
+    @Path('username') required String username,
+    @Body() required User body,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(
@@ -688,7 +689,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///Delete user
   ///@param username The name that needs to be deleted
   Future<chopper.Response> userUsernameDelete({
-    required String? username,
+    required String username,
     dynamic cacheControl,
   }) {
     return _userUsernameDelete(
@@ -701,7 +702,7 @@ abstract class PetServiceYaml extends ChopperService {
   ///@param username The name that needs to be deleted
   @DELETE(path: '/user/{username}', includeNullQueryVars: true)
   Future<chopper.Response> _userUsernameDelete({
-    @Path('username') required String? username,
+    @Path('username') required String username,
     @Header('Cache-Control') String? cacheControl,
     @chopper.Tag()
     SwaggerMetaData swaggerMetaData = const SwaggerMetaData(

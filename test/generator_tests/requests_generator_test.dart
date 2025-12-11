@@ -51,23 +51,6 @@ void main() {
         fileName: 'cars_service',
       );
 
-      final result3 = SwaggerRequestsGenerator(
-        GeneratorOptions(
-          inputFolder: '',
-          outputFolder: '',
-          multipartFileType: 'MultipartFile',
-          defaultHeaderValuesMap: [
-            DefaultHeaderValueMap(defaultValue: '120', headerName: 'id'),
-          ],
-          includePaths: ['multipart'],
-        ),
-      ).generate(
-        swaggerRoot: root,
-        allEnums: [],
-        className: 'CarsService',
-        fileName: 'cars_service',
-      );
-
       expect(result2, contains('Future<chopper.Response<CarModel>>'));
       expect(result,
           contains('Future<chopper.Response<String>> carsSchemaRefBodyGet'));
@@ -83,17 +66,6 @@ void main() {
       expect(result, contains('Future<chopper.Response<CarModel>> carsPost'));
       expect(result,
           contains('Future<chopper.Response<CarModel>> carsMultipartPost'));
-
-      expect(result3, contains("@Field('title') required String title"));
-      expect(result3, contains("@Field('description') String? description"));
-      expect(
-        result3,
-        contains("@PartFile('image') required MultipartFile image"),
-      );
-      expect(
-        result3,
-        contains("@PartFile('images') required List<MultipartFile> images"),
-      );
     });
   });
 }

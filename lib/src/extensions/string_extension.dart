@@ -17,19 +17,12 @@ extension CapitalizeExtension on String {
 }
 
 extension TypeExtension on String {
-  String makeNullable({bool required = false}) {
+  String makeNullable() {
     if (this == kDynamic) {
       return this;
     }
 
     if (endsWith('?')) {
-      if (required) {
-        return substring(0, length - 1);
-      }
-      return this;
-    }
-
-    if (required) {
       return this;
     }
 
