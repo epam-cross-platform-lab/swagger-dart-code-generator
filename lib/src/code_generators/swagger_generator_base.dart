@@ -12,9 +12,11 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart
 abstract class SwaggerGeneratorBase {
   GeneratorOptions get options;
 
-  String getValidatedClassName(
-    String className,
-  ) {
+  String getValidatedClassName(String className) {
+    if (className == kDynamic) {
+      return className;
+    }
+
     if (kBasicTypes.contains(className)) {
       return className;
     }
@@ -36,10 +38,9 @@ abstract class SwaggerGeneratorBase {
     final words = className.split('\$');
 
     final result = words
-        .map((e) => e.pascalCase
-            .split(RegExp(r'\W+|\_'))
-            .map((String str) => str.capitalize)
-            .join())
+        .map(
+          (e) => e.pascalCase.split(RegExp(r'\W+|\_')).map((String str) => str.capitalize).join(),
+        )
         .join('\$')
         .replaceFirst(RegExp(options.cutFromModelNames), '');
 
@@ -55,17 +56,14 @@ abstract class SwaggerGeneratorBase {
       return '\$$result';
     }
 
-    return result
-        .replaceFirst(options.cutFromModelNames, '')
-        .replaceAll('\$\$', '\$');
+    return result.replaceFirst(options.cutFromModelNames, '').replaceAll('\$\$', '\$');
   }
 
   String generateEnumName(String className, String enumName) {
     return getValidatedClassName('${className.capitalize}_$enumName');
   }
 
-  String generateRequestEnumName(
-      String path, String requestType, String parameterName) {
+  String generateRequestEnumName(String path, String requestType, String parameterName) {
     if (path == '/') {
       path = '\$';
     }
@@ -92,8 +90,7 @@ abstract class SwaggerGeneratorBase {
       }
     }
 
-    if (jsonKey.startsWith(RegExp('[0-9]')) ||
-        exceptionWords.contains(jsonKey)) {
+    if (jsonKey.startsWith(RegExp('[0-9]')) || exceptionWords.contains(jsonKey)) {
       jsonKey = '\$$jsonKey';
     }
 
@@ -111,16 +108,18 @@ abstract class SwaggerGeneratorBase {
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
       swaggerPath.requests.forEach((String req, SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
-            .map((SwaggerRequestParameter parameter) =>
-                getOriginalOrOverriddenRequestParameter(parameter,
-                    swaggerRoot.components?.parameters.values.toList() ?? []))
+            .map(
+              (SwaggerRequestParameter parameter) => getOriginalOrOverriddenRequestParameter(
+                parameter,
+                swaggerRoot.components?.parameters.values.toList() ?? [],
+              ),
+            )
             .toList();
       });
     });
 
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
-      swaggerPath.requests
-          .forEach((String requestType, SwaggerRequest swaggerRequest) {
+      swaggerPath.requests.forEach((String requestType, SwaggerRequest swaggerRequest) {
         if (swaggerRequest.parameters.isEmpty) {
           return;
         }
@@ -128,14 +127,14 @@ abstract class SwaggerGeneratorBase {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = generateRequestEnumName(
-              path, requestType, swaggerRequestParameter.name);
+          var name = generateRequestEnumName(path, requestType, swaggerRequestParameter.name);
 
           if (enums.any((element) => element.name == name)) {
             continue;
           }
 
-          final enumValues = swaggerRequestParameter.schema?.enumValues ??
+          final enumValues =
+              swaggerRequestParameter.schema?.enumValues ??
               swaggerRequestParameter.items?.enumValues ??
               [];
 
@@ -143,9 +142,7 @@ abstract class SwaggerGeneratorBase {
             enums.add(
               SwaggerEnum(
                 name: name,
-                isInteger: kIntegerTypes.contains(
-                  swaggerRequestParameter.schema?.type,
-                ),
+                isInteger: kIntegerTypes.contains(swaggerRequestParameter.schema?.type),
                 defaultValue: swaggerRequestParameter.schema?.defaultValue,
               ),
             );
@@ -158,8 +155,9 @@ abstract class SwaggerGeneratorBase {
   }
 
   SwaggerRequestParameter getOriginalOrOverriddenRequestParameter(
-      SwaggerRequestParameter swaggerRequestParameter,
-      List<SwaggerRequestParameter> definedParameters) {
+    SwaggerRequestParameter swaggerRequestParameter,
+    List<SwaggerRequestParameter> definedParameters,
+  ) {
     if (swaggerRequestParameter.ref.isEmpty || definedParameters.isEmpty) {
       return swaggerRequestParameter;
     }
@@ -167,8 +165,9 @@ abstract class SwaggerGeneratorBase {
     final parameterClassName = swaggerRequestParameter.ref.split('/').last;
 
     final neededParameter = definedParameters.firstWhere(
-        (SwaggerRequestParameter element) => element.key == parameterClassName,
-        orElse: () => swaggerRequestParameter);
+      (SwaggerRequestParameter element) => element.key == parameterClassName,
+      orElse: () => swaggerRequestParameter,
+    );
 
     return neededParameter;
   }
