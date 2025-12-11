@@ -16,9 +16,6 @@ targets:
         options:
           input_folder: "input_folder/"
           output_folder: "lib/swagger_generated_code/"
-          custom_annotations:
-            - type_name: 'SomeCustomAnnotations'
-              swagger_key: 'some_custom_annotations'
           with_base_url: true
           with_converter: true
           use_path_for_request_names: true
