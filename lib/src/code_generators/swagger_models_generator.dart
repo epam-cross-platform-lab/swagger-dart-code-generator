@@ -5,6 +5,7 @@ import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart'
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_requests_generator.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
+import 'package:swagger_dart_code_generator/src/extensions/convert_utf8_to_ascii.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -321,36 +322,6 @@ abstract class SwaggerModelsGenerator extends SwaggerGeneratorBase {
     }
 
     return converters + results + allEnumsString;
-  }
-
-  static String convertUtf8ToAscii(String input) {
-    const diacriticsMap = {
-      'ą': 'a',
-      'ć': 'c',
-      'ę': 'e',
-      'ł': 'l',
-      'ń': 'n',
-      'ó': 'o',
-      'ś': 's',
-      'ź': 'z',
-      'ż': 'z',
-      'Ą': 'A',
-      'Ć': 'C',
-      'Ę': 'E',
-      'Ł': 'L',
-      'Ń': 'N',
-      'Ó': 'O',
-      'Ś': 'S',
-      'Ź': 'Z',
-      'Ż': 'Z',
-    };
-
-    var output = StringBuffer();
-    for (var char in input.split('')) {
-      output.write(diacriticsMap[char] ?? char);
-    }
-
-    return output.toString();
   }
 
   static String getValidatedParameterName(String parameterName) {

@@ -1,5 +1,6 @@
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
+import 'package:swagger_dart_code_generator/src/extensions/convert_utf8_to_ascii.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 
 class EnumModel {
@@ -35,7 +36,7 @@ class EnumModel {
       var validatedValue = enumNames.isNotEmpty ? enumNames[i] : value;
 
       validatedValue = getValidatedEnumFieldName(
-        validatedValue,
+        convertUtf8ToAscii(validatedValue),
         value,
         isInteger,
         allFieldNames,
