@@ -33,6 +33,7 @@ class GeneratorOptions {
     this.additionalHeaders = const [],
     this.overrideEqualsAndHashcode = true,
     this.overrideToString = true,
+    this.overrideEnumToString = false,
     this.pageWidth,
     this.scalars = const {},
     this.overridenModels = const [],
@@ -56,6 +57,7 @@ class GeneratorOptions {
   final int? pageWidth;
   final bool overrideToString;
   final bool overrideEqualsAndHashcode;
+  final bool overrideEnumToString;
   final String multipartFileType;
   final String urlencodedFileType;
   final bool withConverter;
