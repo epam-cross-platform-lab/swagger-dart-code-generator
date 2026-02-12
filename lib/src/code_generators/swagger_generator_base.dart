@@ -134,6 +134,7 @@ abstract class SwaggerGeneratorBase {
           }
 
           final enumValues =
+              swaggerRequestParameter.schema?.items?.enumValues ??
               swaggerRequestParameter.schema?.enumValues ??
               swaggerRequestParameter.items?.enumValues ??
               [];

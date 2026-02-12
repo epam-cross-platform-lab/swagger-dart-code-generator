@@ -600,6 +600,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     final format = parameter.format ?? parameter.schema?.format ?? '';
 
     if (parameter.items?.enumValues.isNotEmpty == true ||
+        parameter.schema?.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true ||
         parameter.enumValues.isNotEmpty) {
       if (definedParameters.containsValue(parameter)) {
