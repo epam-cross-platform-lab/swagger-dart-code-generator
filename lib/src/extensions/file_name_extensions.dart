@@ -1,9 +1,8 @@
-import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:change_case/change_case.dart';
 
 String getClassNameFromFileName(String file) {
   final name = removeFileExtension(file).replaceAll('-', '_');
-  final result = name.split('_').map((String e) => e.capitalize);
-  return result.join();
+  return name.toPascalCase();
 }
 
 String removeFileExtension(String file) {
@@ -11,5 +10,5 @@ String removeFileExtension(String file) {
 }
 
 String getFileNameBase(String filePath) {
-  return filePath.split(RegExp(r'\\|\/')).last.replaceAll('-', '_');
+  return filePath.split(RegExp(r'[\\\/]')).last.replaceAll('-', '_');
 }

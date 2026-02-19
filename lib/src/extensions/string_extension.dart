@@ -1,20 +1,6 @@
-import 'package:recase/recase.dart';
+import 'package:change_case/change_case.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
-
-extension CapitalizeExtension on String {
-  String get capitalize {
-    return isEmpty ? this : (this[0].toUpperCase() + substring(1));
-  }
-
-  String get lower {
-    return isEmpty ? this : (this[0].toLowerCase() + substring(1));
-  }
-
-  bool get isUpper {
-    return this == toUpperCase() && this != toLowerCase();
-  }
-}
 
 extension TypeExtension on String {
   String makeNullable() {
@@ -29,7 +15,7 @@ extension TypeExtension on String {
     return '$this?';
   }
 
-  String getRef() => split('/').last.pascalCase;
+  String getRef() => split('/').last.toPascalCase();
 
   String getUnformattedRef() => split('/').last;
 
@@ -59,9 +45,6 @@ extension TypeExtension on String {
       return kDynamic;
     }
 
-    final result =
-        split('-').map((String str) => str == str.capitalize).toList().join();
-
-    return result;
+    return toParamCase();
   }
 }

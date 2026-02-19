@@ -1,7 +1,6 @@
-import 'package:recase/recase.dart';
+import 'package:change_case/change_case.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/constants.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
-import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/models/swagger_enum.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/requests/swagger_request.dart';
@@ -38,9 +37,7 @@ abstract class SwaggerGeneratorBase {
     final words = className.split('\$');
 
     final result = words
-        .map(
-          (e) => e.pascalCase.split(RegExp(r'\W+|\_')).map((String str) => str.capitalize).join(),
-        )
+        .map((e) => e.replaceAll(RegExp(r'[\W_]+'), '_').toPascalCase())
         .join('\$')
         .replaceFirst(RegExp(options.cutFromModelNames), '');
 
@@ -56,25 +53,33 @@ abstract class SwaggerGeneratorBase {
       return '\$$result';
     }
 
-    return result.replaceFirst(options.cutFromModelNames, '').replaceAll('\$\$', '\$');
+    return result
+        .replaceFirst(options.cutFromModelNames, '')
+        .replaceAll(RegExp(r'\$+'), '\$');
   }
 
   String generateEnumName(String className, String enumName) {
-    return getValidatedClassName('${className.capitalize}_$enumName');
+    return getValidatedClassName('${className.toUpperFirstCase()}_$enumName');
   }
 
-  String generateRequestEnumName(String path, String requestType, String parameterName) {
+  String generateRequestEnumName(
+    String path,
+    String requestType,
+    String parameterName,
+  ) {
     if (path == '/') {
       path = '\$';
     }
 
-    path = path.split('{').map((e) => e.capitalize).join();
-    path = path.split('}').map((e) => e.capitalize).join();
+    path = path.split(RegExp('[{}]')).map((e) => e.toUpperFirstCase()).join();
 
     final correctedPath = generateFieldName(path);
 
-    final result =
-        '${correctedPath.capitalize}${requestType.capitalize}${parameterName.capitalize}';
+    final result = [
+      correctedPath,
+      requestType,
+      parameterName,
+    ].join('_').toPascalCase();
 
     return getValidatedClassName(result);
   }
@@ -82,20 +87,16 @@ abstract class SwaggerGeneratorBase {
   String generateFieldName(String jsonKey) {
     final forbiddenCharacters = <String>['#'];
 
-    jsonKey = jsonKey.camelCase;
+    if (forbiddenCharacters.any((element) => jsonKey.startsWith(element))) {
+      jsonKey = r'$forbiddenFieldName';
+    } else {
+      jsonKey = jsonKey.toCamelCase();
 
-    for (var element in forbiddenCharacters) {
-      if (jsonKey.startsWith(element)) {
-        jsonKey = '\$forbiddenFieldName';
+      if (jsonKey.startsWith(RegExp('[0-9]')) ||
+          exceptionWords.contains(jsonKey) ||
+          kBasicTypes.contains(jsonKey)) {
+        jsonKey = '\$$jsonKey';
       }
-    }
-
-    if (jsonKey.startsWith(RegExp('[0-9]')) || exceptionWords.contains(jsonKey)) {
-      jsonKey = '\$$jsonKey';
-    }
-
-    if (kBasicTypes.contains(jsonKey)) {
-      jsonKey = '\$$jsonKey';
     }
 
     return jsonKey;
@@ -109,17 +110,21 @@ abstract class SwaggerGeneratorBase {
       swaggerPath.requests.forEach((String req, SwaggerRequest swaggerRequest) {
         swaggerRequest.parameters = swaggerRequest.parameters
             .map(
-              (SwaggerRequestParameter parameter) => getOriginalOrOverriddenRequestParameter(
-                parameter,
-                swaggerRoot.components?.parameters.values.toList() ?? [],
-              ),
+              (SwaggerRequestParameter parameter) =>
+                  getOriginalOrOverriddenRequestParameter(
+                    parameter,
+                    swaggerRoot.components?.parameters.values.toList() ?? [],
+                  ),
             )
             .toList();
       });
     });
 
     swaggerRoot.paths.forEach((String path, SwaggerPath swaggerPath) {
-      swaggerPath.requests.forEach((String requestType, SwaggerRequest swaggerRequest) {
+      swaggerPath.requests.forEach((
+        String requestType,
+        SwaggerRequest swaggerRequest,
+      ) {
         if (swaggerRequest.parameters.isEmpty) {
           return;
         }
@@ -127,7 +132,11 @@ abstract class SwaggerGeneratorBase {
         for (var p = 0; p < swaggerRequest.parameters.length; p++) {
           final swaggerRequestParameter = swaggerRequest.parameters[p];
 
-          var name = generateRequestEnumName(path, requestType, swaggerRequestParameter.name);
+          var name = generateRequestEnumName(
+            path,
+            requestType,
+            swaggerRequestParameter.name,
+          );
 
           if (enums.any((element) => element.name == name)) {
             continue;
@@ -142,7 +151,9 @@ abstract class SwaggerGeneratorBase {
             enums.add(
               SwaggerEnum(
                 name: name,
-                isInteger: kIntegerTypes.contains(swaggerRequestParameter.schema?.type),
+                isInteger: kIntegerTypes.contains(
+                  swaggerRequestParameter.schema?.type,
+                ),
                 defaultValue: swaggerRequestParameter.schema?.defaultValue,
               ),
             );
@@ -173,12 +184,10 @@ abstract class SwaggerGeneratorBase {
   }
 
   String generateRequestName(String path, String requestType) {
-    path = path.split('{').map((e) => e.capitalize).join();
-    path = path.split('}').map((e) => e.capitalize).join();
-    path = path.split(',').map((e) => e.capitalize).join();
+    path = path.split(RegExp('[{},]')).map((e) => e.toUpperFirstCase()).join();
 
     final correctedPath = getValidatedClassName(path);
 
-    return '${correctedPath.capitalize}${requestType.capitalize}'.camelCase;
+    return [correctedPath, requestType].join('_').toCamelCase();
   }
 }

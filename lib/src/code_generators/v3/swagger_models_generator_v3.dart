@@ -1,7 +1,7 @@
+import 'package:change_case/change_case.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
-import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart';
 
@@ -19,7 +19,8 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     final responses = components?.responses ?? {};
 
     requestBodies.addAll(
-        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
+      SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root),
+    );
 
     final formattedRequestBodies = <String, SwaggerSchema>{};
     requestBodies.forEach((key, value) {
@@ -35,7 +36,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       ...root.definitions,
       ...root.components?.schemas ?? {},
       ...formattedResponses,
-      ...formattedRequestBodies
+      ...formattedRequestBodies,
     };
 
     final distinctClasses = <String, SwaggerSchema>{};
@@ -63,7 +64,7 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
     if (schemas != null) {
       schemas.forEach((className, schema) {
         if (schema.isListEnum) {
-          results.add(getValidatedClassName(className.capitalize));
+          results.add(getValidatedClassName(className.toUpperFirstCase()));
           return;
         }
       });
