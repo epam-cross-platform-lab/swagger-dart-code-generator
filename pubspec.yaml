@@ -23,8 +23,8 @@ environment:
 
 dependencies:
   build: ^4.0.2
+  change_case: ^2.2.0
   markdown: ^7.3.0
-  recase: ^4.1.0
   json_annotation: ^4.9.0
   universal_io: ^2.2.2
   collection: ^1.19.1
