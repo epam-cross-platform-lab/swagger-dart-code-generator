@@ -828,7 +828,11 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       resolvedSchemaForDetails = SwaggerSchema(type: kObject);
     }
 
-    String finalTypeName = getValidatedClassName(baseTypeName);
+    // Don't validate generic type names (e.g., List<String>) as it strips the angle brackets
+    // Only validate simple class names
+    String finalTypeName = baseTypeName.contains('<')
+        ? baseTypeName
+        : getValidatedClassName(baseTypeName);
     bool makeTypeNullable = isExplicitlyNullableInAnyOf;
 
     if (!requiredProperties.contains(propertyKey)) {
