@@ -150,6 +150,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
           values: enumValues,
           enumNames: enumNames,
           isInteger: isInteger,
+          options: options,
         );
 
         result.add(enumContent);
@@ -214,6 +215,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
               values: enumValues,
               enumNames: enumNames,
               isInteger: isInteger,
+              options: options,
             );
 
             result.add(enumContent);
@@ -302,6 +304,7 @@ ${allEnums.map((e) => e.toString()).join('\n')}
         values: enumValues,
         enumNames: enumNames,
         isInteger: isInteger,
+        options: options,
       );
     } else if (schema.items != null) {
       return generateEnumContentIfPossible(schema.items!, enumName);

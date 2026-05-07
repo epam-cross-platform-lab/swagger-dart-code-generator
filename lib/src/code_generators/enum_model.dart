@@ -1,12 +1,14 @@
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/exception_words.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
+import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 
 class EnumModel {
   final String name;
   final List<String> values;
   final bool isInteger;
   final List<String> enumNames;
+  final GeneratorOptions options;
 
   static const String defaultEnumFieldName = 'value_';
 
@@ -15,6 +17,7 @@ class EnumModel {
     required this.values,
     required this.isInteger,
     required this.enumNames,
+    required this.options,
   });
 
   @override
@@ -62,8 +65,25 @@ ${resultStrings.join(',\n')};
 
 final ${isInteger ? 'int' : 'String'}? value;
 
-const $name(this.value);
+const $name(this.value);${_generateToStringMethod()}
 }''';
+  }
+
+  String _generateToStringMethod() {
+    if (!options.overrideEnumToString) {
+      return '';
+    }
+
+    final valueExpression = isInteger
+        ? 'value?.toString() ?? name'
+        : 'value ?? name';
+
+    return '''
+
+
+@override
+String toString() => $valueExpression;
+''';
   }
 
   static String getValidatedEnumFieldName(
