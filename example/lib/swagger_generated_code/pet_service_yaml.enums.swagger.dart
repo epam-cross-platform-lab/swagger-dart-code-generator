@@ -18,6 +18,9 @@ enum OrderStatus {
   final String? value;
 
   const OrderStatus(this.value);
+
+  @override
+  String toString() => value ?? name;
 }
 
 enum PetStatus {
@@ -34,6 +37,9 @@ enum PetStatus {
   final String? value;
 
   const PetStatus(this.value);
+
+  @override
+  String toString() => value ?? name;
 }
 
 enum PetFindByStatusGetStatus {
@@ -50,4 +56,7 @@ enum PetFindByStatusGetStatus {
   final String? value;
 
   const PetFindByStatusGetStatus(this.value);
+
+  @override
+  String toString() => value ?? name;
 }

@@ -22,6 +22,7 @@ targets:
           include_null_query_vars: true
           use_default_null_for_lists: false
           override_equals_and_hashcode: true
+          override_enum_to_string: true
           build_only_models: false
           additional_headers:
             - "Cache-Control"

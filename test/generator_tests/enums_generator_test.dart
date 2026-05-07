@@ -51,6 +51,62 @@ void main() {
       expect(result, contains(output));
     });
 
+    test('Should generate toString method when overrideEnumToString is true', () {
+      final enumModel = EnumModel(
+        name: 'TestEnum',
+        values: ['value1', 'value2'],
+        isInteger: false,
+        enumNames: [],
+        options: GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          overrideEnumToString: true,
+        ),
+      );
+
+      final result = enumModel.toString();
+
+      expect(result, contains('@override'));
+      expect(result, contains('String toString() => value ?? name;'));
+    });
+
+    test('Should NOT generate toString when overrideEnumToString is false', () {
+      final enumModel = EnumModel(
+        name: 'TestEnum',
+        values: ['value1', 'value2'],
+        isInteger: false,
+        enumNames: [],
+        options: GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          overrideEnumToString: false,
+        ),
+      );
+
+      final result = enumModel.toString();
+
+      expect(result, isNot(contains('@override')));
+      expect(result, isNot(contains('String toString()')));
+    });
+
+    test('Should generate toString for integer enums with conversion', () {
+      final enumModel = EnumModel(
+        name: 'TestEnum',
+        values: ['1', '2', '3'],
+        isInteger: true,
+        enumNames: [],
+        options: GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          overrideEnumToString: true,
+        ),
+      );
+
+      final result = enumModel.toString();
+
+      expect(result, contains('value?.toString() ?? name'));
+    });
+
   });
 
   group('getOriginalOrOverriddenRequestParameter', () {
