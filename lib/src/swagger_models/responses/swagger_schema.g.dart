@@ -23,6 +23,7 @@ SwaggerSchema _$SwaggerSchemaFromJson(Map<String, dynamic> json) =>
       ref: json[r'$ref'] as String? ?? '',
       defaultValue: json['default'],
       format: json['format'] as String? ?? '',
+      contentMediaType: json['contentMediaType'] as String? ?? '',
       schema: json['schema'] == null
           ? null
           : SwaggerSchema.fromJson(json['schema'] as Map<String, dynamic>),
@@ -71,6 +72,7 @@ Map<String, dynamic> _$SwaggerSchemaToJson(SwaggerSchema instance) =>
       'deprecated': instance.deprecated,
       'title': instance.title,
       'format': instance.format,
+      'contentMediaType': instance.contentMediaType,
       'default': instance.defaultValue,
       'originalRef': instance.originalRef,
       r'$ref': instance.ref,

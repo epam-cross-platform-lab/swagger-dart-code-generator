@@ -779,24 +779,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           schema = root.allSchemas[schema?.ref.getUnformattedRef()];
         }
 
-        // in case a scheme for the request is defined, we use only one param const kBody and the type of this param will be the scheme as class.
-        if (requestBody.content?.schema?.ref.isNotEmpty == true) {
-          result.add(
-            Parameter(
-              (p) => p
-                ..name = kBody
-                ..named = true
-                ..required = true
-                ..type = Reference(getValidatedClassName(requestBody.content!.schema!.ref.getRef()))
-                ..named = true
-                ..annotations.add(refer(kPart.pascalCase).call([])),
-            ),
-          );
-
-          // early return
-          return result.distinctParameters();
-        }
-
         if (schema?.properties.isEmpty == true) {
           result.add(
             Parameter(
@@ -814,7 +796,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         // otherwise no request scheme is defined, we provide every param as a separate param.
         schema?.properties.forEach((key, value) {
           isBinary(SwaggerSchema? value) =>
-              (value?.type == 'string' && value?.format == 'binary') || value?.type == 'file';
+              (value?.type == 'string' &&
+                  (value?.format == 'binary' ||
+                      value?.contentMediaType.isNotEmpty == true)) ||
+              value?.type == 'file';
           if ((isBinary(value) || value.type == 'array' && isBinary(value.items))) {
             final isRequired = value.type == 'array' || schema!.required.contains(key);
             String typeRef = isRequired
@@ -828,11 +813,13 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             result.add(
               Parameter(
                 (p) => p
-                  ..name = key
+                  ..name = SwaggerModelsGenerator.getValidatedParameterName(key)
                   ..named = true
                   ..required = isRequired
                   ..type = Reference(typeRef)
-                  ..annotations.add(refer(kPartFile.pascalCase).call([])),
+                  ..annotations.add(
+                    refer(kPartFile.pascalCase).call([literalString(key)]),
+                  ),
               ),
             );
           } else {

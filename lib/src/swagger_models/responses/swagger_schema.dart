@@ -14,6 +14,7 @@ class SwaggerSchema {
     this.ref = '',
     this.defaultValue,
     this.format = '',
+    this.contentMediaType = '',
     this.schema,
     this.oneOf = const [],
     this.anyOf = const [],
@@ -64,6 +65,9 @@ class SwaggerSchema {
 
   @JsonKey(name: 'format')
   String format;
+
+  @JsonKey(name: 'contentMediaType')
+  String contentMediaType;
 
   @JsonKey(name: 'default')
   Object? defaultValue;

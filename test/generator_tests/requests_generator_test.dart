@@ -68,4 +68,70 @@ void main() {
           contains('Future<chopper.Response<CarModel>> carsMultipartPost'));
     });
   });
+
+  group('Multipart file upload', () {
+    final root = SwaggerRoot.parse(multipartRefService);
+
+    final result = SwaggerRequestsGenerator(GeneratorOptions(
+      inputFolder: '',
+      outputFolder: '',
+      ignoreHeaders: true,
+    )).generate(
+      swaggerRoot: root,
+      className: 'UploadService',
+      fileName: 'upload_service',
+      allEnums: [],
+    );
+
+    test('Should deparse a \$ref body into individual file parts', () {
+      expect(result, contains('@Multipart()'));
+      expect(result, contains("@PartFile('image') required List<int> image"));
+      expect(result, isNot(contains('required BodyUpload')));
+    });
+
+    test('Should treat OpenAPI 3.1 contentMediaType as binary', () {
+      expect(result, contains("@PartFile('doc') required List<int> doc"));
+    });
+
+    test('Should keep non-binary properties as plain @Part fields', () {
+      expect(result, contains("@Part('caption')"));
+      expect(result, isNot(contains("@PartFile('caption')")));
+    });
+  });
 }
+
+const multipartRefService = '''
+{
+    "openapi": "3.1.0",
+    "info": {"title": "Upload", "version": "1.0.0"},
+    "paths": {
+        "/upload": {
+            "post": {
+                "operationId": "upload",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {"\$ref": "#/components/schemas/Body_upload"}
+                        }
+                    }
+                },
+                "responses": {"200": {"description": "ok"}}
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_upload": {
+                "type": "object",
+                "required": ["image", "doc"],
+                "properties": {
+                    "image": {"type": "string", "format": "binary"},
+                    "doc": {"type": "string", "contentMediaType": "application/octet-stream"},
+                    "caption": {"type": "string"}
+                }
+            }
+        }
+    }
+}
+''';
