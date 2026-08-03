@@ -371,6 +371,7 @@ $dateToJson
 // ignore_for_file: type=lint
 
 import 'package:json_annotation/json_annotation.dart';
+${options.scalars.isEmpty ? '' : "import 'package:json_annotation/json_annotation.dart' as json;\n"}
 import 'package:collection/collection.dart';
 import 'dart:convert';
 ${options.importPaths.map((e) => "import '$e';").join('\n')}

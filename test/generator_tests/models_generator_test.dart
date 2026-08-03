@@ -657,6 +657,43 @@ void main() {
     });
   });
 
+  group('Tests for scalar converters on nullable (anyOf) fields', () {
+    test('Should apply the converter annotation to a nullable date-time field',
+        () {
+      final generator = SwaggerModelsGeneratorV3(
+        GeneratorOptions(
+          inputFolder: '',
+          outputFolder: '',
+          scalars: {
+            'date-time': CustomScalar(
+              type: 'DateTime',
+              deserialize: 'DateTime.parse',
+            ),
+          },
+        ),
+      );
+
+      final result = generator.generatePropertyContentByAnyOf(
+        prop: SwaggerSchema(
+          anyOf: [
+            SwaggerSchema(type: 'string', format: 'date-time'),
+            SwaggerSchema(type: 'null'),
+          ],
+        ),
+        propertyName: 'start',
+        propertyKey: 'start',
+        className: 'Event',
+        allEnumNames: [],
+        allEnumListNames: [],
+        requiredProperties: [],
+        isDeprecated: false,
+      );
+
+      expect(result, contains('@_\$DateTimeJsonConverter()'));
+      expect(result, contains('final DateTime? start;'));
+    });
+  });
+
   group('Tests for overridden format types', () {
     test('Should include deserialize function in JsonKey annotation', () {
       final map = SwaggerRoot.parse(schemasWithUuidsInProperties);
@@ -690,7 +727,7 @@ void main() {
       expect(
           result,
           contains(
-              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, dynamic>'));
       expect(result, contains('fromJson(json) => Uuid.parse(json);'));
       expect(result, contains('toJson(json) => json.toString();'));
     });
@@ -725,7 +762,7 @@ void main() {
       expect(
           result,
           contains(
-              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, dynamic>'));
       expect(result, contains('fromJson(json) => customUuidParse(json);'));
       expect(result, contains('toJson(json) => customUuidToString(json);'));
     });

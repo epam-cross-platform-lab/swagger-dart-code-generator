@@ -910,12 +910,14 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
 
     final dateToJsonValue = generateToJsonForDate(resolvedSchemaForDetails);
     final includeIfNullString = generateIncludeIfNullString();
+    final jsonConverterAnnotation =
+        generatePropertyJsonConverterAnnotation(resolvedSchemaForDetails);
 
     final jsonKeyContent =
         "@JsonKey(name: '$propertyKey'$includeIfNullString$dateToJsonValue${unknownEnumValue.jsonKey})\n";
     final deprecatedContent = isDeprecated ? '@deprecated\n' : '';
 
-    return '\t$jsonKeyContent$deprecatedContent\tfinal $finalTypeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
+    return '\t$jsonConverterAnnotation$jsonKeyContent$deprecatedContent\tfinal $finalTypeName ${generateFieldName(propertyName)};${unknownEnumValue.fromJson}';
   }
 
   String generatePropertyContentByAllOf({
