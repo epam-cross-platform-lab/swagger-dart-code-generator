@@ -225,6 +225,7 @@ class SwaggerDartCodeGenerator implements Builder {
       enums.isNotEmpty,
       options.separateModels,
       options,
+      allEnums.map((e) => e.name).toSet().toList(),
     );
 
     final requests = codeGenerator.generateRequests(

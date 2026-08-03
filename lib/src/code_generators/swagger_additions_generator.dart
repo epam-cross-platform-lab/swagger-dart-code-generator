@@ -48,6 +48,7 @@ final Map<Type, Object Function(Map<String, dynamic>)> $mappingVariableName = {}
     bool buildOnlyModels,
     bool hasEnums,
     bool separateModels,
+    List<String> enumNames,
   ) {
     final result = StringBuffer();
 
@@ -71,6 +72,11 @@ import 'package:chopper/chopper.dart' as chopper;''';
 
     final enumsImport = hasEnums
         ? "import '$swaggerFileName.enums.swagger.dart' as enums;"
+        : '';
+
+    final enumsTypesImport = hasEnums && enumNames.isNotEmpty
+        ? "import '$swaggerFileName.enums.swagger.dart' "
+            "show ${enumNames.join(', ')};"
         : '';
 
     final enumsExport =
@@ -98,6 +104,9 @@ ${options.overrideToString ? "import 'dart:convert';" : ''}
     }
     if (enumsImport.isNotEmpty) {
       result.write(enumsImport);
+    }
+    if (enumsTypesImport.isNotEmpty) {
+      result.write(enumsTypesImport);
     }
 
     // Add metadata import

@@ -171,6 +171,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           method: requestType,
           modelPostfix: options.modelPostfix,
           swaggerRoot: swaggerRoot,
+          allEnums: allEnums,
           overridenResponses: Map.fromEntries(
             options.responseOverrideValueMap
                 .where((v) => v.method.isEmpty || v.method == requestType)
@@ -230,7 +231,8 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             ..returns = Reference(returns),
         );
 
-        final allModels = _getAllMethodModels(swaggerRoot, swaggerRequest, returnTypeName);
+        final allModels =
+            _getAllMethodModels(swaggerRoot, swaggerRequest, returnTypeName, allEnums);
 
         // Add SwaggerMetaData parameter
         final metaDataParameter = Parameter(
@@ -254,7 +256,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     return methods;
   }
 
-  List<String> _getAllMethodModels(SwaggerRoot root, SwaggerRequest request, String response) {
+  List<String> _getAllMethodModels(
+    SwaggerRoot root,
+    SwaggerRequest request,
+    String response,
+    List<EnumModel> allEnums,
+  ) {
     final results = <String>[];
 
     ///Models from parameters
@@ -369,7 +376,21 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
       }
     }
 
-    return results.where((element) => _isValidModelName(element)).toList();
+    final enumNames = allEnums.map((e) => e.name).toSet();
+
+    bool isEnum(String name) {
+      final core = name
+          .replaceAll('enums.', '')
+          .replaceAll('List<', '')
+          .replaceAll('>', '')
+          .replaceAll('?', '')
+          .trim();
+      return enumNames.contains(getValidatedClassName(core));
+    }
+
+    return results
+        .where((element) => _isValidModelName(element) && !isEnum(element))
+        .toList();
   }
 
   bool _isValidModelName(String modelName) {
@@ -1291,6 +1312,7 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String modelPostfix,
     required SwaggerRoot swaggerRoot,
     required String method,
+    required List<EnumModel> allEnums,
   }) {
     if (overridenResponses.containsKey(path)) {
       return overridenResponses[path]!.overriddenValue;
@@ -1328,10 +1350,28 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         '';
 
     if (type.isNotEmpty) {
-      return type;
+      return _prefixEnumReturnType(type, allEnums);
     }
 
     return '';
+  }
+
+  String _prefixEnumReturnType(String type, List<EnumModel> allEnums) {
+    if (type.contains('enums.')) {
+      return type;
+    }
+
+    final core = type
+        .replaceAll('List<', '')
+        .replaceAll('>', '')
+        .replaceAll('?', '')
+        .trim();
+
+    if (allEnums.any((e) => e.name == core)) {
+      return type.replaceFirst(core, 'enums.$core');
+    }
+
+    return type;
   }
 
   String getChopperClientContent(String className, String host, String basePath) {

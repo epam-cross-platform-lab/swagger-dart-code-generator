@@ -45,13 +45,15 @@ class SwaggerCodeGenerator {
     bool hasEnums,
     bool separateModels,
     GeneratorOptions options,
+    List<String> enumNames,
   ) =>
       _getSwaggerAdditionsGenerator(options).generateImportsContent(
           swaggerFileName,
           hasModels,
           buildOnlyModels,
           hasEnums,
-          separateModels);
+          separateModels,
+          enumNames);
 
   List<EnumModel> generateAllEnums({
     required SwaggerRoot root,

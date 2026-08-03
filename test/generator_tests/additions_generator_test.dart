@@ -13,7 +13,7 @@ void main() {
 
     test('Should generate correct imports', () {
       final result = generator.generateImportsContent(
-          'swagger.fileName', true, false, false, false);
+          'swagger.fileName', true, false, false, false, []);
 
       expect(result, contains("part 'swagger.fileName.swagger.chopper.dart';"));
       expect(result, contains("part 'swagger.fileName.swagger.g.dart';"));
@@ -21,10 +21,28 @@ void main() {
 
     test('Should generate correct imports', () {
       final result = generator.generateImportsContent(
-          'swagger.fileName', true, false, true, false);
+          'swagger.fileName', true, false, true, false, ['MyEnum']);
 
       expect(result,
           contains("import 'swagger.fileName.enums.swagger.dart' as enums;"));
+    });
+
+    test('Should import enum types unprefixed so the chopper part resolves them',
+        () {
+      final result = generator.generateImportsContent(
+          'swagger.fileName', true, false, true, false, ['MyEnum', 'OtherEnum']);
+
+      expect(
+          result,
+          contains("import 'swagger.fileName.enums.swagger.dart' "
+              "show MyEnum, OtherEnum;"));
+    });
+
+    test('Should not import enum types when there are no enums', () {
+      final result = generator.generateImportsContent(
+          'swagger.fileName', true, false, false, false, []);
+
+      expect(result, isNot(contains(".enums.swagger.dart' show")));
     });
 
     test('Should generate indexes file', () {
