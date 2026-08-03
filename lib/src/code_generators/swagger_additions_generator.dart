@@ -217,6 +217,12 @@ class \$JsonSerializableConverter extends chopper.JsonConverter {
       return response.copyWith();
     }
 
+    if (ResultType == (List<int>)) {
+      // Binary/file downloads: return the raw bytes instead of JSON-decoding.
+      return response.copyWith<ResultType>(
+          body: response.bodyBytes as ResultType);
+    }
+
     if (ResultType == DateTime) {
       return response.copyWith(
           body: DateTime.parse((response.body as String).replaceAll('"', ''))

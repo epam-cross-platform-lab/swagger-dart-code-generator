@@ -690,7 +690,7 @@ void main() {
       expect(
           result,
           contains(
-              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, dynamic>'));
       expect(result, contains('fromJson(json) => Uuid.parse(json);'));
       expect(result, contains('toJson(json) => json.toString();'));
     });
@@ -725,7 +725,7 @@ void main() {
       expect(
           result,
           contains(
-              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, String>'));
+              'class _\$UuidJsonConverter implements json.JsonConverter<Uuid, dynamic>'));
       expect(result, contains('fromJson(json) => customUuidParse(json);'));
       expect(result, contains('toJson(json) => customUuidToString(json);'));
     });
