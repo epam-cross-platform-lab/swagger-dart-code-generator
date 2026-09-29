@@ -779,8 +779,16 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
           schema = root.allSchemas[schema?.ref.getUnformattedRef()];
         }
 
+        isBinary(SwaggerSchema? value) =>
+            (value?.type == 'string' && value?.format == 'binary') || value?.type == 'file';
+
+        // A single @Part cannot carry a file, so a referenced scheme with file fields is expanded below like an inline one.
+        final hasFileFields = schema?.properties.values
+                .any((value) => isBinary(value) || value.type == 'array' && isBinary(value.items)) ==
+            true;
+
         // in case a scheme for the request is defined, we use only one param const kBody and the type of this param will be the scheme as class.
-        if (requestBody.content?.schema?.ref.isNotEmpty == true) {
+        if (requestBody.content?.schema?.ref.isNotEmpty == true && !hasFileFields) {
           result.add(
             Parameter(
               (p) => p
@@ -813,8 +821,6 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
         // otherwise no request scheme is defined, we provide every param as a separate param.
         schema?.properties.forEach((key, value) {
-          isBinary(SwaggerSchema? value) =>
-              (value?.type == 'string' && value?.format == 'binary') || value?.type == 'file';
           if ((isBinary(value) || value.type == 'array' && isBinary(value.items))) {
             final isRequired = value.type == 'array' || schema!.required.contains(key);
             String typeRef = isRequired
