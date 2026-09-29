@@ -223,6 +223,60 @@ const carsService = '''
                 }
             }
         },
+        "/cars/multipartRef": {
+            "post": {
+                "summary": "Sends multipart with a referenced schema holding files",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarUploadRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car successfully uploaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cars/multipartRefFields": {
+            "post": {
+                "summary": "Sends multipart with a referenced schema without files",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarFieldsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car successfully uploaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/cars/optionalBody": {
             "post": {
                 "summary": "Its needed to test optionalBody",
@@ -773,6 +827,31 @@ const carsService = '''
     },
     "components": {
         "schemas": {
+            "CarUploadRequest": {
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "type": "string"
+                    },
+                    "photos": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    }
+                },
+                "required": ["filename", "photos"]
+            },
+            "CarFieldsRequest": {
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "type": "string"
+                    }
+                },
+                "required": ["filename"]
+            },
             "CarModelSimple": {
                 "type": "string"
             },

@@ -67,5 +67,29 @@ void main() {
       expect(result,
           contains('Future<chopper.Response<CarModel>> carsMultipartPost'));
     });
+
+    test('Should expand a referenced multipart schema with file fields', () {
+      final result = SwaggerRequestsGenerator(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        ignoreHeaders: true,
+      )).generate(
+        swaggerRoot: root,
+        className: 'CarsService',
+        fileName: 'cars_service',
+        allEnums: [],
+      );
+
+      expect(
+        result,
+        contains('_carsMultipartRefPost({@Part(\'filename\') required String? '
+            'filename, @PartFile() required List<List<int>> photos,'),
+      );
+      expect(
+        result,
+        contains('_carsMultipartRefFieldsPost({@Part() required '
+            'CarFieldsRequest body,'),
+      );
+    });
   });
 }
