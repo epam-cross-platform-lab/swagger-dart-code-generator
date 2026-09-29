@@ -1128,6 +1128,16 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
   ${unknownEnumValue.fromJson}''';
   }
 
+  /// Returns the ref of an allOf that wraps a single ref, where the other
+  /// entries only add constraints such as required or nullable, e.g.
+  /// `allOf: [{$ref: Pet}, {required: [owner]}]`. Returns '' otherwise.
+  String _singleAllOfRef(SwaggerSchema schema) {
+    final refs = schema.allOf.where((e) => e.hasRef).toList();
+    final addsProperties = schema.allOf.any((e) => e.properties.isNotEmpty);
+
+    return refs.length == 1 && !addsProperties ? refs.first.ref : '';
+  }
+
   String _generateListPropertyTypeName({
     required List<String> allEnumNames,
     required List<String> allEnumListNames,
@@ -1152,8 +1162,9 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
       }
 
       if (typeName.isEmpty) {
-        if (items.hasRef) {
-          typeName = items.ref.split('/').last;
+        final itemsRef = items.hasRef ? items.ref : _singleAllOfRef(items);
+        if (itemsRef.isNotEmpty) {
+          typeName = itemsRef.split('/').last;
 
           if (!allEnumListNames.contains(typeName) &&
               !allEnumNames.contains(typeName) &&

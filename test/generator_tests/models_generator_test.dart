@@ -548,6 +548,54 @@ void main() {
 
       expect(result, contains('final List<TestObject>? dog;'));
     });
+
+    String listPropertyFor(SwaggerSchema items) =>
+        generator.generateListPropertyContent(
+          propertyName: 'dog',
+          propertyKey: 'Dog',
+          className: 'Animals',
+          prop: SwaggerSchema(items: items),
+          classesWithNullableLists: [],
+          allEnumNames: [],
+          allEnumListNames: [],
+          basicTypesMap: {},
+          requiredProperties: [],
+          allClasses: {},
+          isDeprecated: false,
+        );
+
+    test('Should use the ref of a single-entry allOf', () {
+      final result = listPropertyFor(SwaggerSchema(
+        allOf: [SwaggerSchema(ref: '#/components/schemas/TestObject')],
+      ));
+
+      expect(result, contains('final List<TestObject>? dog;'));
+    });
+
+    test('Should use the ref of an allOf that only adds required', () {
+      final result = listPropertyFor(SwaggerSchema(
+        allOf: [
+          SwaggerSchema(ref: '#/components/schemas/TestObject'),
+          SwaggerSchema(type: 'object', required: ['owner']),
+        ],
+      ));
+
+      expect(result, contains('final List<TestObject>? dog;'));
+    });
+
+    test('Should not use the ref of an allOf that adds properties', () {
+      final result = listPropertyFor(SwaggerSchema(
+        allOf: [
+          SwaggerSchema(ref: '#/components/schemas/TestObject'),
+          SwaggerSchema(
+            type: 'object',
+            properties: {'owner': SwaggerSchema(type: 'string')},
+          ),
+        ],
+      ));
+
+      expect(result, isNot(contains('List<TestObject>')));
+    });
   });
 
   group('generateEqualsOverride', () {
