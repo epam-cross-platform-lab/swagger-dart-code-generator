@@ -116,6 +116,7 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       json['urlencoded_file_type'] as String? ?? 'Map<String, String>',
   generateFirstSucceedResponse:
       json['generate_first_succeed_response'] as bool? ?? true,
+  generateOneOfUnions: json['generate_one_of_unions'] as bool? ?? false,
   customAnnotations:
       (json['custom_annotations'] as List<dynamic>?)
           ?.map(
@@ -132,6 +133,7 @@ Map<String, dynamic> _$GeneratorOptionsToJson(
 ) => <String, dynamic>{
   'use_path_for_request_names': instance.usePathForRequestNames,
   'generate_first_succeed_response': instance.generateFirstSucceedResponse,
+  'generate_one_of_unions': instance.generateOneOfUnions,
   'with_base_url': instance.withBaseUrl,
   'add_base_path_to_requests': instance.addBasePathToRequests,
   'include_null_query_vars': instance.includeNullQueryVars,

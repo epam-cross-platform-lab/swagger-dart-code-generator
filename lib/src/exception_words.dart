@@ -58,4 +58,5 @@ List<String> exceptionWords = <String>[
   'override',
 ];
 
-List<String> exceptionWordsInEnum = <String>[...exceptionWords, 'value'];
+List<String> exceptionWordsInEnum = <String>[...exceptionWords, 'value', 'index', 'name', 'values'];
+

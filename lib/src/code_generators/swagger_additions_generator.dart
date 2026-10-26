@@ -51,11 +51,12 @@ final Map<Type, Object Function(Map<String, dynamic>)> $mappingVariableName = {}
   ) {
     final result = StringBuffer();
 
-    final chopperPartImport =
-        buildOnlyModels ? '' : "part '$swaggerFileName.swagger.chopper.dart';";
+    final chopperPartImport = buildOnlyModels
+        ? ''
+        : "part '$swaggerFileName.swagger.chopper.dart';";
 
-    final overridenModels = options.overridenModels
-            .any((e) => e.fileName == swaggerFileName)
+    final overridenModels =
+        options.overridenModels.any((e) => e.fileName == swaggerFileName)
         ? 'import \'${options.overridenModels.firstWhere((e) => e.fileName == swaggerFileName).importUrl}\';'
         : '';
 
@@ -73,8 +74,9 @@ import 'package:chopper/chopper.dart' as chopper;''';
         ? "import '$swaggerFileName.enums.swagger.dart' as enums;"
         : '';
 
-    final enumsExport =
-        hasEnums ? "export '$swaggerFileName.enums.swagger.dart';" : '';
+    final enumsExport = hasEnums
+        ? "export '$swaggerFileName.enums.swagger.dart';"
+        : '';
 
     result.writeln("""
 // coverage:ignore-file
@@ -153,6 +155,38 @@ String? _dateToJson(DateTime? date) {
 ''';
   }
 
+  /// Unions from `generate_one_of_unions` decode from any JSON value. A union
+  /// result gets the whole body, and a list of unions gets each element as is.
+  /// Like chopper's `JsonConverter`, a body that isn't JSON is passed on as
+  /// the raw string.
+  static const _oneOfUnionResponse = r'''
+    final Object? unionFactory = generatedMapping[ResultType];
+    if (unionFactory is ResultType Function(Object?)) {
+      Object? body;
+      try {
+        body = jsonDecode(response.bodyString);
+      } on FormatException {
+        body = response.bodyString;
+      }
+      return chopper.Response(response.base, body == null ? null : unionFactory(body), error: response.error);
+    }
+
+''';
+
+  static const _decodeList = r'''
+  List<T> _decodeList<T>(Iterable values) =>
+      values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();''';
+
+  static const _oneOfUnionDecodeList = r'''
+  List<T> _decodeList<T>(Iterable values) {
+    final jsonFactory = factories[T];
+    if (jsonFactory is T Function(Object?)) {
+      return values.map<T>(jsonFactory).toList();
+    }
+
+    return values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();
+  }''';
+
   ///Copy-pasted converter from internet
   String generateCustomJsonConverter(String fileName) {
     if (!options.withConverter) {
@@ -200,8 +234,7 @@ class \$CustomJsonDecoder {
     return jsonFactory(values);
   }
 
-  List<T> _decodeList<T>(Iterable values) =>
-      values.where((v) => v != null).map<T>((v) => decode<T>(v) as T).toList();
+${options.generateOneOfUnions ? _oneOfUnionDecodeList : _decodeList}
 }
 
 class \$JsonSerializableConverter extends chopper.JsonConverter {
@@ -223,7 +256,7 @@ class \$JsonSerializableConverter extends chopper.JsonConverter {
               as ResultType);
     }
 
-    final jsonRes = await super.convertResponse(response);
+${options.generateOneOfUnions ? _oneOfUnionResponse : ''}    final jsonRes = await super.convertResponse(response);
     return jsonRes.copyWith<ResultType>(
         body: \$jsonDecoder.decode<Item>(jsonRes.body) as ResultType);
   }

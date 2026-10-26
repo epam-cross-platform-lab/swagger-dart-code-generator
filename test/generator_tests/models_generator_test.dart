@@ -226,6 +226,26 @@ void main() {
       expect(result, contains(', includeIfNull: false'));
     });
 
+    test('Should generate includeIfNull: true for spec-nullable fields even when option is false', () {
+      final propertyEntryMap = SwaggerSchema(originalRef: 'Pet', isNullable: true);
+      const propertyName = 'shipDate';
+      final result = SwaggerModelsGeneratorV3(GeneratorOptions(
+        inputFolder: '',
+        outputFolder: '',
+        includeIfNull: false,
+      )).generatePropertyContentByDefault(
+        prop: propertyEntryMap,
+        propertyName: propertyName,
+        propertyKey: propertyName,
+        allEnumNames: [],
+        allEnumListNames: [],
+        requiredProperties: [],
+        isDeprecated: false,
+      );
+
+      expect(result, contains(', includeIfNull: true'));
+    });
+
     test('Should NOT generate includeIfNull if option is false', () {
       final propertyEntryMap = SwaggerSchema(originalRef: 'Pet');
       const propertyName = 'shipDate';
@@ -547,6 +567,87 @@ void main() {
       );
 
       expect(result, contains('final List<TestObject>? dog;'));
+    });
+
+    test(
+        'Should return List<Object> when className ends with \$Item and items has nested object properties',
+        () {
+      final map = SwaggerSchema(
+        items: SwaggerSchema(
+          properties: {'name': SwaggerSchema(type: 'string')},
+        ),
+      );
+      const propertyName = 'dog';
+      const className = 'Animals\$Item';
+      const propertyKey = 'Dog';
+
+      final result = generator.generateListPropertyContent(
+        propertyName: propertyName,
+        propertyKey: propertyKey,
+        className: className,
+        prop: map,
+        classesWithNullableLists: [],
+        allEnumNames: [],
+        allEnumListNames: [],
+        basicTypesMap: {},
+        requiredProperties: [],
+        allClasses: {},
+        isDeprecated: false,
+      );
+
+      expect(result, contains('final List<Object>? dog'));
+    });
+
+    test(
+        'Should return List<enums.X> when className ends with \$Item and items is a string enum',
+        () {
+      final map = SwaggerSchema(
+        items: SwaggerSchema(type: 'string', originalRef: 'Dog'),
+      );
+      const propertyName = 'dog';
+      const className = 'Animals\$Item';
+      const propertyKey = 'Dog';
+
+      final result = generator.generateListPropertyContent(
+        propertyName: propertyName,
+        propertyKey: propertyKey,
+        className: className,
+        prop: map,
+        classesWithNullableLists: [],
+        allEnumNames: ['Dog'],
+        allEnumListNames: [],
+        basicTypesMap: {},
+        requiredProperties: [],
+        allClasses: {},
+        isDeprecated: false,
+      );
+
+      expect(result, contains('final List<enums.Dog>? dog;'));
+    });
+
+    test(
+        'Should return List<String> when className ends with \$Item and items is a plain string',
+        () {
+      final map = SwaggerSchema(items: SwaggerSchema(type: 'string'));
+      const propertyName = 'dog';
+      const className = 'Animals\$Item';
+      const propertyKey = 'Dog';
+
+      final result = generator.generateListPropertyContent(
+        propertyName: propertyName,
+        propertyKey: propertyKey,
+        className: className,
+        prop: map,
+        classesWithNullableLists: [],
+        allEnumNames: [],
+        allEnumListNames: [],
+        basicTypesMap: {},
+        requiredProperties: [],
+        allClasses: {},
+        isDeprecated: false,
+      );
+
+      expect(result, contains('final List<String>? dog;'));
     });
   });
 

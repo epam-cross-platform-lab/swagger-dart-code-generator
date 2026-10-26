@@ -18,6 +18,8 @@ SwaggerRequestParameter _$SwaggerRequestParameterFromJson(
       ? null
       : ParameterItem.fromJson(json['item'] as Map<String, dynamic>),
   collectionFormat: json['collectionFormat'] as String? ?? '',
+  style: json['style'] as String? ?? '',
+  explode: json['explode'] as bool?,
   items: json['items'] == null
       ? null
       : SwaggerRequestItems.fromJson(json['items'] as Map<String, dynamic>),
@@ -43,6 +45,8 @@ Map<String, dynamic> _$SwaggerRequestParameterToJson(
   'item': instance.item,
   'enum': instance.enumValuesObj,
   'collectionFormat': instance.collectionFormat,
+  'style': instance.style,
+  'explode': instance.explode,
   'schema': instance.schema,
   'items': instance.items,
   'key': instance.key,

@@ -41,6 +41,7 @@ class GeneratorOptions {
     this.multipartFileType = 'List<int>',
     this.urlencodedFileType = 'Map<String, String>',
     this.generateFirstSucceedResponse = true,
+    this.generateOneOfUnions = false,
     this.customAnnotations = const[],
   });
 
@@ -50,6 +51,10 @@ class GeneratorOptions {
 
   final bool usePathForRequestNames;
   final bool generateFirstSucceedResponse;
+
+  /// Generate a sealed class for every `oneOf` with more than one branch,
+  /// instead of typing the property as `dynamic`.
+  final bool generateOneOfUnions;
   final bool withBaseUrl;
   final bool addBasePathToRequests;
   final bool includeNullQueryVars;

@@ -2,6 +2,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:recase/recase.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/one_of_union_generator.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_generator_base.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
 import 'package:swagger_dart_code_generator/src/extensions/parameter_extensions.dart';
@@ -16,7 +17,7 @@ import 'package:swagger_dart_code_generator/src/swagger_models/swagger_root.dart
 
 import 'constants.dart';
 
-class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
+class SwaggerRequestsGenerator extends SwaggerGeneratorBase with OneOfUnionGenerator {
   final GeneratorOptions _options;
 
   @override
@@ -30,6 +31,9 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     required String fileName,
     required List<EnumModel> allEnums,
   }) {
+    normalizeNullableOneOfs(swaggerRoot);
+    useOneOfClassesFrom(swaggerRoot);
+
     final service = _generateService(swaggerRoot, allEnums, className, fileName);
 
     return service.accept(DartEmitter()).toString();
@@ -243,10 +247,22 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
             ..defaultTo = _getDefaultMetaDataValue(swaggerRequest),
         );
 
+        final commaSeparatedParameters = _getCommaSeparatedQueryParameterNames(
+          swaggerRequest: swaggerRequest,
+          swaggerPath: swaggerPath,
+          root: swaggerRoot,
+        );
+
         final privateMethod = _getPrivateMethod(
           (method.toBuilder()..optionalParameters.add(metaDataParameter)).build(),
+          commaSeparatedParameters,
         );
-        final publicMethod = _getPublicMethod(method, allModels, swaggerRequest.deprecated);
+        final publicMethod = _getPublicMethod(
+          method,
+          allModels,
+          swaggerRequest.deprecated,
+          commaSeparatedParameters,
+        );
         methods.addAll([publicMethod, privateMethod]);
       });
     });
@@ -329,8 +345,45 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     for (final successResponse in successResponses) {
       final responseRef = successResponse.anyRef;
 
+      final inlineSchema = responseRef.isEmpty
+          ? successResponse.schema ?? successResponse.content?.schema
+          : null;
+      if (inlineSchema != null) {
+        if (resolveOneOfUnion(response, inlineSchema) != null) {
+          results.add(response);
+          continue;
+        }
+        if (inlineSchema.items case final items?) {
+          if (resolveOneOfUnion('$response\$Item', items) case final union?) {
+            results.add(union.className);
+            continue;
+          }
+        }
+        if (singleOneOfBranch(inlineSchema) case final branch?) {
+          final type = _singleBranchReturnType(branch, response, '');
+          final model = switch (type) {
+            null => null,
+            _ when type.startsWith('List<') => type.substring(5, type.length - 1),
+            _ when !branch.hasRef => response,
+            _ => type,
+          };
+          if (model != null && !_basicReturnTypes.contains(model)) {
+            results.add(model);
+          }
+          continue;
+        }
+      }
+
       if (responseRef.isNotEmpty) {
-        final schema = root.allSchemas[responseRef.getUnformattedRef()];
+        final referenced = root.allSchemas[responseRef.getUnformattedRef()];
+        final schema = switch (referenced) {
+          final referenced? => switch (singleOneOfBranch(referenced)) {
+            final branch? when branch.hasRef =>
+              root.allSchemas[branch.ref.getUnformattedRef()] ?? referenced,
+            _ => referenced,
+          },
+          null => null,
+        };
 
         if (schema?.type == kArray) {
           if (schema?.items?.ref.isNotEmpty == true) {
@@ -379,7 +432,29 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     return true;
   }
 
-  Method _getPrivateMethod(Method method) {
+  Set<String> _getCommaSeparatedQueryParameterNames({
+    required SwaggerRequest swaggerRequest,
+    required SwaggerPath swaggerPath,
+    required SwaggerRoot root,
+  }) {
+    final definedParameters = <String, SwaggerRequestParameter>{
+      ...root.parameters,
+      ...?root.components?.parameters,
+    };
+
+    return [...swaggerRequest.parameters, ...swaggerPath.parameters]
+        .map((par) => definedParameters[par.ref.split('/').last] ?? par)
+        .where(
+          (parameter) =>
+              parameter.inParameter == kQuery &&
+              (parameter.type == kArray || parameter.schema?.type == kArray) &&
+              parameter.isCommaSeparatedList,
+        )
+        .map((parameter) => parameter.name.asParameterName())
+        .toSet();
+  }
+
+  Method _getPrivateMethod(Method method, Set<String> commaSeparatedParameters) {
     final parameters = method.optionalParameters.map((p) {
       Parameter result = p;
 
@@ -410,6 +485,10 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         }
       }
 
+      if (commaSeparatedParameters.contains(p.name)) {
+        result = result.copyWith(type: Reference('String?'));
+      }
+
       return result;
     });
 
@@ -423,7 +502,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     );
   }
 
-  Method _getPublicMethod(Method method, List<String> allModels, bool isDeprecated) {
+  Method _getPublicMethod(
+    Method method,
+    List<String> allModels,
+    bool isDeprecated,
+    Set<String> commaSeparatedParameters,
+  ) {
     final parameters = method.optionalParameters.map((p) => p.copyWith(annotations: []));
 
     return Method(
@@ -433,7 +517,12 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         ..name = method.name
         ..returns = method.returns
         ..annotations.addAll([if (isDeprecated) refer('deprecated')])
-        ..body = _generatePublicMethodCode(method.optionalParameters, method.name!, allModels),
+        ..body = _generatePublicMethodCode(
+          method.optionalParameters,
+          method.name!,
+          allModels,
+          commaSeparatedParameters,
+        ),
     );
   }
 
@@ -441,9 +530,19 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     Iterable<Parameter> parameters,
     String publicMethodName,
     List<String> allModels,
+    Set<String> commaSeparatedParameters,
   ) {
     final parametersListString = parameters
         .map((p) {
+          if (commaSeparatedParameters.contains(p.name)) {
+            final typeName = p.type!.symbol!;
+            if (typeName.startsWith('List<enums.')) {
+              return '${p.name} : ${typeName.substring(11, typeName.length - 2).camelCase}ExplodedListToJson(${p.name})';
+            }
+
+            return "${p.name} : ${p.name} == null || ${p.name}.isEmpty ? null : ${p.name}.join(',')";
+          }
+
           if (p.type!.symbol!.startsWith('enums.')) {
             return '${p.name} : ${p.name}?.value?.toString()';
           }
@@ -601,11 +700,18 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
     if (parameter.items?.enumValues.isNotEmpty == true ||
         parameter.schema?.enumValues.isNotEmpty == true ||
+        parameter.schema?.items?.enumValues.isNotEmpty == true ||
         parameter.enumValues.isNotEmpty) {
       if (definedParameters.containsValue(parameter)) {
         final neededKey =
             definedParameters.entries.firstWhereOrNull((e) => e.value == parameter)?.key ?? '';
-        return getValidatedClassName(neededKey).asEnum();
+        final enumName = getValidatedClassName(neededKey).asEnum();
+
+        if (parameter.type == kArray || parameter.schema?.type == kArray) {
+          return enumName.asList();
+        }
+
+        return enumName;
       }
 
       if (parameter.type == kArray || parameter.schema?.type == kArray) {
@@ -902,7 +1008,20 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
 
       final schema = requestBody.content?.schema;
 
-      if (schema != null) {
+      final unionBodyName = getValidatedClassName('$path${requestType.pascalCase}\$$kRequestBody');
+
+      final bodyUnion = schema == null ? null : resolveOneOfUnion(unionBodyName, schema);
+
+      if (bodyUnion != null) {
+        typeName = bodyUnion.className;
+      } else if (schema != null && singleOneOfBranch(schema) != null) {
+        typeName = _getRequestBodyTypeName(
+          schema: schema.oneOf.single,
+          modelPostfix: options.modelPostfix,
+          root: root,
+          requestPath: path + requestType.pascalCase,
+        );
+      } else if (schema != null) {
         if (schema.oneOf.length == 1) {
           final oneOfRef = schema.oneOf.first.ref.getUnformattedRef();
           typeName = getValidatedClassName(oneOfRef);
@@ -940,6 +1059,38 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     }
 
     return result.distinctParameters();
+  }
+
+  static const _basicReturnTypes = {'String', 'int', 'double', 'num', 'bool', 'Object'};
+
+  /// The return type of a response whose schema is a `oneOf` with the single
+  /// [branch], typed the way that branch would be on its own, or `null` when
+  /// it isn't a model type.
+  String? _singleBranchReturnType(SwaggerSchema branch, String key, String modelPostfix) {
+    if (branch.hasRef) {
+      return refTypeName(branch.ref, allowEnums: false);
+    }
+    if (branch.properties.isNotEmpty) {
+      return '${getValidatedClassName(key)}$modelPostfix';
+    }
+    if (branch.type == kArray) {
+      return switch (branch.items) {
+        final items? when items.hasRef => switch (refTypeName(items.ref, allowEnums: false)) {
+          final type? => 'List<$type>',
+          null => null,
+        },
+        final items? when items.type != kObject && !items.isEnum =>
+          switch (kBasicTypesMap[items.type]) {
+            final type? => 'List<$type>',
+            null => null,
+          },
+        _ => null,
+      };
+    }
+    if (branch.type == kObject || branch.isEnum) {
+      return null;
+    }
+    return kBasicTypesMap[branch.type];
   }
 
   bool _isBasicTypeRef(String ref, SwaggerRoot root) {
@@ -1130,6 +1281,15 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
         return kBasicTypesMap[neededResponse.type]!;
       }
 
+      if (resolveOneOfUnion('${ref.getUnformattedRef()}\$$kResponse', neededResponse)
+          case final union?) {
+        return union.className;
+      }
+
+      if (singleOneOfBranch(neededResponse) case final branch? when branch.hasRef) {
+        return refTypeName(branch.ref, allowEnums: false) ?? kObject.pascalCase;
+      }
+
       if (neededResponse.oneOf.isNotEmpty) {
         return kObject.pascalCase;
       }
@@ -1307,6 +1467,22 @@ class SwaggerRequestsGenerator extends SwaggerGeneratorBase {
     }
 
     final neededResponse = neededResponses.first;
+
+    if (neededResponse.schema ?? neededResponse.content?.schema case final schema?) {
+      final unionKey = inlineResponseKey(path, method);
+      if (resolveOneOfUnion(unionKey, schema) case final union?) {
+        return union.className;
+      }
+      if (resolveItemsOneOfUnion(unionKey, schema) != null) {
+        return getValidatedClassName(unionKey);
+      }
+
+      if (singleOneOfBranch(schema) case final branch?) {
+        if (_singleBranchReturnType(branch, unionKey, modelPostfix) case final type?) {
+          return type;
+        }
+      }
+    }
 
     if (neededResponse.schema?.type == kObject &&
         neededResponse.schema?.properties.isNotEmpty == true) {

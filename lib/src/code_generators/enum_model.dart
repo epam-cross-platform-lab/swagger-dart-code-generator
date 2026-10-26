@@ -142,10 +142,12 @@ enums.$name? ${name.camelCase}NullableFromJson(
     ${enumParse(false)};
 }
 
-String ${name.camelCase}ExplodedListToJson(
+String? ${name.camelCase}ExplodedListToJson(
     List<enums.$name>? ${name.camelCase}) {
 
-    return ${name.camelCase}?.map((e) => e.value!).join(',') ?? '';
+  final values = ${name.camelCase}?.map((e) => e.value).whereType<$type>() ?? const <$type>[];
+
+  return values.isEmpty ? null : values.join(',');
 }
 
 
@@ -158,7 +160,8 @@ List<$type> ${name.camelCase}ListToJson(
   }
 
   return ${name.camelCase}
-      .map((e) => e.value!)
+      .map((e) => e.value)
+      .whereType<$type>()
       .toList();
 }
 

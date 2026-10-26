@@ -15,6 +15,8 @@ class SwaggerRequestParameter {
     this.type = '',
     this.item,
     this.collectionFormat = '',
+    this.style = '',
+    this.explode,
     this.items,
     this.schema,
     this.ref = '',
@@ -56,6 +58,18 @@ class SwaggerRequestParameter {
 
   @JsonKey(name: 'collectionFormat')
   String collectionFormat;
+
+  @JsonKey(name: 'style')
+  String style;
+
+  @JsonKey(name: 'explode')
+  bool? explode;
+
+  /// Whether an array value is sent as a single comma-separated value, either
+  /// through Swagger 2's `collectionFormat: csv` or OpenAPI 3's form style with
+  /// `explode: false`.
+  bool get isCommaSeparatedList =>
+      collectionFormat == 'csv' || ((style.isEmpty || style == 'form') && explode == false);
 
   @JsonKey(name: 'schema')
   SwaggerSchema? schema;
